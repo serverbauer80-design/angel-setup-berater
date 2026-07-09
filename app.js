@@ -1080,14 +1080,17 @@ function renderFaengeTop(){
 function fsEnsureMap(){
   if(fsMap) return;
   fsMap = L.map("fs-map", { zoomControl: true, attributionControl: false }).setView([54.2, 10.0], 8);
-  // Hinweis: der öffentliche tile.openstreetmap.org-Server blockiert Anfragen ohne
-  // Referer-Header (403) – genau das passiert beim Öffnen per Doppelklick als file://.
-  // Wikimedia Maps zeigt die gleiche OSM-Standard-Optik, ist aber für solche
-  // Einbettungen freigegeben.
-  L.tileLayer("https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png", {
+  // Hinweis: tile.openstreetmap.org blockiert Anfragen OHNE Referer-Header (403) –
+  // genau das passiert bei file:// (Doppelklick auf index.html). Über App-starten.bat
+  // (http://localhost) und über die Live-Seite (https://…github.io) wird immer ein
+  // echter Referer mitgeschickt, dort funktioniert der Standard-Server einwandfrei.
+  // (Wikimedia Maps wurde zwischenzeitlich als Alternative genutzt, blockiert laut
+  // eigener Nutzungsrichtlinie inzwischen aber explizit alle fremden Domains außer
+  // localhost – deshalb zurück zum Standard-OSM-Server.)
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19, attribution: "© OpenStreetMap-Mitwirkende"
   }).addTo(fsMap);
-  L.control.attribution({ position: "bottomleft", prefix: false }).addAttribution("© OpenStreetMap-Mitwirkende | Wikimedia").addTo(fsMap);
+  L.control.attribution({ position: "bottomleft", prefix: false }).addAttribution("© OpenStreetMap-Mitwirkende").addTo(fsMap);
   fsMap.on("click", (e) => {
     if(fsAddingSpot){ fsAddingSpot = false; fsOpenSpotModal(null, e.latlng.lat, e.latlng.lng); }
   });
