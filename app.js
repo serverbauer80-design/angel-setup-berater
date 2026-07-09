@@ -1303,8 +1303,11 @@ function fsToggleKuesteLayer(){
 }
 
 // Der öffentliche Overpass-Server ist oft überlastet (429/504) – bei Fehlschlag
-// automatisch einen zweiten, unabhängig betriebenen Mirror versuchen.
+// automatisch weitere, unabhängig betriebene Mirrors versuchen. osm.ch zuerst,
+// da spürbar schneller/zuverlässiger als die Standard-Server; kumi.systems oft
+// nicht erreichbar (Verbindung hängt bis zum Timeout) – deshalb als letzter Versuch.
 const OVERPASS_MIRRORS = [
+  "https://overpass.osm.ch/api/interpreter",
   "https://overpass-api.de/api/interpreter",
   "https://overpass.kumi.systems/api/interpreter"
 ];
@@ -1313,8 +1316,10 @@ async function fsOverpassFetch(query){
   for(const url of OVERPASS_MIRRORS){
     // fetch() hat von sich aus KEIN Timeout – nimmt ein Server die Verbindung an,
     // antwortet aber nie, würde ohne AbortController hier ewig "Lade..." stehen.
+    // Kurzes Timeout pro Mirror, damit bei einem überlasteten/toten Server schnell
+    // auf den nächsten gewechselt wird, statt insgesamt ewig zu warten.
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000);
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
     try {
       res = await fetch(url, {
         method: "POST",
