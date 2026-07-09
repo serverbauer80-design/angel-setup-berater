@@ -1306,13 +1306,16 @@ function fsToggleKuesteLayer(){
 // automatisch weitere, unabhängig betriebene Mirrors versuchen.
 // Wichtig: osm.ch wurde getestet und wieder verworfen – der Server antwortet zwar
 // sehr schnell mit HTTP 200, liefert aber eine leere/kaputte Datenbank (0 Treffer
-// selbst für triviale Testabfragen wie Restaurants in Berlin). maps.mail.ru wurde
-// stattdessen verifiziert (echte Treffer, mehrfach reproduziert) und steht daher
-// als schnellster ECHTER Mirror zuerst; overpass-api.de (offiziell, aber oft
-// überlastet) und kumi.systems (oft komplett unerreichbar) sind Fallbacks.
+// selbst für triviale Testabfragen wie Restaurants in Berlin).
+// maps.mail.ru liefert im Server-zu-Server-Test zwar echte, korrekte Treffer,
+// wird aber vermutlich von vielen Werbe-/Tracker-Blockern und manchen
+// Mobilfunknetzen automatisch blockiert (mail.ru ist eine bekannte
+// Tracking-Domain) – die Verbindung hängt dann lautlos bis zum Timeout, statt
+// sofort einen Fehler zu liefern. Deshalb steht die offizielle, unverdächtige
+// overpass-api.de-Domain zuerst; mail.ru und kumi.systems sind nur Fallbacks.
 const OVERPASS_MIRRORS = [
-  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
   "https://overpass-api.de/api/interpreter",
+  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
   "https://overpass.kumi.systems/api/interpreter"
 ];
 async function fsOverpassFetch(query){
