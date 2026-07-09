@@ -55,6 +55,16 @@ const AKTUELL = {
     vorfach: "Fluorocarbon 0,20–0,25 mm · ca. 60–100 cm",
     extra: "",
     einsatz: "Leichtes, aktives Spinnfischen mit kleinen Gummifischen/Spinnern/Wobblern auf Barsch, Döbel, kleinen Zander – auch gut für Hornhecht/Meerforelle zum Reinschnuppern."
+  },
+  setup6: {
+    key: "setup6",
+    name: "Setup 6 – Grund-/Feederangel (Friedfisch)",
+    rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
+    rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bereits fachgerecht bespult",
+    schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Mono-/Fluorocarbon-Vorfachschnur umspulen",
+    vorfach: "je nach Zielfisch, z. B. 0,16–0,20 mm für Brasse/Karpfen",
+    extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köderbox, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
+    einsatz: "Grund- und Feederangeln auf Karpfen und andere Friedfische (Brasse, Schleie, Rotauge) – ruhiger Ansitz mit Futterkorb/Grundblei an See, Kanal oder ruhigem Fluss."
   }
 };
 
