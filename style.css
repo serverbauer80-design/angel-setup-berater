@@ -44,6 +44,13 @@ body{
 .tab:hover{color:var(--text);border-color:var(--accent)}
 .tab.active{background:var(--accent);color:#062018;border-color:var(--accent)}
 
+.sync-status{
+  background:var(--bg2);border:1px solid var(--line);color:var(--muted);
+  padding:8px 14px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:600;
+  transition:.15s;white-space:nowrap;
+}
+.sync-status:hover{border-color:var(--accent);color:var(--text)}
+
 /* ---------- Views ---------- */
 .view{display:none;max-width:900px;margin:0 auto;padding:24px 18px 40px}
 #view-faenge{max-width:1400px}

@@ -25,7 +25,33 @@
       <button class="tab" data-view="faenge">Fänge &amp; Spots</button>
       <button class="tab" data-view="inventar">Mein Equipment</button>
     </nav>
+    <button id="sync-status-btn" type="button" class="sync-status" title="Synchronisation">☁️ Nicht angemeldet</button>
   </header>
+
+  <!-- ============ SYNC-LOGIN ============ -->
+  <div id="sync-modal" class="fs-modal-overlay" style="display:none">
+    <div class="fs-modal-box card">
+      <div class="fs-modal-head">
+        <h3 id="sync-modal-title">Geräte-Synchronisation</h3>
+        <button id="sync-modal-close" type="button" class="del-btn">✕</button>
+      </div>
+      <p class="k-hint" style="margin-bottom:14px">Mit deinem Login werden Fänge, Spots, Equipment und Checkliste automatisch zwischen all deinen Geräten abgeglichen.</p>
+      <form id="sync-login-form">
+        <div class="add-grid">
+          <input id="sync-email" type="email" placeholder="E-Mail" required autocomplete="username">
+          <input id="sync-pass" type="password" placeholder="Passwort" required autocomplete="current-password">
+        </div>
+        <div class="fs-modal-actions">
+          <button type="submit" class="add-btn">Anmelden</button>
+        </div>
+      </form>
+      <p id="sync-error" class="need-hinweis" style="display:none;margin-top:12px"></p>
+      <div id="sync-loggedin-box" style="display:none;margin-top:6px">
+        <p style="font-size:14px;margin-bottom:12px">Angemeldet als <b id="sync-email-display"></b></p>
+        <button id="sync-logout-btn" type="button" class="del-btn-wide">Abmelden</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ============ BERATER ============ -->
   <main id="view-berater" class="view active">
@@ -189,6 +215,24 @@
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Geräte-Synchronisation (Firebase) -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAVgGGBpJ3Hg3a1GhBhsJ63eSkDZQZV_tU",
+      authDomain: "angel-setup-berater.firebaseapp.com",
+      projectId: "angel-setup-berater",
+      storageBucket: "angel-setup-berater.firebasestorage.app",
+      messagingSenderId: "557649371251",
+      appId: "1:557649371251:web:7e296ead21fb8f156fca06"
+    };
+    firebase.initializeApp(firebaseConfig);
+    firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {});
+  </script>
+
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>

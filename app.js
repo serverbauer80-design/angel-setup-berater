@@ -6,13 +6,19 @@ const gwSel    = $("#gewaesser");
 const hintEl   = $("#hint");
 const ergEl    = $("#ergebnis");
 
+// Muss ganz oben stehen: einige speichere*()-Funktionen (z. B. speichereFaenge)
+// werden schon beim allerersten Laden weiter unten aufgerufen und referenzieren
+// fsSyncDocRef über fsSyncPushDebounced() – ohne diese frühe Deklaration gäbe es
+// einen "Cannot access before initialization"-Fehler (temporal dead zone).
+let fsSyncUser = null, fsSyncDocRef = null, fsSyncUnsub = null, fsSyncPushTimer = null, fsSyncReady = false;
+
 /* ---------- Eigene Ergänzungen zum Inventar (im Browser gespeichert) ---------- */
 const ZUSATZ_KEY = "mein_inventar_v1";
 function ladeZusatz(){
   try { const z = JSON.parse(localStorage.getItem(ZUSATZ_KEY)); return (z && z.setups && z.zubehoer) ? z : {setups:[], zubehoer:[]}; }
   catch(e){ return {setups:[], zubehoer:[]}; }
 }
-function speichereZusatz(){ try { localStorage.setItem(ZUSATZ_KEY, JSON.stringify(ZUSATZ)); } catch(e){} }
+function speichereZusatz(){ try { localStorage.setItem(ZUSATZ_KEY, JSON.stringify(ZUSATZ)); } catch(e){} fsSyncPushDebounced(); }
 let ZUSATZ = ladeZusatz();
 function escAttr(s){ return String(s).replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
@@ -43,7 +49,7 @@ function ladeFaengeDaten(){
   }));
   return { spots: seedSpots, catches: [] };
 }
-function speichereFaenge(){ try { localStorage.setItem(FAENGE_KEY, JSON.stringify(FAENGE)); } catch(e){} }
+function speichereFaenge(){ try { localStorage.setItem(FAENGE_KEY, JSON.stringify(FAENGE)); } catch(e){} fsSyncPushDebounced(); }
 let FAENGE = ladeFaengeDaten();
 speichereFaenge();
 
@@ -53,11 +59,133 @@ function ladeWartung(){
   try { return JSON.parse(localStorage.getItem(WARTUNG_KEY)) || {}; }
   catch(e){ return {}; }
 }
-function speichereWartung(){ try { localStorage.setItem(WARTUNG_KEY, JSON.stringify(WARTUNG)); } catch(e){} }
+function speichereWartung(){ try { localStorage.setItem(WARTUNG_KEY, JSON.stringify(WARTUNG)); } catch(e){} fsSyncPushDebounced(); }
 let WARTUNG = ladeWartung();
 function tageSeit(datumStr){
   const then = new Date(datumStr + "T00:00:00");
   return Math.floor((Date.now() - then.getTime()) / (1000*60*60*24));
+}
+
+/* ---------- Geräte-Synchronisation (Firebase, optional) ----------
+   Alle "speichere*"-Funktionen rufen fsSyncPushDebounced() auf, sobald sich
+   etwas ändert. Ohne Login passiert das einfach nichts (fsSyncDocRef ist
+   dann null) – die App funktioniert weiterhin komplett offline/lokal.
+   (Die let-Deklarationen dafür stehen ganz oben in der Datei, siehe Kommentar dort.) */
+
+function fsSyncCollectState(){
+  return {
+    zusatz: ZUSATZ, faenge: FAENGE, manuell: MANUELL, wartung: WARTUNG,
+    osmCache: typeof OSM_CACHE !== "undefined" ? OSM_CACHE : [],
+    flussCache: typeof FLUSS_CACHE !== "undefined" ? FLUSS_CACHE : [],
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+}
+
+function fsSyncApplyState(data){
+  if(data.zusatz){ ZUSATZ = data.zusatz; try{localStorage.setItem(ZUSATZ_KEY, JSON.stringify(ZUSATZ));}catch(e){} }
+  if(data.faenge){ FAENGE = data.faenge; try{localStorage.setItem(FAENGE_KEY, JSON.stringify(FAENGE));}catch(e){} }
+  if(data.manuell){ MANUELL = data.manuell; try{localStorage.setItem(MANUAL_KEY, JSON.stringify(MANUELL));}catch(e){} }
+  if(data.wartung){ WARTUNG = data.wartung; try{localStorage.setItem(WARTUNG_KEY, JSON.stringify(WARTUNG));}catch(e){} }
+  if(data.osmCache){ OSM_CACHE = data.osmCache; try{localStorage.setItem(OSM_CACHE_KEY, JSON.stringify(OSM_CACHE));}catch(e){} }
+  if(data.flussCache){ FLUSS_CACHE = data.flussCache; try{localStorage.setItem(FLUSS_CACHE_KEY, JSON.stringify(FLUSS_CACHE));}catch(e){} }
+
+  // Alles neu rendern, was von den synchronisierten Daten abhängt
+  if(document.getElementById("inventar")) renderInventar();
+  if(document.getElementById("checkliste")) renderCheckliste();
+  if(typeof renderFaengeTop === "function" && document.getElementById("faenge-top")) renderFaengeTop();
+  if(typeof fsMap !== "undefined" && fsMap){
+    fsRenderMarkers();
+    if(typeof fsRenderOsmMarkers === "function") fsRenderOsmMarkers();
+    if(typeof fsFlussLayer !== "undefined" && fsFlussLayer && typeof fsRenderFlussnamen === "function") fsRenderFlussnamen();
+  }
+}
+
+function fsSyncPushDebounced(){
+  if(!fsSyncDocRef || !fsSyncReady) return;
+  clearTimeout(fsSyncPushTimer);
+  fsSyncPushTimer = setTimeout(() => {
+    fsSyncDocRef.set(fsSyncCollectState(), { merge: true })
+      .catch(err => console.warn("Sync-Push fehlgeschlagen:", err));
+  }, 1500);
+}
+
+async function fsSyncOnLogin(user){
+  fsSyncUser = user;
+  fsSyncDocRef = firebase.firestore().collection("sync").doc(user.uid);
+  const statusBtn = document.getElementById("sync-status-btn");
+  if(statusBtn) statusBtn.textContent = "☁️ Synchronisiert";
+  const emailDisplay = document.getElementById("sync-email-display");
+  if(emailDisplay) emailDisplay.textContent = user.email;
+  const loginForm = document.getElementById("sync-login-form");
+  if(loginForm) loginForm.style.display = "none";
+  const loggedInBox = document.getElementById("sync-loggedin-box");
+  if(loggedInBox) loggedInBox.style.display = "block";
+
+  try {
+    const snap = await fsSyncDocRef.get();
+    if(snap.exists) fsSyncApplyState(snap.data());
+    else await fsSyncDocRef.set(fsSyncCollectState());
+  } catch(e){
+    const errEl = document.getElementById("sync-error");
+    if(errEl){ errEl.textContent = "Erstsynchronisation fehlgeschlagen: " + e.message; errEl.style.display = "block"; }
+  }
+  fsSyncReady = true;
+
+  if(fsSyncUnsub) fsSyncUnsub();
+  fsSyncUnsub = fsSyncDocRef.onSnapshot(snap => {
+    if(!snap.exists || snap.metadata.hasPendingWrites) return; // eigener, noch unbestätigter Schreibvorgang
+    fsSyncApplyState(snap.data());
+  });
+}
+
+function fsSyncOnLogout(){
+  fsSyncUser = null; fsSyncDocRef = null; fsSyncReady = false;
+  if(fsSyncUnsub){ fsSyncUnsub(); fsSyncUnsub = null; }
+  const statusBtn = document.getElementById("sync-status-btn");
+  if(statusBtn) statusBtn.textContent = "☁️ Nicht angemeldet";
+  const loginForm = document.getElementById("sync-login-form");
+  if(loginForm) loginForm.style.display = "block";
+  const loggedInBox = document.getElementById("sync-loggedin-box");
+  if(loggedInBox) loggedInBox.style.display = "none";
+}
+
+// Die komplette Sync-Initialisierung ist bewusst in try/catch gekapselt: geht hier
+// irgendetwas schief (z. B. Firebase nicht erreichbar, Konfigurationsfehler), darf
+// das NIE die restliche App (Berater, Knotenkunde, …) lahmlegen – die App muss
+// immer auch komplett offline/ohne Sync funktionieren.
+try {
+  if(typeof firebase === "undefined") throw new Error("Firebase-SDK nicht geladen");
+
+  firebase.auth().onAuthStateChanged(user => { user ? fsSyncOnLogin(user) : fsSyncOnLogout(); });
+
+  document.getElementById("sync-status-btn").addEventListener("click", () => {
+    document.getElementById("sync-modal").style.display = "flex";
+  });
+  document.getElementById("sync-modal-close").addEventListener("click", () => {
+    document.getElementById("sync-modal").style.display = "none";
+  });
+  document.getElementById("sync-modal").addEventListener("click", (e) => {
+    if(e.target.id === "sync-modal") document.getElementById("sync-modal").style.display = "none";
+  });
+  document.getElementById("sync-login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const errEl = document.getElementById("sync-error");
+    errEl.style.display = "none";
+    const email = document.getElementById("sync-email").value.trim();
+    const pass = document.getElementById("sync-pass").value;
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, pass);
+      document.getElementById("sync-modal").style.display = "none";
+    } catch(err){
+      errEl.textContent = "Anmeldung fehlgeschlagen: " + err.message;
+      errEl.style.display = "block";
+    }
+  });
+  document.getElementById("sync-logout-btn").addEventListener("click", () => { firebase.auth().signOut(); });
+} catch(e){
+  console.warn("Sync-Initialisierung fehlgeschlagen – App läuft weiter ohne Cloud-Sync:", e);
+  const statusBtn = document.getElementById("sync-status-btn");
+  if(statusBtn){ statusBtn.textContent = "☁️ Sync nicht verfügbar"; statusBtn.disabled = true; }
 }
 
 /* ---------- Dropdowns füllen ---------- */
@@ -540,6 +668,7 @@ function ladeManuell(){
 }
 function speichereManuell(obj){
   try { localStorage.setItem(MANUAL_KEY, JSON.stringify(obj)); } catch(e){}
+  fsSyncPushDebounced();
 }
 let MANUELL = ladeManuell();
 
@@ -889,7 +1018,7 @@ function ladeOsmCache(){
   try { const c = JSON.parse(localStorage.getItem(OSM_CACHE_KEY)); return Array.isArray(c) ? c : []; }
   catch(e){ return []; }
 }
-function speichereOsmCache(){ try { localStorage.setItem(OSM_CACHE_KEY, JSON.stringify(OSM_CACHE)); } catch(e){} }
+function speichereOsmCache(){ try { localStorage.setItem(OSM_CACHE_KEY, JSON.stringify(OSM_CACHE)); } catch(e){} fsSyncPushDebounced(); }
 let OSM_CACHE = ladeOsmCache();
 
 function fsToast(msg){
@@ -1301,7 +1430,7 @@ function ladeFlussCache(){
   try { const c = JSON.parse(localStorage.getItem(FLUSS_CACHE_KEY)); return Array.isArray(c) ? c : []; }
   catch(e){ return []; }
 }
-function speichereFlussCache(){ try { localStorage.setItem(FLUSS_CACHE_KEY, JSON.stringify(FLUSS_CACHE)); } catch(e){} }
+function speichereFlussCache(){ try { localStorage.setItem(FLUSS_CACHE_KEY, JSON.stringify(FLUSS_CACHE)); } catch(e){} fsSyncPushDebounced(); }
 let FLUSS_CACHE = ladeFlussCache();
 let fsFlussLayer = null, fsFlussVisible = false, fsFlussLoading = false;
 
