@@ -1303,11 +1303,15 @@ function fsToggleKuesteLayer(){
 }
 
 // Der öffentliche Overpass-Server ist oft überlastet (429/504) – bei Fehlschlag
-// automatisch weitere, unabhängig betriebene Mirrors versuchen. osm.ch zuerst,
-// da spürbar schneller/zuverlässiger als die Standard-Server; kumi.systems oft
-// nicht erreichbar (Verbindung hängt bis zum Timeout) – deshalb als letzter Versuch.
+// automatisch weitere, unabhängig betriebene Mirrors versuchen.
+// Wichtig: osm.ch wurde getestet und wieder verworfen – der Server antwortet zwar
+// sehr schnell mit HTTP 200, liefert aber eine leere/kaputte Datenbank (0 Treffer
+// selbst für triviale Testabfragen wie Restaurants in Berlin). maps.mail.ru wurde
+// stattdessen verifiziert (echte Treffer, mehrfach reproduziert) und steht daher
+// als schnellster ECHTER Mirror zuerst; overpass-api.de (offiziell, aber oft
+// überlastet) und kumi.systems (oft komplett unerreichbar) sind Fallbacks.
 const OVERPASS_MIRRORS = [
-  "https://overpass.osm.ch/api/interpreter",
+  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
   "https://overpass-api.de/api/interpreter",
   "https://overpass.kumi.systems/api/interpreter"
 ];
@@ -1316,10 +1320,9 @@ async function fsOverpassFetch(query){
   for(const url of OVERPASS_MIRRORS){
     // fetch() hat von sich aus KEIN Timeout – nimmt ein Server die Verbindung an,
     // antwortet aber nie, würde ohne AbortController hier ewig "Lade..." stehen.
-    // Kurzes Timeout pro Mirror, damit bei einem überlasteten/toten Server schnell
-    // auf den nächsten gewechselt wird, statt insgesamt ewig zu warten.
+    const timeoutMs = 12000;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000);
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
       res = await fetch(url, {
         method: "POST",
@@ -1330,7 +1333,7 @@ async function fsOverpassFetch(query){
       if(res.ok) break;
       lastErr = new Error("HTTP " + res.status);
     } catch(e){
-      lastErr = e.name === "AbortError" ? new Error("Zeitüberschreitung (20s)") : e;
+      lastErr = e.name === "AbortError" ? new Error(`Zeitüberschreitung (${timeoutMs/1000}s)`) : e;
     } finally {
       clearTimeout(timeoutId);
     }
