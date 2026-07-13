@@ -233,6 +233,16 @@ const FISCHE = [
           {k:"Köder", v:"Gummifisch 7–10 cm am Jigkopf 5–12 g · oder Spinner Gr. 2–3"}
         ],
         tipp:"Für große Barsche (>35 cm) die kräftigere Setup 1 nehmen – da ist oft auch der Zander nicht weit."
+      },
+      {
+        methode:"Light Game – kleiner Gummifisch/Spinner (aktiv)", status:"machbar", setup:"setup5",
+        gewaesser:["eider","nok","elbe","see"],
+        montage:[
+          {k:"Hauptschnur", v:"J-Braid X8 0,10 mm"},
+          {k:"Vorfach", v:"Fluorocarbon 0,20–0,25 mm · 60–100 cm"},
+          {k:"Köder", v:"Mini-Gummifisch 5–8 cm am Jigkopf 3–10 g · oder kleiner Spinner"}
+        ],
+        tipp:"Genau der Einsatzzweck von Setup 5 – aktiv laufen, an Kanten und Strukturen jiggen, viele Fühlungskontakte spüren."
       }
     ]
   },
@@ -342,15 +352,15 @@ const FISCHE = [
     info:"Kräftiger Kämpfer, der Anfüttern und Geduld belohnt. Braucht kräftiges Ansitzgerät + Selbsthakmontage.",
     ansaetze:[
       {
-        methode:"Ansitz – Haarmontage mit Boilie/Mais", status:"wunsch", braucht:"ansitz",
+        methode:"Grund-/Feederangeln – Futterkorb mit Boilie/Mais", status:"machbar", setup:"setup6",
         gewaesser:["see","nok","eider"],
         montage:[
-          {k:"Hauptschnur", v:"Monofil 0,30–0,35 mm"},
-          {k:"Festblei", v:"80–120 g (Selbsthakwirkung)"},
-          {k:"Vorfach", v:"Boiliehaar 15–20 cm"},
-          {k:"Haken", v:"Karpfenhaken Gr. 4–2 · Boilie/Mais am Haar"}
+          {k:"Hauptschnur", v:"vorbespult (Setup 6) bzw. Monofil 0,25–0,30 mm"},
+          {k:"Futterkorb/Grundblei", v:"30–80 g je nach Wurfweite und Strömung"},
+          {k:"Vorfach", v:"Boiliehaar oder Haarmontage 10–15 cm"},
+          {k:"Haken", v:"Karpfenhaken Gr. 6–2 · Boilie/Mais am Haar"}
         ],
-        tipp:"Mit deinen 3 Setups nicht sinnvoll machbar (zu leicht, keine Freilaufrolle). Dafür brauchst du das Ansitz-Setup."
+        tipp:"Genau der Einsatzzweck von Setup 6 (Crivit Feeder-Set). Ruhiger Ansitz, Futterkorb regelmäßig nachfüttern, Rutenspitze auf feine Bisse beobachten."
       }
     ]
   },
@@ -360,15 +370,15 @@ const FISCHE = [
     info:"Heimlicher Schlammbewohner mit vorsichtigem Biss. Aufsteigende Blasen verraten fressende Schleien.",
     ansaetze:[
       {
-        methode:"Posenangeln an der Krautkante", status:"wunsch", braucht:"bolognese",
+        methode:"Stippen an der Krautkante", status:"machbar", setup:"setup4",
         gewaesser:["see","nok"],
         montage:[
-          {k:"Hauptschnur", v:"Monofil 0,16–0,18 mm"},
-          {k:"Pose", v:"feine Laufpose 2–4 g"},
+          {k:"Feste Vorfachschnur", v:"0,10–0,14 mm, am Gummizug"},
+          {k:"Pose", v:"feine Stipp-Pose 1–3 g"},
           {k:"Schrotblei", v:"aufgeteilt, fein ausgebleit"},
           {k:"Haken", v:"Gr. 8–12 · Wurm/Mais/Made"}
         ],
-        tipp:"Braucht feines Friedfischgerät – dafür die Bolognese-/Posenrute aus der Wunschliste. Improvisiert ginge notfalls die Sbiro-Rute (Setup 3), aber unpräzise."
+        tipp:"Genau der Einsatzzweck von Setup 4 (Stippe) – maximale Feinfühligkeit direkt an der Krautkante, aufsteigende Blasen verraten die Fressstelle."
       }
     ]
   },
@@ -378,15 +388,26 @@ const FISCHE = [
     info:"Häufigster Schwarmfisch, ganzjährig fangbar – der klassische Posenfisch (auch Rotfeder, Brasse, Aland).",
     ansaetze:[
       {
-        methode:"Posenangeln / leichtes Feedern", status:"wunsch", braucht:"bolognese",
+        methode:"Stippen (Posenangeln)", status:"machbar", setup:"setup4",
         gewaesser:["eider","nok","see","elbe"],
         montage:[
-          {k:"Hauptschnur", v:"Monofil 0,14–0,18 mm"},
-          {k:"Pose", v:"2–8 g je nach Strömung"},
+          {k:"Feste Vorfachschnur", v:"0,10–0,14 mm, am Gummizug"},
+          {k:"Pose", v:"1–3 g je nach Strömung"},
           {k:"Schrotblei", v:"fein ausgebleit, ein Fühlerblei am Grund"},
           {k:"Haken", v:"Gr. 14–18 · Made/Mais/Teig"}
         ],
-        tipp:"Klassischer Fall für die Bolognese-/Posenrute (Wunschliste). Deine 3 Setups sind alle zu schwer/spezialisiert dafür."
+        tipp:"Klassischer Fall für Setup 4 (Stippe) – entspanntes Posenangeln mit maximaler Feinfühligkeit."
+      },
+      {
+        methode:"Grund-/Feederangeln (weitere Distanz)", status:"machbar", setup:"setup6",
+        gewaesser:["eider","nok","see","elbe"],
+        montage:[
+          {k:"Hauptschnur", v:"vorbespult (Setup 6) bzw. Monofil 0,16–0,20 mm"},
+          {k:"Futterkorb/Grundblei", v:"20–40 g"},
+          {k:"Vorfach", v:"0,14–0,16 mm · ca. 40–60 cm"},
+          {k:"Haken", v:"Gr. 14–18 · Made/Mais/Teig"}
+        ],
+        tipp:"Wenn's weiter raus oder mit Futterkorb gehen soll statt Stippe – Setup 6 deckt größere Distanzen ab."
       }
     ]
   },
@@ -900,3 +921,57 @@ const TAGESCHECK_HINT = {
   meerforelle: { daemmerung:true,                     bevorzugtWetter:"bewegtes Wasser, leicht bedeckt", topSaison:["Frühling","Herbst"] },
   hornhecht:   { daemmerung:false,                    bevorzugtWetter:"sonnig",              topSaison:["Frühling"] }
 };
+
+/* ---------- Wochenend-Planer: vordefinierte Vorhaben ----------
+   Bündelt typische Ausflüge zu ein oder mehreren Ansätzen aus FISCHE, damit man
+   nicht erst Fisch+Gewässer einzeln durchklicken muss. Verweist per fischId +
+   exaktem methode-Text auf den jeweiligen Ansatz (keine Datenduplizierung –
+   Montage/Setup/Tipp kommen live aus FISCHE). ---------- */
+const VORHABEN = [
+  {
+    id:"forellenteich", name:"Forellenteich-Tag", emoji:"🐠",
+    beschreibung:"Besatzforellen am Put & Take – Spoon oder Sbirolino.",
+    einsaetze:[
+      {fischId:"forelle", methode:"Trout Area – Spoons"},
+      {fischId:"forelle", methode:"Sbirolino / Pose (Forellensee)"}
+    ]
+  },
+  {
+    id:"ansitz-karpfen", name:"Ruhiger Ansitz auf Karpfen & Co.", emoji:"🎏",
+    beschreibung:"Grund-/Feederangeln mit Futterkorb an See/Kanal – Karpfen, Brasse, Schleie.",
+    einsaetze:[
+      {fischId:"karpfen", methode:"Grund-/Feederangeln – Futterkorb mit Boilie/Mais"}
+    ]
+  },
+  {
+    id:"stippen-weissfisch", name:"Entspanntes Stippen (Weißfisch)", emoji:"🐟",
+    beschreibung:"Feines Posenangeln an der Krautkante – Rotauge, Schleie, Brasse.",
+    einsaetze:[
+      {fischId:"rotauge", methode:"Stippen (Posenangeln)"},
+      {fischId:"schleie", methode:"Stippen an der Krautkante"}
+    ]
+  },
+  {
+    id:"spinnen-raubfisch", name:"Spinnfischen auf Hecht & Zander", emoji:"🐊",
+    beschreibung:"Aktives Spinnfischen mit Gummifisch/Wobbler an Fluss/Kanal/See.",
+    einsaetze:[
+      {fischId:"hecht", methode:"Spinnfischen – Gummifisch/Wobbler"},
+      {fischId:"zander", methode:"Spinnfischen – Gummifisch am Jigkopf (Faulenzen)"}
+    ]
+  },
+  {
+    id:"light-game-barsch", name:"Light Game auf Barsch", emoji:"🐟",
+    beschreibung:"Leichtes, aktives Jiggen an Kanten und Strukturen.",
+    einsaetze:[
+      {fischId:"barsch", methode:"Light Game – kleiner Gummifisch/Spinner (aktiv)"}
+    ]
+  },
+  {
+    id:"kueste-mefo", name:"Küstentag: Meerforelle & Hornhecht", emoji:"🌊",
+    beschreibung:"Küstenspinnen an der Ostsee – weit werfen, Wathose lohnt sich.",
+    einsaetze:[
+      {fischId:"meerforelle", methode:"Küstenspinnen – Blinker/Küstenwobbler"},
+      {fischId:"hornhecht", methode:"Küstenspinnen – kleiner Blinker (mit Wollfaden)"}
+    ]
+  }
+];

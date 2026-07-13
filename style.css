@@ -96,6 +96,17 @@ select:focus{outline:none;border-color:var(--accent)}
 .fisch-head .meta{color:var(--muted);font-size:13px;margin-top:2px}
 .fisch-head .info{color:var(--text);font-size:14px;margin-top:8px;opacity:.9}
 
+.vorhaben{padding:0;margin-bottom:14px;overflow:hidden}
+.vorhaben-head{display:flex;align-items:center;gap:14px;width:100%;padding:18px 20px;background:none;border:none;cursor:pointer;text-align:left;color:inherit;font:inherit}
+.vorhaben-head:hover{background:rgba(51,195,166,.06)}
+.vorhaben-head .ve{font-size:32px;line-height:1;flex:none}
+.vorhaben-txt{flex:1}
+.vorhaben-txt h3{margin:0;font-size:17px}
+.vorhaben-desc{color:var(--muted);font-size:13.5px;margin-top:3px}
+.vorhaben-chevron{color:var(--muted);font-size:18px;flex:none}
+.vorhaben-body{padding:0 20px 20px;display:flex;flex-direction:column;gap:16px}
+.vorhaben-fisch-tag{font-weight:700;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:6px}
+
 .gw-badge{
   display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--line);
   border-radius:8px;padding:4px 10px;font-size:13px;color:var(--muted);margin-top:6px
@@ -279,6 +290,21 @@ select:focus{outline:none;border-color:var(--accent)}
 .chk-item.miss.clickable .chk-box{opacity:.55}
 .reset-btn{margin-top:6px;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
 .reset-btn:hover{border-color:var(--accent);color:var(--text)}
+
+.pack-details{margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:4px 12px 12px}
+.pack-details summary{cursor:pointer;padding:10px 4px;font-weight:700;font-size:14.5px;list-style:none}
+.pack-details summary::-webkit-details-marker{display:none}
+.pack-details summary::before{content:"▸ ";color:var(--muted)}
+.pack-details[open] summary::before{content:"▾ "}
+.pack-count{color:var(--muted);font-weight:600;font-size:13px}
+.pack-list{margin-top:4px}
+.pack-item{display:flex;gap:12px;align-items:flex-start;padding:11px 10px;border-radius:10px;cursor:pointer;transition:background .12s}
+.pack-item + .pack-item{border-top:1px solid var(--line)}
+.pack-item.have{background:rgba(58,208,122,.09)}
+.pack-item.miss{background:rgba(255,255,255,.02)}
+.pack-item.miss .chk-box{opacity:.55}
+.pack-item:hover{background:rgba(51,195,166,.1)}
+.pack-item:focus{outline:2px solid var(--accent);outline-offset:-2px}
 
 /* ---------- Recht SH ---------- */
 .recht-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px}

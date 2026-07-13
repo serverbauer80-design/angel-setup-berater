@@ -66,6 +66,18 @@ function tageSeit(datumStr){
   return Math.floor((Date.now() - then.getTime()) / (1000*60*60*24));
 }
 
+/* ---------- Packliste fürs Wochenende (im Browser gespeichert) ----------
+   Abgehakte Punkte pro Ansatz (Fisch+Methode), damit man zu Hause vorbereiten
+   und die Häkchen dann als "eingepackt" stehen lassen kann, bis man sie
+   selbst zurücksetzt (kein automatisches Reset nach dem Trip). ---------- */
+const PACKLISTE_KEY = "packliste_check_v1";
+function ladePackliste(){
+  try { return JSON.parse(localStorage.getItem(PACKLISTE_KEY)) || {}; }
+  catch(e){ return {}; }
+}
+function speicherePackliste(){ try { localStorage.setItem(PACKLISTE_KEY, JSON.stringify(PACKLISTE)); } catch(e){} fsSyncPushDebounced(); }
+let PACKLISTE = ladePackliste();
+
 /* ---------- Geräte-Synchronisation (Firebase, optional) ----------
    Alle "speichere*"-Funktionen rufen fsSyncPushDebounced() auf, sobald sich
    etwas ändert. Ohne Login passiert das einfach nichts (fsSyncDocRef ist
@@ -74,7 +86,7 @@ function tageSeit(datumStr){
 
 function fsSyncCollectState(){
   return {
-    zusatz: ZUSATZ, faenge: FAENGE, manuell: MANUELL, wartung: WARTUNG,
+    zusatz: ZUSATZ, faenge: FAENGE, manuell: MANUELL, wartung: WARTUNG, packliste: PACKLISTE,
     osmCache: typeof OSM_CACHE !== "undefined" ? OSM_CACHE : [],
     flussCache: typeof FLUSS_CACHE !== "undefined" ? FLUSS_CACHE : [],
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -86,6 +98,7 @@ function fsSyncApplyState(data){
   if(data.faenge){ FAENGE = data.faenge; try{localStorage.setItem(FAENGE_KEY, JSON.stringify(FAENGE));}catch(e){} }
   if(data.manuell){ MANUELL = data.manuell; try{localStorage.setItem(MANUAL_KEY, JSON.stringify(MANUELL));}catch(e){} }
   if(data.wartung){ WARTUNG = data.wartung; try{localStorage.setItem(WARTUNG_KEY, JSON.stringify(WARTUNG));}catch(e){} }
+  if(data.packliste){ PACKLISTE = data.packliste; try{localStorage.setItem(PACKLISTE_KEY, JSON.stringify(PACKLISTE));}catch(e){} }
   if(data.osmCache){ OSM_CACHE = data.osmCache; try{localStorage.setItem(OSM_CACHE_KEY, JSON.stringify(OSM_CACHE));}catch(e){} }
   if(data.flussCache){ FLUSS_CACHE = data.flussCache; try{localStorage.setItem(FLUSS_CACHE_KEY, JSON.stringify(FLUSS_CACHE));}catch(e){} }
 
@@ -93,6 +106,8 @@ function fsSyncApplyState(data){
   if(document.getElementById("inventar")) renderInventar();
   if(document.getElementById("checkliste")) renderCheckliste();
   if(typeof renderFaengeTop === "function" && document.getElementById("faenge-top")) renderFaengeTop();
+  if(document.getElementById("ergebnis") && fischSel.value) berechne();
+  if(document.getElementById("wochenende") && typeof renderWochenende === "function") renderWochenende();
   if(typeof fsMap !== "undefined" && fsMap){
     fsRenderMarkers();
     if(typeof fsRenderOsmMarkers === "function") fsRenderOsmMarkers();
@@ -261,6 +276,65 @@ function montageHTML(montage){
     <div class="chain">${glieder}</div></div>`;
 }
 
+function packlisteHTML(fisch, ansatz){
+  if(!ansatz.setup || !AKTUELL[ansatz.setup]) return ""; // nur packen, was du wirklich besitzt
+  const prefix = fisch.id + "__" + ansatz.methode;
+  const s = AKTUELL[ansatz.setup];
+  const items = [{ key: prefix + "::setup", label: `${s.name} (Rute + Rolle)` }];
+  (ansatz.montage || []).forEach(m => items.push({ key: prefix + "::" + m.k, label: `${m.k}: ${m.v}` }));
+
+  const done = items.filter(it => PACKLISTE[it.key]).length;
+  const rows = items.map(it => {
+    const ok = !!PACKLISTE[it.key];
+    return `<div class="pack-item ${ok ? "have manuell" : "miss"} clickable" data-pack="${escAttr(it.key)}" role="button" tabindex="0">
+      <span class="chk-box">${ok ? "✅" : "⬜"}</span>
+      <div class="chk-txt"><div class="chk-name">${it.label}</div></div>
+    </div>`;
+  }).join("");
+
+  return `<details class="pack-details">
+    <summary>🎒 Packliste zum Vorbereiten <span class="pack-count">(${done}/${items.length})</span></summary>
+    <div class="chk-list pack-list">${rows}</div>
+    <button class="reset-btn" type="button" data-pack-reset="${escAttr(prefix)}">↺ Diese Packliste zurücksetzen</button>
+  </details>`;
+}
+
+// Klick auf eine Packlisten-Position → abhaken, ohne die ganze Karte neu zu rendern
+// (sonst würde ein offenes <details> beim Abhaken sofort wieder zuklappen).
+function togglePack(el){
+  const key = el.dataset.pack;
+  if(PACKLISTE[key]) delete PACKLISTE[key]; else PACKLISTE[key] = true;
+  speicherePackliste();
+  const ok = !!PACKLISTE[key];
+  el.classList.toggle("have", ok);
+  el.classList.toggle("manuell", ok);
+  el.classList.toggle("miss", !ok);
+  el.querySelector(".chk-box").textContent = ok ? "✅" : "⬜";
+  const details = el.closest(".pack-details");
+  if(details){
+    const all = details.querySelectorAll(".pack-item");
+    const doneNow = details.querySelectorAll(".pack-item.have").length;
+    details.querySelector(".pack-count").textContent = `(${doneNow}/${all.length})`;
+  }
+}
+document.addEventListener("click", (e) => {
+  const item = e.target.closest(".pack-item.clickable");
+  if(item && item.dataset.pack){ togglePack(item); return; }
+  const resetBtn = e.target.closest("[data-pack-reset]");
+  if(resetBtn){
+    const prefix = resetBtn.dataset.packReset;
+    Object.keys(PACKLISTE).forEach(k => { if(k.startsWith(prefix + "::")) delete PACKLISTE[k]; });
+    speicherePackliste();
+    if(fischSel.value) berechne();
+    if(typeof renderWochenende === "function" && document.getElementById("wochenende")) renderWochenende();
+  }
+});
+document.addEventListener("keydown", (e) => {
+  if(e.key !== "Enter" && e.key !== " ") return;
+  const item = e.target.closest && e.target.closest(".pack-item.clickable");
+  if(item && item.dataset.pack){ e.preventDefault(); togglePack(item); }
+});
+
 function linksHTML(links){
   if(!links || links.length === 0) return "";
   const items = links.map(l => `<a class="shop-link" href="${l.url}" target="_blank" rel="noopener noreferrer">🔗 ${l.label}</a>`).join("");
@@ -348,6 +422,7 @@ function ansatzHTML(a, fisch){
     body += setupLineHTML(a.setup);
   }
   body += montageHTML(a.montage);
+  body += packlisteHTML(fisch, a);
   body += knotenEmpfehlungHTML(a);
   if(a.tipp){
     body += `<div class="tipp"><h4>💡 Tipp</h4><p>${a.tipp}</p></div>`;
@@ -2045,6 +2120,57 @@ function renderKnoten(){
   el.innerHTML = html;
 }
 
+/* ---------- Wochenend-Planer ----------
+   Zeigt vordefinierte Vorhaben (data.js: VORHABEN) – aufklappen zeigt Setup,
+   Montage und eine abhakbare Packliste, aus denselben Ansätzen wie im Berater
+   (ansatzHTML wird 1:1 wiederverwendet, keine doppelte Logik). ---------- */
+let wochenendeOffenId = null;
+function renderWochenende(){
+  const el = document.getElementById("wochenende");
+  if(!el) return;
+
+  let html = `<div class="k-intro card">
+    <h2>🎒 Wochenend-Planer</h2>
+    <p>Wähl aus, was du vorhast – du bekommst das passende Setup, die Montage und eine abhakbare Packliste zum Vorbereiten. So kannst du zu Hause alles fertig machen und vor Ort direkt loslegen.</p>
+  </div>`;
+
+  html += VORHABEN.map(v => {
+    const offen = wochenendeOffenId === v.id;
+    let inner = "";
+    if(offen){
+      inner = v.einsaetze.map(e => {
+        const fisch = FISCHE.find(f => f.id === e.fischId);
+        const ansatz = fisch && fisch.ansaetze.find(a => a.methode === e.methode);
+        if(!fisch || !ansatz) return "";
+        return `<div class="vorhaben-fisch-tag">${fisch.emoji} ${fisch.name}</div>` + ansatzHTML(ansatz, fisch);
+      }).join("");
+    }
+    return `<article class="vorhaben card">
+      <button type="button" class="vorhaben-head" data-vorhaben="${v.id}">
+        <span class="ve">${v.emoji}</span>
+        <div class="vorhaben-txt"><h3>${v.name}</h3><p class="vorhaben-desc">${v.beschreibung}</p></div>
+        <span class="vorhaben-chevron">${offen ? "▾" : "▸"}</span>
+      </button>
+      ${offen ? `<div class="vorhaben-body">${inner}</div>` : ""}
+    </article>`;
+  }).join("");
+
+  el.innerHTML = html;
+}
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-vorhaben]");
+  if(!btn) return;
+  const id = btn.dataset.vorhaben;
+  wochenendeOffenId = wochenendeOffenId === id ? null : id;
+  renderWochenende();
+  if(wochenendeOffenId){
+    requestAnimationFrame(() => {
+      const card = document.querySelector(`[data-vorhaben="${id}"]`);
+      if(card) card.scrollIntoView({behavior:"smooth", block:"start"});
+    });
+  }
+});
+
 /* Zu einem Knoten springen (aus dem Berater heraus) */
 function zeigeKnoten(id){
   document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
@@ -2083,3 +2209,4 @@ renderCheckliste();
 renderTagescheck();
 renderFaengeTop();
 renderSaison();
+renderWochenende();
