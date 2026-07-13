@@ -40,6 +40,7 @@ body{
 .tab{
   background:transparent;border:1px solid var(--line);color:var(--muted);
   padding:8px 16px;border-radius:999px;cursor:pointer;font-size:14px;font-weight:600;transition:.15s;
+  white-space:nowrap;flex:none;
 }
 .tab:hover{color:var(--text);border-color:var(--accent)}
 .tab.active{background:var(--accent);color:#062018;border-color:var(--accent)}
@@ -475,8 +476,22 @@ select:focus{outline:none;border-color:var(--accent)}
 .fs-toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:11px 22px;border-radius:999px;font-size:13.5px;z-index:9999;opacity:0;pointer-events:none;transition:opacity .25s}
 .fs-toast.show{opacity:1}
 
+@media (max-width:700px){
+  .topbar{padding:14px;gap:10px}
+  .tabs{
+    width:100%;order:3;overflow-x:auto;flex-wrap:nowrap;gap:8px;
+    margin:0 -14px;padding:2px 14px 6px;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    mask-image:linear-gradient(to right,transparent,black 14px,black calc(100% - 14px),transparent);
+    -webkit-mask-image:linear-gradient(to right,transparent,black 14px,black calc(100% - 14px),transparent);
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:8px 14px;font-size:13.5px}
+  .brand{order:1}
+  .sync-status{order:2;margin-left:auto}
+}
+
 @media (max-width:560px){
   .go{width:100%}
-  .topbar{padding:14px}
   #fs-map{height:60vh;min-height:380px;max-height:520px}
 }
