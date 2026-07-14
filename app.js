@@ -1008,7 +1008,7 @@ async function tagescheckLadeWetter(){
     const vortag = new Date(datum + "T12:00:00");
     vortag.setDate(vortag.getDate() - 1);
     const startDatum = vortag.toISOString().slice(0,10);
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${ort.lat}&longitude=${ort.lng}&hourly=surface_pressure,cloud_cover,wind_speed_10m&start_date=${startDatum}&end_date=${datum}&timezone=Europe%2FBerlin`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${ort.lat}&longitude=${ort.lng}&hourly=surface_pressure,cloud_cover,wind_speed_10m,precipitation_probability&start_date=${startDatum}&end_date=${datum}&timezone=Europe%2FBerlin`;
     const res = await fetch(url);
     if(!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
@@ -1021,17 +1021,20 @@ async function tagescheckLadeWetter(){
     const druckJetzt = data.hourly.surface_pressure[zielIndex];
     const druckVorher = data.hourly.surface_pressure[vorherIndex];
     const wolken = data.hourly.cloud_cover[zielIndex];
+    const regenWahrsch = data.hourly.precipitation_probability[zielIndex];
     const wind = data.hourly.wind_speed_10m[zielIndex];
 
     const druckDelta = druckJetzt - druckVorher;
     const druckWert = druckDelta < -0.5 ? "fallend" : (druckDelta > 0.5 ? "steigend" : "stabil");
     const himmelWert = wolken > 70 ? "bedeckt" : (wolken < 30 ? "klar" : "wechselhaft");
     const windWert = wind > 50 ? "sturm" : (wind > 30 ? "kraeftig" : (wind > 10 ? "leicht" : "still"));
+    const regenWert = regenWahrsch > 60 ? "stark" : (regenWahrsch > 20 ? "leicht" : "kaum");
 
     $("#tc-druck").value = druckWert;
     $("#tc-himmel").value = himmelWert;
     $("#tc-wind").value = windWert;
-    status.innerHTML = `✅ Wetter für ${escAttr(ort.name)}, ${String(stunde).padStart(2,"0")}:00 Uhr geladen: ${druckJetzt.toFixed(0)} hPa (${druckWert}), ${wolken.toFixed(0)}% Wolken, ${wind.toFixed(0)} km/h Wind. <i>Passt das nicht zu dem, was du vor Ort siehst? Einfach oben von Hand korrigieren.</i>`;
+    $("#tc-regen").value = regenWert;
+    status.innerHTML = `✅ Wetter für ${escAttr(ort.name)}, ${String(stunde).padStart(2,"0")}:00 Uhr geladen: ${druckJetzt.toFixed(0)} hPa (${druckWert}), ${wolken.toFixed(0)}% Wolken, ${wind.toFixed(0)} km/h Wind, ${regenWahrsch.toFixed(0)}% Regenwahrscheinlichkeit. <i>Passt das nicht zu dem, was du vor Ort siehst? Einfach oben von Hand korrigieren.</i>`;
     tagescheckBerechnen();
   } catch(err){
     status.textContent = `⚠️ Wetterdaten konnten nicht geladen werden (${err.message}). Bitte manuell eintragen.`;
@@ -1084,6 +1087,11 @@ function renderTagescheck(){
         <option value="kraeftig">Kräftiger Wind</option>
         <option value="sturm">Sturm</option>
       </select></div>
+      <div class="field"><label>Niederschlag</label><select id="tc-regen">
+        <option value="kaum">Kaum/kein Regen</option>
+        <option value="leicht">Leichter Regen möglich</option>
+        <option value="stark">Starker Regen/Gewitter</option>
+      </select></div>
     </div>
     <button type="button" class="add-btn" id="tc-wetter-btn" style="margin-top:12px">🌤️ Wetter automatisch laden</button>
     <div id="tc-wetter-status" class="k-hint" style="margin-top:8px"></div>
@@ -1091,7 +1099,7 @@ function renderTagescheck(){
   <div id="tc-gezeiten-result"></div>
   <div id="tc-result"></div>`;
 
-  ["tc-fisch","tc-datum","tc-zeit","tc-druck","tc-himmel","tc-wind"].forEach(id => {
+  ["tc-fisch","tc-datum","tc-zeit","tc-druck","tc-himmel","tc-wind","tc-regen"].forEach(id => {
     document.getElementById(id).addEventListener("change", tagescheckBerechnen);
   });
   ["tc-datum","tc-gezeiten-ort"].forEach(id => {
@@ -1111,6 +1119,7 @@ function tagescheckBerechnen(){
   const druck = $("#tc-druck").value;
   const himmel = $("#tc-himmel").value;
   const wind = $("#tc-wind").value;
+  const regen = $("#tc-regen").value;
 
   const fisch = fischId ? FISCHE.find(f => f.id === fischId) : null;
   const hint = fischId ? (TAGESCHECK_HINT[fischId] || {}) : {};
@@ -1143,6 +1152,10 @@ function tagescheckBerechnen(){
   if(wind === "leicht"){ score += 1; gruende.push(["+1","Leichte Brise kräuselt die Oberfläche – Fische werden weniger vorsichtig."]); }
   else if(wind === "kraeftig"){ score -= 1; gruende.push(["−1","Kräftiger Wind erschwert Wurf & Bisserkennung."]); }
   else if(wind === "sturm"){ score -= 2; gruende.push(["−2","Sturm ist eher ein Sicherheitsthema als ein Angeltag."]); }
+
+  // Niederschlag
+  if(regen === "leicht"){ gruende.push(["±0","Leichter Regen trübt die Wasseroberfläche und kann manche Fische aktiver machen – kein Ausschlusskriterium."]); }
+  else if(regen === "stark"){ score -= 2; gruende.push(["−2","Starker Regen/Gewitter: schlechte Sicht, unangenehm – und bei Gewitter zusätzlich ein Sicherheitsthema (nicht am offenen Wasser mit langer Rute)."]); }
 
   // Saison
   if(hint.topSaison && hint.topSaison.includes(saison)){
