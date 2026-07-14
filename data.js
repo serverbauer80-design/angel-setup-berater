@@ -84,7 +84,7 @@ const ZUBEHOER = [
   "Zange Amazon Basics 28,5 cm", "Maulspreizer NEUSID Edelstahl", "Seitenschneider KNIPEX 125 mm",
   "Handschuhe Xynovate (bissfest)", "Stahlvorfächer Perca (72 St.)", "Gerätetasche Berkley",
   "Rucksackbox Kogha Premium", "Abhakmatte Kogha Eco", "Köder-Sets Kogha Hecht / Trout Attack",
-  "Spoon-Tasche Zite Fishing"
+  "Spoon-Tasche Zite Fishing", "Rutenhalter Leeko (2 Stück, Edelstahl, 360° verstellbar)"
 ];
 
 /* ---------- 2) WUNSCHLISTE (zukünftige Setups) ---------- */
@@ -110,6 +110,15 @@ const WUNSCH = {
     preis: "ca. 25–50 € (Einsteiger-Kopfrute)",
     dazu: "Keine Extra-Kleinteile nötig – Posen/Haken/Schrotblei von Setup 4 passen 1:1",
     hinweis: "Keine neue Geräteklasse, nur eine kürzere Ergänzung zu Setup 4: für sehr enge Spots (Bäume, schmaler Steg, dichte Ufervegetation), wo Schwingen/Einschieben mit der 7-m-Rute unpraktisch ist."
+  },
+  passivrute: {
+    key: "passivrute", name: "Passive Zweitangel – Method-Feeder/Picker",
+    rute: "Daiwa Aqualite Feeder / Shimano Beastmaster CX Feeder · 3,00–3,60 m · WG 40–80 g · 2–3 Wechselspitzen (Quivertips)",
+    rolle: "Shimano Baitrunner ST 4000 (Freilauf)",
+    schnur: "Monofil 0,25–0,30 mm",
+    preis: "ca. 150–200 € (Rute ~60–90 € + Rolle ~90–110 €)",
+    dazu: "Rutenhalter (vorhanden), optional elektronischer Bissanzeiger",
+    hinweis: "Optimiert fürs passive Ansitzen (z. B. Zweitangel am Forellensee): Wechselspitze zeigt Bisse sichtbar an statt nur die Pose zu beobachten, Freilauf verhindert, dass ein Fisch die Rute von der Halterung zieht. Setup 3 und 7 funktionieren übergangsweise auch passiv, sind aber nicht dafür optimiert. Später auch für leichtes Feedern auf Weißfisch/Karpfen nutzbar (parallel zu Setup 6)."
   },
   pilk: {
     key: "pilk", name: "Hochsee-/Kutter-Setup (Pilken)",
