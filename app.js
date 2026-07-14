@@ -51,6 +51,34 @@ function ladeFaengeDaten(){
 }
 function speichereFaenge(){ try { localStorage.setItem(FAENGE_KEY, JSON.stringify(FAENGE)); } catch(e){} fsSyncPushDebounced(); }
 let FAENGE = ladeFaengeDaten();
+
+/* Nachträglich in data.js ergänzte SPOTS_SEED-Einträge (z. B. neue Gewässer)
+   auch bei bereits bestehenden Nutzern nachladen – per Namensabgleich, damit
+   eigene/bereits vorhandene Spots nicht verändert oder dupliziert werden.
+   Zusätzlich: fünf ursprünglich falsch als "Schleswig-Holstein"/"See" statt
+   "Dänemark"/"Forellensee" eingetragene Spots bei Bestandsnutzern korrigieren. */
+(function migriereSpotsSeed(){
+  if(typeof SPOTS_SEED === "undefined") return;
+  const FALSCH_MARKIERT_DK = new Set([
+    "Arrild Fiskesø", "Rødekro Fiskepark", "Mjøls Lystfiskersø",
+    "Tinglev Sønderby Put & Take", "Oxriver Put & Take"
+  ]);
+  let geaendert = false;
+  FAENGE.spots.forEach(s => {
+    if(FALSCH_MARKIERT_DK.has(s.name) && (s.region !== "dk" || s.type !== "forellensee")){
+      s.region = "dk"; s.type = "forellensee"; geaendert = true;
+    }
+  });
+  const bekannteNamen = new Set(FAENGE.spots.map(s => s.name));
+  SPOTS_SEED.forEach(s => {
+    if(bekannteNamen.has(s.name)) return;
+    FAENGE.spots.push({ ...s, id: genId(), rating: 0, visited: false, created: new Date().toISOString() });
+    bekannteNamen.add(s.name);
+    geaendert = true;
+  });
+  if(geaendert) speichereFaenge();
+})();
+
 speichereFaenge();
 
 /* ---------- Wartungserinnerung (Setup-Pflege, im Browser gespeichert) ---------- */
