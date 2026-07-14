@@ -306,6 +306,8 @@ select:focus{outline:none;border-color:var(--accent)}
 .pack-item.miss .chk-box{opacity:.55}
 .pack-item:hover{background:rgba(51,195,166,.1)}
 .pack-item:focus{outline:2px solid var(--accent);outline-offset:-2px}
+.pack-subhead{display:flex;align-items:center;gap:8px;margin-top:16px;padding:10px 4px 2px;font-weight:700;font-size:14px;border-top:1px solid var(--line)}
+.pack-subhint{margin:0 4px 6px;font-size:12.5px;color:var(--muted)}
 
 /* ---------- Recht SH ---------- */
 .recht-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px}

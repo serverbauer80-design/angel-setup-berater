@@ -276,6 +276,20 @@ function montageHTML(montage){
     <div class="chain">${glieder}</div></div>`;
 }
 
+// Alle "pflicht"-Positionen aus der Zubehör-Checkliste, dedupliziert – dieselbe
+// Quelle (ZUBEHOER_CHECK) und derselbe Speicher (MANUELL) wie im Tab "Zubehör-Check",
+// damit ein Häkchen hier auch dort (und umgekehrt) übernommen wird.
+function pflichtZubehoerListe(){
+  const gesehen = new Set();
+  const liste = [];
+  ZUBEHOER_CHECK.forEach(k => k.items.forEach(it => {
+    if(it.stufe !== "pflicht" || gesehen.has(it.name)) return;
+    gesehen.add(it.name);
+    liste.push(it);
+  }));
+  return liste;
+}
+
 function packlisteHTML(fisch, ansatz){
   if(!ansatz.setup || !AKTUELL[ansatz.setup]) return ""; // nur packen, was du wirklich besitzt
   const prefix = fisch.id + "__" + ansatz.methode;
@@ -292,10 +306,28 @@ function packlisteHTML(fisch, ansatz){
     </div>`;
   }).join("");
 
+  const bestand = besitzText();
+  const pflicht = pflichtZubehoerListe();
+  const pflichtOffen = pflicht.filter(it => !(besitztAuto(it, bestand) || MANUELL[it.name] === true)).length;
+  const pflichtRows = pflicht.map(it => {
+    const auto = besitztAuto(it, bestand);
+    const man = MANUELL[it.name] === true;
+    const ok = auto || man;
+    const cls = auto ? "have auto" : (man ? "have manuell clickable" : "miss clickable");
+    const tag = auto ? `<span class="stufe have-tag">aus Inventar</span>` : (man ? `<span class="stufe have-tag">abgehakt ✓</span>` : "");
+    return `<div class="chk-item ${cls}" ${auto ? "" : `data-item="${escAttr(it.name)}"`} ${auto ? "" : 'role="button" tabindex="0"'}>
+      <span class="chk-box">${ok ? "✅" : "⬜"}</span>
+      <div class="chk-txt"><div class="chk-name">${it.name} ${tag}</div></div>
+    </div>`;
+  }).join("");
+
   return `<details class="pack-details">
     <summary>🎒 Packliste zum Vorbereiten <span class="pack-count">(${done}/${items.length})</span></summary>
     <div class="chk-list pack-list">${rows}</div>
     <button class="reset-btn" type="button" data-pack-reset="${escAttr(prefix)}">↺ Diese Packliste zurücksetzen</button>
+    <div class="pack-subhead">📄 Pflicht-Ausrüstung <span class="pack-count">(${pflicht.length - pflichtOffen}/${pflicht.length})</span></div>
+    <p class="pack-subhint">Aus der Zubehör-Checkliste – ein Häkchen gilt überall, auch im Tab „Zubehör-Check".</p>
+    <div class="chk-list pack-list">${pflichtRows}</div>
   </details>`;
 }
 
@@ -811,7 +843,27 @@ function toggleCheck(name){
   if(MANUELL[name]) delete MANUELL[name];
   else MANUELL[name] = true;
   speichereManuell(MANUELL);
-  renderCheckliste();
+  if(document.getElementById("checkliste")) renderCheckliste();
+  // Dieselbe Position kann gleichzeitig in einer offenen Packliste stehen (Wochenende/
+  // Berater) – dort nicht die ganze Karte neu rendern (würde <details> zuklappen),
+  // sondern nur die betroffenen Zeilen optisch nachziehen.
+  const ok = MANUELL[name] === true;
+  document.querySelectorAll(`.pack-list .chk-item[data-item="${name.replace(/"/g,'\\"')}"]`).forEach(el => {
+    el.classList.toggle("have", ok);
+    el.classList.toggle("manuell", ok);
+    el.classList.toggle("miss", !ok);
+    const box = el.querySelector(".chk-box");
+    if(box) box.textContent = ok ? "✅" : "⬜";
+    const tag = el.querySelector(".have-tag");
+    if(tag) tag.textContent = ok ? "abgehakt ✓" : "";
+    const details = el.closest(".pack-details");
+    if(details){
+      const list = details.querySelectorAll(".pack-subhead ~ .pack-list .chk-item");
+      const doneNow = details.querySelectorAll(".pack-subhead ~ .pack-list .chk-item.have").length;
+      const subCount = details.querySelector(".pack-subhead .pack-count");
+      if(subCount) subCount.textContent = `(${doneNow}/${list.length})`;
+    }
+  });
 }
 document.addEventListener("click", (e) => {
   const item = e.target.closest(".chk-item.clickable");
