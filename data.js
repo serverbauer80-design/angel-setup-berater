@@ -41,10 +41,10 @@ const AKTUELL = {
     name: "Setup 4 – Stippe (Weißfisch)",
     rute: "Shimano Hyperloop 7,00 m · 7 Segmente",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
-    schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet",
+    schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1,5–2 m (deutlich kürzer als die 7 m Rute – zum Reinschwingen des Fischs)",
     vorfach: "optional: kleine Wirbel (Gr. 16–18) falls gewünscht",
     extra: "Posen 1–3 g, Haken Gr. 16–18, Schrotblei gemischt, Made/Wurm",
-    einsatz: "Feines Stippen auf Rotauge, Schleie, Brasse an Eider, NOK, See – sehr entspannt, maximale Feinfühligkeit."
+    einsatz: "Feines Stippen auf Rotauge, Schleie, Brasse an Eider, NOK, See – sehr entspannt, maximale Feinfühligkeit. Fisch landen: Rute im Bogen zu dir heranschwingen, bei wenig Platz stattdessen Segmente einschieben."
   },
   setup5: {
     key: "setup5",
@@ -373,12 +373,12 @@ const FISCHE = [
         methode:"Stippen an der Krautkante", status:"machbar", setup:"setup4",
         gewaesser:["see","nok"],
         montage:[
-          {k:"Feste Vorfachschnur", v:"0,10–0,14 mm, am Gummizug"},
+          {k:"Feste Vorfachschnur", v:"0,10–0,14 mm, am Gummizug, Länge ca. 1,5–2 m (kürzer als die Rute – zum Reinschwingen)"},
           {k:"Pose", v:"feine Stipp-Pose 1–3 g"},
           {k:"Schrotblei", v:"aufgeteilt, fein ausgebleit"},
           {k:"Haken", v:"Gr. 8–12 · Wurm/Mais/Made"}
         ],
-        tipp:"Genau der Einsatzzweck von Setup 4 (Stippe) – maximale Feinfühligkeit direkt an der Krautkante, aufsteigende Blasen verraten die Fressstelle."
+        tipp:"Genau der Einsatzzweck von Setup 4 (Stippe) – maximale Feinfühligkeit direkt an der Krautkante, aufsteigende Blasen verraten die Fressstelle. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen (Bäume/Steg)? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
       }
     ]
   },
@@ -391,12 +391,12 @@ const FISCHE = [
         methode:"Stippen (Posenangeln)", status:"machbar", setup:"setup4",
         gewaesser:["eider","nok","see","elbe"],
         montage:[
-          {k:"Feste Vorfachschnur", v:"0,10–0,14 mm, am Gummizug"},
+          {k:"Feste Vorfachschnur", v:"0,10–0,14 mm, am Gummizug, Länge ca. 1,5–2 m (kürzer als die Rute – zum Reinschwingen)"},
           {k:"Pose", v:"1–3 g je nach Strömung"},
           {k:"Schrotblei", v:"fein ausgebleit, ein Fühlerblei am Grund"},
           {k:"Haken", v:"Gr. 14–18 · Made/Mais/Teig"}
         ],
-        tipp:"Klassischer Fall für Setup 4 (Stippe) – entspanntes Posenangeln mit maximaler Feinfühligkeit."
+        tipp:"Klassischer Fall für Setup 4 (Stippe) – entspanntes Posenangeln mit maximaler Feinfühligkeit. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
       },
       {
         methode:"Grund-/Feederangeln (weitere Distanz)", status:"machbar", setup:"setup6",
