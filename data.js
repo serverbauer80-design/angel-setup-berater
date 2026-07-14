@@ -93,6 +93,14 @@ const WUNSCH = {
     preis: "ca. 250–400 € gehoben (Einsteiger ca. 60–100 €)",
     dazu: "Posen-Sortiment 2–8 g, feine Haken Gr. 14–18, Made/Wurm"
   },
+  kompaktstippe: {
+    key: "kompaktstippe", name: "Kompakt-Stippe 3–4 m (enge Spots)",
+    rute: "Günstige Teleskop-Kopfrute 3,00–4,00 m (z. B. Shimano/Browning Einsteigerklasse)", rolle: "keine Rolle nötig – wie Setup 4",
+    schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug – Montage ca. 1–1,5 m",
+    preis: "ca. 25–50 € (Einsteiger-Kopfrute)",
+    dazu: "Keine Extra-Kleinteile nötig – Posen/Haken/Schrotblei von Setup 4 passen 1:1",
+    hinweis: "Keine neue Geräteklasse, nur eine kürzere Ergänzung zu Setup 4: für sehr enge Spots (Bäume, schmaler Steg, dichte Ufervegetation), wo Schwingen/Einschieben mit der 7-m-Rute unpraktisch ist."
+  },
   pilk: {
     key: "pilk", name: "Hochsee-/Kutter-Setup (Pilken)",
     rute: "WFT Never Crack Senso Pilk 2,70 m, WG 50–160 g", rolle: "Shimano Speedmaster/Daiwa Saltist (Multi) oder 6000–8000er Stationär",
@@ -973,6 +981,69 @@ const VORHABEN = [
     einsaetze:[
       {fischId:"meerforelle", methode:"Küstenspinnen – Blinker/Küstenwobbler"},
       {fischId:"hornhecht", methode:"Küstenspinnen – kleiner Blinker (mit Wollfaden)"}
+    ]
+  },
+  {
+    id:"rapfen-jagd", name:"Rapfen-Jagd an der Oberfläche", emoji:"🐡",
+    beschreibung:"Weite, schnelle Würfe an Strömungskanten & Buhnen, wenn der Rapfenschlag zu sehen ist.",
+    einsaetze:[
+      {fischId:"rapfen", methode:"Spinnfischen – weite Würfe, schnelle Führung"}
+    ]
+  },
+  {
+    id:"doebel-spinnen", name:"Döbel am Fließwasser", emoji:"🐟",
+    beschreibung:"Leichtes Spinnen auf scheue Döbel knapp unter der Oberfläche.",
+    einsaetze:[
+      {fischId:"doebel", methode:"Leichtes Spinnen auf große Döbel"}
+    ]
+  },
+  {
+    id:"nachtansitz-aal", name:"Nachtansitz auf Aal", emoji:"🐍",
+    beschreibung:"Grundangeln auf Tauwurm in warmen Sommernächten – Geduld und Bissanzeiger.",
+    einsaetze:[
+      {fischId:"aal", methode:"Grundangeln – Tauwurm (Nachtansitz)"}
+    ]
+  },
+  {
+    id:"winter-quappe", name:"Winter-Ansitz auf Quappe", emoji:"🐟",
+    beschreibung:"Kalte, dunkle Nächte (Nov–Feb) – Grundangeln auf den einzigen heimischen Dorschartigen im Süßwasser.",
+    einsaetze:[
+      {fischId:"quappe", methode:"Grundangeln – Fisch-/Wurmköder (Winternacht)"}
+    ]
+  },
+  {
+    id:"hering-mole", name:"Heringssaison von der Mole", emoji:"🐟",
+    beschreibung:"Frühjahr/Herbst mit Mehrhaken-Paternoster von Molen und Häfen.",
+    einsaetze:[
+      {fischId:"hering", methode:"Heringspaternoster von der Mole"}
+    ]
+  },
+  {
+    id:"wolfsbarsch-kueste", name:"Wolfsbarsch-Spinnen an der Küste", emoji:"🐟",
+    beschreibung:"Aktives Spinnfischen an Molen, Stränden und im Brackwasser der Eider.",
+    einsaetze:[
+      {fischId:"wolfsbarsch", methode:"Spinnfischen an der Küste"}
+    ]
+  },
+  {
+    id:"wels-ansitz", name:"Wels-Ansitz (noch nicht ausgerüstet)", emoji:"🐋",
+    beschreibung:"Europas größter Süßwasserfisch – braucht kräftiges Spezialgerät, das du aktuell noch nicht hast.",
+    einsaetze:[
+      {fischId:"wels", methode:"Ansitz – Köderfisch/Tauwurmbündel"}
+    ]
+  },
+  {
+    id:"kutter-pilken", name:"Pilken vom Kutter (noch nicht ausgerüstet)", emoji:"🐟",
+    beschreibung:"Senkrecht gepilkter Dorsch auf hoher See – braucht eine kompakte Pilkrute, die du aktuell noch nicht hast.",
+    einsaetze:[
+      {fischId:"dorsch", methode:"Pilken vom Kutter"}
+    ]
+  },
+  {
+    id:"brandung-flunder", name:"Brandungsangeln auf Flunder (noch nicht ausgerüstet)", emoji:"🐟",
+    beschreibung:"Grundmontage mit Wattwurm an Ost-/Nordseestrand – braucht Brandungsrute + Weitwurfrolle, die du aktuell noch nicht hast.",
+    einsaetze:[
+      {fischId:"flunder", methode:"Brandungsangeln – Grundmontage mit Wattwurm"}
     ]
   }
 ];
