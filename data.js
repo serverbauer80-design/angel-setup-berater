@@ -89,7 +89,8 @@ const ZUBEHOER = [
   "Forellenköder Trout Master Master Worm (UV-aktiv, 2 Farben)", "Spoons Forelle Set (16 Stück, 2,5/3,5/5 g)",
   "Schrotblei-Set Paradox Fishing (0,25–2,0 g)", "Forellenteigformer Angel-Berger Doppel-Baitformer 2in1",
   "Zangen-Set Amazon Basics (3 Stück, lange Reichweite)", "Hakenlöser Zite Fishing (18 cm, gebogen)",
-  "Hakenlöser-Set Paradox Fishing (3er Set)", "Rutenbänder Fentar (12 Stück, mit Klettband)"
+  "Hakenlöser-Set Paradox Fishing (3er Set)", "Rutenbänder Fentar (12 Stück, mit Klettband)",
+  "Fiskars Universalmesser K40 (mit Köcher, 22,5 cm)"
 ];
 
 /* ---------- 2) WUNSCHLISTE (zukünftige Setups) ---------- */
