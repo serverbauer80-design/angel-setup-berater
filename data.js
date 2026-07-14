@@ -84,7 +84,12 @@ const ZUBEHOER = [
   "Zange Amazon Basics 28,5 cm", "Maulspreizer NEUSID Edelstahl", "Seitenschneider KNIPEX 125 mm",
   "Handschuhe Xynovate (bissfest)", "Stahlvorfächer Perca (72 St.)", "Gerätetasche Berkley",
   "Rucksackbox Kogha Premium", "Abhakmatte Kogha Eco", "Köder-Sets Kogha Hecht / Trout Attack",
-  "Spoon-Tasche Zite Fishing", "Rutenhalter Leeko (2 Stück, Edelstahl, 360° verstellbar)"
+  "Spoon-Tasche Zite Fishing", "Rutenhalter Leeko (2 Stück, Edelstahl, 360° verstellbar)",
+  "Schnurstopper Paradox Fishing (Silikon, 3 Größen S/M/L)", "Gummiperlen Paradox Fishing (200 Stück, 3–8 mm)",
+  "Forellenköder Trout Master Master Worm (UV-aktiv, 2 Farben)", "Spoons Forelle Set (16 Stück, 2,5/3,5/5 g)",
+  "Schrotblei-Set Paradox Fishing (0,25–2,0 g)", "Forellenteigformer Angel-Berger Doppel-Baitformer 2in1",
+  "Zangen-Set Amazon Basics (3 Stück, lange Reichweite)", "Hakenlöser Zite Fishing (18 cm, gebogen)",
+  "Hakenlöser-Set Paradox Fishing (3er Set)", "Rutenbänder Fentar (12 Stück, mit Klettband)"
 ];
 
 /* ---------- 2) WUNSCHLISTE (zukünftige Setups) ---------- */
