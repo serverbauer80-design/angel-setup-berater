@@ -582,6 +582,8 @@ function renderInventar(){
       <div class="row"><span class="k">Schnur</span><span>${s.schnur}</span></div>
       <div class="row"><span class="k">Vorfach</span><span>${s.vorfach}</span></div>
       <div class="row"><span class="k">Extra</span><span>${s.extra}</span></div>
+      ${s.einsatz ? `<div class="row"><span class="k">Einsatz</span><span>${s.einsatz}</span></div>` : ""}
+      ${s.tippKompakt ? `<div class="tipp"><h4>💡 Tipp</h4><p>${s.tippKompakt}</p></div>` : ""}
       <div class="wartung-box${faellig ? " faellig" : ""}">
         <span>🔧 ${letzteWartung ? `Zuletzt gewartet: ${letzteWartung} (vor ${tage} Tagen)` : "Noch keine Wartung eingetragen"}</span>
         <button type="button" class="fs-chip" data-wartung="${s.key}">Heute gewartet</button>

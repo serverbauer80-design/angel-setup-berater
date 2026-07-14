@@ -44,7 +44,8 @@ const AKTUELL = {
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1,5–2 m (deutlich kürzer als die 7 m Rute – zum Reinschwingen des Fischs)",
     vorfach: "optional: kleine Wirbel (Gr. 16–18) falls gewünscht",
     extra: "Posen 1–3 g, Haken Gr. 16–18, Schrotblei gemischt, Made/Wurm",
-    einsatz: "Feines Stippen auf Rotauge, Schleie, Brasse an Eider, NOK, See – sehr entspannt, maximale Feinfühligkeit. Fisch landen: Rute im Bogen zu dir heranschwingen, bei wenig Platz stattdessen Segmente einschieben."
+    einsatz: "Feines Stippen auf Rotauge, Schleie, Brasse an Eider, NOK, See – sehr entspannt, maximale Feinfühligkeit. Fisch landen: Rute im Bogen zu dir heranschwingen, bei wenig Platz stattdessen Segmente einschieben.",
+    tippKompakt: "Bei sehr engen Spots (Bäume, schmaler Steg, dichte Ufervegetation) ist eine kurze 3–4 m Kompakt-Stippe die entspanntere Alternative zur 7-m-Rute: kein Schwingen/Einschieben nötig, die Spitze bleibt praktisch immer in Reichweite. Dafür deutlich weniger Reichweite – nur für nahes Ufer-Fischen, nicht über Schilf/Seerosen hinweg."
   },
   setup5: {
     key: "setup5",
