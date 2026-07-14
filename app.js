@@ -928,6 +928,62 @@ function jahreszeitVonMonat(m){
   return "Herbst";
 }
 
+/* ---------- Echter Gezeiten-Rechner (worldtides.info) ----------
+   Der API-Key ist zwangsläufig im öffentlichen Quellcode sichtbar (statische
+   Seite, kein Backend) - bewusste Nutzer-Entscheidung, da nur die kostenlose
+   Stufe genutzt wird. Bei Missbrauch/Kontingent-Erschöpfung kann der Key auf
+   worldtides.info jederzeit neu generiert werden. */
+const WORLDTIDES_KEY = "eab6216f-7a71-4cc8-aa13-92ca98e77b87";
+const GEZEITEN_ORTE = [
+  { id:"ostsee_sh", name:"Ostsee SH (Kiel/Eckernförde)", lat:54.47, lng:10.18 },
+  { id:"nordsee_sh", name:"Nordsee SH (St. Peter-Ording)", lat:54.30, lng:8.63 },
+  { id:"eider", name:"Eider-Mündung (Tönning)", lat:54.31, lng:8.90 },
+  { id:"hvidesande", name:"Hvide Sande (Dänemark)", lat:56.0011, lng:8.1281 },
+  { id:"blaavand", name:"Blåvand (Dänemark)", lat:55.56, lng:8.12 },
+  { id:"soendervig", name:"Søndervig (Dänemark)", lat:56.09, lng:8.15 }
+];
+const gezeitenCache = {};
+async function ladeGezeiten(ort, datum){
+  const cacheKey = ort.id + "_" + datum;
+  if(gezeitenCache[cacheKey]) return gezeitenCache[cacheKey];
+  const url = `https://www.worldtides.info/api/v3?extremes&date=${datum}&days=1&lat=${ort.lat}&lon=${ort.lng}&key=${WORLDTIDES_KEY}`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  if(data.status !== 200) throw new Error(data.error || ("Status " + data.status));
+  gezeitenCache[cacheKey] = data.extremes || [];
+  return gezeitenCache[cacheKey];
+}
+async function tagescheckLadeGezeiten(){
+  const ortId = $("#tc-gezeiten-ort").value;
+  const container = $("#tc-gezeiten-result");
+  if(!container) return;
+  if(!ortId){ container.innerHTML = ""; return; }
+  const ort = GEZEITEN_ORTE.find(o => o.id === ortId);
+  const datum = $("#tc-datum").value || heuteISO();
+  container.innerHTML = `<div class="card fs-stats-block"><p class="k-hint">⏳ Lade Gezeiten für ${escAttr(ort.name)} …</p></div>`;
+  try {
+    const extremes = await ladeGezeiten(ort, datum);
+    if(!extremes || extremes.length === 0){
+      container.innerHTML = `<div class="card fs-stats-block"><p class="k-hint">Keine Gezeitendaten für dieses Datum gefunden.</p></div>`;
+      return;
+    }
+    const rows = extremes.map(e => {
+      const t = new Date(e.date);
+      const zeit = t.toLocaleTimeString("de-DE", { hour:"2-digit", minute:"2-digit", timeZone:"Europe/Berlin" });
+      const label = e.type === "High" ? "🔼 Hochwasser" : "🔽 Niedrigwasser";
+      return `<div class="row"><span>${label}</span><span>${zeit} Uhr</span></div>`;
+    }).join("");
+    container.innerHTML = `<div class="card fs-stats-block">
+      <h3>🌊 Gezeiten – ${escAttr(ort.name)}</h3>
+      ${rows}
+      <p class="k-hint" style="margin-top:8px">Zeiten in Ortszeit (Europe/Berlin) · Daten von worldtides.info</p>
+    </div>`;
+  } catch(err){
+    container.innerHTML = `<div class="card fs-stats-block"><p class="k-hint">⚠️ Gezeiten konnten nicht geladen werden (${escAttr(err.message)}). Internetverbindung oder API-Kontingent prüfen.</p></div>`;
+  }
+}
+
 function renderTagescheck(){
   const el = $("#tagescheck");
   const heute = new Date();
@@ -970,12 +1026,20 @@ function renderTagescheck(){
         <option value="kraeftig">Kräftiger Wind</option>
         <option value="sturm">Sturm</option>
       </select></div>
+      <div class="field"><label>Gezeiten für Küstenort (optional)</label><select id="tc-gezeiten-ort">
+        <option value="">– kein Küstenangeln –</option>
+        ${GEZEITEN_ORTE.map(o => `<option value="${o.id}">${o.name}</option>`).join("")}
+      </select></div>
     </div>
   </div>
+  <div id="tc-gezeiten-result"></div>
   <div id="tc-result"></div>`;
 
   ["tc-fisch","tc-datum","tc-zeit","tc-druck","tc-himmel","tc-wind"].forEach(id => {
     document.getElementById(id).addEventListener("change", tagescheckBerechnen);
+  });
+  ["tc-datum","tc-gezeiten-ort"].forEach(id => {
+    document.getElementById(id).addEventListener("change", tagescheckLadeGezeiten);
   });
   tagescheckBerechnen();
 }
