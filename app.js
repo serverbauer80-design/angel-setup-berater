@@ -1022,12 +1022,31 @@ function tagescheckBerechnen(){
 
   const list = gruende.map(([pts,text]) => `<li><span class="tc-pts">${pts}</span> ${text}</li>`).join("");
 
-  $("#tc-result").innerHTML = `<div class="tc-result ${ampel}">
+  $("#tc-result").innerHTML = schonzeitWarnungHTML(fischId, monat) + `<div class="tc-result ${ampel}">
     <div class="tc-label">${label}</div>
     <div class="tc-fisch-name">${fisch ? fisch.emoji + " " + fisch.name : "Allgemein"} · ${saison}</div>
     <ul class="tc-list">${list}</ul>
     <p class="tc-hint">Erfahrungswissen, keine Garantie – aber ein guter Anhaltspunkt für Entscheidungen wie „eher morgens losfahren statt mittags".</p>
   </div>` + tcErfahrungHTML(fischId, zeit, saison);
+}
+
+/* Warnt im Tagescheck, wenn der gewählte Fisch am gewählten Datum in der
+   gesetzlichen Schonzeit steckt oder besonders geschützt ist – nutzt dieselben
+   RECHT_SH-Daten wie die Berater-Anzeige und denselben Monats-Parser wie der
+   Saisonkalender (parseSchonzeitMonate), keine doppelte Datenhaltung. */
+function schonzeitWarnungHTML(fischId, monat){
+  if(!fischId || typeof RECHT_SH === "undefined") return "";
+  const r = RECHT_SH[fischId];
+  if(!r) return "";
+
+  if(r.schutz){
+    return `<div class="schonzeit-warnung"><b>⚠️ Besonderer Schutzstatus:</b> ${r.hinweis || "Für diesen Fisch gelten besondere Schutz-/Fangregeln – vor dem Angeln aktuellen Stand prüfen."}</div>`;
+  }
+  const monate = parseSchonzeitMonate(r.schonzeit);
+  if(monate && monate.includes(monat)){
+    return `<div class="schonzeit-warnung"><b>⚠️ Schonzeit am gewählten Datum:</b> ${r.schonzeit} – <b>Entnahme verboten</b>, ein Fang muss schonend zurückgesetzt werden. Mindestmaß: ${r.mindestmass}.</div>`;
+  }
+  return "";
 }
 
 /* Eigene Erfahrung: gleicht die Tagescheck-Einschätzung mit tatsächlich

@@ -326,6 +326,8 @@ select:focus{outline:none;border-color:var(--accent)}
 .tc-card{padding:20px}
 .tc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
 #tc-result{margin-top:18px}
+.schonzeit-warnung{background:rgba(232,92,92,.1);border:1px solid rgba(232,92,92,.5);border-radius:12px;padding:14px 16px;margin-bottom:14px;font-size:14px;color:var(--text)}
+.schonzeit-warnung b{color:var(--bad)}
 .tc-result{border-radius:16px;padding:20px 22px;border:1px solid var(--line);box-shadow:var(--shadow)}
 .tc-result.gruen{background:rgba(58,208,122,.08);border-color:rgba(58,208,122,.4)}
 .tc-result.gelb{background:rgba(242,178,58,.08);border-color:rgba(242,178,58,.4)}
