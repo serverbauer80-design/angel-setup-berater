@@ -202,6 +202,14 @@
             </select>
           </div>
           <input id="fsc-notiz" placeholder="Notiz (optional)" style="margin-top:10px">
+          <div class="fsc-foto-box" style="margin-top:10px">
+            <label for="fsc-foto" class="fsc-foto-label">📷 Foto hinzufügen (optional)</label>
+            <input id="fsc-foto" type="file" accept="image/*" capture="environment">
+            <div id="fsc-foto-preview-wrap" style="display:none">
+              <img id="fsc-foto-preview" alt="Foto-Vorschau">
+              <button type="button" id="fsc-foto-remove" class="del-btn-mini">✕ entfernen</button>
+            </div>
+          </div>
           <div class="fs-modal-actions">
             <button type="submit" class="add-btn">Fang speichern</button>
             <button type="button" id="fsc-delete" class="del-btn-wide" style="display:none">🗑 Löschen</button>

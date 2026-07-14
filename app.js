@@ -113,8 +113,15 @@ let PACKLISTE = ladePackliste();
    (Die let-Deklarationen dafür stehen ganz oben in der Datei, siehe Kommentar dort.) */
 
 function fsSyncCollectState(){
+  // Fotos NIE mit hochladen: sie sind bewusst rein lokal (siehe Kommentar bei
+  // fsResizeBild) und würden das 1MB-Limit des Sync-Dokuments sprengen.
+  const faengeOhneFotos = { ...FAENGE, catches: FAENGE.catches.map(c => {
+    if(!c.foto) return c;
+    const { foto, ...rest } = c;
+    return rest;
+  }) };
   return {
-    zusatz: ZUSATZ, faenge: FAENGE, manuell: MANUELL, wartung: WARTUNG, packliste: PACKLISTE,
+    zusatz: ZUSATZ, faenge: faengeOhneFotos, manuell: MANUELL, wartung: WARTUNG, packliste: PACKLISTE,
     osmCache: typeof OSM_CACHE !== "undefined" ? OSM_CACHE : [],
     flussCache: typeof FLUSS_CACHE !== "undefined" ? FLUSS_CACHE : [],
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -123,7 +130,15 @@ function fsSyncCollectState(){
 
 function fsSyncApplyState(data){
   if(data.zusatz){ ZUSATZ = data.zusatz; try{localStorage.setItem(ZUSATZ_KEY, JSON.stringify(ZUSATZ));}catch(e){} }
-  if(data.faenge){ FAENGE = data.faenge; try{localStorage.setItem(FAENGE_KEY, JSON.stringify(FAENGE));}catch(e){} }
+  if(data.faenge){
+    // Fotos sind rein lokal und werden nie synchronisiert (siehe fsSyncCollectState) -
+    // beim Anwenden der Cloud-Daten die lokal vorhandenen Fotos je Fang wieder anheften,
+    // sonst würden sie hier durch die fotolose Cloud-Version überschrieben/gelöscht.
+    const fotosNachId = new Map(FAENGE.catches.filter(c => c.foto).map(c => [c.id, c.foto]));
+    FAENGE = data.faenge;
+    FAENGE.catches.forEach(c => { if(!c.foto && fotosNachId.has(c.id)) c.foto = fotosNachId.get(c.id); });
+    try{localStorage.setItem(FAENGE_KEY, JSON.stringify(FAENGE));}catch(e){}
+  }
   if(data.manuell){ MANUELL = data.manuell; try{localStorage.setItem(MANUAL_KEY, JSON.stringify(MANUELL));}catch(e){} }
   if(data.wartung){ WARTUNG = data.wartung; try{localStorage.setItem(WARTUNG_KEY, JSON.stringify(WARTUNG));}catch(e){} }
   if(data.packliste){ PACKLISTE = data.packliste; try{localStorage.setItem(PACKLISTE_KEY, JSON.stringify(PACKLISTE));}catch(e){} }
@@ -1926,6 +1941,7 @@ function fsOpenSpotDetail(spotId){
       html += `<div class="fang-eintrag two-btns card">
         <button class="del-btn" data-fs-del-catch="${c.id}" title="Entfernen">🗑</button>
         <button class="del-btn" style="right:46px" data-fs-edit-catch="${c.id}" title="Bearbeiten">✎</button>
+        ${c.foto ? `<img class="fang-foto" src="${c.foto}" alt="Foto vom Fang">` : ""}
         <div class="fang-titel">🐟 ${c.fischName}${c.gewicht ? " · " + c.gewicht + " kg" : ""}${c.laenge ? " · " + c.laenge + " cm" : ""}</div>
         <div class="fang-meta">${c.datum}${c.methode ? " · " + c.methode : ""}${c.cost ? " · " + c.cost.toFixed(2) + "€" : ""}</div>
         ${c.notiz ? `<div class="fang-notiz">${c.notiz}</div>` : ""}
@@ -1962,12 +1978,58 @@ function linkifySimple(text){
 }
 
 /* ---------- Fang-Formular ---------- */
+// Foto wird NUR lokal gespeichert (kein Cloud-Sync für Bilder – der Sync-Speicher
+// ist ein einzelnes Firestore-Dokument mit 1MB-Limit, das mit Fotos sofort platzen
+// würde). Vor dem Speichern wird jedes Bild client-seitig stark verkleinert
+// (Canvas, max. 480px, JPEG ~60%), damit es im localStorage nicht aus dem Ruder läuft.
+let fscFotoDataUrl = null;
+
+function fsResizeBild(file, maxDim, callback){
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      if(width > height && width > maxDim){ height = Math.round(height * maxDim / width); width = maxDim; }
+      else if(height > maxDim){ width = Math.round(width * maxDim / height); height = maxDim; }
+      const canvas = document.createElement("canvas");
+      canvas.width = width; canvas.height = height;
+      canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+      callback(canvas.toDataURL("image/jpeg", 0.6));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function fsZeigeFotoPreview(dataUrl){
+  fscFotoDataUrl = dataUrl;
+  const wrap = $("#fsc-foto-preview-wrap");
+  if(dataUrl){
+    $("#fsc-foto-preview").src = dataUrl;
+    wrap.style.display = "flex";
+  } else {
+    wrap.style.display = "none";
+    $("#fsc-foto-preview").src = "";
+  }
+}
+$("#fsc-foto").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  fsResizeBild(file, 480, fsZeigeFotoPreview);
+});
+$("#fsc-foto-remove").addEventListener("click", () => {
+  $("#fsc-foto").value = "";
+  fsZeigeFotoPreview(null);
+});
+
 function fsOpenCatchModal(catchId, spotId){
   const form = $("#fs-catch-form");
   form.reset();
   $("#fsc-datum").value = heuteISO();
   $("#fsc-delete").style.display = "none";
   $("#fsc-id").value = "";
+  fsZeigeFotoPreview(null);
 
   const spotOptions = `<option value="">– kein Spot –</option>` +
     FAENGE.spots.map(s => `<option value="${s.id}">${escAttr(s.name)}</option>`).join("");
@@ -1990,6 +2052,7 @@ function fsOpenCatchModal(catchId, spotId){
     $("#fsc-laenge").value = c.laenge || "";
     $("#fsc-zeit").value = c.zeit || "";
     $("#fsc-notiz").value = c.notiz || "";
+    if(c.foto) fsZeigeFotoPreview(c.foto);
   } else {
     $("#fs-catch-title").textContent = "Fang eintragen";
   }
@@ -2015,7 +2078,8 @@ $("#fs-catch-form").addEventListener("submit", (e) => {
     laenge: $("#fsc-laenge").value.trim() || null,
     zeit: $("#fsc-zeit").value || null,
     weather: null, cost: null,
-    notiz: $("#fsc-notiz").value.trim()
+    notiz: $("#fsc-notiz").value.trim(),
+    foto: fscFotoDataUrl || null
   };
   if(id){
     const idx = FAENGE.catches.findIndex(c => c.id === id);
@@ -2058,6 +2122,7 @@ function fsRenderListe(){
     const spot = c.spotId ? FAENGE.spots.find(s => s.id === c.spotId) : null;
     html += `<div class="fang-eintrag card" data-fs-edit-catch="${c.id}" style="cursor:pointer">
       <button class="del-btn" data-fs-del-catch="${c.id}" title="Entfernen">🗑</button>
+      ${c.foto ? `<img class="fang-foto" src="${c.foto}" alt="Foto vom Fang">` : ""}
       <div class="fang-titel">🐟 ${c.fischName}${c.gewicht ? " · " + c.gewicht + " kg" : ""}${c.laenge ? " · " + c.laenge + " cm" : ""}</div>
       <div class="fang-meta">${c.datum}${c.methode ? " · " + c.methode : ""}${spot ? " · 📍 " + spot.name : ""}</div>
       ${c.notiz ? `<div class="fang-notiz">${c.notiz}</div>` : ""}
