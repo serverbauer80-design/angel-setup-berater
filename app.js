@@ -2198,11 +2198,16 @@ function renderWochenende(){
         if(!fisch || !ansatz) return "";
         return `<div class="vorhaben-fisch-tag">${fisch.emoji} ${fisch.name}</div>` + ansatzHTML(ansatz, fisch);
       }).join("");
+      inner += `<button type="button" class="add-btn" data-tagescheck="${v.einsaetze[0].fischId}">📅 Lohnt sich das gerade? Genauer prüfen</button>`;
     }
     return `<article class="vorhaben card">
       <button type="button" class="vorhaben-head" data-vorhaben="${v.id}">
         <span class="ve">${v.emoji}</span>
-        <div class="vorhaben-txt"><h3>${v.name}</h3><p class="vorhaben-desc">${v.beschreibung}</p></div>
+        <div class="vorhaben-txt">
+          <h3>${v.name}</h3>
+          <p class="vorhaben-desc">${v.beschreibung}</p>
+          ${vorhabenSaisonBadgeHTML(v)}
+        </div>
         <span class="vorhaben-chevron">${offen ? "▾" : "▸"}</span>
       </button>
       ${offen ? `<div class="vorhaben-body">${inner}</div>` : ""}
@@ -2238,6 +2243,38 @@ document.addEventListener("click", (e) => {
   const btn = e.target.closest(".knot-link");
   if(btn) zeigeKnoten(btn.dataset.knot);
 });
+
+/* Zum "Lohnt sich heute?"-Check springen, mit vorausgewähltem Zielfisch
+   (aus der Trip-Planung heraus). Der Tagescheck selbst braucht Wetter-Eingaben
+   (Luftdruck/Himmel/Wind), die sich nicht automatisch ermitteln lassen – daher
+   kein stiller Score auf der Trip-Karte, sondern direkter Sprung zum vollen Check. */
+function zeigeTagescheck(fischId){
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.querySelector('.tab[data-view="tagescheck"]').classList.add("active");
+  $("#view-tagescheck").classList.add("active");
+  const sel = document.getElementById("tc-fisch");
+  if(sel && fischId){ sel.value = fischId; tagescheckBerechnen(); }
+  $("#view-tagescheck").scrollIntoView({behavior:"smooth", block:"start"});
+}
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-tagescheck]");
+  if(btn) zeigeTagescheck(btn.dataset.tagescheck);
+});
+
+/* Automatische, eingabefreie Saison-Einschätzung für eine Trip-Karte (Kopfzeile,
+   auch ohne Aufklappen sichtbar) – nutzt dieselben TAGESCHECK_HINT-Daten wie der
+   volle Tagescheck, aber nur den saisonalen Teil (kein Wetter nötig). */
+function vorhabenSaisonBadgeHTML(vorhaben){
+  const saisonJetzt = jahreszeitVonMonat(new Date().getMonth() + 1);
+  const hints = vorhaben.einsaetze.map(e => TAGESCHECK_HINT[e.fischId]).filter(Boolean);
+  const hatTopSaison = hints.some(h => h.topSaison);
+  if(!hatTopSaison) return `<span class="saison-badge neutral">⚪ Ganzjährig fangbar</span>`;
+  const inSaison = hints.some(h => h.topSaison && h.topSaison.includes(saisonJetzt));
+  return inSaison
+    ? `<span class="saison-badge gut">🟢 ${saisonJetzt} ist Hauptsaison</span>`
+    : `<span class="saison-badge neutral">⚪ Gerade nicht Hauptsaison (${saisonJetzt})</span>`;
+}
 
 /* ---------- Tabs ---------- */
 document.querySelectorAll(".tab").forEach(t => {

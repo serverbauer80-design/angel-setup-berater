@@ -107,6 +107,9 @@ select:focus{outline:none;border-color:var(--accent)}
 .vorhaben-chevron{color:var(--muted);font-size:18px;flex:none}
 .vorhaben-body{padding:0 20px 20px;display:flex;flex-direction:column;gap:16px}
 .vorhaben-fisch-tag{font-weight:700;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:6px}
+.saison-badge{display:inline-block;margin-top:8px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
+.saison-badge.gut{background:rgba(58,208,122,.15);color:var(--ok);border:1px solid rgba(58,208,122,.35)}
+.saison-badge.neutral{background:rgba(157,182,196,.12);color:var(--muted);border:1px solid var(--line)}
 
 .gw-badge{
   display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--line);
