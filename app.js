@@ -2175,10 +2175,29 @@ function fsRenderStats(){
   });
   const pbListe = Object.entries(pbByFish).sort((a,b) => (parseFloat(b[1].gewicht)||parseFloat(b[1].laenge)||0) - (parseFloat(a[1].gewicht)||parseFloat(a[1].laenge)||0));
 
+  // Erfolgreichste Methode (nur Fänge mit eingetragener Methode)
+  const methodeCounts = {};
+  FAENGE.catches.forEach(c => { if(c.methode) methodeCounts[c.methode] = (methodeCounts[c.methode]||0)+1; });
+  const topMethoden = Object.entries(methodeCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const catchesMitMethode = Object.values(methodeCounts).reduce((a,b)=>a+b,0);
+
+  // Bester Monat (über alle Jahre zusammengefasst, unabhängig vom Fisch)
+  const MONATSNAMEN = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  const monatCounts = {};
+  FAENGE.catches.forEach(c => {
+    const m = parseInt((c.datum||"").split("-")[1], 10);
+    if(m) monatCounts[m] = (monatCounts[m]||0)+1;
+  });
+  const topMonate = Object.entries(monatCounts).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const catchesMitDatum = Object.values(monatCounts).reduce((a,b)=>a+b,0);
+
   let html = `<div class="stat-grid">
     <div class="stat-card card"><div class="stat-value">${totalSpots}</div><div class="stat-label">Spots</div></div>
     <div class="stat-card card"><div class="stat-value">${totalCatches}</div><div class="stat-label">Fänge</div></div>
     <div class="stat-card card"><div class="stat-value">${totalWeight.toFixed(1)} kg</div><div class="stat-label">Gesamtgewicht</div></div>
+    ${spotStats.length > 0 ? `<div class="stat-card card"><div class="stat-value">🏅</div><div class="stat-label">${spotStats[0].name}<br><span class="stat-sub">bester Spot · ${spotStats[0].count} Fänge</span></div></div>` : ""}
+    ${topMethoden.length > 0 ? `<div class="stat-card card"><div class="stat-value">🎣</div><div class="stat-label">${topMethoden[0][0]}<br><span class="stat-sub">beste Methode · ${topMethoden[0][1]}×</span></div></div>` : ""}
+    ${topMonate.length > 0 ? `<div class="stat-card card"><div class="stat-value">📅</div><div class="stat-label">${MONATSNAMEN[topMonate[0][0]-1]}<br><span class="stat-sub">bester Monat · ${topMonate[0][1]}×</span></div></div>` : ""}
   </div>`;
 
   if(topFish.length > 0){
@@ -2187,6 +2206,28 @@ function fsRenderStats(){
       const pct = totalCatches>0 ? (count/totalCatches*100) : 0;
       html += `<div class="fs-bar-row">
         <div class="fs-bar-label"><span>${fish}</span><span>${count}×</span></div>
+        <div class="fs-bar-track"><div class="fs-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  if(topMethoden.length > 0){
+    html += `<div class="card fs-stats-block"><h3>🎣 Erfolgreichste Methoden</h3>`;
+    topMethoden.forEach(([methode,count]) => {
+      const pct = catchesMitMethode>0 ? (count/catchesMitMethode*100) : 0;
+      html += `<div class="fs-bar-row">
+        <div class="fs-bar-label"><span>${methode}</span><span>${count}×</span></div>
+        <div class="fs-bar-track"><div class="fs-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  if(topMonate.length > 0){
+    html += `<div class="card fs-stats-block"><h3>📅 Beste Monate</h3>`;
+    topMonate.forEach(([monat,count]) => {
+      const pct = catchesMitDatum>0 ? (count/catchesMitDatum*100) : 0;
+      html += `<div class="fs-bar-row">
+        <div class="fs-bar-label"><span>${MONATSNAMEN[monat-1]}</span><span>${count}×</span></div>
         <div class="fs-bar-track"><div class="fs-bar-fill" style="width:${pct}%"></div></div>
       </div>`;
     });
