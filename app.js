@@ -984,6 +984,60 @@ async function tagescheckLadeGezeiten(){
   }
 }
 
+/* ---------- Echte Wettervorhersage (Open-Meteo – kostenlos, kein API-Key nötig) ----------
+   Füllt Luftdrucktendenz/Himmel/Wind automatisch, bleibt aber jederzeit manuell überschreibbar –
+   der Tagescheck funktioniert unverändert auch komplett ohne Internetverbindung. */
+const WETTER_ORT_DEFAULT = { name:"Schleswig-Holstein (allgemein)", lat:54.3, lng:9.65 };
+const WETTER_STUNDE_JE_ZEIT = {
+  daemmerung_morgen: 6, vormittag: 9, mittag: 12, nachmittag: 15, daemmerung_abend: 19, nacht: 23
+};
+function tagescheckWetterOrt(){
+  const ortId = $("#tc-gezeiten-ort").value;
+  return GEZEITEN_ORTE.find(o => o.id === ortId) || WETTER_ORT_DEFAULT;
+}
+async function tagescheckLadeWetter(){
+  const status = $("#tc-wetter-status");
+  if(!status) return;
+  const ort = tagescheckWetterOrt();
+  const datum = $("#tc-datum").value || heuteISO();
+  const zeit = $("#tc-zeit").value || "vormittag";
+  const stunde = WETTER_STUNDE_JE_ZEIT[zeit] ?? 12;
+
+  status.textContent = `⏳ Lade Wetterdaten für ${ort.name} …`;
+  try {
+    const vortag = new Date(datum + "T12:00:00");
+    vortag.setDate(vortag.getDate() - 1);
+    const startDatum = vortag.toISOString().slice(0,10);
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${ort.lat}&longitude=${ort.lng}&hourly=surface_pressure,cloud_cover,wind_speed_10m&start_date=${startDatum}&end_date=${datum}&timezone=Europe%2FBerlin`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    if(!data.hourly || !data.hourly.time) throw new Error("Keine Daten erhalten");
+
+    const zielIndex = data.hourly.time.indexOf(`${datum}T${String(stunde).padStart(2,"0")}:00`);
+    if(zielIndex === -1) throw new Error("Datum außerhalb des verfügbaren Zeitraums (Open-Meteo deckt ca. 3 Monate Vergangenheit bis 16 Tage Zukunft ab)");
+    const vorherIndex = Math.max(0, zielIndex - 6);
+
+    const druckJetzt = data.hourly.surface_pressure[zielIndex];
+    const druckVorher = data.hourly.surface_pressure[vorherIndex];
+    const wolken = data.hourly.cloud_cover[zielIndex];
+    const wind = data.hourly.wind_speed_10m[zielIndex];
+
+    const druckDelta = druckJetzt - druckVorher;
+    const druckWert = druckDelta < -0.5 ? "fallend" : (druckDelta > 0.5 ? "steigend" : "stabil");
+    const himmelWert = wolken > 70 ? "bedeckt" : (wolken < 30 ? "klar" : "wechselhaft");
+    const windWert = wind > 50 ? "sturm" : (wind > 30 ? "kraeftig" : (wind > 10 ? "leicht" : "still"));
+
+    $("#tc-druck").value = druckWert;
+    $("#tc-himmel").value = himmelWert;
+    $("#tc-wind").value = windWert;
+    status.innerHTML = `✅ Wetter für ${escAttr(ort.name)}, ${String(stunde).padStart(2,"0")}:00 Uhr geladen: ${druckJetzt.toFixed(0)} hPa (${druckWert}), ${wolken.toFixed(0)}% Wolken, ${wind.toFixed(0)} km/h Wind. <i>Passt das nicht zu dem, was du vor Ort siehst? Einfach oben von Hand korrigieren.</i>`;
+    tagescheckBerechnen();
+  } catch(err){
+    status.textContent = `⚠️ Wetterdaten konnten nicht geladen werden (${err.message}). Bitte manuell eintragen.`;
+  }
+}
+
 function renderTagescheck(){
   const el = $("#tagescheck");
   const heute = new Date();
@@ -994,9 +1048,9 @@ function renderTagescheck(){
 
   el.innerHTML = `<div class="k-intro card">
     <h2>📅 Lohnt sich heute?</h2>
-    <p>Kein Wetterdienst, sondern <b>Erfahrungswissen zum Selbst-Einschätzen</b>: Trag ein, was du gerade siehst/weißt
-    (Luftdruck z. B. per Wetter-App oder Barometer), und du bekommst eine Einschätzung <b>mit Begründung</b> – damit du
-    nach und nach selbst ein Gefühl dafür entwickelst, statt nur eine Zahl zu bekommen.</p>
+    <p><b>Erfahrungswissen zum Selbst-Einschätzen</b>, jetzt mit optionaler Wetter-Automatik: Luftdruck/Himmel/Wind werden
+    automatisch für Datum + Ort geladen (Open-Meteo) – du kannst sie danach jederzeit von Hand korrigieren, wenn du vor
+    Ort etwas anderes siehst. Damit bekommst du eine Einschätzung <b>mit Begründung</b> – kein reines Zahlen-Orakel.</p>
   </div>
   <div class="tc-card card">
     <div class="tc-grid">
@@ -1009,6 +1063,10 @@ function renderTagescheck(){
         <option value="nachmittag">Nachmittag</option>
         <option value="daemmerung_abend">Abenddämmerung</option>
         <option value="nacht">Nacht</option>
+      </select></div>
+      <div class="field"><label>Ort für Wetter/Gezeiten (optional)</label><select id="tc-gezeiten-ort">
+        <option value="">– allgemein Schleswig-Holstein –</option>
+        ${GEZEITEN_ORTE.map(o => `<option value="${o.id}">${o.name}</option>`).join("")}
       </select></div>
       <div class="field"><label>Luftdrucktendenz</label><select id="tc-druck">
         <option value="fallend">Fällt gerade (Wetterwechsel im Anzug)</option>
@@ -1026,11 +1084,9 @@ function renderTagescheck(){
         <option value="kraeftig">Kräftiger Wind</option>
         <option value="sturm">Sturm</option>
       </select></div>
-      <div class="field"><label>Gezeiten für Küstenort (optional)</label><select id="tc-gezeiten-ort">
-        <option value="">– kein Küstenangeln –</option>
-        ${GEZEITEN_ORTE.map(o => `<option value="${o.id}">${o.name}</option>`).join("")}
-      </select></div>
     </div>
+    <button type="button" class="add-btn" id="tc-wetter-btn" style="margin-top:12px">🌤️ Wetter automatisch laden</button>
+    <div id="tc-wetter-status" class="k-hint" style="margin-top:8px"></div>
   </div>
   <div id="tc-gezeiten-result"></div>
   <div id="tc-result"></div>`;
@@ -1041,6 +1097,7 @@ function renderTagescheck(){
   ["tc-datum","tc-gezeiten-ort"].forEach(id => {
     document.getElementById(id).addEventListener("change", tagescheckLadeGezeiten);
   });
+  $("#tc-wetter-btn").addEventListener("click", tagescheckLadeWetter);
   tagescheckBerechnen();
 }
 
