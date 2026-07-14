@@ -66,6 +66,16 @@ const AKTUELL = {
     vorfach: "je nach Zielfisch, z. B. 0,16–0,20 mm für Brasse/Karpfen",
     extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köderbox, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
     einsatz: "Grund- und Feederangeln auf Karpfen und andere Friedfische (Brasse, Schleie, Rotauge) – ruhiger Ansitz mit Futterkorb/Grundblei an See, Kanal oder ruhigem Fluss."
+  },
+  setup7: {
+    key: "setup7",
+    name: "Setup 7 – Spinnangel Forelle/Barsch",
+    rute: "Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil",
+    rolle: "Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult",
+    schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen",
+    vorfach: "Fluorocarbon 0,20–0,25 mm · ca. 60–100 cm",
+    extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köder, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
+    einsatz: "Aktives Spinnfischen mit Kunstködern auf Forelle und Barsch – etwas kräftiger als Setup 2 (Ultraleicht) und Setup 5 (Light Game), WG bis 40 g deckt auch etwas größere Spinner/Wobbler/Blinker ab."
   }
 };
 
