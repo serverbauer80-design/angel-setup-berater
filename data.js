@@ -90,7 +90,11 @@ const ZUBEHOER = [
   "Schrotblei-Set Paradox Fishing (0,25–2,0 g)", "Forellenteigformer Angel-Berger Doppel-Baitformer 2in1",
   "Zangen-Set Amazon Basics (3 Stück, lange Reichweite)", "Hakenlöser Zite Fishing (18 cm, gebogen)",
   "Hakenlöser-Set Paradox Fishing (3er Set)", "Rutenbänder Fentar (12 Stück, mit Klettband)",
-  "Fiskars Universalmesser K40 (mit Köcher, 22,5 cm)"
+  "Fiskars Universalmesser K40 (mit Köcher, 22,5 cm)",
+  "Erste-Hilfe-Set OX-ON Traveller (32-teilig)", "Vorfachbox Iron Trout Leader Board",
+  "Fertigmontage Saenger C-2 (2,5g)", "Fertigmontage Saenger C-1 (3,0g)",
+  "Vorfachset Saenger Rotauge S-515 (60cm, 10 Stück)", "Wirbel Zebco",
+  "Spoon (Einzelköder)", "Micro-Köder-Set"
 ];
 
 /* ---------- 2) WUNSCHLISTE (zukünftige Setups) ---------- */
