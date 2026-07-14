@@ -121,14 +121,14 @@ const WUNSCH = {
     dazu: "Keine Extra-Kleinteile nötig – Posen/Haken/Schrotblei von Setup 4 passen 1:1",
     hinweis: "Keine neue Geräteklasse, nur eine kürzere Ergänzung zu Setup 4: für sehr enge Spots (Bäume, schmaler Steg, dichte Ufervegetation), wo Schwingen/Einschieben mit der 7-m-Rute unpraktisch ist."
   },
-  passivrute: {
-    key: "passivrute", name: "Passive Zweitangel – Method-Feeder/Picker",
-    rute: "Daiwa Aqualite Feeder / Shimano Beastmaster CX Feeder · 3,00–3,60 m · WG 40–80 g · 2–3 Wechselspitzen (Quivertips)",
-    rolle: "Shimano Baitrunner ST 4000 (Freilauf)",
-    schnur: "Monofil 0,25–0,30 mm",
-    preis: "ca. 150–200 € (Rute ~60–90 € + Rolle ~90–110 €)",
-    dazu: "Rutenhalter (vorhanden), optional elektronischer Bissanzeiger",
-    hinweis: "Optimiert fürs passive Ansitzen (z. B. Zweitangel am Forellensee): Wechselspitze zeigt Bisse sichtbar an statt nur die Pose zu beobachten, Freilauf verhindert, dass ein Fisch die Rute von der Halterung zieht. Setup 3 und 7 funktionieren übergangsweise auch passiv, sind aber nicht dafür optimiert. Später auch für leichtes Feedern auf Weißfisch/Karpfen nutzbar (parallel zu Setup 6)."
+  posenrute: {
+    key: "posenrute", name: "Allround-Posenrute (Forellensee + Ansitz)",
+    rute: "Daiwa Aqualite Tele Fl. 3,90 m · WG 10–35 g · teleskopierbar (4 Teile)",
+    rolle: "Shimano Baitrunner ST 4000 (Freilauf) – oder kompaktere 2500er, falls Gewicht/Balance wichtiger ist",
+    schnur: "Monofil 0,20–0,25 mm",
+    preis: "ca. 176 € (Rute 86 € + Rolle ~90 €)",
+    dazu: "Rutenhalter (vorhanden), Laufpose 3–15 g je nach Einsatz",
+    hinweis: "Vielseitiger als eine reine Forellensee-Zweitangel: klassische Posenrute (kein Feeder/Quivertip nötig, da die Montage über eine schwimmende Pose läuft) – nutzbar als passive Zweitangel am Forellensee, aktiv am Forellensee (Sbirolino/Pose), UND als Laufpose auf Weißfisch/Schleie/Karpfen an See/Kanal auf mittlere Distanz. Schließt die Lücke zwischen Setup 4 (Stippe, nur Ufernähe) und Setup 6 (Feeder, Grundmontage ohne Pose). Setup 3 und 7 funktionieren übergangsweise auch passiv, sind aber nicht dafür optimiert."
   },
   pilk: {
     key: "pilk", name: "Hochsee-/Kutter-Setup (Pilken)",
