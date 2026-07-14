@@ -2182,8 +2182,8 @@ function renderWochenende(){
   if(!el) return;
 
   let html = `<div class="k-intro card">
-    <h2>🎒 Wochenend-Planer</h2>
-    <p>Wähl aus, was du vorhast – du bekommst das passende Setup, die Montage und eine abhakbare Packliste zum Vorbereiten. So kannst du zu Hause alles fertig machen und vor Ort direkt loslegen.</p>
+    <h2>🎒 Trip-Planung</h2>
+    <p>Wähl aus, was du vorhast – egal ob am Wochenende oder unter der Woche. Du bekommst das passende Setup, die Montage und eine abhakbare Packliste zum Vorbereiten. So kannst du zu Hause alles fertig machen und vor Ort direkt loslegen.</p>
   </div>`;
 
   html += VORHABEN.map(v => {
