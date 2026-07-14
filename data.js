@@ -281,6 +281,18 @@ const FISCHE = [
           {k:"Haken", v:"Gamakatsu Gr. 6 · Berkley PowerBait (auftreibend)"}
         ],
         tipp:"PowerBait so viel, dass der Köder knapp über Grund schwebt. Nach dem Wurf absinken lassen, dann langsam einholen."
+      },
+      {
+        methode:"Passive Zweitangel (Pose, liegend)", status:"machbar", setup:"setup3",
+        gewaesser:["forellensee","see"],
+        montage:[
+          {k:"Hauptschnur", v:"Monofil 0,25 mm"},
+          {k:"Laufpose", v:"3–8 g, auf gewünschte Tiefe eingestellt (Stopper + Perle)"},
+          {k:"Perle + Wirbel", v:"Prellperle, dann Wirbel"},
+          {k:"Vorfach", v:"Fluorocarbon ca. 60–80 cm"},
+          {k:"Haken", v:"Gamakatsu Gr. 6 · Berkley PowerBait (auftreibend), sodass der Köder knapp über Grund schwebt"}
+        ],
+        tipp:"Ideal als passive Zweitangel neben einer aktiv geführten Rute (z. B. Setup 2 mit Spoons): Rute in den Rutenhalter, Pose beobachten – zieht sie unter oder treibt weg, ist das der Biss. Wichtig: Viele Forellenseen erlauben eine Zweitrute nur gegen Aufpreis oder gar nicht – auf der Tageskarte/Anlagenordnung vorher prüfen."
       }
     ]
   },
