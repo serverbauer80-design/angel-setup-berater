@@ -1120,3 +1120,78 @@ const VORHABEN = [
     ]
   }
 ];
+
+/* ---------- Angelmethoden-Übersicht ----------
+   Allgemeine, fischunabhängige Übersicht gängiger Angelmethoden. Status wird
+   NICHT hier fest eingetragen, sondern zur Laufzeit aus AKTUELL/WUNSCH
+   berechnet (siehe app.js: methodeStatus()) - passendeSetups = damit voll
+   machbar, bedingtSetups = geht zur Not, ist aber nicht optimal dafür
+   ausgelegt, wunschKey = Verweis auf WUNSCH-Eintrag für "was bräuchte ich". */
+const ANGELMETHODEN = [
+  {
+    id:"spinnfischen", name:"Spinnfischen", emoji:"🎣",
+    beschreibung:"Aktives Werfen und kontinuierliches Einholen von Kunstködern (Gummifisch, Wobbler, Blinker, Spoon) – der Köder imitiert flüchtenden Beutefisch. Die vielseitigste Methode auf Raubfisch wie Hecht, Zander, Barsch, Forelle.",
+    passendeSetups:["setup1","setup2","setup5","setup7"]
+  },
+  {
+    id:"dropshot", name:"Dropshot-Angeln", emoji:"🎣",
+    beschreibung:"Der Köder hängt an einem abgesetzten Haken über dem Blei, das am Grund bleibt – so lässt sich der Köder praktisch auf der Stelle verführerisch zittern lassen. Sehr effektiv auf Barsch.",
+    passendeSetups:["setup2","setup5"]
+  },
+  {
+    id:"posenangeln", name:"Posenangeln / Stippen", emoji:"🎣",
+    beschreibung:"Klassisches Angeln mit schwimmender Pose, die Bisse sichtbar anzeigt. Stippen (feste Rute ohne Rolle) für Ufernähe, Laufpose mit Rolle für mehr Distanz. Grundtechnik für Weißfisch, Schleie, Forelle.",
+    passendeSetups:["setup4"],
+    wunschKey:"posenrute"
+  },
+  {
+    id:"grundfeedern", name:"Grund-/Feederangeln", emoji:"🎣",
+    beschreibung:"Köder liegt am Grund, oft mit Futterkorb (Feeder) zum gezielten Anfüttern der Stelle. Ruhiger Ansitz mit Rutenhalter, Bissanzeige über Rutenspitze oder elektronischen Bissanzeiger. Standard für Karpfen, Brasse, Aal.",
+    passendeSetups:["setup6"]
+  },
+  {
+    id:"sbirolino", name:"Sbirolino-Angeln", emoji:"🎣",
+    beschreibung:"Ein durchsichtiger, mit Wasser befüllbarer Schwimmkörper (Sbirolino) ersetzt das Wurfgewicht und ermöglicht das weite Auswerfen sehr leichter Köder – ideal für Forellen am Forellensee oder Meerforelle an der Küste.",
+    passendeSetups:["setup3"]
+  },
+  {
+    id:"ansitzangeln", name:"Ansitzangeln (passiv, mit Freilauf)", emoji:"🎣",
+    beschreibung:"Rute liegt in der Halterung, ein Freilauf-System lässt den Fisch die Schnur abziehen, ohne die Rute von der Halterung zu reißen. Klassisch für Karpfen, Aal, Wels, Quappe über längere Wartezeiten.",
+    bedingtSetups:["setup1"],
+    wunschKey:"ansitz"
+  },
+  {
+    id:"kuestenspinnen", name:"Küstenspinnen (Salzwasser)", emoji:"🌊",
+    beschreibung:"Spinnfischen von Strand, Mole oder watend an der Ostsee-/Nordseeküste – auf Meerforelle, Hornhecht, Wolfsbarsch. Braucht salzwasserfeste Rolle und meist mehr Wurfweite als reines Süßwasser-Spinnfischen.",
+    bedingtSetups:["setup1"],
+    wunschKey:"kuestenspinn"
+  },
+  {
+    id:"brandungsangeln", name:"Brandungsangeln", emoji:"🌊",
+    beschreibung:"Grundmontage mit schwerem Krallenblei, weit in die Brandung geworfen – auf Plattfisch, Wolfsbarsch, Dorsch von Sandstränden der Nord- und Ostsee. Braucht lange Wurfweite und robustes Gerät.",
+    wunschKey:"brandung"
+  },
+  {
+    id:"pilken", name:"Pilken (Kutter/Hochsee)", emoji:"🌊",
+    beschreibung:"Senkrechtes Führen eines schweren Metallköders (Pilker) vom Boot aus, meist mit Beifängern – der Klassiker beim Dorschangeln auf Kutterfahrten in Nord- und Ostsee.",
+    wunschKey:"pilk"
+  },
+  {
+    id:"paternoster", name:"Paternoster-Angeln", emoji:"🌊",
+    beschreibung:"Fertigsystem mit mehreren Haken übereinander an einer Hauptschnur, meist mit buntem Lametta besetzt – der Standard für Heringsschwärme von Molen und Häfen im Frühjahr/Herbst.",
+    passendeSetups:["setup1"]
+  },
+  {
+    id:"vertikalangeln", name:"Vertikalangeln / Jiggen", emoji:"🎣",
+    beschreibung:"Der Köder wird senkrecht unter der Rutenspitze geführt statt weit geworfen – z. B. vom Boot oder von Steilufern/Spundwänden am Kanal auf Zander und Barsch.",
+    bedingtSetups:["setup1"]
+  },
+  {
+    id:"fliegenfischen", name:"Fliegenfischen", emoji:"🪰",
+    beschreibung:"Eine sehr leichte Kunstfliege wird nicht durch das Gewicht des Köders, sondern durch das Gewicht der speziellen Fliegenschnur ausgeworfen – eigene Rutenklasse, eigene Wurftechnik. Klassisch für Bachforelle und Äsche in Fließgewässern."
+  },
+  {
+    id:"trolling", name:"Trolling / Schleppangeln", emoji:"🚤",
+    beschreibung:"Köder werden hinter einem langsam fahrenden Boot hergezogen, um große Wasserflächen nach Raubfisch abzusuchen – braucht zusätzlich zum Angelgerät ein Boot."
+  }
+];

@@ -2448,6 +2448,53 @@ function renderKnoten(){
   el.innerHTML = html;
 }
 
+/* ---------- Angelmethoden-Übersicht ----------
+   Status wird zur Laufzeit aus AKTUELL/WUNSCH berechnet, nicht in data.js
+   fest hinterlegt – bleibt so automatisch aktuell, wenn neue Setups
+   dazukommen (z. B. Setup 6/7 in dieser Session). ---------- */
+function methodeStatus(methode){
+  const setupMachbar = (methode.passendeSetups || []).find(k => AKTUELL[k]);
+  if(setupMachbar) return { status:"machbar", setup:setupMachbar };
+  const setupBedingt = (methode.bedingtSetups || []).find(k => AKTUELL[k]);
+  if(setupBedingt) return { status:"bedingt", setup:setupBedingt };
+  return { status:"wunsch", setup:null };
+}
+function renderAngelmethoden(){
+  const el = $("#methoden");
+  let html = `<div class="k-intro card">
+    <h2>🎣 Angelmethoden im Überblick</h2>
+    <p>Alle gängigen Angelmethoden kurz erklärt – und ob du sie mit deinem aktuellen Equipment schon nutzen kannst.</p>
+  </div>`;
+
+  const rang = { machbar:0, bedingt:1, wunsch:2 };
+  const sortiert = [...ANGELMETHODEN].sort((a,b) => rang[methodeStatus(a).status] - rang[methodeStatus(b).status]);
+
+  sortiert.forEach(m => {
+    const { status, setup } = methodeStatus(m);
+    let body = "";
+    if(status === "machbar" || status === "bedingt"){
+      body += setupLineHTML(setup);
+    }
+    if(status === "wunsch" && m.wunschKey){
+      body += needHTML(m.wunschKey);
+    } else if(status === "wunsch"){
+      body += `<div class="need-hinweis">❌ Aktuell weder mit deinem Equipment machbar noch auf der Wunschliste – wäre eine komplett neue Geräteklasse (und bei Trolling zusätzlich ein Boot nötig).</div>`;
+    }
+    html += `<article class="ansatz">
+      <div class="ansatz-head">
+        <span class="badge ${status}">${statusLabel(status)}</span>
+        <span class="m-name">${m.emoji} ${m.name}</span>
+      </div>
+      <div class="ansatz-body">
+        <p class="k-hint" style="margin:0 0 10px">${m.beschreibung}</p>
+        ${body}
+      </div>
+    </article>`;
+  });
+
+  el.innerHTML = html;
+}
+
 /* ---------- Wochenend-Planer ----------
    Zeigt vordefinierte Vorhaben (data.js: VORHABEN) – aufklappen zeigt Setup,
    Montage und eine abhakbare Packliste, aus denselben Ansätzen wie im Berater
@@ -2570,6 +2617,7 @@ $("#losButton").addEventListener("click", berechne);
 initFischDropdown();
 renderInventar();
 renderKnoten();
+renderAngelmethoden();
 renderCheckliste();
 renderTagescheck();
 renderFaengeTop();
