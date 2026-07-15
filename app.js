@@ -2539,6 +2539,43 @@ function renderAngelmethoden(){
   el.innerHTML = html;
 }
 
+/* ---------- LAV Schleswig-Holstein: vergünstigte/kostenlose Mitgliedsgewässer ---------- */
+function renderLavGewaesser(){
+  const el = $("#lav");
+  const kostenlosCount = LAV_GEWAESSER.filter(g => g.kostenlosLav === true).length;
+
+  let html = `<div class="k-intro card">
+    <h2>💳 LAV-Gewässer (Schleswig-Holstein)</h2>
+    <p>Als LAV-Mitglied kannst du an diesen Gewässern vergünstigt oder sogar kostenlos angeln.
+    <b>${kostenlosCount} von ${LAV_GEWAESSER.length}</b> sind für LAV-Mitglieder komplett kostenfrei (Boot meist trotzdem extra) –
+    bei den übrigen zahlst du einen reduzierten Erlaubnisschein.</p>
+    <p class="k-hint">${LAV_GEWAESSER_META.disclaimer} <i>(${LAV_GEWAESSER_META.stand})</i></p>
+  </div>`;
+
+  const sortiert = [...LAV_GEWAESSER].sort((a,b) => (b.kostenlosLav === true) - (a.kostenlosLav === true));
+
+  sortiert.forEach(g => {
+    const gruppenRows = g.gruppen.map(gr => `<div class="row"><span>${gr.name}</span><span><b>${gr.preise}</b></span></div>`).join("");
+    const badge = g.kostenlosLav === true
+      ? `<span class="badge machbar">🆓 LAV-Mitglieder kostenlos</span>`
+      : (g.unsicher
+        ? `<span class="badge bedingt">❓ Nicht eindeutig</span>`
+        : `<span class="badge wunsch">💶 Auch für Mitglieder kostenpflichtig</span>`);
+    html += `<article class="ansatz">
+      <div class="ansatz-head">
+        ${badge}
+        <span class="m-name">${g.name}${g.typ ? ` · ${g.typ}` : ""}</span>
+      </div>
+      <div class="ansatz-body">
+        ${gruppenRows}
+        ${g.hinweis ? `<div class="need-hinweis" style="margin-top:10px">${g.hinweis}</div>` : ""}
+      </div>
+    </article>`;
+  });
+
+  el.innerHTML = html;
+}
+
 /* ---------- Wochenend-Planer ----------
    Zeigt vordefinierte Vorhaben (data.js: VORHABEN) – aufklappen zeigt Setup,
    Montage und eine abhakbare Packliste, aus denselben Ansätzen wie im Berater
@@ -2666,4 +2703,5 @@ renderCheckliste();
 renderTagescheck();
 renderFaengeTop();
 renderSaison();
+renderLavGewaesser();
 renderWochenende();

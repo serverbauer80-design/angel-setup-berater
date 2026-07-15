@@ -1210,3 +1210,83 @@ const ANGELMETHODEN = [
     beschreibung:"Köder werden hinter einem langsam fahrenden Boot hergezogen, um große Wasserflächen nach Raubfisch abzusuchen – braucht zusätzlich zum Angelgerät ein Boot."
   }
 ];
+
+/* ---------- LAV Schleswig-Holstein – Vergünstigte/kostenlose Mitgliedsgewässer ----------
+   Quelle: Gewässersteckbriefe auf lav-sh.de. Preise können sich ändern - vor
+   dem Angeln immer aktuellen Stand auf lav-sh.de prüfen (siehe Disclaimer). */
+const LAV_GEWAESSER = [
+  {
+    id:"westensee", name:"Westensee", typ:"See",
+    kostenlosLav:true,
+    gruppen:[
+      { name:"LAV-Mitglieder", preise:"Kostenlos (nur Boot 10 €/Tag zusätzlich)" },
+      { name:"DAFV-Mitglieder", preise:"10 €/Tag · 40 €/Woche" }
+    ]
+  },
+  {
+    id:"pruessee", name:"Prüßsee", typ:"See",
+    kostenlosLav:false,
+    gruppen:[
+      { name:"LAV-Mitglieder", preise:"10 €/Tag · 20 €/3 Tage · 40 €/Woche · 120 €/Jahr" }
+    ]
+  },
+  {
+    id:"dobersdorfer-see", name:"Dobersdorfer See", typ:"See",
+    kostenlosLav:true,
+    gruppen:[
+      { name:"LAV-Mitglieder", preise:"Kostenlos (Boot 10 €/Tag zusätzlich)" },
+      { name:"DAFV-Mitglieder", preise:"10 €/Tag · 40 €/Woche" }
+    ]
+  },
+  {
+    id:"einfelder-see", name:"Einfelder See", typ:"See",
+    kostenlosLav:null,
+    unsicher:true,
+    gruppen:[
+      { name:"DAFV-Mitglieder", preise:"10 €/Tag · 40 €/Woche · 100 €/Jahr" }
+    ],
+    hinweis:"Auf der Steckbrief-Seite wird nur der DAFV-Preis genannt, ein expliziter „LAV-Mitglieder kostenlos“-Vermerk fehlt hier (anders als bei Westensee/Dobersdorfer/Stolper See). Vermutlich analog geregelt, aber nicht bestätigt – vorher beim LAV nachfragen."
+  },
+  {
+    id:"stolper-see", name:"Stolper See", typ:"See",
+    kostenlosLav:true,
+    gruppen:[
+      { name:"LAV-Mitglieder", preise:"Kostenlos (Boot 10 €/Tag zusätzlich)" },
+      { name:"DAFV-Mitglieder", preise:"10 €/Tag · 40 €/Woche" }
+    ]
+  },
+  {
+    id:"ploener-see", name:"Großer Plöner See & Seenverbund", typ:"See",
+    kostenlosLav:false,
+    gruppen:[
+      { name:"Mitglieder (auch LAV)", preise:"17 €/24h · 70 €/Woche · 215 €/Jahr" }
+    ],
+    hinweis:"Leihboote in Bosau kosten zusätzlich 10 €/Tag."
+  },
+  {
+    id:"nok", name:"Nord-Ostsee-Kanal (NOK)", typ:"Kanal",
+    kostenlosLav:false,
+    gruppen:[
+      { name:"LAV-Mitglieder", preise:"15 €/24h · 21 €/3 Tage · 29 €/Woche · 47 €/Jahr" },
+      { name:"Nicht-Mitglieder", preise:"28 €/24h · 47 €/3 Tage · … bis 138 €/Jahr (deutlich teurer)" }
+    ]
+  },
+  {
+    id:"elk", name:"Elbe-Lübeck-Kanal (ELK)", typ:"Kanal",
+    kostenlosLav:false,
+    gruppen:[
+      { name:"DAFV-Mitglieder", preise:"13 €/Tag · 28 €/Woche · 41 €/Jahr" }
+    ]
+  },
+  {
+    id:"elbe-lauenburg", name:"Elbe bei Lauenburg", typ:"Fluss",
+    kostenlosLav:false,
+    gruppen:[
+      { name:"LAV-/AVN-Mitglieder", preise:"12 €/Tag · 19 €/3 Tage · 27 €/Woche · 43 €/Jahr" }
+    ]
+  }
+];
+const LAV_GEWAESSER_META = {
+  stand: "Stand: Juli 2026, Quelle lav-sh.de",
+  disclaimer: "Preise und Regelungen können sich ändern – vor jedem Angeltag den aktuellen Stand auf lav-sh.de oder direkt beim LAV Schleswig-Holstein prüfen. „LAV-Mitglieder“ = Mitglieder im Landesangelverband SH selbst, „DAFV-Mitglieder“ = Mitglieder im Bundesverband (oft nur diese Preisstufe explizit auf der jeweiligen Gewässerseite genannt, uneinheitlich gepflegt)."
+};
