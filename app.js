@@ -611,14 +611,11 @@ function berechne(){
 }
 
 /* ---------- Inventar-Ansicht ---------- */
-function renderInventar(){
-  const el = $("#inventar");
-  let html = `<h2>🎒 Mein aktuelles Equipment</h2><div class="inv-grid">`;
-  Object.values(AKTUELL).forEach(s => {
-    const letzteWartung = WARTUNG[s.key];
-    const tage = letzteWartung ? tageSeit(letzteWartung) : null;
-    const faellig = tage === null || tage > 180; // > 6 Monate ohne Eintrag = Erinnerung
-    html += `<div class="inv-card">
+function inventarKarteHTML(s){
+  const letzteWartung = WARTUNG[s.key];
+  const tage = letzteWartung ? tageSeit(letzteWartung) : null;
+  const faellig = tage === null || tage > 180; // > 6 Monate ohne Eintrag = Erinnerung
+  return `<div class="inv-card">
       <h3>${s.name}</h3>
       <div class="row"><span class="k">Rute</span><span>${s.rute}</span></div>
       <div class="row"><span class="k">Rolle</span><span>${s.rolle}</span></div>
@@ -632,7 +629,22 @@ function renderInventar(){
         <button type="button" class="fs-chip" data-wartung="${s.key}">Heute gewartet</button>
       </div>
     </div>`;
-  });
+}
+
+function renderInventar(){
+  const el = $("#inventar");
+  const alleSetups = Object.values(AKTUELL);
+  const stippen = alleSetups.filter(s => s.kategorie === "stippe");
+  const mitRolle = alleSetups.filter(s => s.kategorie !== "stippe");
+
+  let html = `<h2>🎒 Mein aktuelles Equipment</h2>`;
+  html += `<h3 class="inv-gruppe-titel">🎣 Ruten mit Rolle</h3>`;
+  html += `<div class="inv-grid">` + mitRolle.map(inventarKarteHTML).join("") + `</div>`;
+  if(stippen.length > 0){
+    html += `<h3 class="inv-gruppe-titel">🪁 Stippruten (ohne Rolle)</h3>`;
+    html += `<div class="inv-grid">` + stippen.map(inventarKarteHTML).join("") + `</div>`;
+  }
+  html += `<div class="inv-grid">`;
   // eigene Setups
   ZUSATZ.setups.forEach((s,i) => {
     html += `<div class="inv-card eigen">

@@ -175,7 +175,9 @@ select:focus{outline:none;border-color:var(--accent)}
 /* ---------- Inventar ---------- */
 #inventar h2{font-size:18px;margin:26px 0 12px;border-bottom:1px solid var(--line);padding-bottom:8px}
 #inventar h2:first-child{margin-top:0}
-.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.inv-gruppe-titel{font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin:18px 0 10px}
+.inv-gruppe-titel:first-of-type{margin-top:4px}
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:18px}
 .inv-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
 .inv-card.wunsch{border-style:dashed;opacity:.95}
 .inv-card h3{margin:0 0 10px;font-size:16px}

@@ -38,6 +38,7 @@ const AKTUELL = {
   },
   setup4: {
     key: "setup4",
+    kategorie: "stippe",
     name: "Setup 4 – Stippe (Weißfisch)",
     rute: "Shimano Hyperloop 7,00 m · 7 Segmente",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
@@ -79,6 +80,7 @@ const AKTUELL = {
   },
   setup8: {
     key: "setup8",
+    kategorie: "stippe",
     name: "Setup 8 – Kompakt-Stippe (enge Spots)",
     rute: "Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug, wie Setup 4",
@@ -89,6 +91,7 @@ const AKTUELL = {
   },
   setup9: {
     key: "setup9",
+    kategorie: "stippe",
     name: "Setup 9 – Stipp-Combo (Köderfisch/Einsteiger)",
     rute: "Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk",
     rolle: "keine Rolle nötig",
