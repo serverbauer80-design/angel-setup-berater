@@ -89,6 +89,25 @@ function ladeWartung(){
 }
 function speichereWartung(){ try { localStorage.setItem(WARTUNG_KEY, JSON.stringify(WARTUNG)); } catch(e){} fsSyncPushDebounced(); }
 let WARTUNG = ladeWartung();
+
+/* Einmalige Migration: Setup 4/5/6/7 wurden umnummeriert (Stippruten in eigene
+   Gruppe verschoben, Rest rutscht nach: alt4->neu7, alt5->neu4, alt6->neu5,
+   alt7->neu6). Wartungsdaten sind unter dem alten setup.key gespeichert und
+   müssen einmalig mitwandern, sonst zeigt die App das Wartungsdatum am
+   falschen (neuen) Setup an. Flag verhindert mehrfaches/falsches Verschieben
+   bei jedem künftigen Laden. */
+(function migriereSetupNummerierungV1(){
+  const FLAG = "setup_renumber_v1_done";
+  if(localStorage.getItem(FLAG)) return;
+  const mapping = { setup4:"setup7", setup5:"setup4", setup6:"setup5", setup7:"setup6" };
+  if(Object.keys(WARTUNG).some(k => mapping[k])){
+    const neu = {};
+    Object.keys(WARTUNG).forEach(k => { neu[mapping[k] || k] = WARTUNG[k]; });
+    WARTUNG = neu;
+    speichereWartung();
+  }
+  try { localStorage.setItem(FLAG, "1"); } catch(e){}
+})();
 function tageSeit(datumStr){
   const then = new Date(datumStr + "T00:00:00");
   return Math.floor((Date.now() - then.getTime()) / (1000*60*60*24));
