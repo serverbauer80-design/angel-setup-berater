@@ -76,6 +76,26 @@ const AKTUELL = {
     vorfach: "Fluorocarbon 0,20–0,25 mm · ca. 60–100 cm",
     extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köder, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
     einsatz: "Aktives Spinnfischen mit Kunstködern auf Forelle und Barsch – etwas kräftiger als Setup 2 (Ultraleicht) und Setup 5 (Light Game), WG bis 40 g deckt auch etwas größere Spinner/Wobbler/Blinker ab."
+  },
+  setup8: {
+    key: "setup8",
+    name: "Setup 8 – Kompakt-Stippe (enge Spots)",
+    rute: "Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert",
+    rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug, wie Setup 4",
+    schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1–1,5 m (kürzer als die 4 m Rute – zum Reinschwingen des Fischs)",
+    vorfach: "optional: kleine Wirbel (Gr. 16–18) falls gewünscht",
+    extra: "",
+    einsatz: "Kompakte Alternative zu Setup 4 für sehr enge Angelplätze (Bäume, schmaler Steg, dichte Ufervegetation) – kein Schwingen/Einschieben der 7-m-Rute nötig, die Spitze bleibt fast immer in Reichweite. Feines Posenfischen auf Rotauge, Schleie & Co."
+  },
+  setup9: {
+    key: "setup9",
+    name: "Setup 9 – Stipp-Combo (Köderfisch/Einsteiger)",
+    rute: "Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk",
+    rolle: "keine Rolle nötig",
+    schnur: "Fertige Montage (Schnur, Pose, Haken) ab Werk auf Wickelbrett – sofort einsatzbereit",
+    vorfach: "bereits in der Fertigmontage enthalten",
+    extra: "Komplett vormontiert, kein Aufbau nötig",
+    einsatz: "Schnelle, unkomplizierte Stippe für Köderfischfang oder als Einsteiger-/Zweitrute – kürzer und einfacher als Setup 4/8, dafür ohne jede Vorbereitung sofort startklar."
   }
 };
 
@@ -112,14 +132,6 @@ const WUNSCH = {
     schnur: "Monofil 0,14–0,18 mm",
     preis: "ca. 250–400 € gehoben (Einsteiger ca. 60–100 €)",
     dazu: "Posen-Sortiment 2–8 g, feine Haken Gr. 14–18, Made/Wurm"
-  },
-  kompaktstippe: {
-    key: "kompaktstippe", name: "Kompakt-Stippe 3–4 m (enge Spots)",
-    rute: "Günstige Teleskop-Kopfrute 3,00–4,00 m (z. B. Shimano/Browning Einsteigerklasse)", rolle: "keine Rolle nötig – wie Setup 4",
-    schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug – Montage ca. 1–1,5 m",
-    preis: "ca. 25–50 € (Einsteiger-Kopfrute)",
-    dazu: "Keine Extra-Kleinteile nötig – Posen/Haken/Schrotblei von Setup 4 passen 1:1",
-    hinweis: "Keine neue Geräteklasse, nur eine kürzere Ergänzung zu Setup 4: für sehr enge Spots (Bäume, schmaler Steg, dichte Ufervegetation), wo Schwingen/Einschieben mit der 7-m-Rute unpraktisch ist."
   },
   posenrute: {
     key: "posenrute", name: "Allround-Posenrute (Forellensee + Ansitz)",
