@@ -38,8 +38,38 @@ const AKTUELL = {
   },
   setup4: {
     key: "setup4",
+    name: "Setup 4 – Light Game (Barsch/Döbel)",
+    rute: "Savage Gear Revenge SG2 Light Game · 2,21 m · WG 5-18 g · 9 Ringe · 121 g · 2-teilig",
+    rolle: "Daiwa 23 Ninja LT2500 · 4 Kugellager · Übersetzung 5,3:1 · 230 g · Frontbremse",
+    schnur: "J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen deiner 0,06 mm (Setup 2) und 0,16 mm (Setup 1)",
+    vorfach: "Fluorocarbon 0,20–0,25 mm · ca. 60–100 cm",
+    extra: "",
+    einsatz: "Leichtes, aktives Spinnfischen mit kleinen Gummifischen/Spinnern/Wobblern auf Barsch, Döbel, kleinen Zander – auch gut für Hornhecht/Meerforelle zum Reinschnuppern."
+  },
+  setup5: {
+    key: "setup5",
+    name: "Setup 5 – Grund-/Feederangel (Friedfisch)",
+    rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
+    rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bereits fachgerecht bespult",
+    schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Mono-/Fluorocarbon-Vorfachschnur umspulen",
+    vorfach: "je nach Zielfisch, z. B. 0,16–0,20 mm für Brasse/Karpfen",
+    extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köderbox, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
+    einsatz: "Grund- und Feederangeln auf Karpfen und andere Friedfische (Brasse, Schleie, Rotauge) – ruhiger Ansitz mit Futterkorb/Grundblei an See, Kanal oder ruhigem Fluss."
+  },
+  setup6: {
+    key: "setup6",
+    name: "Setup 6 – Spinnangel Forelle/Barsch",
+    rute: "Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil",
+    rolle: "Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult",
+    schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen",
+    vorfach: "Fluorocarbon 0,20–0,25 mm · ca. 60–100 cm",
+    extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köder, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
+    einsatz: "Aktives Spinnfischen mit Kunstködern auf Forelle und Barsch – etwas kräftiger als Setup 2 (Ultraleicht) und Setup 4 (Light Game), WG bis 40 g deckt auch etwas größere Spinner/Wobbler/Blinker ab."
+  },
+  setup7: {
+    key: "setup7",
     kategorie: "stippe",
-    name: "Setup 4 – Stippe (Weißfisch)",
+    name: "Setup 7 – Stippe (Weißfisch)",
     rute: "Shimano Hyperloop 7,00 m · 7 Segmente",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1,5–2 m (deutlich kürzer als die 7 m Rute – zum Reinschwingen des Fischs)",
@@ -48,46 +78,16 @@ const AKTUELL = {
     einsatz: "Feines Stippen auf Rotauge, Schleie, Brasse an Eider, NOK, See – sehr entspannt, maximale Feinfühligkeit. Fisch landen: Rute im Bogen zu dir heranschwingen, bei wenig Platz stattdessen Segmente einschieben.",
     tippKompakt: "Bei sehr engen Spots (Bäume, schmaler Steg, dichte Ufervegetation) ist Setup 8 (Kompakt-Stippe, 4 m) die entspanntere Alternative zur 7-m-Rute: kein Schwingen/Einschieben nötig, die Spitze bleibt praktisch immer in Reichweite. Dafür deutlich weniger Reichweite – nur für nahes Ufer-Fischen, nicht über Schilf/Seerosen hinweg."
   },
-  setup5: {
-    key: "setup5",
-    name: "Setup 5 – Light Game (Barsch/Döbel)",
-    rute: "Savage Gear Revenge SG2 Light Game · 2,21 m · WG 5-18 g · 9 Ringe · 121 g · 2-teilig",
-    rolle: "Daiwa 23 Ninja LT2500 · 4 Kugellager · Übersetzung 5,3:1 · 230 g · Frontbremse",
-    schnur: "J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen deiner 0,06 mm (Setup 2) und 0,16 mm (Setup 1)",
-    vorfach: "Fluorocarbon 0,20–0,25 mm · ca. 60–100 cm",
-    extra: "",
-    einsatz: "Leichtes, aktives Spinnfischen mit kleinen Gummifischen/Spinnern/Wobblern auf Barsch, Döbel, kleinen Zander – auch gut für Hornhecht/Meerforelle zum Reinschnuppern."
-  },
-  setup6: {
-    key: "setup6",
-    name: "Setup 6 – Grund-/Feederangel (Friedfisch)",
-    rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
-    rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bereits fachgerecht bespult",
-    schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Mono-/Fluorocarbon-Vorfachschnur umspulen",
-    vorfach: "je nach Zielfisch, z. B. 0,16–0,20 mm für Brasse/Karpfen",
-    extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köderbox, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
-    einsatz: "Grund- und Feederangeln auf Karpfen und andere Friedfische (Brasse, Schleie, Rotauge) – ruhiger Ansitz mit Futterkorb/Grundblei an See, Kanal oder ruhigem Fluss."
-  },
-  setup7: {
-    key: "setup7",
-    name: "Setup 7 – Spinnangel Forelle/Barsch",
-    rute: "Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil",
-    rolle: "Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult",
-    schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen",
-    vorfach: "Fluorocarbon 0,20–0,25 mm · ca. 60–100 cm",
-    extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köder, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
-    einsatz: "Aktives Spinnfischen mit Kunstködern auf Forelle und Barsch – etwas kräftiger als Setup 2 (Ultraleicht) und Setup 5 (Light Game), WG bis 40 g deckt auch etwas größere Spinner/Wobbler/Blinker ab."
-  },
   setup8: {
     key: "setup8",
     kategorie: "stippe",
     name: "Setup 8 – Kompakt-Stippe (enge Spots)",
     rute: "Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert",
-    rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug, wie Setup 4",
+    rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug, wie Setup 7",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1–1,5 m (kürzer als die 4 m Rute – zum Reinschwingen des Fischs)",
     vorfach: "optional: kleine Wirbel (Gr. 16–18) falls gewünscht",
     extra: "",
-    einsatz: "Kompakte Alternative zu Setup 4 für sehr enge Angelplätze (Bäume, schmaler Steg, dichte Ufervegetation) – kein Schwingen/Einschieben der 7-m-Rute nötig, die Spitze bleibt fast immer in Reichweite. Feines Posenfischen auf Rotauge, Schleie & Co."
+    einsatz: "Kompakte Alternative zu Setup 7 für sehr enge Angelplätze (Bäume, schmaler Steg, dichte Ufervegetation) – kein Schwingen/Einschieben der 7-m-Rute nötig, die Spitze bleibt fast immer in Reichweite. Feines Posenfischen auf Rotauge, Schleie & Co."
   },
   setup9: {
     key: "setup9",
@@ -98,7 +98,7 @@ const AKTUELL = {
     schnur: "Fertige Montage (Schnur, Pose, Haken) ab Werk auf Wickelbrett – sofort einsatzbereit",
     vorfach: "bereits in der Fertigmontage enthalten",
     extra: "Komplett vormontiert, kein Aufbau nötig",
-    einsatz: "Schnelle, unkomplizierte Stippe für Köderfischfang oder als Einsteiger-/Zweitrute – kürzer und einfacher als Setup 4/8, dafür ohne jede Vorbereitung sofort startklar."
+    einsatz: "Schnelle, unkomplizierte Stippe für Köderfischfang oder als Einsteiger-/Zweitrute – kürzer und einfacher als Setup 7/8, dafür ohne jede Vorbereitung sofort startklar."
   }
 };
 
@@ -143,7 +143,7 @@ const WUNSCH = {
     schnur: "Monofil 0,20–0,25 mm",
     preis: "ca. 176 € (Rute 86 € + Rolle ~90 €)",
     dazu: "Rutenhalter (vorhanden), Laufpose 3–15 g je nach Einsatz",
-    hinweis: "Vielseitiger als eine reine Forellensee-Zweitangel: klassische Posenrute (kein Feeder/Quivertip nötig, da die Montage über eine schwimmende Pose läuft) – nutzbar als passive Zweitangel am Forellensee, aktiv am Forellensee (Sbirolino/Pose), UND als Laufpose auf Weißfisch/Schleie/Karpfen an See/Kanal auf mittlere Distanz. Schließt die Lücke zwischen Setup 4 (Stippe, nur Ufernähe) und Setup 6 (Feeder, Grundmontage ohne Pose). Setup 3 und 7 funktionieren übergangsweise auch passiv, sind aber nicht dafür optimiert."
+    hinweis: "Vielseitiger als eine reine Forellensee-Zweitangel: klassische Posenrute (kein Feeder/Quivertip nötig, da die Montage über eine schwimmende Pose läuft) – nutzbar als passive Zweitangel am Forellensee, aktiv am Forellensee (Sbirolino/Pose), UND als Laufpose auf Weißfisch/Schleie/Karpfen an See/Kanal auf mittlere Distanz. Schließt die Lücke zwischen Setup 7 (Stippe, nur Ufernähe) und Setup 5 (Feeder, Grundmontage ohne Pose). Setup 3 und 6 funktionieren übergangsweise auch passiv, sind aber nicht dafür optimiert."
   },
   pilk: {
     key: "pilk", name: "Hochsee-/Kutter-Setup (Pilken)",
@@ -288,14 +288,14 @@ const FISCHE = [
         tipp:"Für große Barsche (>35 cm) die kräftigere Setup 1 nehmen – da ist oft auch der Zander nicht weit."
       },
       {
-        methode:"Light Game – kleiner Gummifisch/Spinner (aktiv)", status:"machbar", setup:"setup5",
+        methode:"Light Game – kleiner Gummifisch/Spinner (aktiv)", status:"machbar", setup:"setup4",
         gewaesser:["eider","nok","elbe","see"],
         montage:[
           {k:"Hauptschnur", v:"J-Braid X8 0,10 mm"},
           {k:"Vorfach", v:"Fluorocarbon 0,20–0,25 mm · 60–100 cm"},
           {k:"Köder", v:"Mini-Gummifisch 5–8 cm am Jigkopf 3–10 g · oder kleiner Spinner"}
         ],
-        tipp:"Genau der Einsatzzweck von Setup 5 – aktiv laufen, an Kanten und Strukturen jiggen, viele Fühlungskontakte spüren."
+        tipp:"Genau der Einsatzzweck von Setup 4 – aktiv laufen, an Kanten und Strukturen jiggen, viele Fühlungskontakte spüren."
       }
     ]
   },
@@ -417,15 +417,15 @@ const FISCHE = [
     info:"Kräftiger Kämpfer, der Anfüttern und Geduld belohnt. Braucht kräftiges Ansitzgerät + Selbsthakmontage.",
     ansaetze:[
       {
-        methode:"Grund-/Feederangeln – Futterkorb mit Boilie/Mais", status:"machbar", setup:"setup6",
+        methode:"Grund-/Feederangeln – Futterkorb mit Boilie/Mais", status:"machbar", setup:"setup5",
         gewaesser:["see","nok","eider"],
         montage:[
-          {k:"Hauptschnur", v:"vorbespult (Setup 6) bzw. Monofil 0,25–0,30 mm"},
+          {k:"Hauptschnur", v:"vorbespult (Setup 5) bzw. Monofil 0,25–0,30 mm"},
           {k:"Futterkorb/Grundblei", v:"30–80 g je nach Wurfweite und Strömung"},
           {k:"Vorfach", v:"Boiliehaar oder Haarmontage 10–15 cm"},
           {k:"Haken", v:"Karpfenhaken Gr. 6–2 · Boilie/Mais am Haar"}
         ],
-        tipp:"Genau der Einsatzzweck von Setup 6 (Crivit Feeder-Set). Ruhiger Ansitz, Futterkorb regelmäßig nachfüttern, Rutenspitze auf feine Bisse beobachten."
+        tipp:"Genau der Einsatzzweck von Setup 5 (Crivit Feeder-Set). Ruhiger Ansitz, Futterkorb regelmäßig nachfüttern, Rutenspitze auf feine Bisse beobachten."
       }
     ]
   },
@@ -435,7 +435,7 @@ const FISCHE = [
     info:"Heimlicher Schlammbewohner mit vorsichtigem Biss. Aufsteigende Blasen verraten fressende Schleien.",
     ansaetze:[
       {
-        methode:"Stippen an der Krautkante", status:"machbar", setup:"setup4",
+        methode:"Stippen an der Krautkante", status:"machbar", setup:"setup7",
         gewaesser:["see","nok"],
         montage:[
           {k:"Feste Vorfachschnur", v:"0,10–0,14 mm, am Gummizug, Länge ca. 1,5–2 m (kürzer als die Rute – zum Reinschwingen)"},
@@ -443,7 +443,7 @@ const FISCHE = [
           {k:"Schrotblei", v:"aufgeteilt, fein ausgebleit"},
           {k:"Haken", v:"Gr. 8–12 · Wurm/Mais/Made"}
         ],
-        tipp:"Genau der Einsatzzweck von Setup 4 (Stippe) – maximale Feinfühligkeit direkt an der Krautkante, aufsteigende Blasen verraten die Fressstelle. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen (Bäume/Steg)? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
+        tipp:"Genau der Einsatzzweck von Setup 7 (Stippe) – maximale Feinfühligkeit direkt an der Krautkante, aufsteigende Blasen verraten die Fressstelle. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen (Bäume/Steg)? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
       }
     ]
   },
@@ -453,7 +453,7 @@ const FISCHE = [
     info:"Häufigster Schwarmfisch, ganzjährig fangbar – der klassische Posenfisch (auch Rotfeder, Brasse, Aland).",
     ansaetze:[
       {
-        methode:"Stippen (Posenangeln)", status:"machbar", setup:"setup4",
+        methode:"Stippen (Posenangeln)", status:"machbar", setup:"setup7",
         gewaesser:["eider","nok","see","elbe"],
         montage:[
           {k:"Feste Vorfachschnur", v:"0,10–0,14 mm, am Gummizug, Länge ca. 1,5–2 m (kürzer als die Rute – zum Reinschwingen)"},
@@ -461,18 +461,18 @@ const FISCHE = [
           {k:"Schrotblei", v:"fein ausgebleit, ein Fühlerblei am Grund"},
           {k:"Haken", v:"Gr. 14–18 · Made/Mais/Teig"}
         ],
-        tipp:"Klassischer Fall für Setup 4 (Stippe) – entspanntes Posenangeln mit maximaler Feinfühligkeit. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
+        tipp:"Klassischer Fall für Setup 7 (Stippe) – entspanntes Posenangeln mit maximaler Feinfühligkeit. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
       },
       {
-        methode:"Grund-/Feederangeln (weitere Distanz)", status:"machbar", setup:"setup6",
+        methode:"Grund-/Feederangeln (weitere Distanz)", status:"machbar", setup:"setup5",
         gewaesser:["eider","nok","see","elbe"],
         montage:[
-          {k:"Hauptschnur", v:"vorbespult (Setup 6) bzw. Monofil 0,16–0,20 mm"},
+          {k:"Hauptschnur", v:"vorbespult (Setup 5) bzw. Monofil 0,16–0,20 mm"},
           {k:"Futterkorb/Grundblei", v:"20–40 g"},
           {k:"Vorfach", v:"0,14–0,16 mm · ca. 40–60 cm"},
           {k:"Haken", v:"Gr. 14–18 · Made/Mais/Teig"}
         ],
-        tipp:"Wenn's weiter raus oder mit Futterkorb gehen soll statt Stippe – Setup 6 deckt größere Distanzen ab."
+        tipp:"Wenn's weiter raus oder mit Futterkorb gehen soll statt Stippe – Setup 5 deckt größere Distanzen ab."
       }
     ]
   },
@@ -1146,23 +1146,23 @@ const ANGELMETHODEN = [
   {
     id:"spinnfischen", name:"Spinnfischen", emoji:"🎣",
     beschreibung:"Aktives Werfen und kontinuierliches Einholen von Kunstködern (Gummifisch, Wobbler, Blinker, Spoon) – der Köder imitiert flüchtenden Beutefisch. Die vielseitigste Methode auf Raubfisch wie Hecht, Zander, Barsch, Forelle.",
-    passendeSetups:["setup1","setup2","setup5","setup7"]
+    passendeSetups:["setup1","setup2","setup4","setup6"]
   },
   {
     id:"dropshot", name:"Dropshot-Angeln", emoji:"🎣",
     beschreibung:"Der Köder hängt an einem abgesetzten Haken über dem Blei, das am Grund bleibt – so lässt sich der Köder praktisch auf der Stelle verführerisch zittern lassen. Sehr effektiv auf Barsch.",
-    passendeSetups:["setup2","setup5"]
+    passendeSetups:["setup2","setup4"]
   },
   {
     id:"posenangeln", name:"Posenangeln / Stippen", emoji:"🎣",
     beschreibung:"Klassisches Angeln mit schwimmender Pose, die Bisse sichtbar anzeigt. Stippen (feste Rute ohne Rolle) für Ufernähe, Laufpose mit Rolle für mehr Distanz. Grundtechnik für Weißfisch, Schleie, Forelle.",
-    passendeSetups:["setup4"],
+    passendeSetups:["setup7"],
     wunschKey:"posenrute"
   },
   {
     id:"grundfeedern", name:"Grund-/Feederangeln", emoji:"🎣",
     beschreibung:"Köder liegt am Grund, oft mit Futterkorb (Feeder) zum gezielten Anfüttern der Stelle. Ruhiger Ansitz mit Rutenhalter, Bissanzeige über Rutenspitze oder elektronischen Bissanzeiger. Standard für Karpfen, Brasse, Aal.",
-    passendeSetups:["setup6"]
+    passendeSetups:["setup5"]
   },
   {
     id:"sbirolino", name:"Sbirolino-Angeln", emoji:"🎣",
