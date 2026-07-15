@@ -123,8 +123,11 @@ select:focus{outline:none;border-color:var(--accent)}
 .badge.machbar{background:rgba(58,208,122,.16);color:var(--ok);border:1px solid rgba(58,208,122,.4)}
 .badge.bedingt{background:rgba(242,178,58,.16);color:var(--warn);border:1px solid rgba(242,178,58,.4)}
 .badge.wunsch{background:rgba(232,92,92,.16);color:var(--bad);border:1px solid rgba(232,92,92,.4)}
-.ansatz-head .m-name{font-weight:700;font-size:16px;flex:1}
+.ansatz-head .m-name{font-weight:800;font-size:19px;flex:1}
 .ansatz-body{padding:16px 18px;display:flex;flex-direction:column;gap:16px}
+.ansatz-body .row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;font-size:13.5px;color:var(--muted);padding:8px 0;border-bottom:1px solid var(--line)}
+.ansatz-body .row:last-of-type{border-bottom:none}
+.ansatz-body .row b{color:var(--text);font-size:15px;font-weight:700;text-align:right}
 
 .setup-line{
   display:flex;flex-wrap:wrap;gap:8px 18px;background:var(--bg2);border-radius:10px;padding:12px 14px;
