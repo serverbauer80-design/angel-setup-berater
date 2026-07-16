@@ -2867,15 +2867,15 @@ function ulSchliesseViewer(){
   $("#unterlagen-list").style.display   = "";
 }
 
+const UL_IS_MOBILE = navigator.maxTouchPoints > 1;
+
 async function ulOeffneDoc(id, name){
   const listEl = $("#unterlagen-list");
-  // Zuerst lokalen Cache prüfen
   let cached = await ulIDBLadeEins(id);
   let buffer;
   if(cached){
     buffer = cached.data;
   } else if(fsSyncUser){
-    // Von Firebase Storage laden und lokal cachen
     listEl.querySelector(`[data-ul-open="${id}"] .ul-doc-size`).textContent = "⏬ Wird geladen …";
     try {
       buffer = await ulCloudDownload(fsSyncUser.uid, id);
@@ -2891,10 +2891,16 @@ async function ulOeffneDoc(id, name){
   const blob = new Blob([buffer], { type: "application/pdf" });
   if(ulAktuellerObjectURL) URL.revokeObjectURL(ulAktuellerObjectURL);
   ulAktuellerObjectURL = URL.createObjectURL(blob);
-  $("#ul-viewer-name").textContent = name;
-  $("#ul-pdf-embed").src = ulAktuellerObjectURL;
-  listEl.style.display = "none";
-  $("#unterlagen-viewer").style.display = "flex";
+
+  if(UL_IS_MOBILE){
+    // Auf Handy: neuer Tab – embed funktioniert auf iOS/Android nicht zuverlässig
+    window.open(ulAktuellerObjectURL, "_blank");
+  } else {
+    $("#ul-viewer-name").textContent = name;
+    $("#ul-pdf-embed").src = ulAktuellerObjectURL;
+    listEl.style.display = "none";
+    $("#unterlagen-viewer").style.display = "flex";
+  }
 }
 
 async function renderUnterlagen(){
@@ -3227,3 +3233,42 @@ renderLavGewaesser();
 renderWochenende();
 renderAnsitzAngeln();
 renderUnterlagen();
+
+/* ---------- Auto-Update-Check ---------- */
+(function(){
+  const VERSION_KEY = "app_version_known";
+  let letzteVersion = null;
+
+  function zeigeUpdateBanner(version){
+    if(document.getElementById("update-banner")) return;
+    const div = document.createElement("div");
+    div.id = "update-banner";
+    div.innerHTML = `🔄 Update verfügbar – <b>Antippen zum Aktualisieren</b>`;
+    div.style.cssText = [
+      "position:fixed","bottom:0","left:0","right:0","z-index:9999",
+      "background:var(--accent)","color:#0e1b24","text-align:center",
+      "padding:14px 16px","font-size:15px","font-weight:700","cursor:pointer",
+      "box-shadow:0 -2px 12px rgba(0,0,0,.4)"
+    ].join(";");
+    div.addEventListener("click", () => {
+      localStorage.setItem(VERSION_KEY, version);
+      location.href = location.pathname + "?r=" + Date.now();
+    });
+    document.body.appendChild(div);
+  }
+
+  async function pruefeVersion(){
+    try {
+      const resp = await fetch("version.txt?r=" + Date.now(), { cache: "no-store" });
+      if(!resp.ok) return;
+      const version = (await resp.text()).trim();
+      if(!letzteVersion) letzteVersion = version;
+      const bekannt = localStorage.getItem(VERSION_KEY);
+      if(bekannt && bekannt !== version) zeigeUpdateBanner(version);
+      else if(!bekannt) localStorage.setItem(VERSION_KEY, version);
+    } catch(e) {}
+  }
+
+  pruefeVersion();
+  setInterval(pruefeVersion, 5 * 60 * 1000); // alle 5 Minuten
+})();
