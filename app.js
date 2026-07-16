@@ -2795,39 +2795,51 @@ async function ulIDBLadeEins(id){
 
 // ---- Firebase Storage / Firestore (nur wenn eingeloggt) ----
 
-function ulStorageRef(uid, id){
-  return firebase.storage().ref(`unterlagen/${uid}/${id}.pdf`);
-}
+// ---- Firestore als Cloud-Speicher (base64, kein Storage-Tarif nötig) ----
 
 function ulFirestoreCol(uid){
   return firebase.firestore().collection("unterlagen").doc(uid).collection("docs");
 }
 
+function ulToBase64(buffer){
+  const bytes = new Uint8Array(buffer);
+  let bin = "";
+  for(let i = 0; i < bytes.byteLength; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+
+function ulFromBase64(b64){
+  const bin   = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for(let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
+}
+
 async function ulCloudLadeAlle(uid){
   const snap = await ulFirestoreCol(uid).orderBy("created").get();
-  return snap.docs.map(d => ({ id: d.id, ...d.data(), inCloud: true }));
+  // dataB64 beim Listing weglassen – nur Metadaten zurückgeben
+  return snap.docs.map(d => {
+    const { dataB64, ...meta } = d.data();
+    return { id: d.id, ...meta, inCloud: true };
+  });
 }
 
 async function ulCloudSpeichere(uid, id, name, created, buffer, onProgress){
-  const ref  = ulStorageRef(uid, id);
-  const task = ref.put(buffer, { contentType: "application/pdf" });
-  await new Promise((resolve, reject) => {
-    task.on("state_changed",
-      snap => { if(onProgress) onProgress(snap.bytesTransferred / snap.totalBytes); },
-      reject, resolve);
-  });
-  await ulFirestoreCol(uid).doc(id).set({ name, created, size: buffer.byteLength });
+  if(onProgress) onProgress(0.3);
+  const dataB64 = ulToBase64(buffer);
+  if(onProgress) onProgress(0.7);
+  await ulFirestoreCol(uid).doc(id).set({ name, created, size: buffer.byteLength, dataB64 });
+  if(onProgress) onProgress(1);
 }
 
 async function ulCloudLoesche(uid, id){
-  await ulStorageRef(uid, id).delete().catch(() => {});
   await ulFirestoreCol(uid).doc(id).delete().catch(() => {});
 }
 
 async function ulCloudDownload(uid, id){
-  const url  = await ulStorageRef(uid, id).getDownloadURL();
-  const resp = await fetch(url);
-  return resp.arrayBuffer();
+  const snap = await ulFirestoreCol(uid).doc(id).get();
+  if(!snap.exists) throw new Error("Dokument nicht in der Cloud gefunden.");
+  return ulFromBase64(snap.data().dataB64);
 }
 
 // ---- Hilfsfunktionen ----
