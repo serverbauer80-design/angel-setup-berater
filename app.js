@@ -2730,6 +2730,110 @@ function vorhabenSaisonBadgeHTML(vorhaben){
     : `<span class="saison-badge neutral">⚪ Gerade nicht Hauptsaison (${saisonJetzt})</span>`;
 }
 
+/* ---------- Ansitzangeln ---------- */
+function renderAnsitzAngeln(){
+  const el = $("#ansitz");
+
+  function preisklasse(titel, emoji, items, hinweis){
+    const rows = items.map(([label, wert, url]) => {
+      const val = url
+        ? `<a class="shop-link" href="${url}" target="_blank" rel="noopener noreferrer">${wert}</a>`
+        : `<b>${wert}</b>`;
+      return `<div class="row"><span>${label}</span><span>${val}</span></div>`;
+    }).join("");
+    const hinweisHTML = hinweis ? `<div class="need-hinweis" style="margin-top:6px">${hinweis}</div>` : "";
+    return `<article class="ansatz" style="margin-bottom:12px">
+      <div class="ansatz-head">
+        <span class="badge machbar">${emoji} ${titel}</span>
+      </div>
+      <div class="ansatz-body">
+        ${rows}
+        ${hinweisHTML}
+      </div>
+    </article>`;
+  }
+
+  const html = `
+    <div class="k-intro card">
+      <h2>⚓ Ansitzangeln – Setups</h2>
+      <p>Karpfen und Aal – die klassischen Ansitzfische. Der entscheidende Unterschied sitzt
+      nicht im Preis, sondern in Rutenlänge und Testkurve: Karpfen braucht Wurfweite und
+      Rückgrat (3,00 lb), Aal braucht eine weichere Spitze für feine Bisse und kommt meist
+      mit kürzeren Distanzen aus (2,25–2,75 lb). Preise sind Richtwerte – vor Kauf immer
+      aktuell prüfen.</p>
+    </div>
+
+    <div class="k-intro card" style="margin-bottom:8px">
+      <h2>🐟 Karpfen</h2>
+      <p class="k-hint">Freie Hegehaken, Boilies oder Mais – ruhiger Ansitz an See oder Kanal.
+      Freilaufrolle (Baitrunner) ist Pflicht: Karpfen nehmen den Köder, ziehen Schnur ab –
+      erst dann anschlagen.</p>
+    </div>
+
+    ${preisklasse("Einsteiger · ~100–110 €", "🟢", [
+      ["Rute", "Daiwa Black Widow XT Carp · 3,60 m · 3,00 lb · ca. 54 €",
+        "https://www.angelsport.de/daiwa-karpfenrute-black-widow-xt-tele-carp-xt-tele-carp_0225557.html"],
+      ["Rolle", "DAM Quick 2 FS · Gr. 6000 · ca. 30–40 €",
+        "https://www.gerlinger.de/DAM-Rolle-Quick-2-FS-Freilaufrolle-verschiedene-Groessen-Karpfenrolle-Ansitzrolle"],
+      ["Schnur", "Cormoran Profiline Karpfen · 0,35 mm / 10 kg · 400 m",
+        "https://www.angeljoe.de/Cormoran-Profiline-Schnur-Karpfen-400m-Braun-0-35mm-10kg/110421"]
+    ])}
+
+    ${preisklasse("Mittelklasse · ~150–200 €", "🟡", [
+      ["Rute", "Sportex Catapult CS-4 Carp · 3,60 m · 3,00 lb – Carbon-Blank, Fuji-Rollenhalter, 10 J. Garantie",
+        "https://fischdeal.de/t/karpfenruten/sportex-catapult-cs-4-carp-karpfenrute-12ft-3-00lb"],
+      ["Rolle", "Shimano Baitrunner DL 6000 – Referenz im Karpfensegment",
+        "https://www.angelsport.de/shimano-freilaufrolle-baitrunner-dl_0120859.html"],
+      ["Schnur", "Cormoran Profiline Karpfen 0,35 mm (wie Einsteiger) oder Fox Exocet Fluoro Mono", ""]
+    ])}
+
+    ${preisklasse("Gehoben · 250 €+", "🔴", [
+      ["Rute", "Fox Horizon X3 · 12 ft · ca. 93 €",
+        "https://www.carp-world.de/Fox-Horizon-X3"],
+      ["Rolle", "Shimano Baitrunner XT-A Medium · ca. 150–195 € (bei Askari teils ausverkauft)",
+        "https://www.angelplatz.de/shimano-medium-baitrunner-xt-a-lc-freilaufrolle--ro0041"],
+      ["Schnur", "Geflochtene 0,20 mm + Monofil-Schlagschnur für max. Wurfweite, alternativ Prologic Mimicry Mirage XP", ""]
+    ])}
+
+    <div class="k-intro card" style="margin-top:20px;margin-bottom:8px">
+      <h2>🐍 Aal</h2>
+      <p class="k-hint">Dämmerungs- und Nachtfisch. Weiche Rutenspitze wichtig – Aal zieht
+      zögerlich. Fein einstellbarer Freilauf ist hier noch wichtiger als beim Karpfen.</p>
+    </div>
+
+    ${preisklasse("Einsteiger · ~50–65 €", "🟢", [
+      ["Rute", "Cormoran Topfish Aal · 1,80 m · 50–100 g · mit Knicklichthalter · ca. 20–23 €",
+        "https://www.fang-shop.de/angelruten/steckruten/2220/cormoran-topfish-aalrute-2tlg-50-100g-1-80m-2-10m-aal-grundangel-allround-boot"],
+      ["Rolle", "DAM Quick 1 FS · Gr. 3000/4000",
+        "https://akm-angelgeraete.de/DAM-Quick-1-FS-Freilaufrolle"],
+      ["Schnur", "Monofil 0,25–0,30 mm", ""]
+    ])}
+
+    ${preisklasse("Mittelklasse · ~150–170 €", "🟡", [
+      ["Rute", "Karpfenrute 2,25–2,5 lb · 3,60 m – weicher als Karpfenmodell, mehr Reichweite als Einsteiger-Aalrute",
+        "https://www.angelgeraete-bode.de/ruten/karpfenruten/"],
+      ["Rolle", "Daiwa Black Widow BR LT 4000-C · ca. 65–77 € – superfein einstellbarer Freilauf für scheue Bisse",
+        "https://www.gerlinger.de/Daiwa-Freilaufrolle-Black-Widow-BR-LT"],
+      ["Schnur", "Monofil 0,28–0,30 mm", ""]
+    ])}
+
+    ${preisklasse("Gehoben · Schätzung", "🔴", [
+      ["Rute", "Sportex Catapult oder Fox Horizon (wie Karpfen), aber 2,25–2,75 lb statt 3,00 lb", ""],
+      ["Rolle", "Shimano Baitrunner XT-A in kleinerer Größe (4000)", ""],
+      ["Schnur", "Monofil, ggf. Fluorocarbon-Vorfach gegen Abrieb an Aal-Verstecken", ""]
+    ], "Kein etabliertes Aal-Premiumsegment – die meisten erfahrenen Angler greifen hier ohnehin auf Karpfenruten zurück.")}
+
+    <div class="need-hinweis" style="margin-top:20px;padding:14px 16px;font-size:13.5px">
+      💡 <b>Wichtiger Hinweis:</b> Bei Aal „Gehoben" zahlst du im Wesentlichen für
+      Freilauf-Feinmechanik drauf – die Rute bringt kaum Mehrwert, weil Aal keine
+      Präzisionswürfe verlangt. Das Geld ist beim Karpfen-Setup in der Gehoben-Stufe
+      besser investiert.
+    </div>
+  `;
+
+  el.innerHTML = html;
+}
+
 /* ---------- Tabs ---------- */
 document.querySelectorAll(".tab").forEach(t => {
   t.addEventListener("click", () => {
@@ -2758,3 +2862,4 @@ renderFaengeTop();
 renderSaison();
 renderLavGewaesser();
 renderWochenende();
+renderAnsitzAngeln();
