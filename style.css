@@ -648,6 +648,39 @@ select:focus{outline:none;border-color:var(--accent)}
   #fs-map{height:60vh;min-height:380px;max-height:520px}
 }
 
+/* ===== Starthilfe ===== */
+.ei-wrap{display:flex;flex-direction:column;gap:20px;max-width:700px;margin:0 auto;padding:16px 0}
+.ei-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.ei-card-header{display:flex;align-items:flex-start;gap:14px}
+.ei-card-icon{font-size:28px;line-height:1;flex-shrink:0;margin-top:2px}
+.ei-card-titel{font-size:17px;font-weight:800;color:var(--text)}
+.ei-card-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.ei-check-row{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+.ei-check-btn{white-space:nowrap}
+.ei-result-box{border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.ei-gruen{background:rgba(51,195,166,.12);border:1.5px solid rgba(51,195,166,.4)}
+.ei-rot{background:rgba(232,118,58,.1);border:1.5px solid rgba(232,118,58,.4)}
+.ei-gelb{background:rgba(212,168,75,.1);border:1.5px solid rgba(212,168,75,.4)}
+.ei-result-icon{font-size:22px}
+.ei-result-titel{font-size:15px;font-weight:800;color:var(--text)}
+.ei-result-text{font-size:13px;color:var(--muted);line-height:1.6}
+.ei-result-hinweis{font-size:12px;color:var(--accent);background:rgba(51,195,166,.08);border-radius:8px;padding:8px 10px;margin-top:2px}
+.ei-disclaimer{font-size:11px;color:var(--muted);font-style:italic;border-top:1px solid var(--line);padding-top:10px;margin-top:2px}
+.ei-info-block{background:var(--bg2);border-radius:10px;padding:14px}
+.ei-info-titel{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px}
+.ei-check-items{display:flex;flex-direction:column;gap:7px}
+.ei-check-item{font-size:13px;color:var(--text);display:flex;gap:8px;align-items:flex-start}
+.ei-gwtext{font-size:13px;color:var(--text);line-height:1.65;display:flex;flex-direction:column;gap:8px}
+.ei-gwtext p{margin:0}
+.ei-link{color:var(--accent);text-decoration:none;font-weight:700}
+.ei-link:hover{text-decoration:underline}
+.ei-steps{display:flex;flex-direction:column;gap:0}
+.ei-step{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+.ei-step:last-child{border-bottom:none;padding-bottom:0}
+.ei-step-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#0e1b24;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.ei-step-titel{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.ei-step-text{font-size:13px;color:var(--muted);line-height:1.6}
+
 /* ===== Sub-Tabs (Tagebuch) ===== */
 .tb-subtabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
 .tb-subtab{background:none;border:1px solid var(--line);border-radius:8px;padding:6px 14px;font-size:13px;color:var(--muted);cursor:pointer;transition:.12s}

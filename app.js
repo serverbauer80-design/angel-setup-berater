@@ -3506,6 +3506,7 @@ document.querySelectorAll(".tab").forEach(t => {
     if(t.dataset.view === "faenge") fsOnTabShown();
     if(t.dataset.view === "lav") lavOnTabShown();
     if(t.dataset.view === "tagebuch"){ TB_VIEW = "list"; TB_DETAIL = null; renderTagebuch(); }
+    if(t.dataset.view === "einsteiger") renderEinsteiger();
   });
 });
 
@@ -3528,6 +3529,7 @@ renderWochenende();
 renderAnsitzAngeln();
 renderUnterlagen();
 renderTagebuch();
+renderEinsteiger();
 (async function(){try{const e=await tbIDBLadeAlle();tbUpdateStatsCache(e);}catch(err){}})();
 
 /* ---------- Heute-dabei-Filter (Berater) ---------- */
@@ -3667,6 +3669,225 @@ function tbFaengeText(faenge){
   const total = faenge.length;
   const arten = [...new Set(faenge.map(f=>f.art))].join(", ");
   return `${total}× ${arten}`;
+}
+
+/* ===== STARTHILFE ===== */
+function eiBehaltenCheck(fischId, laenge){
+  const r = (typeof RECHT_SH !== "undefined") ? RECHT_SH[fischId] : null;
+  const fisch = FISCHE.find(f => f.id === fischId);
+  const name = fisch ? `${fisch.emoji} ${fisch.name}` : fischId;
+  if(!r) return `<div class="ei-result-box ei-gelb">⚠️ Keine Daten für diesen Fisch – Erlaubnisschein prüfen.</div>`;
+
+  const heute = new Date();
+  const monat = heute.getMonth() + 1;
+
+  // Ganzjährig geschützt
+  if(r.schutz || r.schonzeit?.toLowerCase().includes("ganzjährig geschont")){
+    return `<div class="ei-result-box ei-rot">
+      <div class="ei-result-icon">🚫</div>
+      <div class="ei-result-titel">Nicht entnehmen – ${name}</div>
+      <div class="ei-result-text">${r.hinweis || r.schonzeit}</div>
+    </div>`;
+  }
+
+  // Schonzeit prüfen
+  const monate = parseSchonzeitMonate(r.schonzeit);
+  const inSchonzeit = monate && monate.includes(monat);
+
+  // Mindestmaß prüfen
+  const mmMatch = r.mindestmass?.match(/(\d+)\s*cm/);
+  const mmCm = mmMatch ? parseInt(mmMatch[1]) : null;
+  const zuKlein = mmCm !== null && !isNaN(laenge) && laenge < mmCm;
+
+  if(inSchonzeit && zuKlein){
+    return `<div class="ei-result-box ei-rot">
+      <div class="ei-result-icon">🚫</div>
+      <div class="ei-result-titel">Zurücksetzen – Schonzeit UND zu klein</div>
+      <div class="ei-result-text">Schonzeit: ${r.schonzeit}<br>Mindestmaß: ${r.mindestmass} – dein Fisch: ${laenge} cm<br>${r.hinweis||""}</div>
+    </div>`;
+  }
+  if(inSchonzeit){
+    return `<div class="ei-result-box ei-rot">
+      <div class="ei-result-icon">📅</div>
+      <div class="ei-result-titel">Zurücksetzen – Schonzeit</div>
+      <div class="ei-result-text">Schonzeit für ${name}: ${r.schonzeit}<br>Fisch schonend zurücksetzen. ${r.hinweis||""}</div>
+    </div>`;
+  }
+  if(zuKlein){
+    return `<div class="ei-result-box ei-rot">
+      <div class="ei-result-icon">📏</div>
+      <div class="ei-result-titel">Zurücksetzen – zu klein</div>
+      <div class="ei-result-text">Mindestmaß: ${r.mindestmass} – dein Fisch: ${laenge} cm<br>Noch ${mmCm - laenge} cm zu klein. Zurücksetzen und wachsen lassen. ${r.hinweis||""}</div>
+    </div>`;
+  }
+
+  const hinweisBox = r.hinweis ? `<div class="ei-result-hinweis">💡 ${r.hinweis}</div>` : "";
+  return `<div class="ei-result-box ei-gruen">
+    <div class="ei-result-icon">✅</div>
+    <div class="ei-result-titel">Behalten erlaubt – ${name}${!isNaN(laenge)?", "+laenge+" cm":""}</div>
+    <div class="ei-result-text">Keine Schonzeit im ${heute.toLocaleDateString("de-DE",{month:"long"})}. Mindestmaß: ${r.mindestmass}.</div>
+    ${hinweisBox}
+  </div>`;
+}
+
+function renderEinsteiger(){
+  const wrap = document.getElementById("einsteiger-main");
+  if(!wrap) return;
+
+  const fischOptions = FISCHE
+    .filter(f => RECHT_SH && RECHT_SH[f.id])
+    .map(f => `<option value="${f.id}">${f.emoji} ${f.name}</option>`)
+    .join("");
+
+  wrap.innerHTML = `
+  <div class="ei-wrap">
+
+    <!-- ===== 1. BEHALTEN-CHECK ===== -->
+    <div class="ei-card">
+      <div class="ei-card-header">
+        <span class="ei-card-icon">✅</span>
+        <div>
+          <div class="ei-card-titel">Darf ich den behalten?</div>
+          <div class="ei-card-sub">Fischart + Länge eingeben → sofort wissen ob du den Fisch entnehmen darfst</div>
+        </div>
+      </div>
+      <div class="ei-check-row">
+        <select class="tb-select" id="ei-fisch" style="flex:2">${fischOptions}</select>
+        <input class="tb-input" id="ei-laenge" type="number" min="0" max="200" placeholder="Länge cm" style="flex:1;min-width:90px">
+        <button class="go ei-check-btn" id="ei-check-btn">Prüfen</button>
+      </div>
+      <div id="ei-result"></div>
+      <div class="ei-disclaimer">Angaben nach Binnenfischereiordnung SH 2026. Gilt nicht für Hamburg – dort Erlaubnisschein prüfen. Kein Ersatz für offizielle Quellen.</div>
+    </div>
+
+    <!-- ===== 2. GEWÄSSER-GUIDE ===== -->
+    <div class="ei-card">
+      <div class="ei-card-header">
+        <span class="ei-card-icon">🗺️</span>
+        <div>
+          <div class="ei-card-titel">Wo darf ich angeln?</div>
+          <div class="ei-card-sub">Was du brauchst und wo du in HH und SH loslegst</div>
+        </div>
+      </div>
+
+      <div class="ei-info-block">
+        <div class="ei-info-titel">📋 Was du immer dabei haben musst</div>
+        <div class="ei-check-items">
+          <div class="ei-check-item">🪪 <b>Fischereischein</b> (deine bestandene Prüfung – Dokument mitnehmen)</div>
+          <div class="ei-check-item">💳 <b>Fischereiabgabemarke</b> für das jeweilige Bundesland (SH oder HH)</div>
+          <div class="ei-check-item">🎫 <b>Erlaubnisschein / Tageskarte</b> für das konkrete Gewässer</div>
+          <div class="ei-check-item">📐 <b>Maßband</b> zum Messen (Pflicht!)</div>
+          <div class="ei-check-item">🔪 <b>Betäubungsmittel + Messer</b> wenn du Fische entnehmen willst</div>
+        </div>
+      </div>
+
+      <div class="ei-info-block">
+        <div class="ei-info-titel">🏞️ Schleswig-Holstein – wo anfangen?</div>
+        <div class="ei-gwtext">
+          <p><b>LAV-Gewässer (Landesanglerverband SH)</b> – Mit LAV-Erlaubnisschein kannst du an über 100 Gewässern in ganz SH angeln. Jahres- oder Tageskarten beim LAV oder regionalen Angelvereinen kaufen. → <b>Sieh im Tab „💳 LAV-Gewässer"</b> welche Gewässer in deiner Nähe liegen.</p>
+          <p><b>Freie Fließgewässer</b> – Eider, Treene, Stör und viele andere Flüsse sind teilweise frei zugänglich, teils mit Vereinserlaubnis. Immer vorher klären – einfach ins Wasser stellen ohne Erlaubnisschein ist auch in SH nicht erlaubt.</p>
+          <p><b>Forellenseen (Put &amp; Take)</b> – Ideal zum Einsteigen! Tageskarte kaufen, Rute rein, fertig. Viele Seen haben Personal vor Ort. → <b>Sieh im Tab „Fänge &amp; Spots"</b> für Forellenseen in deiner Nähe.</p>
+          <p><b>Ostsee / Nordsee (Küste)</b> – An vielen Strandabschnitten und Molen freier Zugang für Freizeitangler. Fischarten: Meerforelle, Dorsch, Hornhecht, Flunder. Für Bootsangeln ggf. Seekarte/Erlaubnis prüfen.</p>
+        </div>
+      </div>
+
+      <div class="ei-info-block">
+        <div class="ei-info-titel">🏙️ Hamburg – wo anfangen?</div>
+        <div class="ei-gwtext">
+          <p><b>Hamburger Angler-Verband (HAV)</b> – Mitgliedschaft ermöglicht Angeln an über 40 Hamburger Vereinsgewässern. Jahresbeitrag meist 80–130 €. → <a href="https://www.hamburger-angler-verband.de" target="_blank" rel="noopener" class="ei-link">hamburger-angler-verband.de</a></p>
+          <p><b>Elbe und Nebenflüsse</b> – Teile der Elbe sind für Freizeitangler mit gültigem Hamburger Fischereiabgabe-Nachweis zugänglich. Genau im Erlaubnisschein nachlesen.</p>
+          <p><b>Alster</b> – Angelerlaubnis nur mit HAV-Mitgliedschaft oder Tageskarte eines HAV-Vereins. Nicht einfach ranstellen!</p>
+          <p><b>Tipp Einsteiger Hamburg</b> – Erst Forellensee im Umland (viele in SH nahe HH), dann mit HAV-Mitgliedschaft die Hamburger Gewässer erkunden.</p>
+        </div>
+      </div>
+
+      <div class="ei-info-block">
+        <div class="ei-info-titel">💡 Goldene Regel für Anfänger</div>
+        <p class="ei-gwtext" style="margin:0">Immer <b>bevor</b> du anfängst: Erlaubnisschein kaufen und lesen. Kein Gewässer in Deutschland ist wirklich „frei" – selbst öffentliche Flüsse gehören einem Fischereiberechtigten. Ohne Erlaubnis drohen Bußgelder bis 5.000 €.</p>
+      </div>
+    </div>
+
+    <!-- ===== 3. ERSTER FANG ===== -->
+    <div class="ei-card">
+      <div class="ei-card-header">
+        <span class="ei-card-icon">🐟</span>
+        <div>
+          <div class="ei-card-titel">Ich habe was gefangen – was jetzt?</div>
+          <div class="ei-card-sub">Schritt für Schritt, damit nichts schiefgeht</div>
+        </div>
+      </div>
+      <div class="ei-steps">
+        <div class="ei-step">
+          <div class="ei-step-num">1</div>
+          <div class="ei-step-body">
+            <div class="ei-step-titel">Ruhe bewahren &amp; Drill beenden</div>
+            <div class="ei-step-text">Rute hochhalten, Fisch ausdrillen lassen bis er an der Oberfläche liegt. Nicht reißen – Maul geht sonst kaputt.</div>
+          </div>
+        </div>
+        <div class="ei-step">
+          <div class="ei-step-num">2</div>
+          <div class="ei-step-body">
+            <div class="ei-step-titel">Mit Kescher landen</div>
+            <div class="ei-step-text">Kescher ins Wasser, Fisch über den Kescher führen und hochheben. Nie in den Kescher reinstechen. Kleine Fische (&lt; 20 cm) kann man direkt mit der Hand landen.</div>
+          </div>
+        </div>
+        <div class="ei-step">
+          <div class="ei-step-num">3</div>
+          <div class="ei-step-body">
+            <div class="ei-step-titel">Hände anfeuchten</div>
+            <div class="ei-step-text">Trockene Hände zerstören die Schleimhaut des Fisches. Vor dem Anfassen immer kurz ins Wasser tauchen.</div>
+          </div>
+        </div>
+        <div class="ei-step">
+          <div class="ei-step-num">4</div>
+          <div class="ei-step-body">
+            <div class="ei-step-titel">Haken lösen</div>
+            <div class="ei-step-text">Zangengriff um den Hakenbogen, Haken rückwärts aus der Einstichrichtung drehen. Tief geschluckter Haken → Schnur durchtrennen, Haken verrottet von selbst. Nie mit Gewalt ziehen.</div>
+          </div>
+        </div>
+        <div class="ei-step">
+          <div class="ei-step-num">5</div>
+          <div class="ei-step-body">
+            <div class="ei-step-titel">Messen – Schnauze bis Schwanzgabelende</div>
+            <div class="ei-step-text">Fisch auf dem Maßband flach hinlegen. Von der Schnauzenspitze bis zur längsten Schwanzspitze messen. Danach den oben stehenden <b>Behalten-Check</b> nutzen.</div>
+          </div>
+        </div>
+        <div class="ei-step">
+          <div class="ei-step-num">6</div>
+          <div class="ei-step-body">
+            <div class="ei-step-titel">Entscheiden: behalten oder zurücksetzen?</div>
+            <div class="ei-step-text"><b>Zurücksetzen:</b> Fisch kopfüber ins Wasser halten bis er von selbst davonschwimmt. Nicht werfen.<br><b>Behalten (waidgerecht töten):</b> Kräftigen Schlag mit dem Priest auf den Schädelknochen direkt hinter den Augen. Fisch muss sofort bewusstlos sein. Wartet man zu lang, ist das Tierquälerei.</div>
+          </div>
+        </div>
+        <div class="ei-step">
+          <div class="ei-step-num">7</div>
+          <div class="ei-step-body">
+            <div class="ei-step-titel">Foto machen</div>
+            <div class="ei-step-text">Fisch waagerecht mit beiden Händen halten, nicht am Unterkiefer hängen lassen (Kieferschaden). Kurz knipsen, fertig.</div>
+          </div>
+        </div>
+        <div class="ei-step">
+          <div class="ei-step-num">8</div>
+          <div class="ei-step-body">
+            <div class="ei-step-titel">Im Tagebuch eintragen</div>
+            <div class="ei-step-text">Fischart, Länge, Gewässer, Köder – alles frisch im Gedächtnis. Der <b>📔 Tagebuch</b>-Tab ist genau dafür da.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>`;
+
+  document.getElementById("ei-check-btn")?.addEventListener("click", () => {
+    const fischId = document.getElementById("ei-fisch")?.value;
+    const laenge = parseFloat(document.getElementById("ei-laenge")?.value);
+    document.getElementById("ei-result").innerHTML = eiBehaltenCheck(fischId, laenge);
+  });
+
+  // Enter-Taste im Längen-Feld
+  document.getElementById("ei-laenge")?.addEventListener("keydown", e => {
+    if(e.key === "Enter") document.getElementById("ei-check-btn")?.click();
+  });
 }
 
 /* --- Stats-Cache für Berater-Badge --- */
