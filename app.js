@@ -351,8 +351,8 @@ function detectMontagenTyp(montage){
   if(t.includes("schlagschnur") || t.includes("krallenblei")) return "brandung";
   if(t.includes("futterkorb")) return "feeder";
   if(t.includes("feste vorfachschnur")) return "stippe";
-  if(t.includes("laufpose")) return "laufpose";
   if(t.includes("stahlvorfach") && t.includes("pose")) return "pose-stahl";
+  if(t.includes("laufpose")) return "laufpose";
   if(t.includes("laufblei")) return "laufblei";
   if(t.includes("jigkopf")) return "jigkopf";
   return null;
@@ -411,6 +411,8 @@ function montageDiagramHTML(montage){
       <ellipse cx="158" cy="87" rx="18" ry="11" fill="#5a7d8e"/>
       <line x1="140" y1="67" x2="140" y2="87" stroke="#33c3a6" stroke-width="1.5" stroke-dasharray="3,2"/>
       <line x1="176" y1="67" x2="176" y2="87" stroke="#33c3a6" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <circle cx="194" cy="67" r="5" fill="#d4a84b"/>
+      <text x="194" y="82" text-anchor="middle" fill="#9db6c4" font-size="8" font-family="sans-serif">Gummiperle</text>
       <rect x="210" y="62" width="6" height="10" rx="2" fill="#8ab0c0"/>
       <rect x="218" y="60" width="14" height="14" rx="3" fill="#8ab0c0"/>
       <line x1="232" y1="67" x2="390" y2="67" stroke="#d4a84b" stroke-width="2.5" stroke-dasharray="6,3"/>
@@ -425,26 +427,32 @@ function montageDiagramHTML(montage){
       <text x="100" y="53" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Braid/Mono</text>
     </svg>`,
 
-    "pose-stahl": `<svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Posenansitz Öderfisch">
-      <text x="210" y="16" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">~ Wasseroberfläche ~</text>
-      <line x1="0" y1="24" x2="420" y2="24" stroke="#2aa0d8" stroke-width="1" stroke-dasharray="8,4" opacity=".5"/>
-      <rect x="6" y="18" width="36" height="10" rx="3" fill="#8ab0c0"/>
-      <polygon points="6,14 6,32 0,23" fill="#8ab0c0"/>
-      <line x1="42" y1="23" x2="160" y2="23" stroke="#33c3a6" stroke-width="2.5"/>
-      <ellipse cx="170" cy="14" rx="10" ry="16" fill="#e8763a"/>
-      <ellipse cx="170" cy="32" rx="10" ry="16" fill="#e0edf2"/>
-      <line x1="170" y1="48" x2="170" y2="92" stroke="#33c3a6" stroke-width="2.5"/>
-      <rect x="163" y="92" width="14" height="14" rx="3" fill="#8ab0c0"/>
-      <line x1="170" y1="106" x2="170" y2="156" stroke="#9db6c4" stroke-width="2.5"/>
-      <path d="M170 156 Q171 180 188 182 Q206 182 206 167" fill="none" stroke="#8ab0c0" stroke-width="3"/>
-      <line x1="204" y1="170" x2="210" y2="177" stroke="#8ab0c0" stroke-width="2"/>
-      <ellipse cx="224" cy="168" rx="22" ry="10" fill="#e85c5c" opacity=".7"/>
-      <path d="M244 165 L256 158 M244 168 L256 174" fill="none" stroke="#e85c5c" stroke-width="2.5" stroke-linecap="round"/>
-      <text x="198" y="23" fill="#9db6c4" font-size="10" font-family="sans-serif">Laufpose</text>
-      <text x="166" y="112" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Wirbel</text>
-      <text x="118" y="136" fill="#9db6c4" font-size="10" font-family="sans-serif">Stahlvorfach</text>
-      <text x="265" y="172" fill="#9db6c4" font-size="9" font-family="sans-serif">Öderfisch</text>
-      <text x="210" y="198" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Haken (Drilling)</text>
+    "pose-stahl": `<svg viewBox="0 0 420 255" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Posenansitz Öderfisch">
+      <text x="210" y="31" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">~ Wasseroberfläche ~</text>
+      <line x1="0" y1="39" x2="420" y2="39" stroke="#2aa0d8" stroke-width="1" stroke-dasharray="8,4" opacity=".5"/>
+      <rect x="6" y="33" width="36" height="10" rx="3" fill="#8ab0c0"/>
+      <polygon points="6,29 6,47 0,38" fill="#8ab0c0"/>
+      <line x1="42" y1="38" x2="160" y2="38" stroke="#33c3a6" stroke-width="2.5"/>
+      <rect x="167" y="3" width="6" height="8" rx="2" fill="#8ab0c0"/>
+      <circle cx="170" cy="13" r="5" fill="#d4a84b"/>
+      <ellipse cx="170" cy="29" rx="10" ry="16" fill="#e8763a"/>
+      <ellipse cx="170" cy="47" rx="10" ry="16" fill="#e0edf2"/>
+      <circle cx="170" cy="65" r="5" fill="#d4a84b"/>
+      <line x1="170" y1="70" x2="170" y2="107" stroke="#33c3a6" stroke-width="2.5"/>
+      <rect x="163" y="107" width="14" height="14" rx="3" fill="#8ab0c0"/>
+      <line x1="170" y1="121" x2="170" y2="171" stroke="#9db6c4" stroke-width="2.5"/>
+      <path d="M170 171 Q171 195 188 197 Q206 197 206 182" fill="none" stroke="#8ab0c0" stroke-width="3"/>
+      <line x1="204" y1="185" x2="210" y2="192" stroke="#8ab0c0" stroke-width="2"/>
+      <ellipse cx="224" cy="183" rx="22" ry="10" fill="#e85c5c" opacity=".7"/>
+      <path d="M244 180 L256 173 M244 183 L256 189" fill="none" stroke="#e85c5c" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="198" y="36" fill="#9db6c4" font-size="10" font-family="sans-serif">Laufpose</text>
+      <text x="182" y="10" fill="#9db6c4" font-size="8" font-family="sans-serif">Stopper</text>
+      <text x="182" y="20" fill="#9db6c4" font-size="8" font-family="sans-serif">Prellperle</text>
+      <text x="182" y="67" fill="#9db6c4" font-size="8" font-family="sans-serif">Prellperle</text>
+      <text x="166" y="127" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Wirbel</text>
+      <text x="118" y="151" fill="#9db6c4" font-size="10" font-family="sans-serif">Stahlvorfach</text>
+      <text x="265" y="187" fill="#9db6c4" font-size="9" font-family="sans-serif">Öderfisch</text>
+      <text x="210" y="213" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Haken (Drilling)</text>
     </svg>`,
 
     sbirolino: `<svg viewBox="0 0 560 148" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Sbirolino-Montage">
@@ -3527,22 +3535,26 @@ function renderHeuteDabeiUI(){
   const alleSetups = [...Object.values(AKTUELL), ...Object.values(ZUSATZ.setups || {})];
   if(alleSetups.length === 0){ wrap.innerHTML = ""; return; }
   const pills = Object.entries(AKTUELL).map(([key, s]) => {
-    const on = HEUTE_DABEI.size === 0 || HEUTE_DABEI.has(key);
+    const on = HEUTE_DABEI.has(key);
     return `<button class="setup-pill${on ? " on" : ""}" data-hd="${key}" title="${s.name}">${s.name.replace(/^Setup \d+ – /,"")}</button>`;
   }).join("");
-  const alleOn = HEUTE_DABEI.size === 0;
+  const hatAuswahl = HEUTE_DABEI.size > 0;
+  const hintText = hatAuswahl
+    ? `${HEUTE_DABEI.size} Setup(s) ausgewählt · Ergebnisse gefiltert`
+    : "Nichts ausgewählt → alle Methoden werden angezeigt";
   wrap.innerHTML = `<div class="heute-dabei-wrap">
     <div class="heute-dabei-label">
       <span>🎒 Heute dabei</span>
-      ${!alleOn ? `<button class="heute-dabei-reset" id="hd-reset-btn">Alle anzeigen</button>` : ""}
+      ${hatAuswahl ? `<button class="heute-dabei-reset" id="hd-reset-btn">Alle abwählen</button>` : ""}
     </div>
     <div class="heute-dabei-row">${pills}</div>
+    <div class="heute-dabei-hint">${hintText}</div>
   </div>`;
   wrap.querySelectorAll(".setup-pill").forEach(btn => {
     btn.addEventListener("click", () => {
       const key = btn.dataset.hd;
-      if(HEUTE_DABEI.has(key)){ HEUTE_DABEI.delete(key); if(HEUTE_DABEI.size === 0) HEUTE_DABEI = new Set(); }
-      else { if(HEUTE_DABEI.size === 0) HEUTE_DABEI = new Set(Object.keys(AKTUELL)); HEUTE_DABEI.add(key); }
+      if(HEUTE_DABEI.has(key)) HEUTE_DABEI.delete(key);
+      else HEUTE_DABEI.add(key);
       renderHeuteDabeiUI();
       if(fischSel.value) berechne();
     });
