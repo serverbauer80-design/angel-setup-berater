@@ -808,11 +808,14 @@ function ansatzHTML(a, fisch){
     body += needHTML(a.braucht);
   }
   body += fangEintragenHTML(fisch, a.methode);
+  const perf = a.setup ? TB_STATS_CACHE[a.setup] : null;
+  const perfBadge = perf ? `<div class="setup-perf-badge">🎒 ${perf.ausfluge} Ausflug${perf.ausfluge!==1?"e":""} · ${perf.faenge} Fang${perf.faenge!==1?"e":""}</div>` : "";
   return `<article class="ansatz">
     <div class="ansatz-head">
       <span class="badge ${a.status}">${statusLabel(a.status)}</span>
       <span class="m-name">${a.methode}</span>
     </div>
+    ${perfBadge}
     <div class="ansatz-body">${body}</div>
   </article>`;
 }
@@ -3525,6 +3528,7 @@ renderWochenende();
 renderAnsitzAngeln();
 renderUnterlagen();
 renderTagebuch();
+(async function(){try{const e=await tbIDBLadeAlle();tbUpdateStatsCache(e);}catch(err){}})();
 
 /* ---------- Heute-dabei-Filter (Berater) ---------- */
 let HEUTE_DABEI = new Set(); // leer = alle Setups verfügbar
@@ -3626,6 +3630,12 @@ let TB_EDIT = null;   // entry being edited (null = new)
 let TB_DETAIL = null; // entry being viewed
 let TB_CATCHES_TMP = []; // catch rows in form
 let TB_FOTO_B64 = null;  // base64 photo in form
+let TB_SUBVIEW = "liste"; // "liste" | "kalender" | "statistik"
+let TB_KAL_YEAR = new Date().getFullYear();
+let TB_KAL_MONTH = new Date().getMonth(); // 0-indexed
+let TB_KAL_SELECTED = null; // "YYYY-MM-DD"
+let TB_KAL_INITIALIZED = false;
+let TB_STATS_CACHE = {}; // setupKey → {ausfluge, faenge}
 
 /* --- Hilfsfunktionen --- */
 function tbWetterEmoji(bewoelkung, luftdruck){
@@ -3659,6 +3669,104 @@ function tbFaengeText(faenge){
   return `${total}× ${arten}`;
 }
 
+/* --- Stats-Cache für Berater-Badge --- */
+function tbUpdateStatsCache(entries){
+  const c={};
+  entries.forEach(e=>{
+    if(!e.setup)return;
+    if(!c[e.setup])c[e.setup]={ausfluge:0,faenge:0};
+    c[e.setup].ausfluge++;
+    c[e.setup].faenge+=(e.faenge||[]).length;
+  });
+  TB_STATS_CACHE=c;
+}
+
+/* --- SVG-Balkendiagramm --- */
+function tbSvgBarChart(values,labels,color="#33c3a6"){
+  const W=400,H=88,padL=8,padB=18,padT=14;
+  const n=values.length,max=Math.max(...values,1);
+  const slotW=(W-padL*2)/n,barW=Math.floor(slotW*0.65);
+  const bars=values.map((v,i)=>{
+    const x=padL+i*slotW+(slotW-barW)/2;
+    const h=v?Math.max(v/max*(H-padB-padT),3):0;
+    const y=H-padB-h;
+    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW}" height="${h.toFixed(1)}" rx="3" fill="${color}" opacity="${v?0.85:0.12}"/>
+${v?`<text x="${(x+barW/2).toFixed(1)}" y="${(y-3).toFixed(1)}" text-anchor="middle" fill="${color}" font-size="9" font-family="sans-serif" font-weight="700">${v}</text>`:""}
+<text x="${(x+barW/2).toFixed(1)}" y="${H-3}" text-anchor="middle" fill="#9db6c4" font-size="8" font-family="sans-serif">${labels[i]}</text>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block">${bars}</svg>`;
+}
+
+/* --- Kalender-Subview --- */
+function tbRenderKalender(entries){
+  const year=TB_KAL_YEAR,month=TB_KAL_MONTH;
+  const today=new Date().toISOString().slice(0,10);
+  const entryMap={};
+  entries.forEach(e=>{if(!entryMap[e.datum])entryMap[e.datum]=[];entryMap[e.datum].push(e);});
+  const firstDay=new Date(year,month,1);
+  const lastDay=new Date(year,month+1,0);
+  const monthName=firstDay.toLocaleDateString("de-DE",{month:"long",year:"numeric"});
+  const startDow=(firstDay.getDay()+6)%7;
+  const dowHTML=["Mo","Di","Mi","Do","Fr","Sa","So"].map(d=>`<div class="tb-kal-dow">${d}</div>`).join("");
+  let cells=Array(startDow).fill(`<div class="tb-kal-day tb-kal-empty"></div>`);
+  for(let day=1;day<=lastDay.getDate();day++){
+    const iso=`${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+    const es=entryMap[iso]||[];
+    const hasEntry=es.length>0,hasCatch=es.some(e=>e.faenge?.length>0);
+    const isToday=iso===today,isSel=iso===TB_KAL_SELECTED;
+    let cls="tb-kal-day"+(hasEntry?" tb-kal-has":"")+(isToday?" tb-kal-today":"")+(isSel?" tb-kal-sel":"");
+    const dot=hasEntry?`<div class="tb-kal-dot${hasCatch?" tb-kal-dot-catch":""}"></div>`:"";
+    cells.push(`<div class="${cls}"${hasEntry?` data-kaldate="${iso}"`:""}>${day}${dot}</div>`);
+  }
+  let detailHTML="";
+  if(TB_KAL_SELECTED&&entryMap[TB_KAL_SELECTED]){
+    const es=entryMap[TB_KAL_SELECTED];
+    detailHTML=`<div class="tb-kal-detail">`+es.map(e=>`<div class="tb-kal-detail-row">
+      <div><div class="tb-kal-detail-loc">${e.gewaesser||"Gewässer unbekannt"}</div>
+      <div class="tb-kal-detail-meta">${tbWetterEmoji(e.wetter?.bewoelkung,e.wetter?.luftdruck)} ${e.methode||""} ${e.faenge?.length>0?"· 🐟 "+e.faenge.length+"×":""}</div></div>
+      <div>${tbSterneHTML(e.bewertung||0)}</div></div>`).join("")+`</div>`;
+  }
+  return `<div class="tb-kal-wrap">
+    <div class="tb-kal-nav">
+      <button class="tb-kal-nav-btn" id="tb-kal-prev">◀</button>
+      <span class="tb-kal-month-label">${monthName}</span>
+      <button class="tb-kal-nav-btn" id="tb-kal-next">▶</button>
+    </div>
+    <div class="tb-kal-grid">${dowHTML}${cells.join("")}</div>
+    ${detailHTML}</div>`;
+}
+
+/* --- Statistik-Subview --- */
+function tbRenderStatistik(entries){
+  if(!entries.length)return`<div class="tb-empty"><span class="tb-empty-icon">📊</span><p>Noch keine Einträge für Statistiken.</p></div>`;
+  const totalA=entries.length;
+  const totalF=entries.reduce((s,e)=>s+(e.faenge?.length||0),0);
+  const avg=(totalA>0?(totalF/totalA).toFixed(1):"0");
+  const gewMap={};entries.forEach(e=>{const g=e.gewaesser||"?";gewMap[g]=(gewMap[g]||0)+1;});
+  const topGew=Object.entries(gewMap).sort((a,b)=>b[1]-a[1])[0];
+  const koederMap={};entries.forEach(e=>{if(e.koeder)koederMap[e.koeder]=(koederMap[e.koeder]||0)+1;});
+  const topKoeder=Object.entries(koederMap).sort((a,b)=>b[1]-a[1])[0];
+  const monatsLabels=["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+  const monatsVals=Array(12).fill(0);
+  entries.forEach(e=>{if(e.datum)monatsVals[parseInt(e.datum.slice(5,7))-1]++;});
+  const uhrzeitLabels=["0h","3h","6h","9h","12h","15h","18h","21h"];
+  const uhrzeitVals=Array(8).fill(0);
+  entries.forEach(e=>{if(!e.von||!e.faenge?.length)return;const h=parseInt(e.von.split(":")[0]);uhrzeitVals[Math.min(Math.floor(h/3),7)]+=e.faenge.length;});
+  const hasUhr=uhrzeitVals.some(v=>v>0);
+  const tiles=[
+    {val:totalA,label:"Ausflüge"},
+    {val:totalF,label:"Fänge gesamt"},
+    {val:avg,label:"Ø Fänge / Ausflug"},
+    {val:topGew?topGew[0]:"–",label:"Lieblingsgewässer"},
+  ];
+  return `<div class="tb-stats-wrap">
+    <div class="tb-stat-tiles">${tiles.map(t=>`<div class="tb-stat-tile"><div class="tb-stat-tile-val">${t.val}</div><div class="tb-stat-tile-label">${t.label}</div></div>`).join("")}</div>
+    <div class="tb-chart-wrap"><div class="tb-chart-title">📅 Ausflüge nach Monat</div>${tbSvgBarChart(monatsVals,monatsLabels)}</div>
+    ${hasUhr?`<div class="tb-chart-wrap"><div class="tb-chart-title">🕐 Fänge nach Angelzeit</div>${tbSvgBarChart(uhrzeitVals,uhrzeitLabels,"#d4a84b")}</div>`:`<div class="tb-chart-wrap"><div class="tb-chart-title">🕐 Fänge nach Angelzeit</div><p style="font-size:13px;color:var(--muted)">Einträge mit Von-Uhrzeit und Fängen nötig.</p></div>`}
+    ${topKoeder?`<div class="tb-chart-wrap"><div class="tb-chart-title">🪱 Meistgenutzter Köder</div><div style="font-size:20px;font-weight:800;color:var(--accent);margin:4px 0">${topKoeder[0]}</div><div style="font-size:13px;color:var(--muted)">${topKoeder[1]}× eingesetzt</div></div>`:""}
+  </div>`;
+}
+
 /* --- Rendern --- */
 async function renderTagebuch(){
   const wrap = document.getElementById("tagebuch-main");
@@ -3674,11 +3782,9 @@ async function renderTagebuch(){
   try {
     if(fsSyncUser){
       entries = await tbCloudLadeAlle(fsSyncUser.uid);
-      // Fotos aus IDB nachladen
       const lokal = await tbIDBLadeAlle();
       const fotoMap = Object.fromEntries(lokal.map(e => [e.id, e.foto]));
       entries = entries.map(e => ({...e, foto: fotoMap[e.id]||null}));
-      // Cloud-Einträge lokal cachen
       for(const e of entries) await tbIDBSpeichere(e);
     } else {
       entries = await tbIDBLadeAlle();
@@ -3687,6 +3793,7 @@ async function renderTagebuch(){
     entries = await tbIDBLadeAlle();
   }
   entries.sort((a,b) => b.datum.localeCompare(a.datum));
+  tbUpdateStatsCache(entries);
 
   if(TB_VIEW === "detail" && TB_DETAIL){
     const e = entries.find(x => x.id === TB_DETAIL) || TB_DETAIL;
@@ -3694,17 +3801,33 @@ async function renderTagebuch(){
     return;
   }
 
-  // Listenansicht
+  // Kalender-Starmonat: beim ersten Besuch zum letzten Eintrag springen
+  if(!TB_KAL_INITIALIZED && entries.length){
+    const lastDate = new Date(entries[0].datum+"T00:00:00");
+    TB_KAL_YEAR = lastDate.getFullYear();
+    TB_KAL_MONTH = lastDate.getMonth();
+    TB_KAL_INITIALIZED = true;
+  }
+
   const syncHint = fsSyncUser
     ? `<div class="tb-sync-hint">☁️ Synced mit ${fsSyncUser.email}</div>`
     : `<div class="tb-sync-hint">💡 Melde dich an (☁️-Symbol oben), um das Tagebuch auf allen Geräten zu haben.</div>`;
 
-  const listHTML = entries.length === 0
-    ? `<div class="tb-empty"><span class="tb-empty-icon">📔</span>
-        <p>Noch keine Ausflüge eingetragen.</p>
-        <p style="font-size:13px;margin-top:6px">Tippe auf „Neuer Ausflug" um deinen ersten Eintrag zu erstellen.</p>
-       </div>`
-    : `<div class="tb-list">${entries.map(e => tbEntryCardHTML(e)).join("")}</div>`;
+  const subTabs = ["liste","kalender","statistik"].map((k,i)=>{
+    const icons=["📋","📅","📊"], labels=["Einträge","Kalender","Statistik"];
+    return `<button class="tb-subtab${TB_SUBVIEW===k?" active":""}" data-sv="${k}">${icons[i]} ${labels[i]}</button>`;
+  }).join("");
+
+  let contentHTML="";
+  if(TB_SUBVIEW==="liste"){
+    contentHTML = entries.length===0
+      ? `<div class="tb-empty"><span class="tb-empty-icon">📔</span><p>Noch keine Ausflüge eingetragen.</p><p style="font-size:13px;margin-top:6px">Tippe auf „Neuer Ausflug" um deinen ersten Eintrag zu erstellen.</p></div>`
+      : `<div class="tb-list">${entries.map(e=>tbEntryCardHTML(e)).join("")}</div>`;
+  } else if(TB_SUBVIEW==="kalender"){
+    contentHTML = tbRenderKalender(entries);
+  } else {
+    contentHTML = tbRenderStatistik(entries);
+  }
 
   wrap.innerHTML = `
     <div class="tb-topbar">
@@ -3712,18 +3835,33 @@ async function renderTagebuch(){
       <button class="tb-new-btn" id="tb-new-btn">+ Neuer Ausflug</button>
     </div>
     ${syncHint}
-    ${listHTML}`;
+    <div class="tb-subtabs">${subTabs}</div>
+    ${contentHTML}`;
 
-  document.getElementById("tb-new-btn")?.addEventListener("click", () => {
-    TB_VIEW = "form"; TB_EDIT = null; TB_CATCHES_TMP = []; TB_FOTO_B64 = null;
+  document.getElementById("tb-new-btn")?.addEventListener("click",()=>{
+    TB_VIEW="form"; TB_EDIT=null; TB_CATCHES_TMP=[]; TB_FOTO_B64=null;
     renderTagebuch();
   });
-  wrap.querySelectorAll(".tb-entry").forEach(card => {
-    card.addEventListener("click", () => {
-      TB_VIEW = "detail"; TB_DETAIL = card.dataset.tbid;
-      renderTagebuch();
-    });
+
+  wrap.querySelectorAll(".tb-subtab").forEach(btn=>{
+    btn.addEventListener("click",()=>{ TB_SUBVIEW=btn.dataset.sv; renderTagebuch(); });
   });
+
+  if(TB_SUBVIEW==="liste"){
+    wrap.querySelectorAll(".tb-entry").forEach(card=>{
+      card.addEventListener("click",()=>{ TB_VIEW="detail"; TB_DETAIL=card.dataset.tbid; renderTagebuch(); });
+    });
+  } else if(TB_SUBVIEW==="kalender"){
+    document.getElementById("tb-kal-prev")?.addEventListener("click",()=>{
+      TB_KAL_MONTH--; if(TB_KAL_MONTH<0){TB_KAL_MONTH=11;TB_KAL_YEAR--;} TB_KAL_SELECTED=null; renderTagebuch();
+    });
+    document.getElementById("tb-kal-next")?.addEventListener("click",()=>{
+      TB_KAL_MONTH++; if(TB_KAL_MONTH>11){TB_KAL_MONTH=0;TB_KAL_YEAR++;} TB_KAL_SELECTED=null; renderTagebuch();
+    });
+    wrap.querySelectorAll(".tb-kal-has").forEach(cell=>{
+      cell.addEventListener("click",()=>{ TB_KAL_SELECTED=cell.dataset.kaldate; renderTagebuch(); });
+    });
+  }
 }
 
 function tbEntryCardHTML(e){
@@ -3793,6 +3931,7 @@ function tbDetailHTML(e){
       </div>
       ${e.methode ? `<div class="tb-detail-item"><div class="tb-detail-item-label">Methode</div><div class="tb-detail-item-value">${e.methode}</div></div>` : ""}
       ${e.koeder ? `<div class="tb-detail-item"><div class="tb-detail-item-label">Köder</div><div class="tb-detail-item-value">${e.koeder}</div></div>` : ""}
+      ${e.setup && AKTUELL[e.setup] ? `<div class="tb-detail-item"><div class="tb-detail-item-label">Setup</div><div class="tb-detail-item-value">${AKTUELL[e.setup].name.replace(/^Setup \d+ – /,"")}</div></div>` : ""}
     </div>
     <div class="tb-detail-section">
       <h4>Fänge</h4>
@@ -3853,6 +3992,12 @@ function tbFormHTML(){
     <div class="tb-form-grid">
       <div><label class="tb-label">Methode</label><input class="tb-input" id="tb-f-methode" placeholder="z.B. Spinnfischen" value="${e.methode||""}"></div>
       <div><label class="tb-label">Köder</label><input class="tb-input" id="tb-f-koeder" placeholder="z.B. Easy Shiner 5&quot;" value="${e.koeder||""}"></div>
+      <div class="full"><label class="tb-label">Setup (optional)</label>
+        <select class="tb-select" id="tb-f-setup">
+          <option value="">– kein / nicht relevant –</option>
+          ${Object.entries(AKTUELL).map(([k,s])=>`<option value="${k}"${(e.setup||"")===k?" selected":""}>${s.name.replace(/^Setup \d+ – /,"")}</option>`).join("")}
+        </select>
+      </div>
     </div>
     <div class="tb-section-label">🐟 Fänge</div>
     <div class="tb-catch-list" id="tb-catch-list">${catchRows}</div>
@@ -3890,6 +4035,7 @@ function tbCaptureDraft(){
     wassertemp: f("tb-f-wtemp"),
     methode: f("tb-f-methode"),
     koeder: f("tb-f-koeder"),
+    setup: f("tb-f-setup"),
     bewertung: typeof TB_EDIT?.bewertung === "number" ? TB_EDIT.bewertung : 0,
     notizen: f("tb-f-notizen")
   };
@@ -3955,6 +4101,7 @@ function tbFormBind(){
       wassertemp: parseFloat(document.getElementById("tb-f-wtemp")?.value)||null,
       methode: document.getElementById("tb-f-methode")?.value||"",
       koeder: document.getElementById("tb-f-koeder")?.value||"",
+      setup: document.getElementById("tb-f-setup")?.value||"",
       faenge: TB_CATCHES_TMP.filter(c => c.art).map(c => ({
         art: c.art,
         laenge: c.laenge ? parseFloat(c.laenge) : null,
