@@ -3873,6 +3873,28 @@ function tbFormHTML(){
   </div>`;
 }
 
+function tbCaptureDraft(){
+  const f = id => document.getElementById(id)?.value ?? "";
+  TB_EDIT = {
+    ...(TB_EDIT || {}),
+    datum: f("tb-f-datum"),
+    von: f("tb-f-von"),
+    bis: f("tb-f-bis"),
+    gewaesser: f("tb-f-gew"),
+    wetter: {
+      temp: f("tb-f-temp"),
+      wind: f("tb-f-wind"),
+      bewoelkung: f("tb-f-bew"),
+      luftdruck: f("tb-f-lp")
+    },
+    wassertemp: f("tb-f-wtemp"),
+    methode: f("tb-f-methode"),
+    koeder: f("tb-f-koeder"),
+    bewertung: typeof TB_EDIT?.bewertung === "number" ? TB_EDIT.bewertung : 0,
+    notizen: f("tb-f-notizen")
+  };
+}
+
 function tbFormBind(){
   // Sterne
   const starRow = document.getElementById("tb-star-row");
@@ -3894,11 +3916,13 @@ function tbFormBind(){
     catchList.addEventListener("click", e => {
       const btn = e.target.closest(".tb-catch-del");
       if(!btn) return;
+      tbCaptureDraft();
       TB_CATCHES_TMP.splice(+btn.dataset.ci, 1);
       renderTagebuch();
     });
   }
   document.getElementById("tb-add-catch-btn")?.addEventListener("click", () => {
+    tbCaptureDraft();
     TB_CATCHES_TMP.push({art:"",laenge:"",gewicht:""});
     renderTagebuch();
   });
