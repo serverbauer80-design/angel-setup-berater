@@ -1231,7 +1231,7 @@ const LAV_GEWAESSER = [
     ]
   },
   {
-    id:"dobersdorfer-see", name:"Dobersdorfer See", typ:"See", lat:54.240, lng:10.281, url:"https://lav-sh.de/lav-gewaesser/",
+    id:"dobersdorfer-see", name:"Dobersdorfer See", typ:"See", lat:54.240, lng:10.281, url:"https://lav-sh.de/dobersdorfer-see/",
     kostenlosLav:true,
     gruppen:[
       { name:"LAV-Mitglieder", preise:"Kostenlos (Boot 10 €/Tag zusätzlich)" },
