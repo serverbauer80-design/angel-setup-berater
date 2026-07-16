@@ -2730,6 +2730,162 @@ function vorhabenSaisonBadgeHTML(vorhaben){
     : `<span class="saison-badge neutral">⚪ Gerade nicht Hauptsaison (${saisonJetzt})</span>`;
 }
 
+/* ---------- Unterlagen (IndexedDB) ---------- */
+const UL_DB_NAME = "angel_unterlagen_v1";
+const UL_STORE   = "docs";
+
+function ulOpenDB(){
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(UL_DB_NAME, 1);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if(!db.objectStoreNames.contains(UL_STORE)){
+        const store = db.createObjectStore(UL_STORE, { keyPath: "id" });
+        store.createIndex("created", "created");
+      }
+    };
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror   = e => reject(e.target.error);
+  });
+}
+
+async function ulLadeAlle(){
+  const db = await ulOpenDB();
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(UL_STORE, "readonly");
+    const req = tx.objectStore(UL_STORE).index("created").getAll();
+    req.onsuccess = e => resolve(e.target.result || []);
+    req.onerror   = e => reject(e.target.error);
+  });
+}
+
+async function ulSpeichere(doc){
+  const db = await ulOpenDB();
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(UL_STORE, "readwrite");
+    const req = tx.objectStore(UL_STORE).put(doc);
+    req.onsuccess = () => resolve();
+    req.onerror   = e => reject(e.target.error);
+  });
+}
+
+async function ulLoesche(id){
+  const db = await ulOpenDB();
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(UL_STORE, "readwrite");
+    const req = tx.objectStore(UL_STORE).delete(id);
+    req.onsuccess = () => resolve();
+    req.onerror   = e => reject(e.target.error);
+  });
+}
+
+async function ulLadeEins(id){
+  const db = await ulOpenDB();
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(UL_STORE, "readonly");
+    const req = tx.objectStore(UL_STORE).get(id);
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror   = e => reject(e.target.error);
+  });
+}
+
+function ulFormatSize(bytes){
+  if(bytes < 1024) return bytes + " B";
+  if(bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / 1024 / 1024).toFixed(1) + " MB";
+}
+
+let ulAktuellerObjectURL = null;
+
+function ulSchliesseViewer(){
+  if(ulAktuellerObjectURL){ URL.revokeObjectURL(ulAktuellerObjectURL); ulAktuellerObjectURL = null; }
+  $("#unterlagen-viewer").style.display = "none";
+  $("#unterlagen-list").style.display   = "";
+}
+
+async function ulOeffneDoc(id){
+  const doc = await ulLadeEins(id);
+  if(!doc) return;
+  const blob = new Blob([doc.data], { type: "application/pdf" });
+  if(ulAktuellerObjectURL) URL.revokeObjectURL(ulAktuellerObjectURL);
+  ulAktuellerObjectURL = URL.createObjectURL(blob);
+  $("#ul-viewer-name").textContent = doc.name;
+  $("#ul-pdf-embed").src = ulAktuellerObjectURL;
+  $("#unterlagen-list").style.display   = "none";
+  $("#unterlagen-viewer").style.display = "flex";
+}
+
+async function renderUnterlagen(){
+  const listEl = $("#unterlagen-list");
+  const docs   = await ulLadeAlle();
+
+  let html = `<div class="k-intro card">
+    <h2>📄 Meine Unterlagen</h2>
+    <p>Angelschein, Fischereiabgaben und andere Dokumente – einmal hochladen, immer dabei.
+    Die Dateien liegen nur auf diesem Gerät (kein Upload ins Internet).</p>
+  </div>
+  <label class="ul-upload-btn">
+    ➕ PDF hinzufügen
+    <input type="file" accept="application/pdf" id="ul-file-input" style="display:none" multiple>
+  </label>`;
+
+  if(docs.length === 0){
+    html += `<div class="ul-empty card">
+      <span class="ul-empty-icon">📂</span>
+      Noch keine Unterlagen hinterlegt.<br>
+      Tippe auf „PDF hinzufügen" um zu starten.
+    </div>`;
+  } else {
+    html += `<div class="ul-doc-list">`;
+    docs.forEach(doc => {
+      html += `<div class="ul-doc-item" data-ul-open="${escAttr(doc.id)}">
+        <span class="ul-doc-icon">📄</span>
+        <div class="ul-doc-meta">
+          <div class="ul-doc-name">${escAttr(doc.name)}</div>
+          <div class="ul-doc-size">${ulFormatSize(doc.data.byteLength)} · ${doc.created.slice(0,10)}</div>
+        </div>
+        <button class="ul-doc-del" data-ul-del="${escAttr(doc.id)}" title="Löschen">🗑</button>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  listEl.innerHTML = html;
+
+  document.getElementById("ul-file-input").addEventListener("change", async function(){
+    for(const file of this.files){
+      if(file.type !== "application/pdf"){ alert("Nur PDF-Dateien werden unterstützt."); continue; }
+      const buffer = await file.arrayBuffer();
+      const doc = {
+        id:      genId(),
+        name:    file.name,
+        data:    buffer,
+        created: new Date().toISOString()
+      };
+      await ulSpeichere(doc);
+    }
+    renderUnterlagen();
+  });
+
+  listEl.querySelectorAll("[data-ul-open]").forEach(el => {
+    el.addEventListener("click", e => {
+      if(e.target.closest("[data-ul-del]")) return;
+      ulOeffneDoc(el.dataset.ulOpen);
+    });
+  });
+
+  listEl.querySelectorAll("[data-ul-del]").forEach(btn => {
+    btn.addEventListener("click", async e => {
+      e.stopPropagation();
+      if(!confirm("Dokument löschen?")) return;
+      await ulLoesche(btn.dataset.ulDel);
+      renderUnterlagen();
+    });
+  });
+}
+
+document.getElementById("ul-viewer-close").addEventListener("click", ulSchliesseViewer);
+
 /* ---------- Ansitzangeln ---------- */
 function renderAnsitzAngeln(){
   const el = $("#ansitz");
@@ -2863,3 +3019,4 @@ renderSaison();
 renderLavGewaesser();
 renderWochenende();
 renderAnsitzAngeln();
+renderUnterlagen();

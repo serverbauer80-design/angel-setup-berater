@@ -28,6 +28,7 @@
       <button class="tab" data-view="faenge">Fänge &amp; Spots</button>
       <button class="tab" data-view="inventar">Mein Equipment</button>
       <button class="tab" data-view="ansitz">⚓ Ansitzangeln</button>
+      <button class="tab" data-view="unterlagen">📄 Unterlagen</button>
     </nav>
     <button id="sync-status-btn" type="button" class="sync-status" title="Synchronisation">☁️ Nicht angemeldet</button>
   </header>
@@ -240,6 +241,18 @@
   <!-- ============ ANSITZANGELN ============ -->
   <main id="view-ansitz" class="view">
     <section id="ansitz"></section>
+  </main>
+
+  <!-- ============ UNTERLAGEN ============ -->
+  <main id="view-unterlagen" class="view">
+    <section id="unterlagen-list"></section>
+    <div id="unterlagen-viewer" class="ul-viewer" style="display:none">
+      <div class="ul-viewer-bar">
+        <span id="ul-viewer-name"></span>
+        <button id="ul-viewer-close" type="button" class="del-btn">✕ Schließen</button>
+      </div>
+      <embed id="ul-pdf-embed" type="application/pdf" class="ul-pdf-embed">
+    </div>
   </main>
 
   <footer class="foot">
