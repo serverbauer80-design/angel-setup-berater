@@ -1243,7 +1243,14 @@ const LAV_GEWAESSER = [
     kostenlosLav:null,
     unsicher:true,
     gruppen:[
-      { name:"DAFV-Mitglieder", preise:"10 €/Tag · 40 €/Woche · 100 €/Jahr" }
+      { name:"DAFV-Mitglieder", preise:"10 €/Tag · 40 €/Woche · 100 €/Jahr" },
+      { name:"Nicht organisiert", preise:"20 €/Tag · 80 €/Woche · 200 €/Jahr" }
+    ],
+    details:[
+      "📏 ca. 182 ha, Ø 3,73 m tief (bis ca. 8 m)",
+      "📅 Saison 01.05.–31.12., Nachtangeln erlaubt",
+      "🎣 Mindestmaß Hecht/Zander 50 cm, Schonzeit 01.01.–31.05.",
+      "🚶 Nur Uferangeln für Gastangler, zahlreiche Plätze vorhanden"
     ],
     hinweis:"Auf der Steckbrief-Seite wird nur der DAFV-Preis genannt, ein expliziter „LAV-Mitglieder kostenlos“-Vermerk fehlt hier (anders als bei Westensee/Dobersdorfer/Stolper See). Vermutlich analog geregelt, aber nicht bestätigt – vorher beim LAV nachfragen."
   },

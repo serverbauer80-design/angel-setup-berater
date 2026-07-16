@@ -128,6 +128,8 @@ select:focus{outline:none;border-color:var(--accent)}
 .ansatz-body .row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;font-size:13.5px;color:var(--muted);padding:8px 0;border-bottom:1px solid var(--line)}
 .ansatz-body .row:last-of-type{border-bottom:none}
 .ansatz-body .row b{color:var(--text);font-size:15px;font-weight:700;text-align:right}
+.lav-details{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.lav-details li{font-size:13.5px;color:var(--muted)}
 
 .setup-line{
   display:flex;flex-wrap:wrap;gap:8px 18px;background:var(--bg2);border-radius:10px;padding:12px 14px;

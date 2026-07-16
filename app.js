@@ -2568,6 +2568,7 @@ function renderLavGewaesser(){
       </div>
       <div class="ansatz-body">
         ${gruppenRows}
+        ${g.details ? `<ul class="lav-details">${g.details.map(d => `<li>${d}</li>`).join("")}</ul>` : ""}
         ${g.hinweis ? `<div class="need-hinweis" style="margin-top:10px">${g.hinweis}</div>` : ""}
       </div>
     </article>`;
