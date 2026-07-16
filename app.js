@@ -2549,12 +2549,14 @@ function renderLavGewaesser(){
     <p>Als LAV-Mitglied kannst du an diesen Gewässern vergünstigt oder sogar kostenlos angeln.
     <b>${kostenlosCount} von ${LAV_GEWAESSER.length}</b> sind für LAV-Mitglieder komplett kostenfrei (Boot meist trotzdem extra) –
     bei den übrigen zahlst du einen reduzierten Erlaubnisschein.</p>
-    <p class="k-hint">${LAV_GEWAESSER_META.disclaimer} <i>(${LAV_GEWAESSER_META.stand})</i></p>
-  </div>`;
+    <p class="k-hint">${LAV_GEWAESSER_META.disclaimer} <i>(${LAV_GEWAESSER_META.stand})</i> Positionen auf der Karte sind Näherungswerte (Ortsmitte), nicht exakt geocodet.</p>
+  </div>
+  <div id="lav-map"></div>`;
 
   const sortiert = [...LAV_GEWAESSER].sort((a,b) => (b.kostenlosLav === true) - (a.kostenlosLav === true));
 
-  sortiert.forEach(g => {
+  sortiert.forEach((g,i) => {
+    const nr = i + 1;
     const gruppenRows = g.gruppen.map(gr => `<div class="row"><span>${gr.name}</span><span><b>${gr.preise}</b></span></div>`).join("");
     const badge = g.kostenlosLav === true
       ? `<span class="badge machbar">🆓 LAV-Mitglieder kostenlos</span>`
@@ -2563,6 +2565,7 @@ function renderLavGewaesser(){
         : `<span class="badge wunsch">💶 Auch für Mitglieder kostenpflichtig</span>`);
     html += `<article class="ansatz">
       <div class="ansatz-head">
+        <span class="lav-nr">${nr}</span>
         ${badge}
         <span class="m-name">${g.name}${g.typ ? ` · ${g.typ}` : ""}</span>
       </div>
@@ -2575,6 +2578,53 @@ function renderLavGewaesser(){
   });
 
   el.innerHTML = html;
+  // Karte NICHT sofort initialisieren: der Tab ist beim allerersten Laden noch
+  // versteckt (display:none), Leaflet würde sich dabei eine 0x0-Größe einfrieren.
+  // Stattdessen erst bei tatsächlichem Öffnen des Tabs (siehe lavOnTabShown()).
+  lavMapNeuAufbauen = true;
+}
+
+/* ---------- Kleine Übersichtskarte mit nummerierten Markern (passend zur
+   Liste darunter) ---------- */
+let lavMap = null;
+let lavMapNeuAufbauen = true;
+function lavOnTabShown(){
+  if(lavMapNeuAufbauen) lavEnsureMap();
+  else if(lavMap) lavMap.invalidateSize();
+}
+function lavEnsureMap(){
+  if(lavMap){ lavMap.remove(); lavMap = null; }
+  const container = document.getElementById("lav-map");
+  if(!container) return;
+  lavMap = L.map("lav-map", { zoomControl: true, attributionControl: false }).setView([54.15, 10.0], 8);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19, attribution: "© OpenStreetMap-Mitwirkende"
+  }).addTo(lavMap);
+  L.control.attribution({ position: "bottomleft", prefix: false }).addAttribution("© OpenStreetMap-Mitwirkende").addTo(lavMap);
+
+  const sortiert = [...LAV_GEWAESSER].sort((a,b) => (b.kostenlosLav === true) - (a.kostenlosLav === true));
+  const punkte = [];
+  sortiert.forEach((g, i) => {
+    if(g.lat == null || g.lng == null) return;
+    const nr = i + 1;
+    const farbe = g.kostenlosLav === true ? "#3ad07a" : "#33c3a6";
+    const icon = L.divIcon({
+      className: "lav-marker",
+      html: `<div class="lav-marker-inner" style="background:${farbe}">${nr}</div>`,
+      iconSize: [28, 28], iconAnchor: [14, 14]
+    });
+    L.marker([g.lat, g.lng], { icon }).addTo(lavMap).bindPopup(`<b>${nr}. ${g.name}</b>`);
+    punkte.push([g.lat, g.lng]);
+  });
+  if(punkte.length > 0) lavMap.fitBounds(punkte, { padding: [28, 28] });
+
+  lavMapNeuAufbauen = false;
+  requestAnimationFrame(() => lavMap && lavMap.invalidateSize());
+  setTimeout(() => {
+    if(!lavMap) return;
+    lavMap.invalidateSize();
+    if(punkte.length > 0) lavMap.fitBounds(punkte, { padding: [28, 28] });
+  }, 200);
 }
 
 /* ---------- Wochenend-Planer ----------
@@ -2687,6 +2737,7 @@ document.querySelectorAll(".tab").forEach(t => {
     t.classList.add("active");
     $("#view-" + t.dataset.view).classList.add("active");
     if(t.dataset.view === "faenge") fsOnTabShown();
+    if(t.dataset.view === "lav") lavOnTabShown();
   });
 });
 
