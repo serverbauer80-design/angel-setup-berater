@@ -36,7 +36,8 @@ body{
 .brand-emoji{font-size:34px}
 .topbar h1{font-size:20px;margin:0;letter-spacing:.2px}
 .sub{margin:2px 0 0;font-size:13px;color:var(--muted)}
-.tabs{display:flex;gap:8px}
+.tabs{display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
 .tab{
   background:transparent;border:1px solid var(--line);color:var(--muted);
   padding:8px 16px;border-radius:999px;cursor:pointer;font-size:14px;font-weight:600;transition:.15s;
@@ -535,16 +536,14 @@ select:focus{outline:none;border-color:var(--accent)}
 .ul-inline-rename{display:flex;align-items:center;gap:8px;padding:8px 16px 12px;flex-wrap:wrap}
 .ul-inline-rename .ul-name-input{flex:1;min-width:140px;font-size:14px;padding:8px 10px}
 
-@media (max-width:700px){
+@media (max-width:1280px){
   .topbar{padding:14px;gap:10px}
   .tabs{
-    width:100%;order:3;overflow-x:auto;flex-wrap:nowrap;gap:8px;
-    margin:0 -14px;padding:2px 14px 6px;-webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
+    width:100%;order:3;gap:8px;
+    margin:0 -14px;padding:2px 14px 6px;
     mask-image:linear-gradient(to right,transparent,black 14px,black calc(100% - 14px),transparent);
     -webkit-mask-image:linear-gradient(to right,transparent,black 14px,black calc(100% - 14px),transparent);
   }
-  .tabs::-webkit-scrollbar{display:none}
   .tab{padding:8px 14px;font-size:13.5px}
   .brand{order:1}
   .sync-status{order:2;margin-left:auto}
