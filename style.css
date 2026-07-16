@@ -523,6 +523,8 @@ select:focus{outline:none;border-color:var(--accent)}
 .ul-pdf-embed{flex:1;width:100%;border:none;background:#fff}
 .ul-empty{text-align:center;padding:40px 20px;color:var(--muted)}
 .ul-empty .ul-empty-icon{font-size:48px;display:block;margin-bottom:12px}
+.ul-progress-bar{background:var(--bg2);border-radius:6px;height:8px;overflow:hidden}
+.ul-progress-fill{background:var(--accent);height:100%;border-radius:6px;transition:width .2s}
 
 @media (max-width:700px){
   .topbar{padding:14px;gap:10px}

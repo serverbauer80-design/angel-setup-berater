@@ -207,6 +207,7 @@ async function fsSyncOnLogin(user){
     if(errEl){ errEl.textContent = "Erstsynchronisation fehlgeschlagen: " + e.message; errEl.style.display = "block"; }
   }
   fsSyncReady = true;
+  if(typeof renderUnterlagen === "function") renderUnterlagen();
 
   if(fsSyncUnsub) fsSyncUnsub();
   fsSyncUnsub = fsSyncDocRef.onSnapshot(snap => {
@@ -224,6 +225,7 @@ function fsSyncOnLogout(){
   if(loginForm) loginForm.style.display = "block";
   const loggedInBox = document.getElementById("sync-loggedin-box");
   if(loggedInBox) loggedInBox.style.display = "none";
+  if(typeof renderUnterlagen === "function") renderUnterlagen();
 }
 
 // Die komplette Sync-Initialisierung ist bewusst in try/catch gekapselt: geht hier
@@ -2730,9 +2732,11 @@ function vorhabenSaisonBadgeHTML(vorhaben){
     : `<span class="saison-badge neutral">⚪ Gerade nicht Hauptsaison (${saisonJetzt})</span>`;
 }
 
-/* ---------- Unterlagen (IndexedDB) ---------- */
+/* ---------- Unterlagen (IndexedDB lokal + Firebase Storage Cloud) ---------- */
 const UL_DB_NAME = "angel_unterlagen_v1";
 const UL_STORE   = "docs";
+
+// ---- IndexedDB (lokaler Cache, immer aktiv) ----
 
 function ulOpenDB(){
   return new Promise((resolve, reject) => {
@@ -2749,7 +2753,7 @@ function ulOpenDB(){
   });
 }
 
-async function ulLadeAlle(){
+async function ulIDBLadeAlle(){
   const db = await ulOpenDB();
   return new Promise((resolve, reject) => {
     const tx  = db.transaction(UL_STORE, "readonly");
@@ -2759,7 +2763,7 @@ async function ulLadeAlle(){
   });
 }
 
-async function ulSpeichere(doc){
+async function ulIDBSpeichere(doc){
   const db = await ulOpenDB();
   return new Promise((resolve, reject) => {
     const tx  = db.transaction(UL_STORE, "readwrite");
@@ -2769,7 +2773,7 @@ async function ulSpeichere(doc){
   });
 }
 
-async function ulLoesche(id){
+async function ulIDBLoesche(id){
   const db = await ulOpenDB();
   return new Promise((resolve, reject) => {
     const tx  = db.transaction(UL_STORE, "readwrite");
@@ -2779,7 +2783,7 @@ async function ulLoesche(id){
   });
 }
 
-async function ulLadeEins(id){
+async function ulIDBLadeEins(id){
   const db = await ulOpenDB();
   return new Promise((resolve, reject) => {
     const tx  = db.transaction(UL_STORE, "readonly");
@@ -2789,7 +2793,47 @@ async function ulLadeEins(id){
   });
 }
 
+// ---- Firebase Storage / Firestore (nur wenn eingeloggt) ----
+
+function ulStorageRef(uid, id){
+  return firebase.storage().ref(`unterlagen/${uid}/${id}.pdf`);
+}
+
+function ulFirestoreCol(uid){
+  return firebase.firestore().collection("unterlagen").doc(uid).collection("docs");
+}
+
+async function ulCloudLadeAlle(uid){
+  const snap = await ulFirestoreCol(uid).orderBy("created").get();
+  return snap.docs.map(d => ({ id: d.id, ...d.data(), inCloud: true }));
+}
+
+async function ulCloudSpeichere(uid, id, name, created, buffer, onProgress){
+  const ref  = ulStorageRef(uid, id);
+  const task = ref.put(buffer, { contentType: "application/pdf" });
+  await new Promise((resolve, reject) => {
+    task.on("state_changed",
+      snap => { if(onProgress) onProgress(snap.bytesTransferred / snap.totalBytes); },
+      reject, resolve);
+  });
+  await ulFirestoreCol(uid).doc(id).set({ name, created, size: buffer.byteLength });
+}
+
+async function ulCloudLoesche(uid, id){
+  await ulStorageRef(uid, id).delete().catch(() => {});
+  await ulFirestoreCol(uid).doc(id).delete().catch(() => {});
+}
+
+async function ulCloudDownload(uid, id){
+  const url  = await ulStorageRef(uid, id).getDownloadURL();
+  const resp = await fetch(url);
+  return resp.arrayBuffer();
+}
+
+// ---- Hilfsfunktionen ----
+
 function ulFormatSize(bytes){
+  if(!bytes) return "";
   if(bytes < 1024) return bytes + " B";
   if(bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
   return (bytes / 1024 / 1024).toFixed(1) + " MB";
@@ -2803,31 +2847,67 @@ function ulSchliesseViewer(){
   $("#unterlagen-list").style.display   = "";
 }
 
-async function ulOeffneDoc(id){
-  const doc = await ulLadeEins(id);
-  if(!doc) return;
-  const blob = new Blob([doc.data], { type: "application/pdf" });
+async function ulOeffneDoc(id, name){
+  const listEl = $("#unterlagen-list");
+  // Zuerst lokalen Cache prüfen
+  let cached = await ulIDBLadeEins(id);
+  let buffer;
+  if(cached){
+    buffer = cached.data;
+  } else if(fsSyncUser){
+    // Von Firebase Storage laden und lokal cachen
+    listEl.querySelector(`[data-ul-open="${id}"] .ul-doc-size`).textContent = "⏬ Wird geladen …";
+    try {
+      buffer = await ulCloudDownload(fsSyncUser.uid, id);
+      await ulIDBSpeichere({ id, name, data: buffer, created: new Date().toISOString() });
+    } catch(e) {
+      alert("Download fehlgeschlagen: " + e.message);
+      return;
+    }
+  } else {
+    alert("Dokument nicht gefunden.");
+    return;
+  }
+  const blob = new Blob([buffer], { type: "application/pdf" });
   if(ulAktuellerObjectURL) URL.revokeObjectURL(ulAktuellerObjectURL);
   ulAktuellerObjectURL = URL.createObjectURL(blob);
-  $("#ul-viewer-name").textContent = doc.name;
+  $("#ul-viewer-name").textContent = name;
   $("#ul-pdf-embed").src = ulAktuellerObjectURL;
-  $("#unterlagen-list").style.display   = "none";
+  listEl.style.display = "none";
   $("#unterlagen-viewer").style.display = "flex";
 }
 
 async function renderUnterlagen(){
   const listEl = $("#unterlagen-list");
-  const docs   = await ulLadeAlle();
+  if(!listEl) return;
+
+  const eingeloggt = !!fsSyncUser;
+  let docs = [];
+  try {
+    docs = eingeloggt ? await ulCloudLadeAlle(fsSyncUser.uid) : await ulIDBLadeAlle();
+  } catch(e) {
+    docs = await ulIDBLadeAlle();
+  }
+
+  const syncHinweis = eingeloggt
+    ? `<span style="color:var(--ok)">☁️ Cloud-Sync aktiv – auf allen Geräten verfügbar.</span>`
+    : `<span style="color:var(--warn)">📱 Nur lokal gespeichert. <a href="#" id="ul-login-link">Anmelden</a> für geräteübergreifenden Zugriff.</span>`;
 
   let html = `<div class="k-intro card">
     <h2>📄 Meine Unterlagen</h2>
-    <p>Angelschein, Fischereiabgaben und andere Dokumente – einmal hochladen, immer dabei.
-    Die Dateien liegen nur auf diesem Gerät (kein Upload ins Internet).</p>
+    <p>Angelschein, Fischereiabgaben und andere Dokumente – einmal hochladen, immer dabei.</p>
+    <p style="font-size:13px;margin:0">${syncHinweis}</p>
   </div>
-  <label class="ul-upload-btn">
-    ➕ PDF hinzufügen
-    <input type="file" accept="application/pdf" id="ul-file-input" style="display:none" multiple>
-  </label>`;
+  <div id="ul-upload-area">
+    <label class="ul-upload-btn">
+      ➕ PDF hinzufügen
+      <input type="file" accept="application/pdf" id="ul-file-input" style="display:none" multiple>
+    </label>
+    <div id="ul-progress-wrap" style="display:none;margin-bottom:12px">
+      <div class="ul-progress-bar"><div id="ul-progress-fill" class="ul-progress-fill"></div></div>
+      <div id="ul-progress-label" style="font-size:12px;color:var(--muted);margin-top:4px">Wird hochgeladen …</div>
+    </div>
+  </div>`;
 
   if(docs.length === 0){
     html += `<div class="ul-empty card">
@@ -2838,11 +2918,13 @@ async function renderUnterlagen(){
   } else {
     html += `<div class="ul-doc-list">`;
     docs.forEach(doc => {
-      html += `<div class="ul-doc-item" data-ul-open="${escAttr(doc.id)}">
+      const size = doc.size ? ulFormatSize(doc.size) : (doc.data ? ulFormatSize(doc.data.byteLength) : "");
+      const datum = doc.created ? doc.created.slice(0,10) : "";
+      html += `<div class="ul-doc-item" data-ul-open="${escAttr(doc.id)}" data-ul-name="${escAttr(doc.name)}">
         <span class="ul-doc-icon">📄</span>
         <div class="ul-doc-meta">
           <div class="ul-doc-name">${escAttr(doc.name)}</div>
-          <div class="ul-doc-size">${ulFormatSize(doc.data.byteLength)} · ${doc.created.slice(0,10)}</div>
+          <div class="ul-doc-size">${[size, datum].filter(Boolean).join(" · ")}</div>
         </div>
         <button class="ul-doc-del" data-ul-del="${escAttr(doc.id)}" title="Löschen">🗑</button>
       </div>`;
@@ -2852,33 +2934,62 @@ async function renderUnterlagen(){
 
   listEl.innerHTML = html;
 
+  // Login-Link im Hinweis
+  const loginLink = document.getElementById("ul-login-link");
+  if(loginLink) loginLink.addEventListener("click", e => {
+    e.preventDefault();
+    document.getElementById("sync-modal").style.display = "flex";
+  });
+
+  // Datei hochladen
   document.getElementById("ul-file-input").addEventListener("change", async function(){
+    const progressWrap = document.getElementById("ul-progress-wrap");
+    const progressFill = document.getElementById("ul-progress-fill");
+    const progressLabel = document.getElementById("ul-progress-label");
+
     for(const file of this.files){
       if(file.type !== "application/pdf"){ alert("Nur PDF-Dateien werden unterstützt."); continue; }
-      const buffer = await file.arrayBuffer();
-      const doc = {
-        id:      genId(),
-        name:    file.name,
-        data:    buffer,
-        created: new Date().toISOString()
-      };
-      await ulSpeichere(doc);
+      const id      = genId();
+      const created = new Date().toISOString();
+      const buffer  = await file.arrayBuffer();
+
+      // Lokaler Cache immer
+      await ulIDBSpeichere({ id, name: file.name, data: buffer, created });
+
+      if(fsSyncUser){
+        progressWrap.style.display = "block";
+        progressFill.style.width = "0%";
+        progressLabel.textContent = `⬆️ ${file.name} wird hochgeladen …`;
+        try {
+          await ulCloudSpeichere(fsSyncUser.uid, id, file.name, created, buffer, pct => {
+            progressFill.style.width = Math.round(pct * 100) + "%";
+          });
+          progressLabel.textContent = "✅ Fertig";
+        } catch(e) {
+          progressLabel.textContent = "❌ Upload fehlgeschlagen: " + e.message;
+        }
+        setTimeout(() => { progressWrap.style.display = "none"; }, 1800);
+      }
     }
     renderUnterlagen();
   });
 
+  // Dokument öffnen
   listEl.querySelectorAll("[data-ul-open]").forEach(el => {
     el.addEventListener("click", e => {
       if(e.target.closest("[data-ul-del]")) return;
-      ulOeffneDoc(el.dataset.ulOpen);
+      ulOeffneDoc(el.dataset.ulOpen, el.dataset.ulName);
     });
   });
 
+  // Dokument löschen
   listEl.querySelectorAll("[data-ul-del]").forEach(btn => {
     btn.addEventListener("click", async e => {
       e.stopPropagation();
       if(!confirm("Dokument löschen?")) return;
-      await ulLoesche(btn.dataset.ulDel);
+      const id = btn.dataset.ulDel;
+      await ulIDBLoesche(id);
+      if(fsSyncUser) await ulCloudLoesche(fsSyncUser.uid, id);
       renderUnterlagen();
     });
   });
