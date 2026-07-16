@@ -225,7 +225,8 @@ const FISCHE = [
         montage:[
           {k:"Hauptschnur", v:"J-Braid 0,16 mm"},
           {k:"Laufblei", v:"See 20–30 g · Strömung (Eider/Elbe) 40–60 g"},
-          {k:"Wirbel", v:"Motor Snap 18 kg (Prellperle davor)"},
+          {k:"Gummiperle", v:"1 Prellperle zwischen Blei und Wirbel (schützt den Knoten vor Schlagbelastung)"},
+          {k:"Wirbel", v:"Motor Snap 18 kg"},
           {k:"Vorfach", v:"Fluorocarbon 0,30–0,35 mm · 60–80 cm"},
           {k:"Haken", v:"Einzelhaken Gr. 1–1/0 · toter Köderfisch 8–12 cm"}
         ],
@@ -253,7 +254,8 @@ const FISCHE = [
         gewaesser:["eider","nok","see"],
         montage:[
           {k:"Hauptschnur", v:"J-Braid 0,16 mm"},
-          {k:"Pose", v:"Laufpose 15–30 g (Tragkraft an Köderfischgröße anpassen)"},
+          {k:"Pose", v:"Laufpose 15–30 g (Tragkraft an Öderfischgröße anpassen)"},
+          {k:"Gummiperlen", v:"2 Prellperlen (je eine über und unter der Pose – schützen den Stopper-Knoten)"},
           {k:"Stahlvorfach", v:"Perca 30–40 cm"},
           {k:"Haken", v:"Drilling/Einzel Gr. 1/0 · Köderfisch 10–15 cm"}
         ],
@@ -385,6 +387,7 @@ const FISCHE = [
         montage:[
           {k:"Hauptschnur", v:"J-Braid 0,16 mm"},
           {k:"Laufblei", v:"See 15–25 g · Strömung 30–50 g"},
+          {k:"Gummiperle", v:"1 Prellperle zwischen Blei und Wirbel (Knoten-Schutz)"},
           {k:"Wirbel", v:"Motor Snap 18 kg"},
           {k:"Vorfach", v:"Mono/FC 0,30 mm · 40–60 cm"},
           {k:"Haken", v:"Aalhaken (langer Schenkel) Gr. 4–1 · Tauwurm"}
@@ -404,6 +407,8 @@ const FISCHE = [
         montage:[
           {k:"Hauptschnur", v:"J-Braid 0,16 mm"},
           {k:"Laufblei", v:"30–60 g (Strömung halten)"},
+          {k:"Gummiperle", v:"1 Prellperle (Knoten-Schutz)"},
+          {k:"Wirbel", v:"Kleiner Wirbel Gr. 10–12"},
           {k:"Vorfach", v:"Mono 0,30 mm · 40 cm"},
           {k:"Haken", v:"Gr. 1–1/0 · Tauwurmbündel oder Fischfetzen"}
         ],
