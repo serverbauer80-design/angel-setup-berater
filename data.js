@@ -1216,7 +1216,7 @@ const ANGELMETHODEN = [
    dem Angeln immer aktuellen Stand auf lav-sh.de prüfen (siehe Disclaimer). */
 const LAV_GEWAESSER = [
   {
-    id:"westensee", name:"Westensee", typ:"See", lat:54.283, lng:9.898,
+    id:"westensee", name:"Westensee", typ:"See", lat:54.283, lng:9.898, url:"https://lav-sh.de/westensee-3/",
     kostenlosLav:true,
     gruppen:[
       { name:"LAV-Mitglieder", preise:"Kostenlos (nur Boot 10 €/Tag zusätzlich)" },
@@ -1224,14 +1224,14 @@ const LAV_GEWAESSER = [
     ]
   },
   {
-    id:"pruessee", name:"Prüßsee", typ:"See", lat:54.163, lng:10.436,
+    id:"pruessee", name:"Prüßsee", typ:"See", lat:54.163, lng:10.436, url:"https://lav-sh.de/pruesssee/",
     kostenlosLav:false,
     gruppen:[
       { name:"LAV-Mitglieder", preise:"10 €/Tag · 20 €/3 Tage · 40 €/Woche · 120 €/Jahr" }
     ]
   },
   {
-    id:"dobersdorfer-see", name:"Dobersdorfer See", typ:"See", lat:54.240, lng:10.281,
+    id:"dobersdorfer-see", name:"Dobersdorfer See", typ:"See", lat:54.240, lng:10.281, url:"https://lav-sh.de/lav-gewaesser/",
     kostenlosLav:true,
     gruppen:[
       { name:"LAV-Mitglieder", preise:"Kostenlos (Boot 10 €/Tag zusätzlich)" },
@@ -1239,7 +1239,7 @@ const LAV_GEWAESSER = [
     ]
   },
   {
-    id:"einfelder-see", name:"Einfelder See", typ:"See", lat:54.093, lng:9.965,
+    id:"einfelder-see", name:"Einfelder See", typ:"See", lat:54.093, lng:9.965, url:"https://lav-sh.de/einfelder-see/",
     kostenlosLav:false,
     gruppen:[
       { name:"DAFV-/LAV-Mitglieder", preise:"10 €/Tag · 40 €/Woche · 100 €/Jahr" },
@@ -1253,7 +1253,7 @@ const LAV_GEWAESSER = [
     ]
   },
   {
-    id:"stolper-see", name:"Stolper See", typ:"See", lat:54.335, lng:10.415,
+    id:"stolper-see", name:"Stolper See", typ:"See", lat:54.335, lng:10.415, url:"https://lav-sh.de/stolper-see/",
     kostenlosLav:true,
     gruppen:[
       { name:"LAV-Mitglieder", preise:"Kostenlos (Boot 10 €/Tag zusätzlich)" },
@@ -1261,7 +1261,7 @@ const LAV_GEWAESSER = [
     ]
   },
   {
-    id:"ploener-see", name:"Großer Plöner See & Seenverbund", typ:"See", lat:54.161, lng:10.417,
+    id:"ploener-see", name:"Großer Plöner See & Seenverbund", typ:"See", lat:54.161, lng:10.417, url:"https://lav-sh.de/grosser-ploener-see-seenverbund/",
     kostenlosLav:false,
     gruppen:[
       { name:"Mitglieder (auch LAV)", preise:"17 €/24h · 70 €/Woche · 215 €/Jahr" }
@@ -1269,7 +1269,7 @@ const LAV_GEWAESSER = [
     hinweis:"Leihboote in Bosau kosten zusätzlich 10 €/Tag."
   },
   {
-    id:"nok", name:"Nord-Ostsee-Kanal (NOK)", typ:"Kanal", lat:54.293, lng:9.663,
+    id:"nok", name:"Nord-Ostsee-Kanal (NOK)", typ:"Kanal", lat:54.293, lng:9.663, url:"https://lav-sh.de/nord-ostsee-kanal-nok/",
     kostenlosLav:false,
     gruppen:[
       { name:"LAV-Mitglieder", preise:"15 €/24h · 21 €/3 Tage · 29 €/Woche · 47 €/Jahr" },
@@ -1277,14 +1277,14 @@ const LAV_GEWAESSER = [
     ]
   },
   {
-    id:"elk", name:"Elbe-Lübeck-Kanal (ELK)", typ:"Kanal", lat:53.755, lng:10.616,
+    id:"elk", name:"Elbe-Lübeck-Kanal (ELK)", typ:"Kanal", lat:53.755, lng:10.616, url:"https://lav-sh.de/elbe-luebeck-kanal-elk/",
     kostenlosLav:false,
     gruppen:[
       { name:"DAFV-Mitglieder", preise:"13 €/Tag · 28 €/Woche · 41 €/Jahr" }
     ]
   },
   {
-    id:"elbe-lauenburg", name:"Elbe bei Lauenburg", typ:"Fluss", lat:53.371, lng:10.565,
+    id:"elbe-lauenburg", name:"Elbe bei Lauenburg", typ:"Fluss", lat:53.371, lng:10.565, url:"https://lav-sh.de/elbe-bei-lauenburg/",
     kostenlosLav:false,
     gruppen:[
       { name:"LAV-/AVN-Mitglieder", preise:"12 €/Tag · 19 €/3 Tage · 27 €/Woche · 43 €/Jahr" }

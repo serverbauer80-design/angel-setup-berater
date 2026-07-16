@@ -2573,6 +2573,7 @@ function renderLavGewaesser(){
         ${gruppenRows}
         ${g.details ? `<ul class="lav-details">${g.details.map(d => `<li>${d}</li>`).join("")}</ul>` : ""}
         ${g.hinweis ? `<div class="need-hinweis" style="margin-top:10px">${g.hinweis}</div>` : ""}
+        ${g.url ? `<a class="shop-link" href="${g.url}" target="_blank" rel="noopener noreferrer">🔗 Zur Gewässerseite (lav-sh.de)</a>` : ""}
       </div>
     </article>`;
   });
