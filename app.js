@@ -337,7 +337,277 @@ function montageHTML(montage){
       <span class="g-txt"><span class="g-k">${m.k}</span><br><span class="g-v">${m.v}</span></span>
     </div>`).join("");
   return `<div class="montage"><h4>Montage-Aufbau (von der Rute zum Köder)</h4>
+    ${montageDiagramHTML(montage)}
     <div class="chain">${glieder}</div></div>`;
+}
+
+/* ---------- Montage-Diagramm-Illustrationen ---------- */
+function detectMontagenTyp(montage){
+  const t = montage.map(m => m.k + " " + m.v).join(" ").toLowerCase();
+  if(t.includes("sbirolino")) return "sbirolino";
+  if(t.includes("dropshot")) return "dropshot";
+  if(t.includes("paternoster")) return "paternoster";
+  if(t.includes("pilker")) return "pilker";
+  if(t.includes("schlagschnur") || t.includes("krallenblei")) return "brandung";
+  if(t.includes("futterkorb")) return "feeder";
+  if(t.includes("feste vorfachschnur")) return "stippe";
+  if(t.includes("laufpose")) return "laufpose";
+  if(t.includes("stahlvorfach") && t.includes("pose")) return "pose-stahl";
+  if(t.includes("laufblei")) return "laufblei";
+  if(t.includes("jigkopf")) return "jigkopf";
+  return null;
+}
+
+function montageDiagramHTML(montage){
+  const typ = detectMontagenTyp(montage);
+  if(!typ) return "";
+
+  const SVG = {
+    jigkopf: `<svg viewBox="0 0 560 148" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Jigkopf-Montage">
+      <rect x="6" y="64" width="36" height="10" rx="3" fill="#8ab0c0"/>
+      <polygon points="6,60 6,78 0,69" fill="#8ab0c0"/>
+      <line x1="42" y1="69" x2="192" y2="69" stroke="#33c3a6" stroke-width="3"/>
+      <rect x="192" y="62" width="14" height="14" rx="3" fill="#8ab0c0"/>
+      <line x1="206" y1="69" x2="360" y2="69" stroke="#d4a84b" stroke-width="2.5" stroke-dasharray="6,3"/>
+      <circle cx="372" cy="69" r="11" fill="#8ab0c0"/>
+      <path d="M372 80 Q373 103 390 105 Q408 105 408 90" fill="none" stroke="#8ab0c0" stroke-width="3"/>
+      <line x1="406" y1="93" x2="412" y2="100" stroke="#8ab0c0" stroke-width="2"/>
+      <path d="M372 69 C394 53 428 53 458 67 C486 79 508 75 530 67 C546 61 554 64 560 67" fill="none" stroke="#33c3a6" stroke-width="5" stroke-linecap="round"/>
+      <path d="M557 65 L568 56 M557 67 L568 75" fill="none" stroke="#33c3a6" stroke-width="3" stroke-linecap="round"/>
+      <text x="114" y="53" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Braid</text>
+      <text x="281" y="53" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">FC-Vorfach</text>
+      <text x="470" y="53" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Gummifisch</text>
+      <text x="199" y="90" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Wirbel</text>
+      <text x="372" y="126" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Jigkopf + Haken</text>
+    </svg>`,
+
+    dropshot: `<svg viewBox="0 0 420 224" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Dropshot-Montage">
+      <rect x="6" y="46" width="36" height="10" rx="3" fill="#8ab0c0"/>
+      <polygon points="6,42 6,60 0,51" fill="#8ab0c0"/>
+      <line x1="42" y1="51" x2="174" y2="51" stroke="#33c3a6" stroke-width="3"/>
+      <rect x="174" y="44" width="14" height="14" rx="3" fill="#8ab0c0"/>
+      <line x1="181" y1="58" x2="181" y2="200" stroke="#d4a84b" stroke-width="2.5" stroke-dasharray="5,3"/>
+      <circle cx="181" cy="118" r="5" fill="#d4a84b"/>
+      <line x1="181" y1="118" x2="232" y2="118" stroke="#d4a84b" stroke-width="2"/>
+      <path d="M232 111 Q233 135 250 137 Q268 137 268 122" fill="none" stroke="#8ab0c0" stroke-width="3"/>
+      <line x1="266" y1="125" x2="272" y2="132" stroke="#8ab0c0" stroke-width="2"/>
+      <path d="M228 105 C244 94 264 94 274 104" fill="none" stroke="#33c3a6" stroke-width="5" stroke-linecap="round"/>
+      <path d="M272 102 L280 96 M272 104 L280 110" fill="none" stroke="#33c3a6" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="176" y1="118" x2="176" y2="198" stroke="#9db6c4" stroke-width="1" stroke-dasharray="2,3"/>
+      <ellipse cx="181" cy="210" rx="10" ry="13" fill="#5a7d8e"/>
+      <text x="105" y="36" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Braid</text>
+      <text x="181" y="36" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Wirbel</text>
+      <text x="155" y="88" fill="#9db6c4" font-size="10" font-family="sans-serif">FC-Vorfach</text>
+      <text x="252" y="92" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Gummifisch</text>
+      <text x="287" y="132" fill="#9db6c4" font-size="9" font-family="sans-serif">DS-Haken</text>
+      <text x="160" y="162" fill="#9db6c4" font-size="9" font-family="sans-serif">~40 cm</text>
+      <text x="181" y="224" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">DS-Gewicht</text>
+    </svg>`,
+
+    laufblei: `<svg viewBox="0 0 560 158" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Laufblei-Grundmontage">
+      <rect x="6" y="62" width="36" height="10" rx="3" fill="#8ab0c0"/>
+      <polygon points="6,58 6,76 0,67" fill="#8ab0c0"/>
+      <line x1="42" y1="67" x2="560" y2="67" stroke="#33c3a6" stroke-width="2.5"/>
+      <ellipse cx="158" cy="87" rx="18" ry="11" fill="#5a7d8e"/>
+      <line x1="140" y1="67" x2="140" y2="87" stroke="#33c3a6" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <line x1="176" y1="67" x2="176" y2="87" stroke="#33c3a6" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <rect x="210" y="62" width="6" height="10" rx="2" fill="#8ab0c0"/>
+      <rect x="218" y="60" width="14" height="14" rx="3" fill="#8ab0c0"/>
+      <line x1="232" y1="67" x2="390" y2="67" stroke="#d4a84b" stroke-width="2.5" stroke-dasharray="6,3"/>
+      <path d="M390 60 Q391 83 408 85 Q426 85 426 70" fill="none" stroke="#8ab0c0" stroke-width="3"/>
+      <line x1="424" y1="73" x2="430" y2="80" stroke="#8ab0c0" stroke-width="2"/>
+      <path d="M403 60 C416 46 430 50 435 60 C440 68 448 67 452 62" fill="none" stroke="#8ab0c0" stroke-width="3" stroke-linecap="round"/>
+      <text x="158" y="111" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Laufblei (gleitet)</text>
+      <text x="213" y="53" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Stopper</text>
+      <text x="225" y="90" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Wirbel</text>
+      <text x="310" y="53" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">FC-Vorfach</text>
+      <text x="415" y="104" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Haken + Köder</text>
+      <text x="100" y="53" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Braid/Mono</text>
+    </svg>`,
+
+    "pose-stahl": `<svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Posenansitz Öderfisch">
+      <text x="210" y="16" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">~ Wasseroberfläche ~</text>
+      <line x1="0" y1="24" x2="420" y2="24" stroke="#2aa0d8" stroke-width="1" stroke-dasharray="8,4" opacity=".5"/>
+      <rect x="6" y="18" width="36" height="10" rx="3" fill="#8ab0c0"/>
+      <polygon points="6,14 6,32 0,23" fill="#8ab0c0"/>
+      <line x1="42" y1="23" x2="160" y2="23" stroke="#33c3a6" stroke-width="2.5"/>
+      <ellipse cx="170" cy="14" rx="10" ry="16" fill="#e8763a"/>
+      <ellipse cx="170" cy="32" rx="10" ry="16" fill="#e0edf2"/>
+      <line x1="170" y1="48" x2="170" y2="92" stroke="#33c3a6" stroke-width="2.5"/>
+      <rect x="163" y="92" width="14" height="14" rx="3" fill="#8ab0c0"/>
+      <line x1="170" y1="106" x2="170" y2="156" stroke="#9db6c4" stroke-width="2.5"/>
+      <path d="M170 156 Q171 180 188 182 Q206 182 206 167" fill="none" stroke="#8ab0c0" stroke-width="3"/>
+      <line x1="204" y1="170" x2="210" y2="177" stroke="#8ab0c0" stroke-width="2"/>
+      <ellipse cx="224" cy="168" rx="22" ry="10" fill="#e85c5c" opacity=".7"/>
+      <path d="M244 165 L256 158 M244 168 L256 174" fill="none" stroke="#e85c5c" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="198" y="23" fill="#9db6c4" font-size="10" font-family="sans-serif">Laufpose</text>
+      <text x="166" y="112" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Wirbel</text>
+      <text x="118" y="136" fill="#9db6c4" font-size="10" font-family="sans-serif">Stahlvorfach</text>
+      <text x="265" y="172" fill="#9db6c4" font-size="9" font-family="sans-serif">Öderfisch</text>
+      <text x="210" y="198" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Haken (Drilling)</text>
+    </svg>`,
+
+    sbirolino: `<svg viewBox="0 0 560 148" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Sbirolino-Montage">
+      <rect x="6" y="64" width="36" height="10" rx="3" fill="#8ab0c0"/>
+      <polygon points="6,60 6,78 0,69" fill="#8ab0c0"/>
+      <line x1="42" y1="69" x2="148" y2="69" stroke="#d4a84b" stroke-width="2.5"/>
+      <ellipse cx="188" cy="69" rx="40" ry="16" fill="#2aa0d8" opacity=".75"/>
+      <ellipse cx="148" cy="69" rx="6" ry="4" fill="#8ab0c0"/>
+      <ellipse cx="228" cy="69" rx="6" ry="4" fill="#8ab0c0"/>
+      <rect x="230" y="62" width="14" height="14" rx="3" fill="#8ab0c0"/>
+      <line x1="244" y1="69" x2="440" y2="69" stroke="#d4a84b" stroke-width="2.5" stroke-dasharray="6,3"/>
+      <path d="M440 62 Q441 85 458 87 Q476 87 476 72" fill="none" stroke="#8ab0c0" stroke-width="3"/>
+      <line x1="474" y1="75" x2="480" y2="82" stroke="#8ab0c0" stroke-width="2"/>
+      <circle cx="492" cy="64" r="9" fill="#33c3a6" opacity=".8"/>
+      <text x="93" y="53" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Monofil</text>
+      <text x="188" y="96" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Sbirolino</text>
+      <text x="237" y="90" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Wirbel</text>
+      <text x="342" y="53" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">FC-Vorfach 1,5–2,5 m</text>
+      <text x="492" y="53" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">PowerBait</text>
+      <text x="460" y="104" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Haken Gr. 6</text>
+    </svg>`,
+
+    laufpose: `<svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Laufpose-Montage">
+      <text x="210" y="16" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">~ Wasseroberfläche ~</text>
+      <line x1="0" y1="24" x2="420" y2="24" stroke="#2aa0d8" stroke-width="1" stroke-dasharray="8,4" opacity=".5"/>
+      <rect x="6" y="18" width="36" height="10" rx="3" fill="#8ab0c0"/>
+      <polygon points="6,14 6,32 0,23" fill="#8ab0c0"/>
+      <line x1="42" y1="23" x2="144" y2="23" stroke="#d4a84b" stroke-width="2.5"/>
+      <rect x="144" y="19" width="6" height="8" rx="2" fill="#8ab0c0"/>
+      <circle cx="153" cy="23" r="4" fill="#8ab0c0"/>
+      <ellipse cx="166" cy="14" rx="10" ry="16" fill="#e8763a"/>
+      <ellipse cx="166" cy="32" rx="10" ry="16" fill="#e0edf2"/>
+      <circle cx="179" cy="23" r="4" fill="#8ab0c0"/>
+      <rect x="182" y="19" width="14" height="8" rx="3" fill="#8ab0c0"/>
+      <line x1="196" y1="23" x2="196" y2="130" stroke="#d4a84b" stroke-width="2.5" stroke-dasharray="5,3"/>
+      <path d="M196 130 Q197 154 214 156 Q232 156 232 141" fill="none" stroke="#8ab0c0" stroke-width="3"/>
+      <line x1="230" y1="144" x2="236" y2="151" stroke="#8ab0c0" stroke-width="2"/>
+      <ellipse cx="218" cy="120" rx="12" ry="6" fill="#33c3a6" opacity=".8"/>
+      <text x="153" y="53" fill="#9db6c4" font-size="9" font-family="sans-serif">Stopper + Pose</text>
+      <text x="207" y="19" fill="#9db6c4" font-size="9" font-family="sans-serif">Wirbel</text>
+      <text x="148" y="88" fill="#9db6c4" font-size="10" font-family="sans-serif">FC-Vorfach</text>
+      <text x="246" y="123" fill="#9db6c4" font-size="9" font-family="sans-serif">Köder</text>
+      <text x="222" y="170" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Haken Gr. 6</text>
+      <text x="60" y="53" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Monofil</text>
+    </svg>`,
+
+    feeder: `<svg viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Feeder-Montage">
+      <rect x="6" y="62" width="36" height="10" rx="3" fill="#8ab0c0"/>
+      <polygon points="6,58 6,76 0,67" fill="#8ab0c0"/>
+      <line x1="42" y1="67" x2="196" y2="67" stroke="#d4a84b" stroke-width="2.5"/>
+      <rect x="196" y="48" width="52" height="38" rx="4" fill="none" stroke="#d4a84b" stroke-width="2.5"/>
+      <line x1="196" y1="58" x2="248" y2="58" stroke="#d4a84b" stroke-width="1" opacity=".5"/>
+      <line x1="196" y1="68" x2="248" y2="68" stroke="#d4a84b" stroke-width="1" opacity=".5"/>
+      <line x1="196" y1="78" x2="248" y2="78" stroke="#d4a84b" stroke-width="1" opacity=".5"/>
+      <line x1="212" y1="48" x2="212" y2="86" stroke="#d4a84b" stroke-width="1" opacity=".5"/>
+      <line x1="228" y1="48" x2="228" y2="86" stroke="#d4a84b" stroke-width="1" opacity=".5"/>
+      <circle cx="200" cy="52" r="5" fill="#8ab0c0"/>
+      <circle cx="244" cy="52" r="5" fill="#8ab0c0"/>
+      <line x1="248" y1="67" x2="320" y2="67" stroke="#d4a84b" stroke-width="2.5"/>
+      <line x1="320" y1="67" x2="320" y2="130" stroke="#8ab0c0" stroke-width="2"/>
+      <path d="M320 130 Q321 154 338 156 Q356 156 356 141" fill="none" stroke="#8ab0c0" stroke-width="3"/>
+      <line x1="354" y1="144" x2="360" y2="151" stroke="#8ab0c0" stroke-width="2"/>
+      <circle cx="338" cy="120" r="10" fill="#d4a84b" opacity=".9"/>
+      <text x="110" y="53" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Monofil</text>
+      <text x="222" y="102" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Futterkorb</text>
+      <text x="222" y="114" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">(mit Futter befüllt)</text>
+      <text x="290" y="53" fill="#9db6c4" font-size="9" font-family="sans-serif">Mono-Vorfach</text>
+      <text x="370" y="124" fill="#9db6c4" font-size="9" font-family="sans-serif">Boilie/Mais</text>
+      <text x="348" y="170" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Karpfenhaken am Haar</text>
+    </svg>`,
+
+    stippe: `<svg viewBox="0 0 360 264" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Stipp-Montage">
+      <rect x="6" y="22" width="310" height="8" rx="3" fill="#8ab0c0"/>
+      <polygon points="316,18 316,34 326,26" fill="#8ab0c0"/>
+      <text x="160" y="16" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Shimano Hyperloop 7 m (Stipprute, keine Rolle)</text>
+      <line x1="316" y1="26" x2="316" y2="60" stroke="#d4a84b" stroke-width="2.5"/>
+      <ellipse cx="316" cy="50" rx="8" ry="18" fill="#e8763a"/>
+      <ellipse cx="316" cy="75" rx="8" ry="18" fill="#e0edf2"/>
+      <line x1="316" y1="93" x2="316" y2="126" stroke="#d4a84b" stroke-width="2.5"/>
+      <circle cx="316" cy="128" r="5" fill="#5a7d8e"/>
+      <line x1="316" y1="133" x2="316" y2="158" stroke="#d4a84b" stroke-width="2.5"/>
+      <circle cx="316" cy="160" r="4" fill="#5a7d8e"/>
+      <line x1="316" y1="164" x2="316" y2="194" stroke="#d4a84b" stroke-width="2.5"/>
+      <path d="M316 194 Q317 218 333 220 Q351 220 351 205" fill="none" stroke="#8ab0c0" stroke-width="3"/>
+      <line x1="349" y1="208" x2="355" y2="215" stroke="#8ab0c0" stroke-width="2"/>
+      <path d="M312 190 C318 182 328 180 334 186 C340 192 342 200 338 204" fill="none" stroke="#d4a84b" stroke-width="3" stroke-linecap="round"/>
+      <text x="295" y="50" text-anchor="end" fill="#9db6c4" font-size="9" font-family="sans-serif">Feste</text>
+      <text x="295" y="62" text-anchor="end" fill="#9db6c4" font-size="9" font-family="sans-serif">Schnur</text>
+      <text x="295" y="76" text-anchor="end" fill="#9db6c4" font-size="9" font-family="sans-serif">Stipp-Pose</text>
+      <text x="295" y="132" text-anchor="end" fill="#9db6c4" font-size="9" font-family="sans-serif">Schrot</text>
+      <text x="295" y="163" text-anchor="end" fill="#9db6c4" font-size="9" font-family="sans-serif">Schrot</text>
+      <text x="295" y="210" text-anchor="end" fill="#9db6c4" font-size="9" font-family="sans-serif">Haken</text>
+      <text x="295" y="224" text-anchor="end" fill="#9db6c4" font-size="9" font-family="sans-serif">Made/Wurm</text>
+    </svg>`,
+
+    pilker: `<svg viewBox="0 0 320 258" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Pilker-Montage">
+      <line x1="160" y1="0" x2="160" y2="38" stroke="#33c3a6" stroke-width="3"/>
+      <rect x="150" y="38" width="20" height="12" rx="3" fill="#8ab0c0"/>
+      <line x1="160" y1="50" x2="160" y2="66" stroke="#d4a84b" stroke-width="2.5"/>
+      <ellipse cx="160" cy="116" rx="18" ry="50" fill="#8ab0c0"/>
+      <ellipse cx="160" cy="116" rx="10" ry="42" fill="#9db6c4" opacity=".4"/>
+      <line x1="160" y1="166" x2="160" y2="188" stroke="#d4a84b" stroke-width="2.5"/>
+      <path d="M160 188 Q170 198 178 195 Q186 192 182 184" fill="none" stroke="#8ab0c0" stroke-width="3"/>
+      <line x1="160" y1="120" x2="210" y2="130" stroke="#d4a84b" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <path d="M210 124 Q211 142 226 144 Q240 144 240 131" fill="none" stroke="#8ab0c0" stroke-width="2.5"/>
+      <path d="M208 120 C220 110 235 112 240 122 C243 130 238 136 234 134" fill="none" stroke="#33c3a6" stroke-width="3.5" stroke-linecap="round"/>
+      <text x="160" y="14" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Braid</text>
+      <text x="184" y="47" fill="#9db6c4" font-size="9" font-family="sans-serif">Mono-Vorfach</text>
+      <text x="160" y="226" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Pilker (60–200 g)</text>
+      <text x="258" y="125" fill="#9db6c4" font-size="9" font-family="sans-serif">Dropper</text>
+      <text x="258" y="137" fill="#9db6c4" font-size="9" font-family="sans-serif">+ Twister</text>
+      <text x="184" y="47" fill="#9db6c4" font-size="9" font-family="sans-serif">Wirbel</text>
+    </svg>`,
+
+    brandung: `<svg viewBox="0 0 560 196" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Brandungsmontage">
+      <rect x="6" y="62" width="36" height="10" rx="3" fill="#8ab0c0"/>
+      <polygon points="6,58 6,76 0,67" fill="#8ab0c0"/>
+      <line x1="42" y1="67" x2="184" y2="67" stroke="#33c3a6" stroke-width="3"/>
+      <circle cx="190" cy="67" r="7" fill="none" stroke="#8ab0c0" stroke-width="2.5"/>
+      <text x="190" y="53" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Schlaufenknoten</text>
+      <line x1="197" y1="67" x2="360" y2="67" stroke="#d4a84b" stroke-width="3"/>
+      <text x="110" y="53" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Braid</text>
+      <text x="278" y="53" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Schlagschnur (Mono 0,40–0,50)</text>
+      <ellipse cx="378" cy="88" rx="18" ry="28" fill="#5a7d8e"/>
+      <path d="M366" y1="67" stroke="#d4a84b" stroke-width="2"/>
+      <line x1="360" y1="67" x2="374" y2="72" stroke="#d4a84b" stroke-width="2.5"/>
+      <line x1="374" y1="72" x2="378" y2="60" stroke="#5a7d8e" stroke-width="2"/>
+      <text x="402" y="92" fill="#9db6c4" font-size="9" font-family="sans-serif">Krallen-</text>
+      <text x="402" y="104" fill="#9db6c4" font-size="9" font-family="sans-serif">blei</text>
+      <line x1="300" y1="67" x2="300" y2="40" stroke="#d4a84b" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <path d="M300 36 Q301 24 314 23 Q326 23 326 35" fill="none" stroke="#8ab0c0" stroke-width="2.5"/>
+      <line x1="324" y1="37" x2="328" y2="43" stroke="#8ab0c0" stroke-width="2"/>
+      <ellipse cx="314" cy="17" rx="12" ry="5" fill="#d4a84b" opacity=".8"/>
+      <line x1="330" y1="67" x2="330" y2="38" stroke="#d4a84b" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <path d="M330 34 Q331 22 344 21 Q357 21 357 33" fill="none" stroke="#8ab0c0" stroke-width="2.5"/>
+      <line x1="355" y1="36" x2="359" y2="42" stroke="#8ab0c0" stroke-width="2"/>
+      <ellipse cx="344" cy="15" rx="12" ry="5" fill="#d4a84b" opacity=".8"/>
+      <text x="290" y="160" fill="#9db6c4" font-size="9" font-family="sans-serif">Paternoster-Arme mit Wattwurm</text>
+    </svg>`,
+
+    paternoster: `<svg viewBox="0 0 320 264" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Heringspaternoster">
+      <line x1="160" y1="0" x2="160" y2="36" stroke="#33c3a6" stroke-width="3"/>
+      <text x="160" y="14" text-anchor="middle" fill="#9db6c4" font-size="10" font-family="sans-serif">Braid / Mono</text>
+      <line x1="160" y1="36" x2="160" y2="230" stroke="#d4a84b" stroke-width="2.5"/>
+      ${[56,88,120,152,184].map((y, i) => `
+        <line x1="160" y1="${y}" x2="220" y2="${y}" stroke="#d4a84b" stroke-width="1.5"/>
+        <path d="M220 ${y-8} Q221 ${y+14} ${i%2===0?233:236} ${y+16} Q${i%2===0?247:250} ${y+16} ${i%2===0?247:250} ${y+3}" fill="none" stroke="#8ab0c0" stroke-width="2.5"/>
+        <line x1="${i%2===0?245:248}" y1="${y+6}" x2="${i%2===0?251:254}" y2="${y+13}" stroke="#8ab0c0" stroke-width="1.5"/>
+        <ellipse cx="240" cy="${y-13}" rx="10" ry="4" fill="#e85c5c" opacity=".7"/>
+      `).join("")}
+      <ellipse cx="160" cy="240" rx="12" ry="16" fill="#5a7d8e"/>
+      <text x="278" y="56" fill="#9db6c4" font-size="9" font-family="sans-serif">Lametta-Haken</text>
+      <text x="278" y="90" fill="#9db6c4" font-size="9" font-family="sans-serif">× 5–7 Stück</text>
+      <text x="160" y="260" text-anchor="middle" fill="#9db6c4" font-size="9" font-family="sans-serif">Abschlussblei (30–60 g)</text>
+    </svg>`,
+  };
+
+  const svg = SVG[typ];
+  if(!svg) return "";
+  return `<details class="montage-diagram" open>
+    <summary>📐 Montage-Illustration</summary>
+    ${svg}
+  </details>`;
 }
 
 // Alle "pflicht"-Positionen aus der Zubehör-Checkliste, dedupliziert – dieselbe
@@ -604,6 +874,8 @@ function berechne(){
   // passende Ansätze für dieses Gewässer (oder alle, wenn kein Gewässer gewählt)
   let ansaetze = fisch.ansaetze;
   if(gwKey) ansaetze = ansaetze.filter(a => !a.gewaesser || a.gewaesser.includes(gwKey));
+  // "Heute dabei"-Filter: nur Setups zeigen, die du gerade dabei hast
+  if(HEUTE_DABEI.size > 0) ansaetze = ansaetze.filter(a => !a.setup || HEUTE_DABEI.has(a.setup));
 
   // Kopf
   let html = `<div class="fisch-head">
@@ -3222,6 +3494,7 @@ document.querySelectorAll(".tab").forEach(t => {
     $("#view-" + t.dataset.view).classList.add("active");
     if(t.dataset.view === "faenge") fsOnTabShown();
     if(t.dataset.view === "lav") lavOnTabShown();
+    if(t.dataset.view === "tagebuch"){ TB_VIEW = "list"; TB_DETAIL = null; renderTagebuch(); }
   });
 });
 
@@ -3243,6 +3516,457 @@ renderLavGewaesser();
 renderWochenende();
 renderAnsitzAngeln();
 renderUnterlagen();
+renderTagebuch();
+
+/* ---------- Heute-dabei-Filter (Berater) ---------- */
+let HEUTE_DABEI = new Set(); // leer = alle Setups verfügbar
+
+function renderHeuteDabeiUI(){
+  const wrap = document.getElementById("heute-dabei-wrap");
+  if(!wrap) return;
+  const alleSetups = [...Object.values(AKTUELL), ...Object.values(ZUSATZ.setups || {})];
+  if(alleSetups.length === 0){ wrap.innerHTML = ""; return; }
+  const pills = Object.entries(AKTUELL).map(([key, s]) => {
+    const on = HEUTE_DABEI.size === 0 || HEUTE_DABEI.has(key);
+    return `<button class="setup-pill${on ? " on" : ""}" data-hd="${key}" title="${s.name}">${s.name.replace(/^Setup \d+ – /,"")}</button>`;
+  }).join("");
+  const alleOn = HEUTE_DABEI.size === 0;
+  wrap.innerHTML = `<div class="heute-dabei-wrap">
+    <div class="heute-dabei-label">
+      <span>🎒 Heute dabei</span>
+      ${!alleOn ? `<button class="heute-dabei-reset" id="hd-reset-btn">Alle anzeigen</button>` : ""}
+    </div>
+    <div class="heute-dabei-row">${pills}</div>
+  </div>`;
+  wrap.querySelectorAll(".setup-pill").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.hd;
+      if(HEUTE_DABEI.has(key)){ HEUTE_DABEI.delete(key); if(HEUTE_DABEI.size === 0) HEUTE_DABEI = new Set(); }
+      else { if(HEUTE_DABEI.size === 0) HEUTE_DABEI = new Set(Object.keys(AKTUELL)); HEUTE_DABEI.add(key); }
+      renderHeuteDabeiUI();
+      if(fischSel.value) berechne();
+    });
+  });
+  const resetBtn = document.getElementById("hd-reset-btn");
+  if(resetBtn) resetBtn.addEventListener("click", () => { HEUTE_DABEI = new Set(); renderHeuteDabeiUI(); if(fischSel.value) berechne(); });
+}
+renderHeuteDabeiUI();
+
+/* ============================================================
+   ANGELTAGEBUCH
+   ============================================================ */
+
+/* --- IDB --- */
+const TB_DB_NAME = "angeltagebuch_db", TB_STORE = "eintraege";
+function tbOpenDB(){
+  return new Promise((res,rej) => {
+    const req = indexedDB.open(TB_DB_NAME, 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore(TB_STORE, {keyPath:"id"});
+    req.onsuccess = e => res(e.target.result);
+    req.onerror = e => rej(e.target.error);
+  });
+}
+async function tbIDBLadeAlle(){
+  const db = await tbOpenDB();
+  return new Promise((res,rej) => {
+    const tx = db.transaction(TB_STORE,"readonly");
+    const req = tx.objectStore(TB_STORE).getAll();
+    req.onsuccess = () => res(req.result || []);
+    req.onerror = () => rej(req.error);
+  });
+}
+async function tbIDBSpeichere(entry){
+  const db = await tbOpenDB();
+  return new Promise((res,rej) => {
+    const tx = db.transaction(TB_STORE,"readwrite");
+    tx.objectStore(TB_STORE).put(entry);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+  });
+}
+async function tbIDBLoesche(id){
+  const db = await tbOpenDB();
+  return new Promise((res,rej) => {
+    const tx = db.transaction(TB_STORE,"readwrite");
+    tx.objectStore(TB_STORE).delete(id);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+  });
+}
+
+/* --- Firestore --- */
+function tbFirestoreCol(uid){
+  return firebase.firestore().collection("tagebuch").doc(uid).collection("eintraege");
+}
+async function tbCloudSpeichere(uid, entry){
+  const {foto, ...data} = entry; // Foto bleibt lokal
+  await tbFirestoreCol(uid).doc(entry.id).set(data);
+}
+async function tbCloudLoesche(uid, id){
+  await tbFirestoreCol(uid).doc(id).delete();
+}
+async function tbCloudLadeAlle(uid){
+  const snap = await tbFirestoreCol(uid).orderBy("datum","desc").get();
+  return snap.docs.map(d => d.data());
+}
+
+/* --- State --- */
+let TB_VIEW = "list"; // "list" | "form" | "detail"
+let TB_EDIT = null;   // entry being edited (null = new)
+let TB_DETAIL = null; // entry being viewed
+let TB_CATCHES_TMP = []; // catch rows in form
+let TB_FOTO_B64 = null;  // base64 photo in form
+
+/* --- Hilfsfunktionen --- */
+function tbWetterEmoji(bewoelkung, luftdruck){
+  const b = (bewoelkung||"").toLowerCase();
+  if(b.includes("gewitter")) return "⛈";
+  if(b.includes("regen")) return "🌧";
+  if(b.includes("stark bewölkt")) return "☁️";
+  if(b.includes("leicht bewölkt")) return "⛅";
+  if(b.includes("klar") || b.includes("sonnig")) return luftdruck==="steigend" ? "🌤" : "☀️";
+  return "🌥";
+}
+function tbSterneHTML(n, klickbar=false){
+  return [1,2,3,4,5].map(i =>
+    `<span class="tb-star${i<=n?" on":""}${klickbar?` data-tbstar="${i}"`:""}">★</span>`
+  ).join("");
+}
+function tbDatumAnzeige(iso){
+  if(!iso) return "–";
+  const d = new Date(iso+"T00:00:00");
+  return d.toLocaleDateString("de-DE",{weekday:"short",day:"numeric",month:"short",year:"numeric"});
+}
+function tbDauerText(von, bis){
+  if(!von && !bis) return "";
+  if(von && bis) return `${von} – ${bis} Uhr`;
+  return von ? `ab ${von} Uhr` : `bis ${bis} Uhr`;
+}
+function tbFaengeText(faenge){
+  if(!faenge || faenge.length === 0) return "Keine Fänge";
+  const total = faenge.length;
+  const arten = [...new Set(faenge.map(f=>f.art))].join(", ");
+  return `${total}× ${arten}`;
+}
+
+/* --- Rendern --- */
+async function renderTagebuch(){
+  const wrap = document.getElementById("tagebuch-main");
+  if(!wrap) return;
+
+  if(TB_VIEW === "form"){
+    wrap.innerHTML = tbFormHTML();
+    tbFormBind();
+    return;
+  }
+
+  let entries;
+  try {
+    if(fsSyncUser){
+      entries = await tbCloudLadeAlle(fsSyncUser.uid);
+      // Fotos aus IDB nachladen
+      const lokal = await tbIDBLadeAlle();
+      const fotoMap = Object.fromEntries(lokal.map(e => [e.id, e.foto]));
+      entries = entries.map(e => ({...e, foto: fotoMap[e.id]||null}));
+      // Cloud-Einträge lokal cachen
+      for(const e of entries) await tbIDBSpeichere(e);
+    } else {
+      entries = await tbIDBLadeAlle();
+    }
+  } catch(err){
+    entries = await tbIDBLadeAlle();
+  }
+  entries.sort((a,b) => b.datum.localeCompare(a.datum));
+
+  if(TB_VIEW === "detail" && TB_DETAIL){
+    const e = entries.find(x => x.id === TB_DETAIL) || TB_DETAIL;
+    wrap.innerHTML = tbDetailHTML(e);
+    return;
+  }
+
+  // Listenansicht
+  const syncHint = fsSyncUser
+    ? `<div class="tb-sync-hint">☁️ Synced mit ${fsSyncUser.email}</div>`
+    : `<div class="tb-sync-hint">💡 Melde dich an (☁️-Symbol oben), um das Tagebuch auf allen Geräten zu haben.</div>`;
+
+  const listHTML = entries.length === 0
+    ? `<div class="tb-empty"><span class="tb-empty-icon">📔</span>
+        <p>Noch keine Ausflüge eingetragen.</p>
+        <p style="font-size:13px;margin-top:6px">Tippe auf „Neuer Ausflug" um deinen ersten Eintrag zu erstellen.</p>
+       </div>`
+    : `<div class="tb-list">${entries.map(e => tbEntryCardHTML(e)).join("")}</div>`;
+
+  wrap.innerHTML = `
+    <div class="tb-topbar">
+      <h2>📔 Angeltagebuch</h2>
+      <button class="tb-new-btn" id="tb-new-btn">+ Neuer Ausflug</button>
+    </div>
+    ${syncHint}
+    ${listHTML}`;
+
+  document.getElementById("tb-new-btn")?.addEventListener("click", () => {
+    TB_VIEW = "form"; TB_EDIT = null; TB_CATCHES_TMP = []; TB_FOTO_B64 = null;
+    renderTagebuch();
+  });
+  wrap.querySelectorAll(".tb-entry").forEach(card => {
+    card.addEventListener("click", () => {
+      TB_VIEW = "detail"; TB_DETAIL = card.dataset.tbid;
+      renderTagebuch();
+    });
+  });
+}
+
+function tbEntryCardHTML(e){
+  const d = new Date((e.datum||"2000-01-01")+"T00:00:00");
+  const tag = String(d.getDate()).padStart(2,"0");
+  const mon = d.toLocaleDateString("de-DE",{month:"short"});
+  const emoji = tbWetterEmoji(e.wetter?.bewoelkung, e.wetter?.luftdruck);
+  const catches = e.faenge?.length || 0;
+  const dauer = tbDauerText(e.von, e.bis);
+  return `<div class="tb-entry" data-tbid="${e.id}">
+    <div class="tb-entry-head">
+      <div class="tb-date-box">
+        <div class="tb-date-day">${tag}</div>
+        <div class="tb-date-mo">${mon}</div>
+      </div>
+      <div class="tb-entry-info">
+        <div class="tb-entry-loc">${e.gewaesser || "Gewässer unbekannt"}</div>
+        <div class="tb-entry-meta">${emoji} ${e.wetter?.temp != null ? e.wetter.temp+"°C" : ""} ${dauer ? "· "+dauer : ""} ${e.methode ? "· "+e.methode : ""}</div>
+      </div>
+      <div class="tb-entry-right">
+        ${catches > 0 ? `<span class="tb-badge-catches">🐟 ${catches}×</span>` : ""}
+        <div class="tb-stars">${tbSterneHTML(e.bewertung||0)}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function tbDetailHTML(e){
+  const emoji = tbWetterEmoji(e.wetter?.bewoelkung, e.wetter?.luftdruck);
+  const faenge = e.faenge||[];
+  const fotoHtml = e.foto ? `<img class="tb-detail-foto" src="${e.foto}" alt="Foto">` : "";
+  const catchHTML = faenge.length === 0
+    ? `<p style="font-size:13px;color:var(--muted)">Keine Fänge eingetragen</p>`
+    : faenge.map(f => {
+        const details = [f.laenge ? f.laenge+"cm" : null, f.gewicht ? f.gewicht+"kg" : null].filter(Boolean).join(", ");
+        return `<div class="tb-detail-catch-item">🐟 <b>${f.art}</b>${details ? " · "+details : ""}</div>`;
+      }).join("");
+  return `<div class="tb-detail-wrap">
+    <div class="tb-detail-header">
+      <div>
+        <div class="tb-detail-title">${e.gewaesser || "Ausflug"}</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px">${tbDatumAnzeige(e.datum)} ${tbDauerText(e.von,e.bis) ? "· "+tbDauerText(e.von,e.bis) : ""}</div>
+        <div class="tb-stars" style="margin-top:6px">${tbSterneHTML(e.bewertung||0)}</div>
+      </div>
+      <div class="tb-detail-actions">
+        <button class="tb-detail-back" id="tb-back-btn">← Zurück</button>
+        <button class="tb-detail-edit" id="tb-edit-btn">✏️</button>
+        <button class="tb-detail-del" id="tb-del-btn">🗑</button>
+      </div>
+    </div>
+    <div class="tb-detail-grid">
+      <div class="tb-detail-item">
+        <div class="tb-detail-item-label">Wetter</div>
+        <div class="tb-detail-item-value">${emoji} ${e.wetter?.bewoelkung||"–"}</div>
+      </div>
+      <div class="tb-detail-item">
+        <div class="tb-detail-item-label">Temperatur</div>
+        <div class="tb-detail-item-value">${e.wetter?.temp != null ? e.wetter.temp+"°C Luft" : "–"}${e.wassertemp != null ? " · "+e.wassertemp+"°C Wasser" : ""}</div>
+      </div>
+      <div class="tb-detail-item">
+        <div class="tb-detail-item-label">Wind</div>
+        <div class="tb-detail-item-value">${e.wetter?.wind||"–"}</div>
+      </div>
+      <div class="tb-detail-item">
+        <div class="tb-detail-item-label">Luftdruck</div>
+        <div class="tb-detail-item-value">${e.wetter?.luftdruck||"–"}</div>
+      </div>
+      ${e.methode ? `<div class="tb-detail-item"><div class="tb-detail-item-label">Methode</div><div class="tb-detail-item-value">${e.methode}</div></div>` : ""}
+      ${e.koeder ? `<div class="tb-detail-item"><div class="tb-detail-item-label">Köder</div><div class="tb-detail-item-value">${e.koeder}</div></div>` : ""}
+    </div>
+    <div class="tb-detail-section">
+      <h4>Fänge</h4>
+      ${catchHTML}
+    </div>
+    ${e.notizen ? `<div class="tb-detail-section"><h4>Notizen</h4><p style="font-size:14px;line-height:1.6">${e.notizen}</p></div>` : ""}
+    ${fotoHtml}
+  </div>`;
+}
+
+function tbFormHTML(){
+  const e = TB_EDIT || {};
+  const heute = new Date().toISOString().slice(0,10);
+  const catches = TB_CATCHES_TMP;
+  const catchRows = catches.map((c,i) =>
+    `<div class="tb-catch-row">
+      <input class="tb-input" placeholder="Fischart" value="${c.art||""}" data-ci="${i}" data-cf="art" style="min-width:80px">
+      <input class="tb-input" placeholder="Länge cm" type="number" value="${c.laenge||""}" data-ci="${i}" data-cf="laenge" style="width:80px">
+      <input class="tb-input" placeholder="kg" type="number" step="0.01" value="${c.gewicht||""}" data-ci="${i}" data-cf="gewicht" style="width:70px">
+      <button class="tb-catch-del" data-ci="${i}">✕</button>
+    </div>`
+  ).join("");
+  const sterne = [1,2,3,4,5].map(i =>
+    `<span class="tb-star${(e.bewertung||0)>=i?" on":""}" data-tbstar="${i}">★</span>`
+  ).join("");
+  const fotoPreview = TB_FOTO_B64 || e.foto
+    ? `<img class="tb-foto-preview" id="tb-foto-preview" src="${TB_FOTO_B64||e.foto}" style="display:block">`
+    : `<img class="tb-foto-preview" id="tb-foto-preview">`;
+  return `<div class="tb-form-wrap">
+    <div class="tb-form-title">${e.id ? "✏️ Ausflug bearbeiten" : "📔 Neuer Ausflug"}</div>
+    <div class="tb-form-grid">
+      <div class="full"><label class="tb-label">Gewässer / Ort</label><input class="tb-input" id="tb-f-gew" placeholder="z.B. Eider bei Rendsburg" value="${e.gewaesser||""}"></div>
+      <div><label class="tb-label">Datum</label><input class="tb-input" type="date" id="tb-f-datum" value="${e.datum||heute}"></div>
+      <div style="display:flex;gap:8px;align-items:flex-end">
+        <div style="flex:1"><label class="tb-label">Von</label><input class="tb-input" type="time" id="tb-f-von" value="${e.von||""}"></div>
+        <div style="flex:1"><label class="tb-label">Bis</label><input class="tb-input" type="time" id="tb-f-bis" value="${e.bis||""}"></div>
+      </div>
+    </div>
+    <div class="tb-section-label">🌤 Wetter</div>
+    <div class="tb-form-grid">
+      <div><label class="tb-label">Lufttemperatur (°C)</label><input class="tb-input" type="number" id="tb-f-temp" placeholder="z.B. 18" value="${e.wetter?.temp??""}" min="-20" max="45"></div>
+      <div><label class="tb-label">Wassertemperatur (°C)</label><input class="tb-input" type="number" id="tb-f-wtemp" placeholder="optional" value="${e.wassertemp??""}" min="0" max="35"></div>
+      <div><label class="tb-label">Wind</label><input class="tb-input" id="tb-f-wind" placeholder="z.B. SW 3 Bft" value="${e.wetter?.wind||""}"></div>
+      <div><label class="tb-label">Bewölkung</label>
+        <select class="tb-select" id="tb-f-bew">
+          ${["klar / sonnig","leicht bewölkt","stark bewölkt","bedeckt","Regen","Gewitter"].map(o =>
+            `<option${(e.wetter?.bewoelkung||"")=== o?" selected":""}>${o}</option>`).join("")}
+        </select>
+      </div>
+      <div class="full"><label class="tb-label">Luftdruck-Trend</label>
+        <select class="tb-select" id="tb-f-lp">
+          ${["stabil","steigend","fallend"].map(o =>
+            `<option${(e.wetter?.luftdruck||"stabil")===o?" selected":""}>${o}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+    <div class="tb-section-label">🎣 Angeln</div>
+    <div class="tb-form-grid">
+      <div><label class="tb-label">Methode</label><input class="tb-input" id="tb-f-methode" placeholder="z.B. Spinnfischen" value="${e.methode||""}"></div>
+      <div><label class="tb-label">Köder</label><input class="tb-input" id="tb-f-koeder" placeholder="z.B. Easy Shiner 5&quot;" value="${e.koeder||""}"></div>
+    </div>
+    <div class="tb-section-label">🐟 Fänge</div>
+    <div class="tb-catch-list" id="tb-catch-list">${catchRows}</div>
+    <button class="tb-add-catch-btn" id="tb-add-catch-btn">+ Fang hinzufügen</button>
+    <div class="tb-section-label">⭐ Bewertung</div>
+    <div class="tb-star-row" id="tb-star-row">${sterne}</div>
+    <div class="tb-section-label">📝 Notizen</div>
+    <textarea class="tb-textarea full" id="tb-f-notizen" placeholder="Besonderheiten, Tipps, Beobachtungen…">${e.notizen||""}</textarea>
+    <div class="tb-section-label">📷 Foto</div>
+    <label class="tb-foto-label" for="tb-f-foto">📷 Foto auswählen</label>
+    <input type="file" id="tb-f-foto" accept="image/*" capture="environment" style="display:none">
+    ${fotoPreview}
+    <div class="tb-form-actions">
+      <button class="tb-save-btn" id="tb-save-btn">💾 Speichern</button>
+      <button class="tb-cancel-btn" id="tb-cancel-btn">Abbrechen</button>
+      ${e.id ? `<button class="tb-del-btn" id="tb-del-inline-btn">🗑 Löschen</button>` : ""}
+    </div>
+  </div>`;
+}
+
+function tbFormBind(){
+  // Sterne
+  const starRow = document.getElementById("tb-star-row");
+  if(starRow) starRow.querySelectorAll(".tb-star").forEach(s => {
+    s.addEventListener("click", () => {
+      const n = +s.dataset.tbstar;
+      if(!TB_EDIT) TB_EDIT = {};
+      TB_EDIT.bewertung = n;
+      starRow.querySelectorAll(".tb-star").forEach((x,i) => x.classList.toggle("on", i<n));
+    });
+  });
+  // Catch-Liste
+  const catchList = document.getElementById("tb-catch-list");
+  if(catchList){
+    catchList.addEventListener("input", e => {
+      const ci = +e.target.dataset.ci, cf = e.target.dataset.cf;
+      if(TB_CATCHES_TMP[ci] !== undefined) TB_CATCHES_TMP[ci][cf] = e.target.value;
+    });
+    catchList.addEventListener("click", e => {
+      const btn = e.target.closest(".tb-catch-del");
+      if(!btn) return;
+      TB_CATCHES_TMP.splice(+btn.dataset.ci, 1);
+      renderTagebuch();
+    });
+  }
+  document.getElementById("tb-add-catch-btn")?.addEventListener("click", () => {
+    TB_CATCHES_TMP.push({art:"",laenge:"",gewicht:""});
+    renderTagebuch();
+  });
+  // Foto
+  document.getElementById("tb-f-foto")?.addEventListener("change", e => {
+    const file = e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      TB_FOTO_B64 = ev.target.result;
+      const prev = document.getElementById("tb-foto-preview");
+      if(prev){ prev.src = TB_FOTO_B64; prev.style.display = "block"; }
+    };
+    reader.readAsDataURL(file);
+  });
+  // Speichern
+  document.getElementById("tb-save-btn")?.addEventListener("click", async () => {
+    const id = (TB_EDIT && TB_EDIT.id) || (Date.now().toString(36) + Math.random().toString(36).slice(2,7));
+    const entry = {
+      id,
+      datum: document.getElementById("tb-f-datum")?.value || new Date().toISOString().slice(0,10),
+      von: document.getElementById("tb-f-von")?.value || "",
+      bis: document.getElementById("tb-f-bis")?.value || "",
+      gewaesser: document.getElementById("tb-f-gew")?.value || "",
+      wetter: {
+        temp: parseFloat(document.getElementById("tb-f-temp")?.value)||null,
+        wind: document.getElementById("tb-f-wind")?.value||"",
+        bewoelkung: document.getElementById("tb-f-bew")?.value||"",
+        luftdruck: document.getElementById("tb-f-lp")?.value||"stabil",
+      },
+      wassertemp: parseFloat(document.getElementById("tb-f-wtemp")?.value)||null,
+      methode: document.getElementById("tb-f-methode")?.value||"",
+      koeder: document.getElementById("tb-f-koeder")?.value||"",
+      faenge: TB_CATCHES_TMP.filter(c => c.art).map(c => ({
+        art: c.art,
+        laenge: c.laenge ? parseFloat(c.laenge) : null,
+        gewicht: c.gewicht ? parseFloat(c.gewicht) : null,
+      })),
+      bewertung: TB_EDIT?.bewertung || 0,
+      notizen: document.getElementById("tb-f-notizen")?.value||"",
+      foto: TB_FOTO_B64 || (TB_EDIT?.foto||null),
+    };
+    await tbIDBSpeichere(entry);
+    if(fsSyncUser){ try{ await tbCloudSpeichere(fsSyncUser.uid, entry); }catch(e){} }
+    TB_VIEW = "list"; TB_EDIT = null; TB_CATCHES_TMP = []; TB_FOTO_B64 = null;
+    renderTagebuch();
+  });
+  // Abbrechen
+  document.getElementById("tb-cancel-btn")?.addEventListener("click", () => {
+    TB_VIEW = "list"; TB_EDIT = null; TB_CATCHES_TMP = []; TB_FOTO_B64 = null;
+    renderTagebuch();
+  });
+  // Löschen (inline im Formular)
+  document.getElementById("tb-del-inline-btn")?.addEventListener("click", async () => {
+    if(!confirm("Diesen Ausflug wirklich löschen?")) return;
+    const id = TB_EDIT.id;
+    await tbIDBLoesche(id);
+    if(fsSyncUser){ try{ await tbCloudLoesche(fsSyncUser.uid, id); }catch(e){} }
+    TB_VIEW = "list"; TB_EDIT = null; TB_CATCHES_TMP = []; TB_FOTO_B64 = null;
+    renderTagebuch();
+  });
+}
+
+// Detail-View Event-Delegation
+document.addEventListener("click", async e => {
+  if(e.target.closest("#tb-back-btn")){ TB_VIEW = "list"; TB_DETAIL = null; renderTagebuch(); return; }
+  if(e.target.closest("#tb-edit-btn")){
+    const entries = await tbIDBLadeAlle();
+    TB_EDIT = entries.find(x => x.id === TB_DETAIL) || {};
+    TB_CATCHES_TMP = (TB_EDIT.faenge || []).map(f => ({...f}));
+    TB_FOTO_B64 = null;
+    TB_VIEW = "form"; renderTagebuch(); return;
+  }
+  if(e.target.closest("#tb-del-btn")){
+    if(!confirm("Diesen Ausflug wirklich löschen?")) return;
+    const id = TB_DETAIL;
+    await tbIDBLoesche(id);
+    if(fsSyncUser){ try{ await tbCloudLoesche(fsSyncUser.uid, id); }catch(e){} }
+    TB_VIEW = "list"; TB_DETAIL = null; renderTagebuch(); return;
+  }
+});
 
 /* ---------- Auto-Update-Check ---------- */
 (function(){

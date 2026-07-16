@@ -28,6 +28,7 @@
       <button class="tab" data-view="faenge">Fänge &amp; Spots</button>
       <button class="tab" data-view="inventar">Mein Equipment</button>
       <button class="tab" data-view="ansitz">⚓ Ansitzangeln</button>
+      <button class="tab" data-view="tagebuch">📔 Tagebuch</button>
       <button class="tab" data-view="unterlagen">📄 Unterlagen</button>
     </nav>
     <button id="sync-status-btn" type="button" class="sync-status" title="Synchronisation">☁️ Nicht angemeldet</button>
@@ -72,6 +73,7 @@
       <button id="losButton" class="go">Setup anzeigen</button>
     </section>
 
+    <div id="heute-dabei-wrap"></div>
     <p id="hint" class="hint">Wähle einen Zielfisch – die passenden Gewässer stellen sich automatisch ein.</p>
 
     <section id="ergebnis" class="ergebnis"></section>
@@ -241,6 +243,11 @@
   <!-- ============ ANSITZANGELN ============ -->
   <main id="view-ansitz" class="view">
     <section id="ansitz"></section>
+  </main>
+
+  <!-- ============ ANGELTAGEBUCH ============ -->
+  <main id="view-tagebuch" class="view">
+    <section id="tagebuch-main"></section>
   </main>
 
   <!-- ============ UNTERLAGEN ============ -->
