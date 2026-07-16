@@ -2845,9 +2845,18 @@ async function ulUmbenennen(id, neuerName){
 }
 
 async function ulCloudDownload(uid, id){
-  const snap = await ulFirestoreCol(uid).doc(id).get();
-  if(!snap.exists) throw new Error("Dokument nicht in der Cloud gefunden.");
-  return ulFromBase64(snap.data().dataB64);
+  let letzterFehler;
+  for(let versuch = 0; versuch < 3; versuch++){
+    try {
+      const snap = await ulFirestoreCol(uid).doc(id).get();
+      if(!snap.exists) throw new Error("Dokument nicht in der Cloud gefunden.");
+      return ulFromBase64(snap.data().dataB64);
+    } catch(e) {
+      letzterFehler = e;
+      if(versuch < 2) await new Promise(r => setTimeout(r, 1200 * (versuch + 1)));
+    }
+  }
+  throw letzterFehler;
 }
 
 // ---- Hilfsfunktionen ----
@@ -2867,7 +2876,7 @@ function ulSchliesseViewer(){
   $("#unterlagen-list").style.display   = "";
 }
 
-const UL_IS_MOBILE = navigator.maxTouchPoints > 1;
+const UL_IS_MOBILE = navigator.maxTouchPoints > 0 || /iPhone|iPad|Android/i.test(navigator.userAgent);
 
 async function ulOeffneDoc(id, name){
   const listEl = $("#unterlagen-list");
@@ -2893,8 +2902,9 @@ async function ulOeffneDoc(id, name){
   ulAktuellerObjectURL = URL.createObjectURL(blob);
 
   if(UL_IS_MOBILE){
-    // Auf Handy: neuer Tab – embed funktioniert auf iOS/Android nicht zuverlässig
-    window.open(ulAktuellerObjectURL, "_blank");
+    // iOS/Android: window.open() nach await wird geblockt – stattdessen
+    // im selben Tab navigieren; Back-Button bringt die App zurück.
+    location.href = ulAktuellerObjectURL;
   } else {
     $("#ul-viewer-name").textContent = name;
     $("#ul-pdf-embed").src = ulAktuellerObjectURL;
