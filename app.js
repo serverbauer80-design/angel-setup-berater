@@ -2836,6 +2836,14 @@ async function ulCloudLoesche(uid, id){
   await ulFirestoreCol(uid).doc(id).delete().catch(() => {});
 }
 
+async function ulUmbenennen(id, neuerName){
+  const cached = await ulIDBLadeEins(id);
+  if(cached){ await ulIDBSpeichere({ ...cached, name: neuerName }); }
+  if(fsSyncUser){
+    await ulFirestoreCol(fsSyncUser.uid).doc(id).update({ name: neuerName }).catch(() => {});
+  }
+}
+
 async function ulCloudDownload(uid, id){
   const snap = await ulFirestoreCol(uid).doc(id).get();
   if(!snap.exists) throw new Error("Dokument nicht in der Cloud gefunden.");
@@ -2911,13 +2919,21 @@ async function renderUnterlagen(){
     <p style="font-size:13px;margin:0">${syncHinweis}</p>
   </div>
   <div id="ul-upload-area">
-    <label class="ul-upload-btn">
+    <label class="ul-upload-btn" id="ul-upload-label">
       ➕ PDF hinzufügen
-      <input type="file" accept="application/pdf" id="ul-file-input" style="display:none" multiple>
+      <input type="file" accept="application/pdf" id="ul-file-input" style="display:none">
     </label>
-    <div id="ul-progress-wrap" style="display:none;margin-bottom:12px">
+    <div id="ul-name-confirm" class="ul-name-confirm card" style="display:none">
+      <div class="ul-name-confirm-label">Bezeichnung für dieses Dokument:</div>
+      <input id="ul-name-input" class="ul-name-input" type="text" placeholder="z. B. Angelschein SH 2026">
+      <div class="ul-name-confirm-actions">
+        <button id="ul-name-ok" class="ul-upload-btn" style="margin:0;padding:10px 18px;font-size:14px">✅ Speichern</button>
+        <button id="ul-name-cancel" type="button" class="del-btn-wide">Abbrechen</button>
+      </div>
+    </div>
+    <div id="ul-progress-wrap" style="display:none;margin-top:10px">
       <div class="ul-progress-bar"><div id="ul-progress-fill" class="ul-progress-fill"></div></div>
-      <div id="ul-progress-label" style="font-size:12px;color:var(--muted);margin-top:4px">Wird hochgeladen …</div>
+      <div id="ul-progress-label" style="font-size:12px;color:var(--muted);margin-top:4px">Wird gespeichert …</div>
     </div>
   </div>`;
 
@@ -2930,7 +2946,7 @@ async function renderUnterlagen(){
   } else {
     html += `<div class="ul-doc-list">`;
     docs.forEach(doc => {
-      const size = doc.size ? ulFormatSize(doc.size) : (doc.data ? ulFormatSize(doc.data.byteLength) : "");
+      const size  = doc.size ? ulFormatSize(doc.size) : (doc.data ? ulFormatSize(doc.data.byteLength) : "");
       const datum = doc.created ? doc.created.slice(0,10) : "";
       html += `<div class="ul-doc-item" data-ul-open="${escAttr(doc.id)}" data-ul-name="${escAttr(doc.name)}">
         <span class="ul-doc-icon">📄</span>
@@ -2938,7 +2954,13 @@ async function renderUnterlagen(){
           <div class="ul-doc-name">${escAttr(doc.name)}</div>
           <div class="ul-doc-size">${[size, datum].filter(Boolean).join(" · ")}</div>
         </div>
+        <button class="ul-doc-rename" data-ul-rename="${escAttr(doc.id)}" data-ul-current="${escAttr(doc.name)}" title="Umbenennen">✏️</button>
         <button class="ul-doc-del" data-ul-del="${escAttr(doc.id)}" title="Löschen">🗑</button>
+      </div>
+      <div class="ul-inline-rename" id="ul-rename-${escAttr(doc.id)}" style="display:none">
+        <input class="ul-name-input" id="ul-rename-input-${escAttr(doc.id)}" value="${escAttr(doc.name)}">
+        <button class="ul-upload-btn" style="margin:0;padding:8px 14px;font-size:13px" data-ul-rename-ok="${escAttr(doc.id)}">Speichern</button>
+        <button class="del-btn-wide" data-ul-rename-cancel="${escAttr(doc.id)}">Abbrechen</button>
       </div>`;
     });
     html += `</div>`;
@@ -2946,55 +2968,117 @@ async function renderUnterlagen(){
 
   listEl.innerHTML = html;
 
-  // Login-Link im Hinweis
+  // Login-Link
   const loginLink = document.getElementById("ul-login-link");
   if(loginLink) loginLink.addEventListener("click", e => {
     e.preventDefault();
     document.getElementById("sync-modal").style.display = "flex";
   });
 
-  // Datei hochladen
-  document.getElementById("ul-file-input").addEventListener("change", async function(){
-    const progressWrap = document.getElementById("ul-progress-wrap");
-    const progressFill = document.getElementById("ul-progress-fill");
-    const progressLabel = document.getElementById("ul-progress-label");
+  // ---- Datei auswählen → Namens-Bestätigung anzeigen ----
+  let ulPendingFile = null;
+  const fileInput    = document.getElementById("ul-file-input");
+  const uploadLabel  = document.getElementById("ul-upload-label");
+  const nameConfirm  = document.getElementById("ul-name-confirm");
+  const nameInput    = document.getElementById("ul-name-input");
+  const progressWrap = document.getElementById("ul-progress-wrap");
+  const progressFill = document.getElementById("ul-progress-fill");
+  const progressLabel= document.getElementById("ul-progress-label");
 
-    for(const file of this.files){
-      if(file.type !== "application/pdf"){ alert("Nur PDF-Dateien werden unterstützt."); continue; }
-      const id      = genId();
-      const created = new Date().toISOString();
-      const buffer  = await file.arrayBuffer();
+  fileInput.addEventListener("change", function(){
+    const file = this.files[0];
+    if(!file) return;
+    if(file.type !== "application/pdf"){ alert("Nur PDF-Dateien werden unterstützt."); return; }
+    ulPendingFile = file;
+    // Dateiname ohne Erweiterung als Vorschlag
+    nameInput.value = file.name.replace(/\.pdf$/i, "");
+    uploadLabel.style.display = "none";
+    nameConfirm.style.display = "block";
+    setTimeout(() => nameInput.focus(), 50);
+  });
 
-      // Lokaler Cache immer
-      await ulIDBSpeichere({ id, name: file.name, data: buffer, created });
+  document.getElementById("ul-name-cancel").addEventListener("click", () => {
+    ulPendingFile = null;
+    fileInput.value = "";
+    nameConfirm.style.display = "none";
+    uploadLabel.style.display = "";
+  });
 
-      if(fsSyncUser){
-        progressWrap.style.display = "block";
-        progressFill.style.width = "0%";
-        progressLabel.textContent = `⬆️ ${file.name} wird hochgeladen …`;
-        try {
-          await ulCloudSpeichere(fsSyncUser.uid, id, file.name, created, buffer, pct => {
-            progressFill.style.width = Math.round(pct * 100) + "%";
-          });
-          progressLabel.textContent = "✅ Fertig";
-        } catch(e) {
-          progressLabel.textContent = "❌ Upload fehlgeschlagen: " + e.message;
-        }
-        setTimeout(() => { progressWrap.style.display = "none"; }, 1800);
+  document.getElementById("ul-name-ok").addEventListener("click", async () => {
+    if(!ulPendingFile) return;
+    const name    = nameInput.value.trim() || ulPendingFile.name;
+    const id      = genId();
+    const created = new Date().toISOString();
+    const buffer  = await ulPendingFile.arrayBuffer();
+
+    nameConfirm.style.display = "none";
+    uploadLabel.style.display = "";
+
+    await ulIDBSpeichere({ id, name, data: buffer, created });
+
+    if(fsSyncUser){
+      progressWrap.style.display = "block";
+      progressFill.style.width = "0%";
+      progressLabel.textContent = `⬆️ „${name}" wird gespeichert …`;
+      try {
+        await ulCloudSpeichere(fsSyncUser.uid, id, name, created, buffer, pct => {
+          progressFill.style.width = Math.round(pct * 100) + "%";
+        });
+        progressLabel.textContent = "✅ Fertig";
+      } catch(e) {
+        progressLabel.textContent = "❌ Fehler: " + e.message;
       }
+      setTimeout(() => { progressWrap.style.display = "none"; }, 1800);
     }
+
+    ulPendingFile = null;
+    fileInput.value = "";
     renderUnterlagen();
   });
 
-  // Dokument öffnen
+  // ---- Dokument öffnen ----
   listEl.querySelectorAll("[data-ul-open]").forEach(el => {
     el.addEventListener("click", e => {
-      if(e.target.closest("[data-ul-del]")) return;
+      if(e.target.closest("[data-ul-del]") || e.target.closest("[data-ul-rename]")) return;
       ulOeffneDoc(el.dataset.ulOpen, el.dataset.ulName);
     });
   });
 
-  // Dokument löschen
+  // ---- Umbenennen: ✏️ anzeigen/verstecken ----
+  listEl.querySelectorAll("[data-ul-rename]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const id      = btn.dataset.ulRename;
+      const renameEl= document.getElementById(`ul-rename-${id}`);
+      const isOpen  = renameEl.style.display !== "none";
+      // alle anderen schließen
+      listEl.querySelectorAll(".ul-inline-rename").forEach(el => { el.style.display = "none"; });
+      if(!isOpen){
+        renameEl.style.display = "flex";
+        document.getElementById(`ul-rename-input-${id}`).focus();
+      }
+    });
+  });
+
+  listEl.querySelectorAll("[data-ul-rename-cancel]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      document.getElementById(`ul-rename-${btn.dataset.ulRenameCancel}`).style.display = "none";
+    });
+  });
+
+  listEl.querySelectorAll("[data-ul-rename-ok]").forEach(btn => {
+    btn.addEventListener("click", async e => {
+      e.stopPropagation();
+      const id       = btn.dataset.ulRenameOk;
+      const neuerName= document.getElementById(`ul-rename-input-${id}`).value.trim();
+      if(!neuerName) return;
+      await ulUmbenennen(id, neuerName);
+      renderUnterlagen();
+    });
+  });
+
+  // ---- Dokument löschen ----
   listEl.querySelectorAll("[data-ul-del]").forEach(btn => {
     btn.addEventListener("click", async e => {
       e.stopPropagation();

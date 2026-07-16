@@ -525,6 +525,15 @@ select:focus{outline:none;border-color:var(--accent)}
 .ul-empty .ul-empty-icon{font-size:48px;display:block;margin-bottom:12px}
 .ul-progress-bar{background:var(--bg2);border-radius:6px;height:8px;overflow:hidden}
 .ul-progress-fill{background:var(--accent);height:100%;border-radius:6px;transition:width .2s}
+.ul-name-confirm{padding:16px;margin-bottom:12px}
+.ul-name-confirm-label{font-size:13px;color:var(--muted);margin-bottom:8px}
+.ul-name-input{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:10px 12px;font-size:15px;outline:none}
+.ul-name-input:focus{border-color:var(--accent)}
+.ul-name-confirm-actions{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.ul-doc-rename{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:6px;border-radius:6px;flex-shrink:0}
+.ul-doc-rename:hover{background:rgba(255,255,255,.07)}
+.ul-inline-rename{display:flex;align-items:center;gap:8px;padding:8px 16px 12px;flex-wrap:wrap}
+.ul-inline-rename .ul-name-input{flex:1;min-width:140px;font-size:14px;padding:8px 10px}
 
 @media (max-width:700px){
   .topbar{padding:14px;gap:10px}
