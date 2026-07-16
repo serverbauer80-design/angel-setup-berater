@@ -1240,10 +1240,9 @@ const LAV_GEWAESSER = [
   },
   {
     id:"einfelder-see", name:"Einfelder See", typ:"See",
-    kostenlosLav:null,
-    unsicher:true,
+    kostenlosLav:false,
     gruppen:[
-      { name:"DAFV-Mitglieder", preise:"10 €/Tag · 40 €/Woche · 100 €/Jahr" },
+      { name:"DAFV-/LAV-Mitglieder", preise:"10 €/Tag · 40 €/Woche · 100 €/Jahr" },
       { name:"Nicht organisiert", preise:"20 €/Tag · 80 €/Woche · 200 €/Jahr" }
     ],
     details:[
@@ -1251,8 +1250,7 @@ const LAV_GEWAESSER = [
       "📅 Saison 01.05.–31.12., Nachtangeln erlaubt",
       "🎣 Mindestmaß Hecht/Zander 50 cm, Schonzeit 01.01.–31.05.",
       "🚶 Nur Uferangeln für Gastangler, zahlreiche Plätze vorhanden"
-    ],
-    hinweis:"Auf der Steckbrief-Seite wird nur der DAFV-Preis genannt, ein expliziter „LAV-Mitglieder kostenlos“-Vermerk fehlt hier (anders als bei Westensee/Dobersdorfer/Stolper See). Vermutlich analog geregelt, aber nicht bestätigt – vorher beim LAV nachfragen."
+    ]
   },
   {
     id:"stolper-see", name:"Stolper See", typ:"See",
