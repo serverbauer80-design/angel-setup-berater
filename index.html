@@ -31,6 +31,7 @@
       <button class="tab" data-view="tagebuch">📔 Tagebuch</button>
       <button class="tab" data-view="unterlagen">📄 Unterlagen</button>
       <button class="tab" data-view="einsteiger">🎓 Starthilfe</button>
+      <button class="tab" data-view="einkauf">🛒 Einkaufsliste</button>
     </nav>
     <button id="sync-status-btn" type="button" class="sync-status" title="Synchronisation">☁️ Nicht angemeldet</button>
   </header>
@@ -268,6 +269,11 @@
     <section id="einsteiger-main"></section>
   </main>
 
+  <!-- ============ EINKAUFSLISTE ============ -->
+  <main id="view-einkauf" class="view">
+    <section id="einkauf-main"></section>
+  </main>
+
   <footer class="foot">
     <p>Alle Montagen &amp; Gewichte sind Richtwerte. Schonzeiten, Mindestmaße und Gerätevorschriften (z. B. Bundesland/Verein) immer vor Ort prüfen. Waidgerecht angeln! 🐟</p>
   </footer>
@@ -291,7 +297,7 @@
     firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {});
   </script>
 
-  <script src="data.js?v=20260722-5"></script>
-  <script src="app.js?v=20260722-5"></script>
+  <script src="data.js?v=20260722-6"></script>
+  <script src="app.js?v=20260722-6"></script>
 </body>
 </html>

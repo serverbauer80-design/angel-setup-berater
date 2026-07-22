@@ -3496,6 +3496,66 @@ function renderAnsitzAngeln(){
   el.innerHTML = html;
 }
 
+/* ---------- Einkaufsliste ---------- */
+function renderEinkauf(){
+  const el = $("#einkauf-main");
+  if(!el) return;
+
+  const alle = EINKAUF_KLEINKRAM.flatMap(k => k.items);
+  const cnt = prio => alle.filter(i => i.prio === prio).length;
+
+  function renderItems(filter){
+    return EINKAUF_KLEINKRAM.map(kat => {
+      const items = filter === "alle" ? kat.items : kat.items.filter(i => i.prio === filter);
+      if(!items.length) return "";
+      return `<div class="ek-kat">
+        <div class="ek-kat-head">${kat.icon} ${kat.kat}</div>
+        ${items.map(item => `
+        <div class="ek-item">
+          <div class="ek-item-top">
+            <div class="ek-item-name">${item.art}</div>
+            <span class="ek-prio ek-prio-${item.prio}">${item.prio === "sofort" ? "🔴 Sofort" : item.prio === "sinnvoll" ? "🟡 Sinnvoll" : "⚪ Optional"}</span>
+          </div>
+          <div class="ek-meta">
+            <span class="ek-tag">📐 ${item.gr}</span>
+            <span class="ek-tag">⚖️ ${item.kg}</span>
+            <span class="ek-tag">📦 ${item.menge}</span>
+          </div>
+          <div class="ek-fuer">🎣 ${item.fuer}</div>
+          <div class="ek-setups">${item.setup.map(s => `<span class="ek-sbadge">${s}</span>`).join("")}</div>
+          ${item.hinweis ? `<div class="ek-hinweis">💡 ${item.hinweis}</div>` : ""}
+        </div>`).join("")}
+      </div>`;
+    }).join("");
+  }
+
+  el.innerHTML = `<div class="ek-wrap">
+    <div class="ek-header">
+      <div class="ek-title">🛒 Kleinkram-Einkaufsliste</div>
+      <div class="ek-sub">Wirbel, Snaps & Karabiner – abgestimmt auf deine Setups S1–S9</div>
+    </div>
+    <div class="ek-filter" id="ek-filter">
+      <button class="ek-chip active" data-f="alle">Alle <span class="ek-cnt">${alle.length}</span></button>
+      <button class="ek-chip" data-f="sofort">🔴 Sofort <span class="ek-cnt">${cnt("sofort")}</span></button>
+      <button class="ek-chip" data-f="sinnvoll">🟡 Sinnvoll <span class="ek-cnt">${cnt("sinnvoll")}</span></button>
+      <button class="ek-chip" data-f="optional">⚪ Optional <span class="ek-cnt">${cnt("optional")}</span></button>
+    </div>
+    <div id="ek-list">${renderItems("alle")}</div>
+    <div class="ek-info-block" style="margin-top:18px">
+      <div class="ek-kat-head" style="margin-bottom:6px">💡 Marken-Empfehlung</div>
+      <div style="font-size:14px;color:var(--fg)">Mustad, Owner, Spro, Gamakatsu – alle zuverlässig in der Mittelklasse. Lieber 20er-Packs als Einzelstücke kaufen – Wirbel und Snaps gehen beim Umbinden regelmäßig verloren.</div>
+    </div>
+  </div>`;
+
+  el.querySelectorAll(".ek-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      el.querySelectorAll(".ek-chip").forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      $("#ek-list").innerHTML = renderItems(chip.dataset.f);
+    });
+  });
+}
+
 /* ---------- Tabs ---------- */
 document.querySelectorAll(".tab").forEach(t => {
   t.addEventListener("click", () => {
@@ -3529,6 +3589,7 @@ renderWochenende();
 renderAnsitzAngeln();
 renderUnterlagen();
 renderTagebuch();
+renderEinkauf();
 let EI_SUBVIEW = "start"; // Starthilfe sub-tab
 renderEinsteiger();
 (async function(){try{const e=await tbIDBLadeAlle();tbUpdateStatsCache(e);}catch(err){}})();

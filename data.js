@@ -121,7 +121,42 @@ const ZUBEHOER = [
   "F. Dick Filetiermesser 21 cm Blue (blaue Scheide, flexibel)", "Zwilling Wetzstahl 26 cm (Diamant, fein)"
 ];
 
-/* ---------- 2) WUNSCHLISTE (zukünftige Setups) ---------- */
+/* ---------- 2) KLEINKRAM-EINKAUFSLISTE ---------- */
+const EINKAUF_KLEINKRAM = [
+  {
+    kat: "Wirbel", icon: "🔄",
+    items: [
+      { art:"Kugellagerwirbel", gr:"Gr. 6", kg:"~12 kg", fuer:"S1 – Raubfisch (Spinner, Anti-Drall)", setup:["S1"], menge:"10–15 Stk.", prio:"sinnvoll" },
+      { art:"Kugellagerwirbel", gr:"Gr. 8–10", kg:"~6–8 kg", fuer:"S4 Light Game · S6 Spin (Spinner, Anti-Drall)", setup:["S4","S6"], menge:"15 Stk.", prio:"sofort" },
+      { art:"Wirbel (Sbirolino-/Blei-Stopper)", gr:"Gr. 10–12", kg:"~4–5 kg", fuer:"S3 – Sbirolino + Dänische Montage", setup:["S3"], menge:"20 Stk.", prio:"sofort" },
+      { art:"Feeder-/Paternoster-Wirbel", gr:"Gr. 6–8", kg:"~8 kg", fuer:"S5 – Feeder/Grund (Paternoster-Rig)", setup:["S5"], menge:"10 Stk.", prio:"sinnvoll" },
+      { art:"Mini-Wirbel (optional)", gr:"Gr. 16–18", kg:"~2 kg", fuer:"S7/S8 – Stippe (wenn Schnur geteilt wird)", setup:["S7","S8"], menge:"10 Stk.", prio:"optional" },
+    ]
+  },
+  {
+    kat: "Snaps / Karabiner", icon: "🔗",
+    items: [
+      { art:"Micro Snap (z. B. Duo Lock Snap)", gr:"Gr. 12–14", kg:"max. 2–3 kg", fuer:"S2 – UL-Forelle (Spoon-Wechsel)", setup:["S2"], menge:"20 Stk.", prio:"sofort", hinweis:"Kein Snap-Wirbel! Nur reiner Snap – ein Wirbel am Ende tötet die Köderaktion beim Spoon." },
+      { art:"Small Snap", gr:"Gr. 8–10", kg:"~5–6 kg", fuer:"S4 – Light Game (Wobbler/Gummifisch wechseln)", setup:["S4"], menge:"15 Stk.", prio:"sinnvoll" },
+    ]
+  },
+  {
+    kat: "Karabinerwirbel", icon: "🪝",
+    items: [
+      { art:"Karabinerwirbel", gr:"Gr. 2–4", kg:"~15–20 kg", fuer:"S1 – Raubfisch (Köder & Vorfach-Wechsel, ohne Hecht/Stahlvorfach)", setup:["S1"], menge:"10 Stk.", prio:"sinnvoll" },
+      { art:"Karabinerwirbel", gr:"Gr. 6–8", kg:"~8–10 kg", fuer:"S6 – Spin Forelle/Barsch", setup:["S6"], menge:"10 Stk.", prio:"sinnvoll" },
+      { art:"Schleppwirbel", gr:"Gr. 10–12", kg:"~4–5 kg", fuer:"S3 – Dänische Montage (zwischen Blinker und FC-Vorfach)", setup:["S3"], menge:"10 Stk.", prio:"sofort" },
+    ]
+  },
+  {
+    kat: "Perlen & Stopper", icon: "🟠",
+    items: [
+      { art:"Glasperlen (Puffer vor Wirbel)", gr:"4–5 mm", kg:"–", fuer:"S3/S5 – Knoten-Schutz vor Blei", setup:["S3","S5"], menge:"~50 Stk.", prio:"optional", hinweis:"Nur wenn du Glasperlen bevorzugst – Gummiperlen (Paradox Fishing, 200 Stk.) hast du bereits." },
+    ]
+  }
+];
+
+/* ---------- 3) WUNSCHLISTE (zukünftige Setups) ---------- */
 const WUNSCH = {
   brandung: {
     key: "brandung", name: "Brandungs-/Grundangel-Setup (Küste)",
