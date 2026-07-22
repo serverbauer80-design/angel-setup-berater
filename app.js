@@ -4011,64 +4011,178 @@ function eiRenderKnoten(){
 /* ===== STARTHILFE – Put & Take Forellenteich ===== */
 function eiRenderPutAndTake(){
   const PT_MONTAGEN = [
-    { name:"Sbirolino-Montage", emoji:"🎣", wann:"Hauptmontage – universell einsetzbar",
-      hinweis:"Größte Stärke: Wurfdistanz + einstellbare Tiefe. Ideal wenn Forellen in der Wassersäule stehen, nicht am Grund.",
-      schritte:[
-        "Sbirolino (schwimmend oder sinkend, 10–15 g) auf Hauptschnur auffädeln – Braid 0,10–0,16 mm",
-        "Darunter Wirbel binden (Improved Clinch Knot)",
-        "FC-Vorfach 0,218 mm · 1,5–2,5 m Länge anknoten (Albright Knot)",
-        "Am Ende Einzelhaken Gr. 8–12 binden – bei Gummiköder ohne Widerhaken oder mit gequetschtem Widerhaken",
-        "Tiefe einstellen: sinkender Sbirolino hält die Tiefe, schwimmender treibt oben",
-        "Hauptleine straff halten, Sbirolino langsam und gleichmäßig einholens (0,5–1 Kurbelumdrehung/Sekunde)",
-        "Variation: kurze Stops einbauen – Köder sinkt kurz ab, Biss oft in der Sinkphase",
+    { name:"Sbirolino-Montage", emoji:"🎣", wann:"Hauptmontage – universell, alle Tiefen",
+      hinweis:"Die vielseitigste Montage am Forellenteich. Durch Auswahl des Sbirolino-Typs (schwimmend/sinkend/neutral) und der Vorfachlänge erreichst du jede gewünschte Wassertiefe. Lange Würfe möglich – ideal für große DK-Seen.",
+      material:[
+        "Sbirolino schwimmend (weiß/transparent) 10–15 g: Köder läuft nahe Oberfläche → Forellen stehen oben",
+        "Sbirolino sinkend (dunkle Farben) 10–15 g: Hält Zieltiefe konstant → Forellen in mittlerer Tiefe",
+        "Wirbel Gr. 10–12 (verhindert Drall)",
+        "FC-Vorfach Daiwa J-Fluoro 0,218 mm (DE) / 0,298 mm (DK, große Forellen)",
+        "Einzelhaken Gr. 8–12 ohne Widerhaken (Pflicht an vielen Seen) oder Widerhaken quetschen",
+        "Köder nach Wahl: Forellengummi Trout Master / Spoon-Imitat / Tauwurm",
       ],
-      tipp:"Mit 0,298 mm FC bei großen Forellen (Put & Take DK) – 0,218 mm reißt bei Schockbelastung durch Braid ohne Stretch!"},
-    { name:"Pose + Einzelhaken (stationär)", emoji:"🪶", wann:"Naturköder – Tauwurm, Teig, Mais – ruhiges Angeln",
-      hinweis:"Bewährt wenn Forellen am Ort stehen (Einlauf, Schatten, Seeseite). Keine aktive Führung nötig.",
       schritte:[
-        "Feste Pose (Tiefe vorher ermitteln – 50 cm über Grund als Start)",
-        "FC-Vorfach 0,218 mm · 60–80 cm Länge unter der Pose",
-        "Einzelhaken Gr. 8–10 ohne oder mit gequetschtem Widerhaken",
-        "Schrotbleie direkt unter der Pose: so viel dass Pose fast eingedrückt ist – empfindliche Bisserkennung",
-        "Köder vollständig verdecken: Haken durch den Wurm stechen, Ende hängend lassen",
-        "Einwerfen, Bite Alarm / Auge auf Pose – Biss: Pose geht weg oder taucht ein",
-        "Anschlag erst wenn die Pose klar unter Wasser oder seitlich zieht – zu früh = leer",
+        "Sbirolino auf Hauptschnur (Braid 0,10–0,16 mm) auffädeln – durch die Mittelachse",
+        "Kleinen Stopper-Perle dahinter, dann Wirbel Gr. 10 mit Improved Clinch Knot binden – Stopper hält Sbirolino am Wirbel",
+        "FC-Vorfach 1,5–2,5 m abschneiden (kurzes Vorfach = flacher, langes = tiefer bei gleichem Sbirolino)",
+        "Vorfach am Wirbel mit Albright Knot befestigen – Knoten klein und glatt halten",
+        "Haken am Vorfachende mit Improved Clinch Knot binden",
+        "Köder aufziehen: Forellengummi auf Haken (wie Strumpf aufziehen, Haken mittig), oder Tauwurm mehrfach aufstechen",
+        "Tiefe bestimmen: Sbirolino schwimmend + kurzes Vorfach (1 m) = 0,5–1 m Tiefe · sinkend + langes Vorfach (2,5 m) = 2–3 m Tiefe",
+        "Wurf: weit werfen, Sbirolino aufklatschen lassen, kurz absinken lassen (2–3 Sek.)",
+        "Einholung: 0,5–1 Kurbelumdrehung/Sek. gleichmäßig – Leine immer leicht straff",
+        "Stops einbauen: alle 5–8 Kurbel kurz 2 Sek. stoppen – Köder sackt ab – Biss kommt oft genau jetzt",
       ],
-      tipp:"Bleibt die Pose stehen aber zuckt? Forelle hat Köder im Maul und prüft ihn – kurz warten, dann sanfter Anschlag."},
-    { name:"Grundmontage mit Powerbait / Forellenpaste", emoji:"🟡", wann:"Ruhige Teiche, stationär am Grund",
-      hinweis:"Powerbait schwimmt – Haken liegt am Grund, Köder schwebt. Sehr effektiv wenn Forellen am Boden fressen.",
+      fehler:[
+        "Vorfach zu kurz: Sbirolino und Köder zu nah beieinander – Forellen scheuen den Schwimmer",
+        "Zu schnell einholen: Sbirolino spritzt, Köder taucht auf – unnatürlich",
+        "0,218 mm FC bei großen DK-Forellen: reißt beim ersten Sprung (Schockbelastung durch dehnungslose Braid)",
+      ],
+      tipp:"Gummiköder-Tipp: Trout Master Master Worm in UV-aktiven Farben (Chartreuse, Pink) funktioniert auf dem Sbirolino fast immer. Farbe je nach Lichtverhältnis wechseln – bei Sonne: helle Töne; bei Bewölkung/Regen: kräftige, dunkle Farben."},
+
+    { name:"Dänische Montage (Dansk Rig)", emoji:"🇩🇰", wann:"Klassiker in DK – Attraktorblinker + Köder kombiniert",
+      hinweis:"Die Parade-Montage in dänischen Put & Take Seen. Ein kleiner Attraktorblinker (Gold/Rot/Orange) zieht Forellen mit Lichtreflexen an – den Haken mit Bait darunter schnappen sie dann. Extrem effektiv weil zwei Reize kombiniert werden: Bewegung/Glanz UND Geruch/Geschmack.",
+      material:[
+        "Attraktorblinker/Spoon klein, 2–4 g, gold oder rot/orange (z.B. Mepps Aglia, kleiner Forellen-Blinker)",
+        "Schleppwirbel Gr. 10–12 (zwischen Blinker und Vorfach – verhindert Drall!)",
+        "FC-Vorfach Daiwa J-Fluoro 0,218 mm (DE) / 0,298 mm (DK)",
+        "Vorfachlänge: 25–40 cm zwischen Blinker-Wirbel und Haken",
+        "Einzelhaken Gr. 8–10 (kein Drilling – Widerhaken quetschen oder widerhakenfrei)",
+        "Köder auf dem Haken: Powerbait (gelb/chartreuse), Forellenpaste, Käsewürfel, Mais oder Tauwurm",
+      ],
       schritte:[
-        "Laufendes Blei (5–15 g) auf Hauptschnur fädeln",
-        "Stopper + Wirbel darunter (verhindert dass Blei auf den Haken läuft)",
+        "Hauptschnur (Braid 0,10 mm) → Schleppwirbel Gr. 10 binden (Improved Clinch)",
+        "An den anderen Wirbel-Ring: kleinen Attraktorblinker 2–3 g einhängen (durch Spaltring des Blinkers)",
+        "ZWEITEN Schleppwirbel Gr. 10 an denselben ersten Wirbel-Ring hängen ODER direkt 25–40 cm FC an Hauptwirbel binden",
+        "FC-Vorfach 25–40 cm am Wirbel mit Improved Clinch befestigen",
+        "Haken Gr. 8–10 am Vorfachende binden",
+        "Köder auftragen: Powerbait erbsengroß um den Haken formen (Haken komplett verdecken) – oder Käsewürfel 1 cm aufstecken",
+        "Montage einwerfen, auf Grund sinken lassen oder langsam einholen",
+        "Einholung sehr langsam: 0,3–0,5 Kurbel/Sek. – Blinker dreht sich, Köder hängt 25 cm dahinter",
+        "Variation 1: ganz stationär auf Grund legen – Blinker liegt flach, Köder über Grund schwebend",
+        "Variation 2: langsam in kurzen Rucken einziehen – Blinker blitzt, kurze Stop-Phase, Köder torkelt",
+      ],
+      fehler:[
+        "Vorfach zu lang (>50 cm): Forelle sieht Blinker, geht drauf zu, Köder hängt zu weit weg – verfehlt",
+        "Zu großer Blinker: Forellen schrecken zurück – max. 3 g, lieber kleiner",
+        "Haken nicht abgedeckt: Forelle spuckt sofort aus – Powerbait muss Haken komplett umschließen",
+        "Kein Schleppwirbel: Leine verdrillt sich in wenigen Würfen – immer Wirbel setzen!",
+      ],
+      tipp:"In DK fast jeder Einheimische angelt mit dieser Montage. Der Käsewürfel-Trick: harten Schmelzkäse in 1×1 cm Würfel schneiden, auf dem Haken fest aufspießen. Hält lange, riecht stark, ist robust – perfekt für weite Würfe. Farbe Powerbait: Gelb in DK meistens die Nr. 1."},
+
+    { name:"Pose + Einzelhaken (stationär)", emoji:"🪶", wann:"Naturköder – ruhig warten, Forellen stehen lassen",
+      hinweis:"Wenn die Forellen an einem festen Punkt stehen (Einlauf, Baumschatten, Windschutz-Seite) und du weißt wo – dann Pose und warten. Keine aktive Führung nötig, dafür maximale Bissempfindlichkeit.",
+      material:[
+        "Feste Pose (Slip-Pose mit festem Stopper für die Tiefe) – Tragkraft auf Blei abstimmen",
+        "Schrotblei-Set: so viele aufklemmen bis Pose zu 80% eingetaucht ist – dann ist sie sehr empfindlich",
+        "FC-Vorfach 0,218 mm · 60–80 cm Länge zwischen untersten Schrotblei und Haken",
+        "Einzelhaken Gr. 8–10 (bei Tauwurm), Gr. 12–14 (bei Rotwurm/Maden)",
+        "Stopper-Kugeln (oben und unten an der Pose für feste Tiefe)",
+      ],
+      schritte:[
+        "Tiefe bestimmen: Pose mit Blei ins Wasser – Pose liegt auf Seite = zu wenig Blei; steht kerzengerade = richtig. Tiefe: Schrotblei 50 cm über Grund als Start",
+        "Schrotbleie gleichmäßig verteilen: 2–3 Bleie direkt unter der Pose (Hauptblei), 1 Blei 20 cm über dem Haken (Fallblei)",
+        "FC-Vorfach 60–80 cm: kurz genug dass Forelle nicht zur Oberfläche kommt, lang genug für natürliches Köderverhalten",
+        "Tauwurm aufstechen: Haken 2× durch den dicken Teil des Wurms, dann durch das letzte Drittel – Wurm U-förmig, Ende hängt frei (wichtig: natürliche Bewegung!)",
+        "Forellenpaste: haselnussgroßes Stück um den Haken formen, fest andrücken",
+        "Powerbait auf Pose: erbsengroß, Haken verdecken, als Alternative wenn Würmer fehlen",
+        "Einwerfen: schwungvoll aber nicht zu hart – Pose soll aufrecht landen",
+        "Leine straff ziehen bis Pose steht, dann Rollenbügel schließen – Leine leicht durch von Hand wegschieben",
+        "Bisssignale: Pose zieht weg = sicher Biss; Pose taucht ein = Biss; Pose zuckt aber bleibt = Forelle prüft, noch warten",
+        "Anschlag: wenn Pose klar wegzieht → Rute flüssig hochreißen, Leine sofort straff – nicht warten!",
+      ],
+      fehler:[
+        "Zu tiefes Einstellen: Köder liegt am Grund – Forellen sehen ihn nicht, Haken hängt fest",
+        "Zu wenig Schrotblei: Pose kippt um – kein empfindlicher Bissanzeiger mehr",
+        "Zu kurzes Vorfach (<40 cm): Forelle zieht Pose sofort runter aber schon abgehakt",
+        "Zu früh anschlagen beim ersten Zucken: Forelle hat noch nicht richtig eingesaugt",
+      ],
+      tipp:"Geheimtipp: Köder-Mix. Tauwurm + kleines Stück Forellenpaste (Garlic/Knoblauch) auf dem gleichen Haken. Der Wurm lockt optisch, die Paste lockt durch Geruch. Oft deutlich besser als Wurm allein."},
+
+    { name:"Grundmontage mit Powerbait", emoji:"🟡", wann:"Stationär am Grund – Forellen suchen Boden ab",
+      hinweis:"Powerbait und ähnliche schwimmende Teige sind speziell für diese Montage gemacht: Das Blei liegt am Grund, der Köder schwimmt 5–15 cm darüber. Forellen sehen ihn perfekt von unten. Sehr wartungsarm – einfach Weitwerfen und Biss abwarten.",
+      material:[
+        "Laufendes Blei 10–20 g (je nach Wurfweite) – Birnenblei oder Inline-Blei",
+        "Perle als Puffer zwischen Blei und Wirbel (schützt den Knoten)",
+        "Wirbel Gr. 10–12 als Blei-Stopper",
         "FC-Vorfach 0,218 mm · 40–60 cm Länge",
-        "Haken mit Powerbait ummanteln – gut faustgroße Menge damit der Haken auftreibt (wichtig: Haken muss komplett verdeckt sein!)",
-        "Alternativ: Schaumstoffball auf Haken + Forellenpaste als Geruchsstoff",
-        "Weitwerfen, Leine straff, Rutenspitze beobachten – kein Auge zudrücken",
-        "Anschlag: Rutenspitze zieht durch → sofort anschlagen",
+        "Spezieller Powerbait-Haken Gr. 10–14 (kurzer Schaft mit Widerhaken auf dem Schaft – hält Teig besser)",
+        "Berkley Powerbait Floating Trout Bait – Farben: Gelb, Chartreuse, Orange, Pink, Rainbow",
+        "Alternative: Schaumstoffball auf Haken + Forellenpaste drumherum (günstiger, riecht genauso)",
       ],
-      tipp:"Powerbait-Farben: Gelb/Chartreuse bei klarem Wasser, Orange/Pink bei trübem Wasser, Regenbogen-Glitter für sonnige Tage. Immer 2–3 Farben dabei haben."},
-    { name:"Spoon / Blinker direkt", emoji:"✨", wann:"Aktive Suche, wenn Forellen jagen",
-      hinweis:"Einfachste Methode, sehr effektiv bei aktiven Forellen. Kein Vorfachproblem – Spoon direkt an FC-Vorfach.",
       schritte:[
-        "Spoon 2,5–5 g (je nach Teichgröße) direkt ans FC-Vorfach binden (Improved Clinch oder Palomar)",
-        "FC 0,218–0,298 mm als komplette Hauptschnur oder als 1,5–2 m Vorfach vor der Braid",
-        "Einwerfen, bis Spoon am Grund ankommt (abzählen!), dann gleichmäßig einholen",
-        "Tiefe variieren: früher beginnen = flacher, länger sinken lassen = tiefer",
-        "Führung: gleichmäßig langsam → Stop → kurze schnelle Züge wechseln",
-        "Variation: Spoon kurz sinken lassen, dann schnell hochkurbeln – Lichtreflexe locken",
+        "Laufendes Blei (10–20 g) auf Hauptschnur fädeln – Seite mit Öse zeigt zum Haken",
+        "Gummiperle auf Schnur fädeln (Puffer für den Knoten)",
+        "Wirbel Gr. 10 mit Improved Clinch binden – Blei läuft frei bis zum Wirbel",
+        "FC-Vorfach 40–60 cm abschneiden (kurz = Köder nah am Grund; lang = Köder schwebt höher)",
+        "Powerbait-Haken oder normalen Einzelhaken Gr. 10–12 binden",
+        "Powerbait auftragen: erbsen- bis haselnussgroßes Stück gut durchkneten, um Haken formen – Haken komplett verdecken, Teig gut andrücken",
+        "Schwimmtest im Wasser: Haken muss aufschwimmen! Zu wenig Teig = Haken sinkt = Boden-Verlust. Mehr Teig drauf bis er schwimmt",
+        "Weit einwerfen (je weiter, desto wahrscheinlicher ungestörter Bereich)",
+        "Leine straff, Rute in Rutenhalter, Rollenbügel schließen – Rutenspitze beobachten",
+        "Biss: Rutenspitze nickt mehrfach oder zieht durch → sofort Rute hochreißen (Powerbait-Haken: kräftiger Anschlag nötig!)",
       ],
-      tipp:"Gold-Spoon funktioniert fast immer. Silber bei hellem Sonnenschein, Gold/Kupfer bei trübem Wasser oder Bewölkung. Bei Put & Take DK: kleinere Spoons (2,5 g) oft besser als große."},
-    { name:"Mini-Wobbler (suspending / sinkend)", emoji:"🐟", wann:"Wenn Forellen in bestimmter Tiefe stehen",
-      hinweis:"Suspending Wobbler bleibt auf Pause in der Tiefe stehen – ideal wenn Forellen auf einer Schicht stehen.",
+      fehler:[
+        "Zu wenig Powerbait: Haken sinkt ab, liegt auf dem Grund – unsichtbar und verheddernd",
+        "Vorfach zu kurz (<30 cm): Blei und Köder zu nah – Forellen scheuen den Metallklumpen",
+        "Falsche Farbe: Im klaren Wasser funktioniert Gelb/Chartreuse am besten; bei trübem Wasser Orange/Pink. Nie nur eine Farbe dabei haben!",
+        "Anschlag zu schwach: Powerbait umhüllt den Haken – er muss sich durcharbeiten – kräftiger Anschlag!",
+      ],
+      tipp:"Powerbait-Farb-Tabelle: ☀️ Sonne + klares Wasser → Gelb/Chartreuse · ☁️ Bedeckt → Orange/Peach · 🌧 Regen/trüb → Pink/Rot · ❄️ Winter → Rainbow/Glitter-Varianten. Powerbait riecht nach Vanille – das lieben Forellen. DIY-Alternative: Polenta + Eigelb + Vanillearoma zu einem festen Teig formen → kostet 5% von Powerbait, funktioniert ähnlich gut."},
+
+    { name:"Spoon / Blinker direkt", emoji:"✨", wann:"Aktive Suche im ganzen See, Forellen jagen sichtbar",
+      hinweis:"Der schnellste Weg, aktive Forellen zu finden. Kein Umrüsten nötig – einfach werfen und einholen. Spoons funktionieren durch Lichtreflexion und Vibration. Besonders morgens wenn Forellen aktiv fressen.",
+      material:[
+        "Spoon 2,5–5 g je nach Teichgröße (kleinerer See → 2,5 g; großer See/DK → 3,5–5 g)",
+        "Farben: Gold (Standard), Silber (Sonne), Kupfer/Orange (trüb/Herbst), Chartreuse (sehr trüb)",
+        "FC 0,218 mm komplett oder als 1,5 m Vorfach vor der Braid (kein Metallwirbel direkt am Spoon!)",
+        "Verbindung: Snap-Wirbel oder direkt am Öhr (Improved Clinch) – kein fester Knoten am Öhr sonst schwingt Spoon nicht!",
+      ],
       schritte:[
-        "Wobbler 4–7 cm, 4–8 g mit Neutralauftrieb (suspending) oder leicht sinkend",
-        "Direkt an FC-Vorfach 0,218 mm mit Schleppwirbel (verhindert Leitungsdrall)",
-        "Einwerfen, Wobbler bis zur Zieltiefe sinken lassen",
-        "Führung: Langsam mit Pausen – auf Pause bleibt suspending Wobbler auf der Stelle",
-        "Stop & Go: 2–3 Kurbel, 2 Sek. Stop – Biss sehr oft in der Pause!",
-        "An Strukturen (Einlauf, Uferböschung) langsam entlangführen",
+        "FC-Vorfach 1,5–2 m an Braid (Albright), am Ende losen Loop-Knoten oder Snap am Spoon (ermöglicht freie Spoon-Bewegung!)",
+        "Alternativ: Spoon direkt mit FC 0,218–0,298 mm als Hauptschnur, kein Braid nötig",
+        "Einwerfen, Spoon aufklatschen lassen, dann zählen: bei 1 m Tiefe ca. 3 Sek. absinken, bei 2 m ca. 6 Sek. – merken!",
+        "Gleichmäßig einholen mit 0,5–1 Kurbel/Sek. auf der gemerkten Absinkzeit",
+        "Schicht variieren: erste Würfe sehr flach (1 Sek. Sinkphase), dann immer tiefer – Fisch hängt irgendwann",
+        "Stop & Go: 4 Kurbel → 2 Sek. Stop (Spoon taumelt ab) → weiter einholen – Biss fast immer in der Sinkphase",
+        "Farbe nach 20 Min. ohne Biss wechseln: Gold → Silber → Kupfer → Chartreuse",
+        "Wenn Biss: selbe Richtung, selbe Tiefe, selbe Farbe wiederholen – Rudel steht da!",
       ],
-      tipp:"Forellen attackieren Wobbler oft auf der Pause – Leine dabei trotzdem leicht straff halten um den Biss zu spüren."},
+      fehler:[
+        "Fester Knoten direkt am Spoon-Öhr: Spoon kann nicht frei schwingen, verliert seine Bewegung",
+        "Zu großer Spoon (>7 g) an kleinen Teichen: Forellen schrecken zurück",
+        "Zu schnell einholen: Spoon dreht sich um die eigene Achse statt zu taumeln – Leinenverdrillung und kein Biss",
+        "Kein Farbwechsel nach längerer Pause: Forellen gewöhnen sich an eine Farbe – Wechsel ist Pflicht!",
+      ],
+      tipp:"DK-Trick: Kupferfarbener Spoon mit rotem Punkt (oder rotem Aufkleber) ist in dänischen Seen oft unschlagbar. Forellen reagieren auf Rot wie auf Blut – evolutionärer Beutereflex. Kleinen roten Leuchtsticker aufkleben und testen."},
+
+    { name:"Mini-Wobbler (suspending / sinkend)", emoji:"🐟", wann:"Forellen stehen auf bestimmter Tiefenschicht",
+      hinweis:"Wobbler kann durch seine Form aktive Eigenbewegung erzeugen – er taumelt und wackelt schon beim gleichmäßigen Einholen. Suspending-Wobbler bleibt auf Pause auf der Stelle, sinkend geht er in der Pause tiefer – beide lösen Bisse auf Pause aus.",
+      material:[
+        "Suspending Wobbler 4–7 cm, 4–8 g (Neutralauftrieb: bleibt auf Pause auf der Stelle)",
+        "Sinkender Wobbler 4–7 cm (geht auf Pause tiefer – gut für Grundnähe)",
+        "Schwimmender Wobbler (geht auf Pause hoch – gut für Oberflächennähe)",
+        "FC-Vorfach 0,218 mm + Schleppwirbel (verhindert Drall) oder Snap",
+        "Farben: Silber/Blau (klares Wasser), Chartreuse/Orange (trüb), Naturfisch-Muster (selektive Forellen)",
+      ],
+      schritte:[
+        "Schleppwirbel ans Vorfachende binden, Wobbler einhängen (Snap oder direkt im Schnappring)",
+        "Wichtig: kein fester Knoten direkt am Wobbler-Öhr – Karabiner oder losen Loop-Knoten nutzen",
+        "Einwerfen, Wobbler auf Zieltiefe absinken lassen (zählen!)",
+        "Führung 1 – Gleichmäßig: 1 Kurbel/Sek. – Wobbler taucht auf seine Lauftiefe und wackelt",
+        "Führung 2 – Stop & Go: 3 Kurbel · 3 Sek. Stop · 3 Kurbel · bei suspending: Köder steht auf Pause",
+        "Führung 3 – Rucktechnik: kurze schnelle Rutenzüge (30 cm), Pause, Zug, Pause – Wobbler flieht und flüchtet",
+        "Tiefe variieren: Schnelleres Einholen = flacher laufend; langsamer = tiefer laufend (je nach Wobbler-Typ)",
+        "An Strukturen (Einlauf, Uferböschung, versunkener Baum) extra langsam vorbeisteuern",
+        "Biss auf Pause: Leine trotz Stop leicht straff halten – Biss sofort spüren, Anschlag direkt",
+      ],
+      fehler:[
+        "Zu schnell einholen: Wobbler bricht aus seiner Lauftiefe, wird unnatürlich",
+        "Falscher Wobbler-Typ für die Tiefe: schwimmender Wobbler am Grund sinnlos",
+        "Leine auf Pause hängen lassen: kein Kontakt zum Köder, Biss nicht spürbar",
+        "Kein Schleppwirbel: Braid verdrillt sich durch den rotierenden Wobbler massiv",
+      ],
+      tipp:"Tipp zum Tunen: Suspending Wobbler lässt sich mit Bleisticker auf Neutralauftrieb trimmen. Im Aquarium/Badewanne testen – bleibt er auf der Stelle? Dann ist er ideal. Oft sind neue Wobbler leicht schwimmend – 1–2 kleine Aufkleber-Blei auf Underseite kleben bis er neutral hängt."},
   ];
 
   const PT_KOEDER = [
@@ -4150,8 +4264,8 @@ function eiRenderPutAndTake(){
     <!-- Montagen -->
     <div class="ei-card">
       <div class="ei-card-header"><span class="ei-card-icon">🎣</span><div>
-        <div class="ei-card-titel">Montagen – 5 bewährte Setups</div>
-        <div class="ei-card-sub">Vollständige Anleitung für jede Methode am Forellenteich</div>
+        <div class="ei-card-titel">Montagen – 6 bewährte Setups</div>
+        <div class="ei-card-sub">Vollständige Anleitungen inkl. Material, Fehler und Tipps</div>
       </div></div>
       ${PT_MONTAGEN.map((m,i)=>`
       <div class="ei-filet-block">
@@ -4162,13 +4276,22 @@ function eiRenderPutAndTake(){
         </div>
         <div class="ei-filet-body" id="ei-ptmon-${i}" style="display:none">
           <div class="ei-filet-hinweis">💡 ${m.hinweis}</div>
+          ${m.material?`<div class="ei-info-block" style="margin:10px 0 6px">
+            <div class="ei-info-titel">🛒 Material</div>
+            ${m.material.map(mat=>`<div class="ei-check-item" style="margin-bottom:4px">• ${mat}</div>`).join("")}
+          </div>`:""}
+          <div class="ei-info-titel" style="margin:10px 0 6px">📋 Aufbau Schritt für Schritt</div>
           <div class="ei-steps">
             ${m.schritte.map((s,si)=>`<div class="ei-step">
               <div class="ei-step-num">${si+1}</div>
               <div class="ei-step-body"><div class="ei-step-text">${s}</div></div>
             </div>`).join("")}
           </div>
-          <div class="ei-koeder-tipp">⚡ ${m.tipp}</div>
+          ${m.fehler?`<div class="ei-info-block" style="margin-top:10px;background:rgba(220,50,50,.07);border-left:3px solid #dc3232">
+            <div class="ei-info-titel" style="color:#dc3232">❌ Häufige Fehler</div>
+            ${m.fehler.map(f=>`<div class="ei-check-item" style="margin-bottom:4px;color:var(--muted)">• ${f}</div>`).join("")}
+          </div>`:""}
+          <div class="ei-koeder-tipp" style="margin-top:10px">⚡ ${m.tipp}</div>
         </div>
       </div>`).join("")}
     </div>
