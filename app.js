@@ -3503,6 +3503,7 @@ function renderEinkauf(){
 
   const alle = EINKAUF_KLEINKRAM.flatMap(k => k.items);
   const cnt = prio => alle.filter(i => i.prio === prio).length;
+  const prioLabel = p => p === "sofort" ? "🔴 Sofort" : p === "sinnvoll" ? "🟡 Sinnvoll" : "⚪ Optional";
 
   function renderItems(filter){
     return EINKAUF_KLEINKRAM.map(kat => {
@@ -3510,21 +3511,20 @@ function renderEinkauf(){
       if(!items.length) return "";
       return `<div class="ek-kat">
         <div class="ek-kat-head">${kat.icon} ${kat.kat}</div>
+        <div class="ek-kat-body">
         ${items.map(item => `
-        <div class="ek-item">
-          <div class="ek-item-top">
-            <div class="ek-item-name">${item.art}</div>
-            <span class="ek-prio ek-prio-${item.prio}">${item.prio === "sofort" ? "🔴 Sofort" : item.prio === "sinnvoll" ? "🟡 Sinnvoll" : "⚪ Optional"}</span>
+        <div class="ek-row">
+          <div class="ek-row-main">
+            <div class="ek-row-top">
+              <span class="ek-row-name">${item.art}</span>
+              <span class="ek-prio ek-prio-${item.prio}">${prioLabel(item.prio)}</span>
+            </div>
+            <div class="ek-row-meta">${item.gr} &nbsp;·&nbsp; ${item.kg} &nbsp;·&nbsp; ${item.menge} &nbsp;·&nbsp; ${item.setup.map(s=>`<span class="ek-sbadge">${s}</span>`).join(" ")}</div>
+            <div class="ek-row-fuer">${item.fuer}</div>
+            ${item.hinweis ? `<div class="ek-hinweis">💡 ${item.hinweis}</div>` : ""}
           </div>
-          <div class="ek-meta">
-            <span class="ek-tag">📐 ${item.gr}</span>
-            <span class="ek-tag">⚖️ ${item.kg}</span>
-            <span class="ek-tag">📦 ${item.menge}</span>
-          </div>
-          <div class="ek-fuer">🎣 ${item.fuer}</div>
-          <div class="ek-setups">${item.setup.map(s => `<span class="ek-sbadge">${s}</span>`).join("")}</div>
-          ${item.hinweis ? `<div class="ek-hinweis">💡 ${item.hinweis}</div>` : ""}
         </div>`).join("")}
+        </div>
       </div>`;
     }).join("");
   }
@@ -3534,16 +3534,15 @@ function renderEinkauf(){
       <div class="ek-title">🛒 Kleinkram-Einkaufsliste</div>
       <div class="ek-sub">Wirbel, Snaps & Karabiner – abgestimmt auf deine Setups S1–S9</div>
     </div>
-    <div class="ek-filter" id="ek-filter">
+    <div class="ek-filter">
       <button class="ek-chip active" data-f="alle">Alle <span class="ek-cnt">${alle.length}</span></button>
       <button class="ek-chip" data-f="sofort">🔴 Sofort <span class="ek-cnt">${cnt("sofort")}</span></button>
       <button class="ek-chip" data-f="sinnvoll">🟡 Sinnvoll <span class="ek-cnt">${cnt("sinnvoll")}</span></button>
       <button class="ek-chip" data-f="optional">⚪ Optional <span class="ek-cnt">${cnt("optional")}</span></button>
     </div>
     <div id="ek-list">${renderItems("alle")}</div>
-    <div class="ek-info-block" style="margin-top:18px">
-      <div class="ek-kat-head" style="margin-bottom:6px">💡 Marken-Empfehlung</div>
-      <div style="font-size:14px;color:var(--fg)">Mustad, Owner, Spro, Gamakatsu – alle zuverlässig in der Mittelklasse. Lieber 20er-Packs als Einzelstücke kaufen – Wirbel und Snaps gehen beim Umbinden regelmäßig verloren.</div>
+    <div class="ek-marken">
+      <b>Marken-Empfehlung:</b> Mustad, Owner, Spro, Gamakatsu. Lieber 20er-Packs als Einzelstücke – Wirbel und Snaps gehen beim Umbinden regelmäßig verloren.
     </div>
   </div>`;
 
