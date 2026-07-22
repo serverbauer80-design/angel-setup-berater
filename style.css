@@ -681,6 +681,43 @@ select:focus{outline:none;border-color:var(--accent)}
 .ei-step-titel{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
 .ei-step-text{font-size:13px;color:var(--muted);line-height:1.6}
 
+/* ===== Starthilfe – Fischbestimmung ===== */
+.ei-best-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:4px}
+.ei-best-card{background:var(--bg2);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;border:2px solid transparent;transition:border-color .18s,transform .12s}
+.ei-best-card:hover,.ei-best-card:active{border-color:var(--accent);transform:scale(1.03)}
+.ei-best-emoji{font-size:2rem;margin-bottom:4px}
+.ei-best-name{font-size:13px;font-weight:700;color:var(--text)}
+.ei-best-lat{font-size:11px;color:var(--muted);font-style:italic}
+.ei-best-detail{margin-top:14px}
+.ei-best-detailbox{background:var(--bg2);border-radius:12px;padding:16px;border-left:4px solid var(--accent)}
+.ei-best-detail-head{font-size:16px;font-weight:800;color:var(--text);margin-bottom:10px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+
+/* ===== Starthilfe – Filetieren / Rezepte / Knoten (Akkordeon) ===== */
+.ei-filet-block,.ei-rez-block,.ei-knoten-block{background:var(--bg2);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.ei-filet-head,.ei-rez-head,.ei-knoten-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer;user-select:none}
+.ei-filet-head:hover,.ei-rez-head:hover,.ei-knoten-head:hover{background:rgba(51,195,166,.06)}
+.ei-filet-title,.ei-rez-title,.ei-knoten-title{font-size:14px;font-weight:700;color:var(--text)}
+.ei-filet-schwier{font-size:12px;color:var(--accent);margin-left:8px}
+.ei-filet-chevron{color:var(--muted);font-size:13px}
+.ei-filet-body,.ei-rez-body,.ei-knoten-body{padding:0 16px 14px}
+.ei-filet-hinweis{font-size:12px;color:var(--accent);background:rgba(51,195,166,.08);border-radius:8px;padding:8px 10px;margin-bottom:10px}
+.ei-rez-zutaten{font-size:13px;color:var(--muted);background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:10px;line-height:1.8}
+.ei-knoten-tipp{font-size:12px;color:var(--muted);font-style:italic;margin-top:8px;padding:8px 10px;border-left:3px solid var(--accent);background:rgba(51,195,166,.06)}
+
+/* ===== Starthilfe – Köder-Guide ===== */
+.ei-koeder-wrap{display:flex;flex-direction:column;gap:14px;margin-top:4px}
+.ei-koeder-season{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.ei-season-badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;background:var(--accent);color:#0e1b24}
+.ei-koeder-card{background:var(--bg2);border-radius:12px;padding:14px 16px}
+.ei-koeder-card.ei-koeder-aktiv{border-left:4px solid var(--accent)}
+.ei-aktiv-badge{font-size:11px;font-weight:700;color:var(--accent);background:rgba(51,195,166,.12);border-radius:12px;padding:2px 8px;display:inline-block;margin-left:8px}
+.ei-koeder-head{font-size:14px;font-weight:800;color:var(--text);margin-bottom:10px;display:flex;align-items:center;flex-wrap:wrap;gap:4px}
+.ei-koeder-items{display:flex;flex-direction:column;gap:6px}
+.ei-koeder-item{display:flex;gap:6px;align-items:flex-start}
+.ei-koeder-item-name{font-size:13px;font-weight:700;color:var(--text);min-width:130px}
+.ei-koeder-wann{font-size:12px;color:var(--muted)}
+.ei-koeder-tipp{font-size:12px;color:var(--accent);font-style:italic}
+
 /* ===== Sub-Tabs (Tagebuch) ===== */
 .tb-subtabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
 .tb-subtab{background:none;border:1px solid var(--line);border-radius:8px;padding:6px 14px;font-size:13px;color:var(--muted);cursor:pointer;transition:.12s}

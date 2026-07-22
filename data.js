@@ -117,7 +117,8 @@ const ZUBEHOER = [
   "Erste-Hilfe-Set OX-ON Traveller (32-teilig)", "Vorfachbox Iron Trout Leader Board",
   "Fertigmontage Saenger C-2 (2,5g)", "Fertigmontage Saenger C-1 (3,0g)",
   "Vorfachset Saenger Rotauge S-515 (60cm, 10 Stück)", "Wirbel Zebco",
-  "Spoon (Einzelköder)", "Micro-Köder-Set"
+  "Spoon (Einzelköder)", "Micro-Köder-Set",
+  "F. Dick Filetiermesser 21 cm Blue (blaue Scheide, flexibel)", "Zwilling Wetzstahl 26 cm (Diamant, fein)"
 ];
 
 /* ---------- 2) WUNSCHLISTE (zukünftige Setups) ---------- */

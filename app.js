@@ -3638,6 +3638,7 @@ let TB_KAL_MONTH = new Date().getMonth(); // 0-indexed
 let TB_KAL_SELECTED = null; // "YYYY-MM-DD"
 let TB_KAL_INITIALIZED = false;
 let TB_STATS_CACHE = {}; // setupKey → {ausfluge, faenge}
+let EI_SUBVIEW = "start"; // Starthilfe sub-tab
 
 /* --- Hilfsfunktionen --- */
 function tbWetterEmoji(bewoelkung, luftdruck){
@@ -3669,6 +3670,342 @@ function tbFaengeText(faenge){
   const total = faenge.length;
   const arten = [...new Set(faenge.map(f=>f.art))].join(", ");
   return `${total}× ${arten}`;
+}
+
+/* ===== STARTHILFE – Fischbestimmung ===== */
+const EI_FISH_ID = [
+  { emoji:"🐊", name:"Hecht", lat:"Esox lucius",
+    merkmale:["Langgestreckter Körper, entenfömige Schnauze","Grün-gelb mit hellen Flecken","Rücken- und Afterflosse weit hinten, nah beieinander","Maul mit vielen scharfen Zähnen – Vorsicht beim Abhaken!"],
+    verwechslung:"Kaum verwechselbar – der Schnabel ist unverwechselbar.", fundort:"Seen, langsame Flüsse, Schilf" },
+  { emoji:"🎣", name:"Zander", lat:"Sander lucioperca",
+    merkmale:["Langgestreckt, olivgrün mit dunklen Querstreifen","Große glasige Augen (Dämmerungsaktiv)","Zwei Rückenflossen – erste mit Stacheln","Maul klein mit langen Reißzähnen"],
+    verwechslung:"Wird oft mit Barsch verwechselt – Zander ist schlanker, blasser, keine Querbänder im Vorderbereich so ausgeprägt.", fundort:"Tiefe Seen, große Flüsse (Elbe, Eider)" },
+  { emoji:"🐟", name:"Flussbarsch", lat:"Perca fluviatilis",
+    merkmale:["5–9 dunkle Querstreifen auf grün-gelbem Körper","Erste Rückenflosse stachelig, zweite weich","Bauchflossen orange-rot","Relativ kleiner Mund"],
+    verwechslung:"Jungzander kann ähnlich aussehen – Barsch hat deutlichere Streifen und rote Bauchflossen.", fundort:"Fast überall – Seen, Flüsse, Kanäle" },
+  { emoji:"🐠", name:"Forelle (Bach-/Regenbogen)", lat:"Salmo trutta / Oncorhynchus mykiss",
+    merkmale:["Bachforelle: braun-olivgrün, rote Punkte mit blauem Hof","Regenbogenforelle: silbrig mit pinkem Längsstreifen, schwarze Punkte","Fettflosse zwischen Rücken- und Schwanzflosse (kleines Rudiment)","Strömungsliebend"],
+    verwechslung:"Bachforelle vs. Regenbogenforelle: Regenb. hat Pinksstreifen, BF hat rote Punkte.", fundort:"Klare, sauerstoffreiche Gewässer, Forellenseen" },
+  { emoji:"🐟", name:"Meerforelle", lat:"Salmo trutta trutta",
+    merkmale:["Silber wie ein Lachs, schwarze X-förmige Flecken","Dickerer Körper als Bachforelle","Schwanz leicht gegabelt","Fettflosse vorhanden"],
+    verwechslung:"Kleiner Lachs – Unterschied: Meerforelle hat mehr Flecken unterhalb der Seitenlinie.", fundort:"Küste SH/Ostsee, Mündungsgewässer, Nov–Jan" },
+  { emoji:"🐍", name:"Aal", lat:"Anguilla anguilla",
+    merkmale:["Schlangenförmig, dunkelbraun-grün","Schuppenlos wirkend (sehr kleine Schuppen eingebettet)","Lange Rücken-, Schwanz- und Afterflosse verschmelzen","Unterkiefer länger als Oberkiefer"],
+    verwechslung:"Unverwechselbar durch Körperform.", fundort:"Alle Gewässer, hauptsächlich nachts aktiv" },
+  { emoji:"🎏", name:"Karpfen", lat:"Cyprinus carpio",
+    merkmale:["Großer, hochrückiger Körper mit großen Schuppen","Zwei Barteln an jedem Mundwinkel (4 total)","Mundwinkel rüsselartig vorstreckbar","Olive-braun bis goldgelb"],
+    verwechslung:"Schleie ähnlich aber kleiner, keine Barteln so ausgeprägt.", fundort:"Seen, Teiche, langsame Flüsse" },
+  { emoji:"🐟", name:"Schleie", lat:"Tinca tinca",
+    merkmale:["Kleiner Körper, sehr kleine eingebettete Schuppen","Olive-dunkelgrün, Bauch gelblich","Auffällig orange-rote Augen","Sehr kleine Barteln an Mundwinkel, abgerundete Flossen"],
+    verwechslung:"Kleiner Karpfen – aber Schleie hat orange Augen und kleinere Schuppen.", fundort:"Krautreiche Stillgewässer, Schilf" },
+  { emoji:"🐟", name:"Rotauge", lat:"Rutilus rutilus",
+    merkmale:["Silbrig, Bauch weißlich","Rote Iris und rote Flossen (Brustflossen orange)","Schlanker als Güster/Blei","Endständiges Maul"],
+    verwechslung:"Rotfeder hat höheren Rücken, rötlichere Flossen und goldgelbe Iris.", fundort:"Fast überall – häufigster Weißfisch" },
+  { emoji:"🐟", name:"Döbel (Aitel)", lat:"Squalius cephalus",
+    merkmale:["Kräftiger, rundlicher Körper","Große Schuppen mit dunklem Rand (Netzzeichnung)","Bronze-grünlicher Rücken, silberne Flanken","Breiter Kopf, großes Maul"],
+    verwechslung:"Hasel ähnlich – Döbel hat breiteren Kopf und ist deutlich kräftiger.", fundort:"Fließgewässer: Eider, Treene, Schwentine" },
+  { emoji:"🐟", name:"Dorsch (Kabeljau)", lat:"Gadus morhua",
+    merkmale:["Drei Rückenflossen, zwei Afterflossen","Charakteristischer Bartel am Unterkiefer","Mottled braun-grün, weißliche Seitenlinie","Großes Maul"],
+    verwechslung:"Wittling ähnlich – Dorsch hat Bartel, Wittling nicht.", fundort:"Ostsee, Nordsee – Bootsangeln und Mole" },
+  { emoji:"🐟", name:"Flunder", lat:"Platichthys flesus",
+    merkmale:["Flacher Plattfisch – beide Augen auf einer Seite","Beide Seiten braun-grün mit orangen Punkten möglich","Seitenlinie mit knöchernen Höckern entlang Rückenflosse","Maul klein, seitlich"],
+    verwechslung:"Scholle hat rote Punkte, Flunder hat Knochenhöcker an Seitenlinie.", fundort:"Küste, Mündungen, Brackwasser (Eider, Elbe)" },
+];
+
+function eiRenderBestimmung(){
+  return `<div class="ei-best-wrap">
+    <div class="ei-best-intro">Klicke auf einen Fisch für Bestimmungsmerkmale und wo du ihn in SH/HH findest.</div>
+    <div class="ei-best-grid">${EI_FISH_ID.map((f,i)=>`
+      <div class="ei-best-card" data-fishidx="${i}">
+        <div class="ei-best-emoji">${f.emoji}</div>
+        <div class="ei-best-name">${f.name}</div>
+        <div class="ei-best-lat">${f.lat}</div>
+      </div>`).join("")}
+    </div>
+    <div class="ei-best-detail" id="ei-best-detail"></div>
+  </div>`;
+}
+
+/* ===== STARTHILFE – Filetieren ===== */
+const EI_FILET = [
+  { name:"Barsch", emoji:"🐟", schwierigkeit:"★☆☆ Einfach",
+    hinweis:"Keine Y-Gräten! Ideal zum Üben. Schuppen müssen vor dem Filetieren entfernt werden.",
+    schritte:[
+      "Schuppen entfernen: Mit Schuppenmesser oder Messerrücken gegen den Strich schuppen (unter Wasser oder in Tüte – Schuppen fliegen!)",
+      "Kopf abschneiden: Schräg hinter den Kiemendeckeln, bis zum Rückgrat schneiden",
+      "Bauch aufschneiden: Von der Schnittlinie bis zur Schwanzwurzel, Eingeweide herausnehmen",
+      "Filet schneiden: Messer flach ans Rückgrat, mit langen Zügen von Kopf zum Schwanz entlangschneiden",
+      "Rippen umgehen: Im Bauchbereich Messer leicht schräg führen und über die Rippen gleiten",
+      "Haut abziehen (optional): Filet mit Haut nach unten, Messer flach zwischen Haut und Fleisch – leicht sägend ziehen",
+      "Zweite Seite genauso – fertiges Filet kontrollieren und Rippengräten ggf. mit Pinzette entfernen",
+    ]},
+  { name:"Forelle", emoji:"🐠", schwierigkeit:"★☆☆ Einfach",
+    hinweis:"Grätenarm, kein Schuppen nötig (Haut ist zart und essbar). Kann auch im Ganzen zubereitet werden.",
+    schritte:[
+      "Schleimschicht abwaschen: Kurz unter kaltem Wasser abspülen",
+      "Bauch öffnen: Von der Kehle bis zur Schwanzwurzel aufschlitzen – Eingeweide herausnehmen",
+      "Blutrinne putzen: Die dunkle Rinne entlang des Rückgrats mit Daumennagel oder Löffelrücken ausreiben",
+      "Ganz zubereiten (Forelle Müllerin): Fertig – würzen, mehlieren, in Butter braten",
+      "Oder filetieren: Messer hinter dem Kopf schräg ansetzen bis auf das Rückgrat",
+      "Entlang des Rückgrats nach hinten schneiden – mit langen, ruhigen Zügen",
+      "Bauchgräten ggf. mit Pinzette ziehen – fertig",
+    ]},
+  { name:"Hecht", emoji:"🐊", schwierigkeit:"★★★ Anspruchsvoll",
+    hinweis:"Y-Gräten sind das Hauptproblem. Zwei Methoden: Dreieck herausschneiden (weniger Fleisch) oder Pinzette (geduldiger aber mehr Ausbeute). Unter 40 cm kaum lohnenswert.",
+    schritte:[
+      "Schuppen entfernen: Hecht hat kleine Schuppen – gründlich gegen den Strich",
+      "Filets abschneiden: Wie Barsch – seitlich am Rückgrat von Kopf zu Schwanz",
+      "Bauchgräten entfernen: Den Y-förmigen Grätenstreifen ertasten – er verläuft von der Mitte schräg nach unten-vorne",
+      "Methode 1 – Dreieck: Über und unter den Y-Gräten schneiden → dreieckigen Grätenstreifen herauslösen (Fleischverlust ~20%)",
+      "Methode 2 – Pinzette: Filet gegen Licht halten, Y-Gräten sehen, jede einzeln mit Pinzette fassen und herausziehen",
+      "Haut abziehen: Wie beim Barsch – Hecht-Haut ist fest, funktioniert gut",
+      "Tipp: Hecht ab 60 cm lohnt sich wirklich – kleiner Hecht hat zu viel Grätenaufwand für zu wenig Fleisch",
+    ]},
+  { name:"Zander", emoji:"🎣", schwierigkeit:"★★☆ Mittel",
+    hinweis:"Wenig Gräten, festes weißes Fleisch – das Edelfilet. Ähnlich wie Barsch, aber keine Schuppen-Probleme.",
+    schritte:[
+      "Schuppen entfernen: Zander hat mittelgroße Schuppen – gründlich schuppen",
+      "Kopf abschneiden hinter Kiemendeckeln",
+      "Filet abschneiden: Messer flach ans Rückgrat, von Kopf zu Schwanz",
+      "Im Bauchbereich leicht schräg über Rippen gleiten",
+      "Rippen herausschneiden oder mit Pinzette entfernen",
+      "Haut abziehen: Sehr zu empfehlen – Zanderhaut hat starken Eigengeschmack",
+      "Ergebnis: Weißes festes Filet, fast grätenfrei – Top-Qualität",
+    ]},
+];
+
+function eiRenderFiletieren(){
+  return `<div class="ei-filet-wrap">
+    <div class="ei-best-intro">Schritt-für-Schritt-Anleitungen für die häufigsten Fänge. Immer mit scharfem Messer arbeiten – stumpf ist gefährlicher als scharf.</div>
+    ${EI_FILET.map((f,i)=>`
+    <div class="ei-filet-block">
+      <div class="ei-filet-head" data-filetidx="${i}">
+        <span>${f.emoji} ${f.name}</span>
+        <span class="ei-filet-schwier">${f.schwierigkeit}</span>
+        <span class="ei-filet-chevron">▼</span>
+      </div>
+      <div class="ei-filet-body" id="ei-filet-${i}" style="display:none">
+        <div class="ei-filet-hinweis">💡 ${f.hinweis}</div>
+        <div class="ei-steps">
+          ${f.schritte.map((s,si)=>`<div class="ei-step">
+            <div class="ei-step-num">${si+1}</div>
+            <div class="ei-step-body"><div class="ei-step-text">${s}</div></div>
+          </div>`).join("")}
+        </div>
+      </div>
+    </div>`).join("")}
+  </div>`;
+}
+
+/* ===== STARTHILFE – Rezepte ===== */
+const EI_REZEPTE = [
+  { name:"Gebratenes Barschfilet", emoji:"🍳", fisch:"Barsch", zeit:"15 Min.",
+    zutaten:["Barschfilets (mit oder ohne Haut)","Mehl zum Wenden","Butter oder Öl","Salz, Pfeffer","Zitrone","Optional: Knoblauch, frischer Dill"],
+    schritte:[
+      "Filets trocken tupfen, beidseitig salzen und pfeffern",
+      "Mehl auf einen Teller, Filets darin wenden und abklopfen",
+      "Pfanne auf mittlere-hohe Hitze, Butter zerlassen bis sie leicht schäumt",
+      "Filets einlegen – mit Haut zuerst die Hautseite, 2–3 Min. bis die Haut knusprig ist",
+      "Wenden, weitere 1–2 Min. von der anderen Seite – Fisch ist fertig wenn er blättert",
+      "Mit Zitronensaft beträufeln, sofort servieren",
+      "Beilage: Kartoffeln, Salat oder Brot – was du magst",
+    ]},
+  { name:"Forelle Müllerin", emoji:"🐠", fisch:"Forelle", zeit:"20 Min.",
+    zutaten:["1 ganze Forelle (ausgenommen)","Mehl","Butter (reichlich)","Salz, Pfeffer","Zitrone","Frische Petersilie"],
+    schritte:[
+      "Forelle innen und außen waschen, trocken tupfen",
+      "Innen salzen und pfeffern, optional Zitronenscheiben in den Bauch",
+      "Forelle in Mehl wenden, überschuss abschütteln",
+      "Butter in großer Pfanne auf mittlerer Hitze zerlassen",
+      "Forelle einlegen – 5–6 Min. je Seite bis goldbraun",
+      "Fertig wenn Fleisch sich leicht vom Rückgrat löst – mit Gabel testen",
+      "Auf dem Teller mit restlicher Bratbutter und Zitrone beträufeln",
+      "Tipp: An der Seite das Filet direkt am Tisch vom Rückgrat lösen",
+    ]},
+  { name:"Hecht paniert", emoji:"🐊", fisch:"Hecht", zeit:"25 Min.",
+    zutaten:["Hechtfilets (Y-Gräten entfernt)","Mehl → Ei → Semmelbrösel (Panierstraße)","Öl zum Braten","Salz, Pfeffer, Paprika","Zitrone, Remoulade"],
+    schritte:[
+      "Filets in mundgerechte Stücke schneiden – Y-Gräten nochmals prüfen",
+      "Salzen, pfeffern, etwas Paprika",
+      "Panierstraße aufbauen: Teller mit Mehl, Schüssel mit verquirltem Ei, Teller mit Bröseln",
+      "Filets nacheinander durch Mehl, Ei, Brösel – gut andrücken",
+      "Öl in Pfanne auf mittlere Hitze – genug Öl dass Filets halb drin schwimmen",
+      "Ca. 3–4 Min. je Seite bis goldbraun und knusprig",
+      "Auf Küchenpapier abtropfen lassen",
+      "Mit Remoulade und Zitrone servieren – Hecht paniert ist ein Klassiker",
+    ]},
+  { name:"Zanderfilet in Zitronenbutter", emoji:"🎣", fisch:"Zander", zeit:"15 Min.",
+    zutaten:["Zanderfilets (ohne Haut)","Butter","1 Zitrone (Saft + Schale)","Salz, weißer Pfeffer","Frischer Thymian oder Petersilie","Optional: Kapern"],
+    schritte:[
+      "Filets trocken tupfen, salzen und pfeffern",
+      "Etwas Butter in Pfanne, mittlere Hitze",
+      "Filets 2–3 Min. je Seite – Zander gart schnell, nicht zu lange!",
+      "Aus der Pfanne nehmen, warm stellen",
+      "In gleicher Pfanne restliche Butter aufschäumen lassen",
+      "Zitronensaft und -schale dazu, kurz aufkochen, Kräuter rein",
+      "Optional: ein paar Kapern mitbraten",
+      "Butter-Sauce über Filets geben – Zanderfilet ist die feinste Süßwasser-Küche",
+    ]},
+];
+
+function eiRenderRezepte(){
+  return `<div class="ei-rez-wrap">
+    <div class="ei-best-intro">Einfache Grundrezepte für deinen ersten Fang. Kein Kochbuch nötig – alles in unter 25 Minuten.</div>
+    ${EI_REZEPTE.map((r,i)=>`
+    <div class="ei-filet-block">
+      <div class="ei-filet-head" data-rezidx="${i}">
+        <span>${r.emoji} ${r.name}</span>
+        <span class="ei-filet-schwier">⏱ ${r.zeit}</span>
+        <span class="ei-filet-chevron">▼</span>
+      </div>
+      <div class="ei-filet-body" id="ei-rez-${i}" style="display:none">
+        <div class="ei-rez-zutaten">
+          <div class="ei-chart-title">🛒 Zutaten</div>
+          ${r.zutaten.map(z=>`<div class="ei-check-item">• ${z}</div>`).join("")}
+        </div>
+        <div class="ei-steps" style="margin-top:10px">
+          ${r.schritte.map((s,si)=>`<div class="ei-step">
+            <div class="ei-step-num">${si+1}</div>
+            <div class="ei-step-body"><div class="ei-step-text">${s}</div></div>
+          </div>`).join("")}
+        </div>
+      </div>
+    </div>`).join("")}
+  </div>`;
+}
+
+/* ===== STARTHILFE – Köder-Guide ===== */
+function eiRenderKoeder(){
+  const monat = new Date().getMonth(); // 0-indexed
+  const jahreszeit = monat>=2&&monat<=4?"Frühling":monat>=5&&monat<=7?"Sommer":monat>=8&&monat<=10?"Herbst":"Winter";
+  const wtemp = monat>=5&&monat<=8?"warm (>15°C)":monat>=3&&monat<=4||monat===9?"mittel (8–15°C)":"kalt (<8°C)";
+  const KOEDER = [
+    { fisch:"🐊 Hecht", aktiv:monat>=2&&monat<=4||monat>=8&&monat<=10,
+      top:[
+        {name:"Gummifisch (10–20 cm)",wann:"Ganzjährig, an Struktur"},
+        {name:"Wobbler (schwimmend/tauchend)",wann:"Sommer früh morgens, Herbst"},
+        {name:"Popper / Oberflächenköder",wann:"Sommer Dämmerung – spektakulär!"},
+        {name:"Großer Blinker / Spinner",wann:"Herbst, trübes Wasser"},
+      ],
+      tipp:"Im Sommer früh morgens oder abends – tagsüber sucht Hecht Schatten und tiefen Stellen. Im Herbst ganzjährig aktiv."},
+    { fisch:"🎣 Zander", aktiv:monat>=8&&monat<=11||monat<=1,
+      top:[
+        {name:"Gummifisch (5–10 cm) auf Jig",wann:"Ganzjährig, am Grund!"},
+        {name:"Twister in weiß/chartreuse",wann:"Trübes Wasser, Dämmerung"},
+        {name:"Wobbler (tief tauchend)",wann:"Herbst/Winter"},
+        {name:"Toter Köderfisch auf Jig",wann:"Winter, kalt"},
+      ],
+      tipp:"Zander beißt am Grund und bei schlechtem Licht (Dämmerung, trübes Wasser, Nacht). Langsame Führung!"},
+    { fisch:"🐟 Barsch", aktiv:true,
+      top:[
+        {name:"Micro-Gummifisch (3–6 cm)",wann:"Ganzjährig, vielseitig"},
+        {name:"Spinner / Mini-Blinker",wann:"Sommer, klares Wasser"},
+        {name:"Twister / Grub",wann:"Herbst, tiefere Stellen"},
+        {name:"Tauwurm / Rotwurm auf Pose",wann:"Ganzjährig, sicher!"},
+      ],
+      tipp:"Barsch beißt fast immer. Als Anfänger zuerst Barsch üben – schult das Gespür für Bisse und Führung."},
+    { fisch:"🐠 Forelle (Fließgewässer)", aktiv:monat>=2&&monat<=9,
+      top:[
+        {name:"Kleine Spoons (2–5 g, gold/silber)",wann:"Frühjahr/Herbst"},
+        {name:"Mini-Wobbler",wann:"Klares Wasser"},
+        {name:"Tauwurm (Naturköder)",wann:"Ganzjährig, nach Regen"},
+        {name:"Kunstfliege",wann:"Fliegenfischer-Methode, sehr effektiv"},
+      ],
+      tipp:"Forellen stehen in Strömung – immer von unten anschleichen, Schatten vermeiden. Bei Put&Take: Spoons zuerst."},
+    { fisch:"🐟 Rotauge / Weißfisch", aktiv:true,
+      top:[
+        {name:"Tauwurm / Rotwurm auf Pose",wann:"Sicherste Methode"},
+        {name:"Mais (gekocht oder aus Dose)",wann:"Karpfen/Rotauge im Sommer"},
+        {name:"Brot / Teig",wann:"Oberflächenangeln im Sommer"},
+        {name:"Kleine Schwebpose mit Mückenlarve",wann:"Feines Angeln"},
+      ],
+      tipp:"Für den ersten garantierten Fang: Pose + Tauwurm an Struktur. Weißfisch ist überall und beißt zuverlässig."},
+    { fisch:"🐟 Meerforelle (Küste)", aktiv:monat>=9&&monat<=1||monat===0,
+      top:[
+        {name:"Wobbler (7–11 cm, schwimmend)",wann:"Früh morgens, Abenddämmerung"},
+        {name:"Blinker (gold/silber)",wann:"Trübe See, Wind"},
+        {name:"Gummifisch schlank (Sandaal-Imitat)",wann:"Sommer an der Küste"},
+        {name:"Streamer (Fliegenfischen)",wann:"Die Königsdisziplin"},
+      ],
+      tipp:"Meerforelle angelt man an der Küste von Oktober bis Januar. Früh aufstehen lohnt sich – Bisse meist in der ersten Stunde nach Sonnenaufgang."},
+  ];
+
+  return `<div class="ei-koeder-wrap">
+    <div class="ei-koeder-season">
+      <span class="ei-season-badge">📅 ${jahreszeit}</span>
+      <span class="ei-season-badge">🌡️ Wasser ${wtemp}</span>
+    </div>
+    <div class="ei-best-intro">Köder-Empfehlungen nach Zielfisch und aktueller Jahreszeit. Grüner Kopf = jetzt besonders aktiv.</div>
+    ${KOEDER.map(k=>`
+    <div class="ei-koeder-card${k.aktiv?" ei-koeder-aktiv":""}">
+      <div class="ei-koeder-head">${k.fisch}${k.aktiv?` <span class="ei-aktiv-badge">Jetzt aktiv</span>`:""}</div>
+      <div class="ei-koeder-items">
+        ${k.top.map(t=>`<div class="ei-koeder-item"><b>${t.name}</b><span class="ei-koeder-wann">${t.wann}</span></div>`).join("")}
+      </div>
+      <div class="ei-koeder-tipp">💡 ${k.tipp}</div>
+    </div>`).join("")}
+  </div>`;
+}
+
+/* ===== STARTHILFE – Knoten-Trainer ===== */
+const EI_KNOTEN = [
+  { name:"Improved Clinch Knot", emoji:"🪢", einsatz:"Haken oder Wirbel an Mono / Fluorocarbon",
+    warum:"Der wichtigste Knoten überhaupt. Schnell zu binden, hält 90–95% der Schnurbruchlast.",
+    schritte:[
+      "Schnur ca. 15 cm durch das Hakenöhr fädeln",
+      "Das lange Ende 5–7× um die stehende Schnur wickeln (bei dickem FC: 4–5×)",
+      "Das Schnurende durch die Schlaufe direkt am Hakenöhr führen",
+      "Dann durch die große Schlaufe die entstanden ist führen",
+      "Feucht machen (Speichel) – dann langsam und gleichmäßig festziehen",
+      "Überschuss abschneiden, ~2 mm stehen lassen",
+    ],
+    tipp:"Immer anfeuchten vor dem Festziehen – trockenes Festziehen schwächt den Knoten durch Reibungshitze um bis zu 30%!"},
+  { name:"Albright Knot", emoji:"🔗", einsatz:"Geflochtene Schnur auf Fluorocarbon-Vorfach",
+    warum:"Verbindet Braid mit FC – verbindet zwei verschiedene Schnurmaterialien sicher. Schmalerer Knoten als FG, für Anfänger leichter zu binden.",
+    schritte:[
+      "FC-Vorfach: eine Schlaufe von ~5 cm Durchmesser formen, zwischen Daumen und Zeigefinger halten",
+      "Braid-Ende durch die FC-Schlaufe fädeln, ~20 cm durchziehen",
+      "Das Braid-Ende 10× fest und dicht um beide FC-Stränge wickeln – von der Schlaufe weg",
+      "Braid-Ende zurück durch die FC-Schlaufe führen – auf der gleichen Seite wie es reingekommen ist",
+      "Alles anfeuchten, gleichzeitig an allen 4 Enden festziehen",
+      "Knoten muss sich gleichmäßig zusammenziehen – bei FC-Ende und Braid-Ende ziehen",
+      "Überschuss kürzen – Braid-Ende sehr kurz, FC-Ende ~3 mm",
+    ],
+    tipp:"Tipp: Am Anfang mit dickerem Material (alte Schnur) üben bis die Abfolge sitzt. Der Knoten sieht kompliziert aus, ist aber nach 3× Üben routiniert."},
+  { name:"Palomar Knot", emoji:"⚓", einsatz:"Haken oder Wirbel direkt an Geflochtener Schnur",
+    warum:"Einfachster Knoten für Braid direkt am Haken. Hält nahezu 100% der Schnurbruchlast – einer der stärksten Knoten überhaupt.",
+    schritte:[
+      "Schnur doppelt nehmen: eine Schlaufe (~10 cm) durch das Hakenöhr fädeln",
+      "Mit der Doppelschnur einen einfachen Überhandknoten machen (locker lassen!)",
+      "Die Schlaufe über den Haken stülpen – komplett über den Hakenschaft",
+      "Feucht machen, dann an Schnurende und Haken gleichzeitig festziehen",
+      "Knoten sitzt oben am Hakenöhr – überschuss abschneiden",
+    ],
+    tipp:"Achtung: Bei größeren Haken mit breitem Bogen die Schlaufe groß genug machen, damit sie über den Haken passt. Beim Formen der Schlaufe darauf achten dass sie sauber liegt."},
+];
+
+function eiRenderKnoten(){
+  return `<div class="ei-knoten-wrap">
+    <div class="ei-best-intro">Die 3 Knoten die du als Anfänger wirklich brauchst – kein einziger mehr. Lerne diese drei und du bist für 90% aller Situationen gerüstet.</div>
+    ${EI_KNOTEN.map((k,i)=>`
+    <div class="ei-filet-block">
+      <div class="ei-filet-head" data-knotidx="${i}">
+        <span>${k.emoji} ${k.name}</span>
+        <span class="ei-filet-schwier" style="font-size:11px">${k.einsatz}</span>
+        <span class="ei-filet-chevron">▼</span>
+      </div>
+      <div class="ei-filet-body" id="ei-knot-${i}" style="display:none">
+        <div class="ei-filet-hinweis">🎯 <b>Wann benutzen:</b> ${k.warum}</div>
+        <div class="ei-steps">
+          ${k.schritte.map((s,si)=>`<div class="ei-step">
+            <div class="ei-step-num">${si+1}</div>
+            <div class="ei-step-body"><div class="ei-step-text">${s}</div></div>
+          </div>`).join("")}
+        </div>
+        <div class="ei-koeder-tipp">💡 ${k.tipp}</div>
+      </div>
+    </div>`).join("")}
+  </div>`;
 }
 
 /* ===== STARTHILFE ===== */
@@ -3734,159 +4071,161 @@ function renderEinsteiger(){
   const wrap = document.getElementById("einsteiger-main");
   if(!wrap) return;
 
+  const tabs = [
+    {k:"start",   icon:"📋", label:"Start"},
+    {k:"bestimmung", icon:"🐟", label:"Bestimmung"},
+    {k:"filetieren", icon:"🔪", label:"Filetieren"},
+    {k:"rezepte", icon:"🍳", label:"Rezepte"},
+    {k:"koeder",  icon:"🪱", label:"Köder"},
+    {k:"knoten",  icon:"🪢", label:"Knoten"},
+  ];
+  const subTabsHTML = tabs.map(t=>
+    `<button class="tb-subtab${EI_SUBVIEW===t.k?" active":""}" data-eisv="${t.k}">${t.icon} ${t.label}</button>`
+  ).join("");
+
   const fischOptions = FISCHE
     .filter(f => RECHT_SH && RECHT_SH[f.id])
     .map(f => `<option value="${f.id}">${f.emoji} ${f.name}</option>`)
     .join("");
 
-  wrap.innerHTML = `
-  <div class="ei-wrap">
-
-    <!-- ===== 1. BEHALTEN-CHECK ===== -->
+  const startHTML = `<div class="ei-wrap">
     <div class="ei-card">
-      <div class="ei-card-header">
-        <span class="ei-card-icon">✅</span>
-        <div>
-          <div class="ei-card-titel">Darf ich den behalten?</div>
-          <div class="ei-card-sub">Fischart + Länge eingeben → sofort wissen ob du den Fisch entnehmen darfst</div>
-        </div>
-      </div>
+      <div class="ei-card-header"><span class="ei-card-icon">✅</span><div>
+        <div class="ei-card-titel">Darf ich den behalten?</div>
+        <div class="ei-card-sub">Fischart + Länge → sofort wissen ob du entnehmen darfst</div>
+      </div></div>
       <div class="ei-check-row">
         <select class="tb-select" id="ei-fisch" style="flex:2">${fischOptions}</select>
         <input class="tb-input" id="ei-laenge" type="number" min="0" max="200" placeholder="Länge cm" style="flex:1;min-width:90px">
         <button class="go ei-check-btn" id="ei-check-btn">Prüfen</button>
       </div>
       <div id="ei-result"></div>
-      <div class="ei-disclaimer">Angaben nach Binnenfischereiordnung SH 2026. Gilt nicht für Hamburg – dort Erlaubnisschein prüfen. Kein Ersatz für offizielle Quellen.</div>
+      <div class="ei-disclaimer">Angaben nach Binnenfischereiordnung SH 2026. Gilt nicht für Hamburg – Erlaubnisschein prüfen. Kein Ersatz für offizielle Quellen.</div>
     </div>
-
-    <!-- ===== 2. GEWÄSSER-GUIDE ===== -->
     <div class="ei-card">
-      <div class="ei-card-header">
-        <span class="ei-card-icon">🗺️</span>
-        <div>
-          <div class="ei-card-titel">Wo darf ich angeln?</div>
-          <div class="ei-card-sub">Was du brauchst und wo du in HH und SH loslegst</div>
-        </div>
-      </div>
-
-      <div class="ei-info-block">
-        <div class="ei-info-titel">📋 Was du immer dabei haben musst</div>
-        <div class="ei-check-items">
-          <div class="ei-check-item">🪪 <b>Fischereischein</b> (deine bestandene Prüfung – Dokument mitnehmen)</div>
-          <div class="ei-check-item">💳 <b>Fischereiabgabemarke</b> für das jeweilige Bundesland (SH oder HH)</div>
-          <div class="ei-check-item">🎫 <b>Erlaubnisschein / Tageskarte</b> für das konkrete Gewässer</div>
-          <div class="ei-check-item">📐 <b>Maßband</b> zum Messen (Pflicht!)</div>
-          <div class="ei-check-item">🔪 <b>Betäubungsmittel + Messer</b> wenn du Fische entnehmen willst</div>
-        </div>
-      </div>
-
-      <div class="ei-info-block">
-        <div class="ei-info-titel">🏞️ Schleswig-Holstein – wo anfangen?</div>
-        <div class="ei-gwtext">
-          <p><b>LAV-Gewässer (Landesanglerverband SH)</b> – Mit LAV-Erlaubnisschein kannst du an über 100 Gewässern in ganz SH angeln. Jahres- oder Tageskarten beim LAV oder regionalen Angelvereinen kaufen. → <b>Sieh im Tab „💳 LAV-Gewässer"</b> welche Gewässer in deiner Nähe liegen.</p>
-          <p><b>Freie Fließgewässer</b> – Eider, Treene, Stör und viele andere Flüsse sind teilweise frei zugänglich, teils mit Vereinserlaubnis. Immer vorher klären – einfach ins Wasser stellen ohne Erlaubnisschein ist auch in SH nicht erlaubt.</p>
-          <p><b>Forellenseen (Put &amp; Take)</b> – Ideal zum Einsteigen! Tageskarte kaufen, Rute rein, fertig. Viele Seen haben Personal vor Ort. → <b>Sieh im Tab „Fänge &amp; Spots"</b> für Forellenseen in deiner Nähe.</p>
-          <p><b>Ostsee / Nordsee (Küste)</b> – An vielen Strandabschnitten und Molen freier Zugang für Freizeitangler. Fischarten: Meerforelle, Dorsch, Hornhecht, Flunder. Für Bootsangeln ggf. Seekarte/Erlaubnis prüfen.</p>
-        </div>
-      </div>
-
-      <div class="ei-info-block">
-        <div class="ei-info-titel">🏙️ Hamburg – wo anfangen?</div>
-        <div class="ei-gwtext">
-          <p><b>Hamburger Angler-Verband (HAV)</b> – Mitgliedschaft ermöglicht Angeln an über 40 Hamburger Vereinsgewässern. Jahresbeitrag meist 80–130 €. → <a href="https://www.hamburger-angler-verband.de" target="_blank" rel="noopener" class="ei-link">hamburger-angler-verband.de</a></p>
-          <p><b>Elbe und Nebenflüsse</b> – Teile der Elbe sind für Freizeitangler mit gültigem Hamburger Fischereiabgabe-Nachweis zugänglich. Genau im Erlaubnisschein nachlesen.</p>
-          <p><b>Alster</b> – Angelerlaubnis nur mit HAV-Mitgliedschaft oder Tageskarte eines HAV-Vereins. Nicht einfach ranstellen!</p>
-          <p><b>Tipp Einsteiger Hamburg</b> – Erst Forellensee im Umland (viele in SH nahe HH), dann mit HAV-Mitgliedschaft die Hamburger Gewässer erkunden.</p>
-        </div>
-      </div>
-
-      <div class="ei-info-block">
-        <div class="ei-info-titel">💡 Goldene Regel für Anfänger</div>
-        <p class="ei-gwtext" style="margin:0">Immer <b>bevor</b> du anfängst: Erlaubnisschein kaufen und lesen. Kein Gewässer in Deutschland ist wirklich „frei" – selbst öffentliche Flüsse gehören einem Fischereiberechtigten. Ohne Erlaubnis drohen Bußgelder bis 5.000 €.</p>
+      <div class="ei-card-header"><span class="ei-card-icon">🗺️</span><div>
+        <div class="ei-card-titel">Wo darf ich angeln?</div>
+        <div class="ei-card-sub">Was du brauchst und wo du in HH und SH loslegst</div>
+      </div></div>
+      <div class="ei-info-block"><div class="ei-info-titel">📋 Was du immer dabei haben musst</div><div class="ei-check-items">
+        <div class="ei-check-item">🪪 <b>Fischereischein</b> (deine bestandene Prüfung – Dokument mitnehmen)</div>
+        <div class="ei-check-item">💳 <b>Fischereiabgabemarke</b> für das jeweilige Bundesland (SH oder HH)</div>
+        <div class="ei-check-item">🎫 <b>Erlaubnisschein / Tageskarte</b> für das konkrete Gewässer</div>
+        <div class="ei-check-item">📐 <b>Maßband</b> zum Messen (Pflicht!)</div>
+        <div class="ei-check-item">🔪 <b>Priest + Messer</b> wenn du Fische entnehmen willst</div>
+      </div></div>
+      <div class="ei-info-block"><div class="ei-info-titel">🏞️ Schleswig-Holstein</div><div class="ei-gwtext">
+        <p><b>LAV-Gewässer</b> – Mit LAV-Erlaubnisschein an über 100 Gewässern. → Tab „💳 LAV-Gewässer"</p>
+        <p><b>Freie Fließgewässer</b> – Eider, Treene, Stör – immer Erlaubnisschein prüfen!</p>
+        <p><b>Forellenseen (Put &amp; Take)</b> – Ideal zum Einsteigen. → Tab „Fänge &amp; Spots"</p>
+        <p><b>Küste</b> – Viele Strände/Molen frei zugänglich. Meerforelle, Dorsch, Flunder.</p>
+      </div></div>
+      <div class="ei-info-block"><div class="ei-info-titel">🏙️ Hamburg</div><div class="ei-gwtext">
+        <p><b>HAV (Hamburger Angler-Verband)</b> – Mitgliedschaft ~80–130 €/Jahr, über 40 Vereinsgewässer. → <a href="https://www.hamburger-angler-verband.de" target="_blank" rel="noopener" class="ei-link">hamburger-angler-verband.de</a></p>
+        <p><b>Alster/Elbe</b> – nur mit HAV-Erlaubnis oder Tageskarte. Nicht einfach ranstellen!</p>
+      </div></div>
+      <div class="ei-info-block"><div class="ei-info-titel">💡 Goldene Regel</div>
+        <p class="ei-gwtext" style="margin:0">Immer <b>vorher</b> Erlaubnisschein kaufen und lesen. Ohne Erlaubnis: Bußgeld bis 5.000 €.</p>
       </div>
     </div>
-
-    <!-- ===== 3. ERSTER FANG ===== -->
     <div class="ei-card">
-      <div class="ei-card-header">
-        <span class="ei-card-icon">🐟</span>
-        <div>
-          <div class="ei-card-titel">Ich habe was gefangen – was jetzt?</div>
-          <div class="ei-card-sub">Schritt für Schritt, damit nichts schiefgeht</div>
-        </div>
-      </div>
+      <div class="ei-card-header"><span class="ei-card-icon">🐟</span><div>
+        <div class="ei-card-titel">Ich habe was gefangen – was jetzt?</div>
+        <div class="ei-card-sub">Schritt für Schritt, damit nichts schiefgeht</div>
+      </div></div>
       <div class="ei-steps">
-        <div class="ei-step">
-          <div class="ei-step-num">1</div>
-          <div class="ei-step-body">
-            <div class="ei-step-titel">Ruhe bewahren &amp; Drill beenden</div>
-            <div class="ei-step-text">Rute hochhalten, Fisch ausdrillen lassen bis er an der Oberfläche liegt. Nicht reißen – Maul geht sonst kaputt.</div>
-          </div>
-        </div>
-        <div class="ei-step">
-          <div class="ei-step-num">2</div>
-          <div class="ei-step-body">
-            <div class="ei-step-titel">Mit Kescher landen</div>
-            <div class="ei-step-text">Kescher ins Wasser, Fisch über den Kescher führen und hochheben. Nie in den Kescher reinstechen. Kleine Fische (&lt; 20 cm) kann man direkt mit der Hand landen.</div>
-          </div>
-        </div>
-        <div class="ei-step">
-          <div class="ei-step-num">3</div>
-          <div class="ei-step-body">
-            <div class="ei-step-titel">Hände anfeuchten</div>
-            <div class="ei-step-text">Trockene Hände zerstören die Schleimhaut des Fisches. Vor dem Anfassen immer kurz ins Wasser tauchen.</div>
-          </div>
-        </div>
-        <div class="ei-step">
-          <div class="ei-step-num">4</div>
-          <div class="ei-step-body">
-            <div class="ei-step-titel">Haken lösen</div>
-            <div class="ei-step-text">Zangengriff um den Hakenbogen, Haken rückwärts aus der Einstichrichtung drehen. Tief geschluckter Haken → Schnur durchtrennen, Haken verrottet von selbst. Nie mit Gewalt ziehen.</div>
-          </div>
-        </div>
-        <div class="ei-step">
-          <div class="ei-step-num">5</div>
-          <div class="ei-step-body">
-            <div class="ei-step-titel">Messen – Schnauze bis Schwanzgabelende</div>
-            <div class="ei-step-text">Fisch auf dem Maßband flach hinlegen. Von der Schnauzenspitze bis zur längsten Schwanzspitze messen. Danach den oben stehenden <b>Behalten-Check</b> nutzen.</div>
-          </div>
-        </div>
-        <div class="ei-step">
-          <div class="ei-step-num">6</div>
-          <div class="ei-step-body">
-            <div class="ei-step-titel">Entscheiden: behalten oder zurücksetzen?</div>
-            <div class="ei-step-text"><b>Zurücksetzen:</b> Fisch kopfüber ins Wasser halten bis er von selbst davonschwimmt. Nicht werfen.<br><b>Behalten (waidgerecht töten):</b> Kräftigen Schlag mit dem Priest auf den Schädelknochen direkt hinter den Augen. Fisch muss sofort bewusstlos sein. Wartet man zu lang, ist das Tierquälerei.</div>
-          </div>
-        </div>
-        <div class="ei-step">
-          <div class="ei-step-num">7</div>
-          <div class="ei-step-body">
-            <div class="ei-step-titel">Foto machen</div>
-            <div class="ei-step-text">Fisch waagerecht mit beiden Händen halten, nicht am Unterkiefer hängen lassen (Kieferschaden). Kurz knipsen, fertig.</div>
-          </div>
-        </div>
-        <div class="ei-step">
-          <div class="ei-step-num">8</div>
-          <div class="ei-step-body">
-            <div class="ei-step-titel">Im Tagebuch eintragen</div>
-            <div class="ei-step-text">Fischart, Länge, Gewässer, Köder – alles frisch im Gedächtnis. Der <b>📔 Tagebuch</b>-Tab ist genau dafür da.</div>
-          </div>
-        </div>
+        <div class="ei-step"><div class="ei-step-num">1</div><div class="ei-step-body"><div class="ei-step-titel">Ruhe &amp; Drill beenden</div><div class="ei-step-text">Rute hochhalten, Fisch ausdrillen lassen. Nicht reißen.</div></div></div>
+        <div class="ei-step"><div class="ei-step-num">2</div><div class="ei-step-body"><div class="ei-step-titel">Mit Kescher landen</div><div class="ei-step-text">Fisch über den Kescher führen und heben. Kleine Fische (&lt;20 cm) direkt mit Hand.</div></div></div>
+        <div class="ei-step"><div class="ei-step-num">3</div><div class="ei-step-body"><div class="ei-step-titel">Hände anfeuchten</div><div class="ei-step-text">Trockene Hände zerstören die Schleimhaut. Immer vorher ins Wasser tauchen.</div></div></div>
+        <div class="ei-step"><div class="ei-step-num">4</div><div class="ei-step-body"><div class="ei-step-titel">Haken lösen</div><div class="ei-step-text">Zange um den Hakenbogen, rückwärts aus Einstichrichtung drehen. Tief geschluckt → Schnur durchtrennen.</div></div></div>
+        <div class="ei-step"><div class="ei-step-num">5</div><div class="ei-step-body"><div class="ei-step-titel">Messen – Schnauze bis Schwanzspitze</div><div class="ei-step-text">Flach aufs Maßband. Dann „Behalten?"-Check oben nutzen.</div></div></div>
+        <div class="ei-step"><div class="ei-step-num">6</div><div class="ei-step-body"><div class="ei-step-titel">Entscheiden</div><div class="ei-step-text"><b>Zurücksetzen:</b> Kopfüber ins Wasser halten bis er schwimmt.<br><b>Behalten:</b> Priest kräftig auf Schädelknochen hinter den Augen → sofort bewusstlos.</div></div></div>
+        <div class="ei-step"><div class="ei-step-num">7</div><div class="ei-step-body"><div class="ei-step-titel">Foto</div><div class="ei-step-text">Fisch waagerecht halten, nicht am Unterkiefer hängen lassen.</div></div></div>
+        <div class="ei-step"><div class="ei-step-num">8</div><div class="ei-step-body"><div class="ei-step-titel">📔 Tagebuch eintragen</div><div class="ei-step-text">Fischart, Länge, Gewässer, Köder – alles frisch im Gedächtnis festhalten.</div></div></div>
       </div>
     </div>
-
   </div>`;
 
-  document.getElementById("ei-check-btn")?.addEventListener("click", () => {
+  let contentHTML = "";
+  if(EI_SUBVIEW==="start")         contentHTML = startHTML;
+  else if(EI_SUBVIEW==="bestimmung") contentHTML = eiRenderBestimmung();
+  else if(EI_SUBVIEW==="filetieren") contentHTML = eiRenderFiletieren();
+  else if(EI_SUBVIEW==="rezepte")    contentHTML = eiRenderRezepte();
+  else if(EI_SUBVIEW==="koeder")     contentHTML = eiRenderKoeder();
+  else if(EI_SUBVIEW==="knoten")     contentHTML = eiRenderKnoten();
+
+  wrap.innerHTML = `<div class="tb-subtabs">${subTabsHTML}</div>${contentHTML}`;
+
+  // Sub-Tab-Klicks
+  wrap.querySelectorAll(".tb-subtab").forEach(btn=>{
+    btn.addEventListener("click",()=>{ EI_SUBVIEW=btn.dataset.eisv; renderEinsteiger(); });
+  });
+
+  // Behalten-Check
+  document.getElementById("ei-check-btn")?.addEventListener("click",()=>{
     const fischId = document.getElementById("ei-fisch")?.value;
     const laenge = parseFloat(document.getElementById("ei-laenge")?.value);
     document.getElementById("ei-result").innerHTML = eiBehaltenCheck(fischId, laenge);
   });
+  document.getElementById("ei-laenge")?.addEventListener("keydown",e=>{
+    if(e.key==="Enter") document.getElementById("ei-check-btn")?.click();
+  });
 
-  // Enter-Taste im Längen-Feld
-  document.getElementById("ei-laenge")?.addEventListener("keydown", e => {
-    if(e.key === "Enter") document.getElementById("ei-check-btn")?.click();
+  // Fisch-Bestimmung Klicks
+  wrap.querySelectorAll(".ei-best-card").forEach(card=>{
+    card.addEventListener("click",()=>{
+      const f = EI_FISH_ID[+card.dataset.fishidx];
+      const det = document.getElementById("ei-best-detail");
+      if(!det||!f) return;
+      det.innerHTML = `<div class="ei-best-detailbox">
+        <div class="ei-best-detail-head">${f.emoji} ${f.name} <span class="ei-best-lat">${f.lat}</span></div>
+        <div class="ei-info-block">
+          <div class="ei-info-titel">🔍 Bestimmungsmerkmale</div>
+          ${f.merkmale.map(m=>`<div class="ei-check-item">• ${m}</div>`).join("")}
+        </div>
+        <div class="ei-info-block" style="margin-top:8px">
+          <div class="ei-check-item">⚠️ <b>Verwechslung:</b> ${f.verwechslung}</div>
+          <div class="ei-check-item">📍 <b>Fundort:</b> ${f.fundort}</div>
+        </div>
+      </div>`;
+      det.scrollIntoView({behavior:"smooth",block:"nearest"});
+    });
+  });
+
+  // Filetier-Akkordeon
+  wrap.querySelectorAll("[data-filetidx]").forEach(head=>{
+    head.addEventListener("click",()=>{
+      const body = document.getElementById("ei-filet-"+head.dataset.filetidx);
+      const chev = head.querySelector(".ei-filet-chevron");
+      if(!body) return;
+      const open = body.style.display!=="none";
+      body.style.display = open?"none":"block";
+      if(chev) chev.textContent = open?"▼":"▲";
+    });
+  });
+
+  // Rezept-Akkordeon
+  wrap.querySelectorAll("[data-rezidx]").forEach(head=>{
+    head.addEventListener("click",()=>{
+      const body = document.getElementById("ei-rez-"+head.dataset.rezidx);
+      const chev = head.querySelector(".ei-filet-chevron");
+      if(!body) return;
+      const open = body.style.display!=="none";
+      body.style.display = open?"none":"block";
+      if(chev) chev.textContent = open?"▼":"▲";
+    });
+  });
+
+  // Knoten-Akkordeon
+  wrap.querySelectorAll("[data-knotidx]").forEach(head=>{
+    head.addEventListener("click",()=>{
+      const body = document.getElementById("ei-knot-"+head.dataset.knotidx);
+      const chev = head.querySelector(".ei-filet-chevron");
+      if(!body) return;
+      const open = body.style.display!=="none";
+      body.style.display = open?"none":"block";
+      if(chev) chev.textContent = open?"▼":"▲";
+    });
   });
 }
 
