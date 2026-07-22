@@ -4008,6 +4008,274 @@ function eiRenderKnoten(){
   </div>`;
 }
 
+/* ===== STARTHILFE – Put & Take Forellenteich ===== */
+function eiRenderPutAndTake(){
+  const PT_MONTAGEN = [
+    { name:"Sbirolino-Montage", emoji:"🎣", wann:"Hauptmontage – universell einsetzbar",
+      hinweis:"Größte Stärke: Wurfdistanz + einstellbare Tiefe. Ideal wenn Forellen in der Wassersäule stehen, nicht am Grund.",
+      schritte:[
+        "Sbirolino (schwimmend oder sinkend, 10–15 g) auf Hauptschnur auffädeln – Braid 0,10–0,16 mm",
+        "Darunter Wirbel binden (Improved Clinch Knot)",
+        "FC-Vorfach 0,218 mm · 1,5–2,5 m Länge anknoten (Albright Knot)",
+        "Am Ende Einzelhaken Gr. 8–12 binden – bei Gummiköder ohne Widerhaken oder mit gequetschtem Widerhaken",
+        "Tiefe einstellen: sinkender Sbirolino hält die Tiefe, schwimmender treibt oben",
+        "Hauptleine straff halten, Sbirolino langsam und gleichmäßig einholens (0,5–1 Kurbelumdrehung/Sekunde)",
+        "Variation: kurze Stops einbauen – Köder sinkt kurz ab, Biss oft in der Sinkphase",
+      ],
+      tipp:"Mit 0,298 mm FC bei großen Forellen (Put & Take DK) – 0,218 mm reißt bei Schockbelastung durch Braid ohne Stretch!"},
+    { name:"Pose + Einzelhaken (stationär)", emoji:"🪶", wann:"Naturköder – Tauwurm, Teig, Mais – ruhiges Angeln",
+      hinweis:"Bewährt wenn Forellen am Ort stehen (Einlauf, Schatten, Seeseite). Keine aktive Führung nötig.",
+      schritte:[
+        "Feste Pose (Tiefe vorher ermitteln – 50 cm über Grund als Start)",
+        "FC-Vorfach 0,218 mm · 60–80 cm Länge unter der Pose",
+        "Einzelhaken Gr. 8–10 ohne oder mit gequetschtem Widerhaken",
+        "Schrotbleie direkt unter der Pose: so viel dass Pose fast eingedrückt ist – empfindliche Bisserkennung",
+        "Köder vollständig verdecken: Haken durch den Wurm stechen, Ende hängend lassen",
+        "Einwerfen, Bite Alarm / Auge auf Pose – Biss: Pose geht weg oder taucht ein",
+        "Anschlag erst wenn die Pose klar unter Wasser oder seitlich zieht – zu früh = leer",
+      ],
+      tipp:"Bleibt die Pose stehen aber zuckt? Forelle hat Köder im Maul und prüft ihn – kurz warten, dann sanfter Anschlag."},
+    { name:"Grundmontage mit Powerbait / Forellenpaste", emoji:"🟡", wann:"Ruhige Teiche, stationär am Grund",
+      hinweis:"Powerbait schwimmt – Haken liegt am Grund, Köder schwebt. Sehr effektiv wenn Forellen am Boden fressen.",
+      schritte:[
+        "Laufendes Blei (5–15 g) auf Hauptschnur fädeln",
+        "Stopper + Wirbel darunter (verhindert dass Blei auf den Haken läuft)",
+        "FC-Vorfach 0,218 mm · 40–60 cm Länge",
+        "Haken mit Powerbait ummanteln – gut faustgroße Menge damit der Haken auftreibt (wichtig: Haken muss komplett verdeckt sein!)",
+        "Alternativ: Schaumstoffball auf Haken + Forellenpaste als Geruchsstoff",
+        "Weitwerfen, Leine straff, Rutenspitze beobachten – kein Auge zudrücken",
+        "Anschlag: Rutenspitze zieht durch → sofort anschlagen",
+      ],
+      tipp:"Powerbait-Farben: Gelb/Chartreuse bei klarem Wasser, Orange/Pink bei trübem Wasser, Regenbogen-Glitter für sonnige Tage. Immer 2–3 Farben dabei haben."},
+    { name:"Spoon / Blinker direkt", emoji:"✨", wann:"Aktive Suche, wenn Forellen jagen",
+      hinweis:"Einfachste Methode, sehr effektiv bei aktiven Forellen. Kein Vorfachproblem – Spoon direkt an FC-Vorfach.",
+      schritte:[
+        "Spoon 2,5–5 g (je nach Teichgröße) direkt ans FC-Vorfach binden (Improved Clinch oder Palomar)",
+        "FC 0,218–0,298 mm als komplette Hauptschnur oder als 1,5–2 m Vorfach vor der Braid",
+        "Einwerfen, bis Spoon am Grund ankommt (abzählen!), dann gleichmäßig einholen",
+        "Tiefe variieren: früher beginnen = flacher, länger sinken lassen = tiefer",
+        "Führung: gleichmäßig langsam → Stop → kurze schnelle Züge wechseln",
+        "Variation: Spoon kurz sinken lassen, dann schnell hochkurbeln – Lichtreflexe locken",
+      ],
+      tipp:"Gold-Spoon funktioniert fast immer. Silber bei hellem Sonnenschein, Gold/Kupfer bei trübem Wasser oder Bewölkung. Bei Put & Take DK: kleinere Spoons (2,5 g) oft besser als große."},
+    { name:"Mini-Wobbler (suspending / sinkend)", emoji:"🐟", wann:"Wenn Forellen in bestimmter Tiefe stehen",
+      hinweis:"Suspending Wobbler bleibt auf Pause in der Tiefe stehen – ideal wenn Forellen auf einer Schicht stehen.",
+      schritte:[
+        "Wobbler 4–7 cm, 4–8 g mit Neutralauftrieb (suspending) oder leicht sinkend",
+        "Direkt an FC-Vorfach 0,218 mm mit Schleppwirbel (verhindert Leitungsdrall)",
+        "Einwerfen, Wobbler bis zur Zieltiefe sinken lassen",
+        "Führung: Langsam mit Pausen – auf Pause bleibt suspending Wobbler auf der Stelle",
+        "Stop & Go: 2–3 Kurbel, 2 Sek. Stop – Biss sehr oft in der Pause!",
+        "An Strukturen (Einlauf, Uferböschung) langsam entlangführen",
+      ],
+      tipp:"Forellen attackieren Wobbler oft auf der Pause – Leine dabei trotzdem leicht straff halten um den Biss zu spüren."},
+  ];
+
+  const PT_KOEDER = [
+    { gruppe:"🥄 Spoons & Blinker", items:[
+      {name:"Gold-Spoon 2,5–5 g",wann:"Universell, immer als erstes probieren"},
+      {name:"Silber-Spoon 2,5–5 g",wann:"Helles Sonnenwetter, klares Wasser"},
+      {name:"Kupfer/Orange-Spoon",wann:"Herbst, trübes Wasser, Dämmerung"},
+      {name:"Firetiger / Chartreuse-Spoon",wann:"Sehr trübes Wasser oder wenn nichts anderes zieht"},
+    ]},
+    { gruppe:"🐟 Wobbler & Kunstköder", items:[
+      {name:"Suspending Mini-Wobbler 4–7 cm",wann:"Forellen stehen in bestimmter Tiefe"},
+      {name:"Forellengummi (Trout Master Worm, UV-aktiv)",wann:"Sbirolino-Montage, sehr vielseitig"},
+      {name:"Micro-Twister / Gummigrub 3–5 cm",wann:"Am Jig-Kopf oder unter Pose"},
+      {name:"Mini-Spinner (Mepps Aglia Gr.1–2)",wann:"Bewegtes Wasser, Einläufe"},
+    ]},
+    { gruppe:"🟡 Powerbait & Paste", items:[
+      {name:"Berkley Powerbait Gelb/Chartreuse",wann:"Grundmontage – klares Wasser"},
+      {name:"Berkley Powerbait Orange/Pink",wann:"Grundmontage – trübes Wasser"},
+      {name:"Forellenpaste (Eigen- oder Fertigmischung)",wann:"Pose oder Grundmontage als Naturköder-Ersatz"},
+      {name:"Maismehlteig (Polenta + Vanille + Ei)",wann:"Günstiger DIY-Köder, sehr wirksam"},
+    ]},
+    { gruppe:"🪱 Naturköder", items:[
+      {name:"Tauwurm",wann:"Auf Pose oder Grund – fast immer der sicherste Köder"},
+      {name:"Rotwurm (klein)",wann:"Feine Pose-Montage, aktive Forellen"},
+      {name:"Maden (Pinkies/weiß)",wann:"Wenn Forellen wählerisch sind, fein angeln"},
+      {name:"Mais (gekocht oder Dose)",wann:"Trout Factory / Put & Take im Sommer"},
+      {name:"Käsewürfel (Schmelzkäse, hart)",wann:"DK-Methode – stark riechend, sehr effektiv"},
+    ]},
+  ];
+
+  const PT_TIPPS_DK = [
+    "DK-Seen oft größer und tiefer als dt. Anlagen – weiter werfen lohnt sich",
+    "In DK oft keine Menge-Begrenzung pro Tag (je nach See), DE meist 5–8 Fische",
+    "DK-Forellen können sehr groß sein (2–5+ kg) – FC 0,298 mm statt 0,218 mm!",
+    "Drag immer auf 1/3 der Schnurbruchlast einstellen – bei FC 0,298 mm (5,83 kg) also ~1,9 kg",
+    "Käsewürfel und Mais funktionieren in DK sehr gut – Maden weniger verbreitet",
+    "DK-Seen: oft Catch & Release möglich, auch wenn Kauf-Preis pro Fisch gilt",
+    "Wetter wichtig: nach Regen oder Bedeckung beißen Forellen in DK besonders aktiv",
+    "Kescher immer dabei – DK-Forellen sind kräftig, nie ohne landen!",
+  ];
+
+  const PT_GROSSFORELLE = [
+    "Drag vor dem Angeln einstellen: Schnur ausziehen und Federwaage halten – bei 0,298 mm FC auf ~1,5–2 kg Zugwiderstand",
+    "Beim Anbeißen: erst durch den Biss Druck aufbauen, nicht reißartig anschlagen",
+    "Forelle kämpft in Wellen (mehrere Drillphasen) – Druck konstant halten, nie nachlassen",
+    "Springt die Forelle: Rutenspitze kurz Richtung Fisch kippen (Tipp der Rute zur Seite drehen) – verhindert Hebelwirkung auf Haken",
+    "In Keschernähe: oft letzter panischer Sprint – jetzt nicht forcieren, warten bis sie liegt",
+    "Kescher flach ins Wasser, Fisch über den Kescher führen – nie mit Kescher in Richtung Fisch stoßen",
+    "FC-Vorfach nach jedem großen Fisch prüfen: Scheuerstellen → sofort erneuern",
+    "Nach dem Kampf: Fisch im Wasser halten bis er sich selbst befreit – er braucht Erholung genauso wie du",
+  ];
+
+  return `<div class="ei-wrap">
+
+    <!-- Intro -->
+    <div class="ei-card">
+      <div class="ei-card-header"><span class="ei-card-icon">🐠</span><div>
+        <div class="ei-card-titel">Put & Take Forellenteich</div>
+        <div class="ei-card-sub">Dein kompletter Leitfaden für Forellenseen in Deutschland (SH) und Dänemark</div>
+      </div></div>
+      <div class="ei-info-block">
+        <div class="ei-info-titel">Was ist ein Put & Take See?</div>
+        <div class="ei-gwtext">
+          <p>Besatzgewässer, in denen Forellen (meist Regenbogenforellen) regelmäßig eingesetzt werden und von Angelscheininhaber direkt entnommen werden dürfen – meist gegen Entgelt pro Fisch oder Tageskarte. Kein langer Laufschein nötig, kein Vereinsmitglied sein – Ticket kaufen, Angeln, Fisch mitnehmen.</p>
+          <p><b>Vorteile als Anfänger:</b> Fische sind vorhanden und hungrig · Kurze Anfahrten · Tolle Übungsmöglichkeit für Montagen und Führungstechniken · Erster garantierter Erfolg möglich</p>
+        </div>
+      </div>
+      <div class="ei-info-block">
+        <div class="ei-info-titel">🐟 Regenbogenforelle – Verhalten kennen</div>
+        <div class="ei-gwtext">
+          <p><b>Wo stehen Forellen?</b> Bevorzugt an Einläufen (Sauerstoff), an Schatten (Bäume, Stege), in Strömungskanten bei Wind-Gegenseite, in mittlerer Wassertiefe (1–3 m). Im Sommer: tiefer und kühler. Im Winter: auch flacher.</p>
+          <p><b>Tageszeiten:</b> Morgens und abends am aktivsten – besonders 1 Std. nach Sonnenaufgang. Mittags oft träge. Dämmerung = beste Zeit.</p>
+          <p><b>Jahreszeiten:</b> Frühling/Herbst = aktivste Beissperiode. Sommer heiß → tiefer, langsamer führen. Winter → sehr langsam, Naturköder bevorzugt.</p>
+          <p><b>Frisch eingesetzte Fische</b> beißen fast auf alles. Fische die schon länger im See sind → wählerischer → Naturköder oder bekannte Köder des Sees fragen.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Montagen -->
+    <div class="ei-card">
+      <div class="ei-card-header"><span class="ei-card-icon">🎣</span><div>
+        <div class="ei-card-titel">Montagen – 5 bewährte Setups</div>
+        <div class="ei-card-sub">Vollständige Anleitung für jede Methode am Forellenteich</div>
+      </div></div>
+      ${PT_MONTAGEN.map((m,i)=>`
+      <div class="ei-filet-block">
+        <div class="ei-filet-head" data-ptmonidx="${i}">
+          <span>${m.emoji} ${m.name}</span>
+          <span class="ei-filet-schwier" style="font-size:11px;max-width:40%">${m.wann}</span>
+          <span class="ei-filet-chevron">▼</span>
+        </div>
+        <div class="ei-filet-body" id="ei-ptmon-${i}" style="display:none">
+          <div class="ei-filet-hinweis">💡 ${m.hinweis}</div>
+          <div class="ei-steps">
+            ${m.schritte.map((s,si)=>`<div class="ei-step">
+              <div class="ei-step-num">${si+1}</div>
+              <div class="ei-step-body"><div class="ei-step-text">${s}</div></div>
+            </div>`).join("")}
+          </div>
+          <div class="ei-koeder-tipp">⚡ ${m.tipp}</div>
+        </div>
+      </div>`).join("")}
+    </div>
+
+    <!-- Köder-Guide -->
+    <div class="ei-card">
+      <div class="ei-card-header"><span class="ei-card-icon">🪱</span><div>
+        <div class="ei-card-titel">Köder-Guide Forellenteich</div>
+        <div class="ei-card-sub">Was funktioniert wann und warum</div>
+      </div></div>
+      <div class="ei-info-block" style="margin-bottom:0">
+        <div class="ei-info-titel">🔑 Grundregel: erstmal Gold-Spoon oder Tauwurm</div>
+        <p class="ei-gwtext" style="margin:0">Wenn du nicht weißt was die Fische wollen → Gold-Spoon 3 g oder Tauwurm auf Pose. Beides funktioniert immer als Ausgangspunkt. Dann variieren.</p>
+      </div>
+      ${PT_KOEDER.map(g=>`
+      <div class="ei-info-block">
+        <div class="ei-info-titel">${g.gruppe}</div>
+        ${g.items.map(it=>`
+        <div class="ei-koeder-item" style="margin-bottom:8px;flex-direction:column;align-items:flex-start">
+          <div style="font-weight:700;font-size:13px;color:var(--text)">${it.name}</div>
+          <div class="ei-koeder-wann">${it.wann}</div>
+        </div>`).join("")}
+      </div>`).join("")}
+    </div>
+
+    <!-- Führungstechniken -->
+    <div class="ei-card">
+      <div class="ei-card-header"><span class="ei-card-icon">🔄</span><div>
+        <div class="ei-card-titel">Führungstechniken</div>
+        <div class="ei-card-sub">Wie du den Köder durch das Wasser bewegst – der Unterschied zwischen Biss und Leerbiss</div>
+      </div></div>
+      <div class="ei-steps">
+        <div class="ei-step"><div class="ei-step-num">1</div><div class="ei-step-body">
+          <div class="ei-step-titel">Gleichmäßig langsam</div>
+          <div class="ei-step-text">0,5–1 Kurbelumdrehung/Sek. – konstanteste Methode. Ideal als Einstieg um zu testen wo im See Fische stehen.</div>
+        </div></div>
+        <div class="ei-step"><div class="ei-step-num">2</div><div class="ei-step-body">
+          <div class="ei-step-titel">Stop & Go</div>
+          <div class="ei-step-text">2–3 Kurbel, dann 2–3 Sek. Stop. In der Pause sinkt der Köder – Biss oft in diesem Moment! Leine leicht straff halten um den Kontakt zu halten.</div>
+        </div></div>
+        <div class="ei-step"><div class="ei-step-num">3</div><div class="ei-step-body">
+          <div class="ei-step-titel">Sink & Draw (absinken + Zug)</div>
+          <div class="ei-step-text">Köder bis auf Grund sinken lassen, dann mit der Rutenspitze 1 m hochziehen, wieder sinken lassen. Wiederholend. Sehr effektiv bei Spoons und schweren Gummis.</div>
+        </div></div>
+        <div class="ei-step"><div class="ei-step-num">4</div><div class="ei-step-body">
+          <div class="ei-step-titel">Tiefenvariante (Countdown-Methode)</div>
+          <div class="ei-step-text">Köder einwerfen und mitzählen (1, 2, 3 …) bis der Biss kommt. Beim nächsten Wurf auf die gleiche Tiefe absinken lassen. Systematische Schichtsuche bis zur Aktiv-Schicht.</div>
+        </div></div>
+        <div class="ei-step"><div class="ei-step-num">5</div><div class="ei-step-body">
+          <div class="ei-step-titel">Richtungswechsel / Fächern</div>
+          <div class="ei-step-text">Jeden Wurf 5–10° versetzt – das gesamte erreichbare Wasser absuchen. Wenn Biss kommt: selbe Richtung wiederholen (Fisch steht oft im Rudel).</div>
+        </div></div>
+        <div class="ei-step"><div class="ei-step-num">6</div><div class="ei-step-body">
+          <div class="ei-step-titel">Tempostufen wechseln</div>
+          <div class="ei-step-text">Wenn 15 Min. ohne Biss: erst Tempo wechseln (schneller oder langsamer), dann Tiefe ändern, dann Köder tauschen. Diese Reihenfolge einhalten – gezielt suchen statt wahllos tauschen.</div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- DK vs DE -->
+    <div class="ei-card">
+      <div class="ei-card-header"><span class="ei-card-icon">🇩🇰</span><div>
+        <div class="ei-card-titel">Dänemark vs. Deutschland – Unterschiede</div>
+        <div class="ei-card-sub">Was du bei einem DK-Trip beachten musst</div>
+      </div></div>
+      <div class="ei-info-block">
+        <div class="ei-info-titel">Wichtige Unterschiede DK</div>
+        <div class="ei-check-items">
+          ${PT_TIPPS_DK.map(t=>`<div class="ei-check-item">• ${t}</div>`).join("")}
+        </div>
+      </div>
+      <div class="ei-info-block">
+        <div class="ei-info-titel">📋 Packliste DK-Trip</div>
+        <div class="ei-check-items">
+          <div class="ei-check-item">✅ Fischereischein (Originaldokument!)</div>
+          <div class="ei-check-item">✅ Dänische Fischereiabgabemarke (online kaufen – fisketegn.dk)</div>
+          <div class="ei-check-item">✅ Tageskarte des Sees bezahlen / kaufen vor Ort</div>
+          <div class="ei-check-item">✅ FC 0,298 mm Vorfach für große Forellen (0,218 mm reißt!)</div>
+          <div class="ei-check-item">✅ Drag korrekt eingestellt – vor Abfahrt testen</div>
+          <div class="ei-check-item">✅ Käsewürfel / Mais als DK-Naturköder</div>
+          <div class="ei-check-item">✅ Großen Kescher mitnehmen (DK-Forellen sind groß)</div>
+          <div class="ei-check-item">✅ Priest + Messer (F. Dick) für Fischversorgung vor Ort</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Großforellen-Tipps -->
+    <div class="ei-card">
+      <div class="ei-card-header"><span class="ei-card-icon">🏆</span><div>
+        <div class="ei-card-titel">Große Forellen landen – ohne Schockregel</div>
+        <div class="ei-card-sub">Was tun wenn ein wirklich großer Fisch anbeißt</div>
+      </div></div>
+      <div class="ei-info-block ei-rot" style="background:rgba(220,50,50,.08);border-left:4px solid #dc3232">
+        <div class="ei-info-titel" style="color:#dc3232">⚠️ Häufigster Fehler: Schockregel zu straff</div>
+        <p class="ei-gwtext" style="margin:0">Geflochtene Schnur hat <b>null Dehnung</b> – jeder Ruck geht direkt auf das FC-Vorfach. Wenn der Drag zu fest ist, reißt das Vorfach beim ersten Sprung oder panischen Sprint. Schockregel = 1/3 der FC-Bruchlast. FC 0,298 mm (5,83 kg) → Drag auf ca. 1,9 kg.</p>
+      </div>
+      <div class="ei-steps">
+        ${PT_GROSSFORELLE.map((s,i)=>`<div class="ei-step">
+          <div class="ei-step-num">${i+1}</div>
+          <div class="ei-step-body"><div class="ei-step-text">${s}</div></div>
+        </div>`).join("")}
+      </div>
+    </div>
+
+  </div>`;
+}
+
 /* ===== STARTHILFE ===== */
 function eiBehaltenCheck(fischId, laenge){
   const r = (typeof RECHT_SH !== "undefined") ? RECHT_SH[fischId] : null;
@@ -4078,6 +4346,7 @@ function renderEinsteiger(){
     {k:"rezepte", icon:"🍳", label:"Rezepte"},
     {k:"koeder",  icon:"🪱", label:"Köder"},
     {k:"knoten",  icon:"🪢", label:"Knoten"},
+    {k:"putak",   icon:"🐠", label:"Put & Take"},
   ];
   const subTabsHTML = tabs.map(t=>
     `<button class="tb-subtab${EI_SUBVIEW===t.k?" active":""}" data-eisv="${t.k}">${t.icon} ${t.label}</button>`
@@ -4153,6 +4422,7 @@ function renderEinsteiger(){
   else if(EI_SUBVIEW==="rezepte")    contentHTML = eiRenderRezepte();
   else if(EI_SUBVIEW==="koeder")     contentHTML = eiRenderKoeder();
   else if(EI_SUBVIEW==="knoten")     contentHTML = eiRenderKnoten();
+  else if(EI_SUBVIEW==="putak")      contentHTML = eiRenderPutAndTake();
 
   wrap.innerHTML = `<div class="tb-subtabs">${subTabsHTML}</div>${contentHTML}`;
 
@@ -4208,6 +4478,18 @@ function renderEinsteiger(){
   wrap.querySelectorAll("[data-rezidx]").forEach(head=>{
     head.addEventListener("click",()=>{
       const body = document.getElementById("ei-rez-"+head.dataset.rezidx);
+      const chev = head.querySelector(".ei-filet-chevron");
+      if(!body) return;
+      const open = body.style.display!=="none";
+      body.style.display = open?"none":"block";
+      if(chev) chev.textContent = open?"▼":"▲";
+    });
+  });
+
+  // Put & Take Montagen-Akkordeon
+  wrap.querySelectorAll("[data-ptmonidx]").forEach(head=>{
+    head.addEventListener("click",()=>{
+      const body = document.getElementById("ei-ptmon-"+head.dataset.ptmonidx);
       const chev = head.querySelector(".ei-filet-chevron");
       if(!body) return;
       const open = body.style.display!=="none";
