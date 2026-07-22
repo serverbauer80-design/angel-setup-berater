@@ -4044,60 +4044,189 @@ function eiRenderKoeder(){
 
 /* ===== STARTHILFE – Knoten-Trainer ===== */
 const EI_KNOTEN = [
-  { name:"Improved Clinch Knot", emoji:"🪢", einsatz:"Haken oder Wirbel an Mono / Fluorocarbon",
-    warum:"Der wichtigste Knoten überhaupt. Schnell zu binden, hält 90–95% der Schnurbruchlast.",
+  { name:"Improved Clinch Knot", emoji:"🪢",
+    festigkeit:"90–95 %", material:"Mono & Fluorocarbon (FC) · NICHT für Braid geeignet",
+    einsatz:"Haken, Wirbel oder Karabiner an Mono / FC binden",
+    warum:"Der meistgenutzte Angelknoten weltweit. Schnell gebunden, sehr stark, sitzt sicher. Lerne ihn zuerst – er deckt 70% aller Situationen ab.",
+    diagram:
+`SCHRITT 1 – Schnur durch Öhr fädeln (15 cm):
+  ══════════════════════► ◄──────── O
+  stehende Schnur          15 cm     Hakenöhr
+
+SCHRITT 2 – 5–7x um die stehende Schnur wickeln:
+  ══╗▓▓▓▓▓▓▓▓▓▓▓╔══════ O
+    ║ 5-7 Wicklg.║
+    ╚════════════╝
+                 ↑ kleine Schlaufe direkt am Öhr
+
+SCHRITT 3+4 – durch zwei Schlaufen führen:
+  Tag-End → durch kleine Schlaufe ①
+         → dann durch die große Schlaufe ②
+
+FERTIG – Knoten nach dem Festziehen:
+  ══════[▓▓▓]══ O
+         Wicklungs-Paket sitzt dicht am Öhr`,
     schritte:[
-      "Schnur ca. 15 cm durch das Hakenöhr fädeln",
-      "Das lange Ende 5–7× um die stehende Schnur wickeln (bei dickem FC: 4–5×)",
-      "Das Schnurende durch die Schlaufe direkt am Hakenöhr führen",
-      "Dann durch die große Schlaufe die entstanden ist führen",
-      "Feucht machen (Speichel) – dann langsam und gleichmäßig festziehen",
-      "Überschuss abschneiden, ~2 mm stehen lassen",
+      {s:"Haken in die linke Hand nehmen, das Öhr (das Loch am oberen Ende) nach oben zeigend halten.", k:""},
+      {s:"FC-Schnur (oder Mono) ca. 15 cm durch das Hakenöhr fädeln – von vorne nach hinten. Du hast jetzt zwei Enden: die stehende Schnur (geht zur Rolle) und das kürzere Tag-End (ca. 15 cm).", k:"✓ Tag-End ragt 15 cm über das Öhr hinaus"},
+      {s:"Tag-End und stehende Schnur nebeneinander zwischen linkem Daumen und Zeigefinger klemmen, direkt am Öhr. Festhalten – das ist dein Ankerpunkt für alle Wicklungen.", k:"✓ Beide Schnüre liegen parallel zwischen Fingern"},
+      {s:"Mit der rechten Hand das Tag-End nehmen und 5–7× locker um die STEHENDE Schnur wickeln – dabei vom Öhr weg wickeln. Jede Wicklung direkt neben die vorherige legen (kein Abstand!). Bei dickem FC (0,298 mm): nur 4–5 Wicklungen, sonst wird er nicht glatt.", k:"✓ Saubere, dicht liegende Spirale ohne Überlappung"},
+      {s:"Tag-End zurück zum Öhr führen. Direkt am Öhr siehst du eine kleine Schlaufe, die zwischen Tag-End und stehender Schnur entstanden ist. Das Tag-End durch diese KLEINE Schlaufe von unten nach oben hindurchstecken.", k:"✓ Tag-End zeigt jetzt von unten durch die kleine Schlaufe heraus"},
+      {s:"Jetzt siehst du eine große Schlaufe, die zwischen den Wicklungen und dem Tag-End entstanden ist. Das Tag-End durch diese GROSSE Schlaufe hindurchziehen (in dieselbe Richtung wie vorher).", k:"✓ Tag-End hängt jetzt auf der Rückseite der Wicklungen"},
+      {s:"Alles anfeuchten mit Speichel oder Wasser – das ist PFLICHT. Trockenes Festziehen erzeugt Reibungshitze, die FC um bis zu 30% schwächt.", k:"✓ Alle Teile des Knotens sind feucht"},
+      {s:"Langsam und gleichmäßig festziehen: Tag-End mit rechts, stehende Schnur mit links – beide gleichzeitig. Nie ruckartig, immer mit konstantem Zug. Die Wicklungen schieben sich dabei zusammen und setzen sich am Öhr fest.", k:"✓ Knoten gleitet sauber zusammen ohne zu verdrehen"},
+      {s:"Knoten prüfen: mit Daumen und Zeigefinger beider Hände testen ob er hält (kurzer Ruck). Dann Tag-End ca. 2 mm über dem Knoten abschneiden – nicht zu kurz (kann aufgehen) und nicht zu lang.", k:"✓ Knoten sitzt fest direkt am Hakenöhr"},
     ],
-    tipp:"Immer anfeuchten vor dem Festziehen – trockenes Festziehen schwächt den Knoten durch Reibungshitze um bis zu 30%!"},
-  { name:"Albright Knot", emoji:"🔗", einsatz:"Geflochtene Schnur auf Fluorocarbon-Vorfach",
-    warum:"Verbindet Braid mit FC – verbindet zwei verschiedene Schnurmaterialien sicher. Schmalerer Knoten als FG, für Anfänger leichter zu binden.",
+    fehler:[
+      "Zu wenige Wicklungen: Knoten rutscht durch – immer mindestens 5×, bei dünner Schnur 6–7×",
+      "Durch die falsche Schlaufe geführt: erst KLEINE Schlaufe am Öhr, dann GROSSE Schlaufe – diese Reihenfolge ist entscheidend",
+      "Trocken festgezogen: Reibungshitze schwächt FC massiv – immer anfeuchten!",
+      "Zu schnell / ruckartig gezogen: Wicklungen verdrillen sich ungleichmäßig – langsam und gleichmäßig ziehen",
+      "Tag-End zu kurz abgeschnitten: Knoten kann sich unter Last lösen – 2 mm stehen lassen",
+    ],
+    ueben:"Zuhause üben: Bleistift als 'Haken', dicker Bindfaden als Schnur. 10× binden bis die Bewegungsabfolge sitzt, DANN erst an der echten Schnur.",
+    youtube:"Improved Clinch Knot binden",
+    tipp:"Wenn du nur einen Knoten lernst – dieser ist es. An Mono und FC universell. Sitzt nach 10× Üben in unter 30 Sekunden."},
+
+  { name:"Albright Knot", emoji:"🔗",
+    festigkeit:"90–95 %", material:"Verbindet Braid (geflochtene Schnur) mit FC-Vorfach · unterschiedliche Stärken möglich",
+    einsatz:"Braid-Hauptschnur an FC-Vorfach knoten – z. B. Braid 0,10 mm an FC 0,218 mm",
+    warum:"Wenn du geflochtene Schnur (Braid) verwendest brauchst du ein FC-Vorfach davor – der Albright verbindet die beiden sicher und bleibt schmal genug um durch die Rutenringe zu laufen.",
+    diagram:
+`SCHRITT 1 – FC-Schlaufe bilden und Braid einfädeln:
+  FC:    ════════╗
+                 ║  ← Schlaufe (~5 cm)
+         ════════╝
+  Braid: →→→→→ durch die FC-Schlaufe, 20 cm durch
+
+SCHRITT 2 – Braid 10× um beide FC-Stränge wickeln:
+  FC:    ════╗▓▓▓▓▓▓▓▓▓╔════
+             ║10 Wicklg.║
+             ╚══════════╝
+  Wicklungen von der Schlaufe weg!
+
+SCHRITT 3 – Braid-Ende zurück durch FC-Schlaufe:
+  FC-Schlaufe → Braid geht rein und kommt
+  auf DERSELBEN Seite wieder heraus!
+
+FERTIG:
+  FC ═══[▓▓▓▓▓▓▓▓▓▓]══► Braid
+        Wicklungspaket schiebt sich zusammen`,
     schritte:[
-      "FC-Vorfach: eine Schlaufe von ~5 cm Durchmesser formen, zwischen Daumen und Zeigefinger halten",
-      "Braid-Ende durch die FC-Schlaufe fädeln, ~20 cm durchziehen",
-      "Das Braid-Ende 10× fest und dicht um beide FC-Stränge wickeln – von der Schlaufe weg",
-      "Braid-Ende zurück durch die FC-Schlaufe führen – auf der gleichen Seite wie es reingekommen ist",
-      "Alles anfeuchten, gleichzeitig an allen 4 Enden festziehen",
-      "Knoten muss sich gleichmäßig zusammenziehen – bei FC-Ende und Braid-Ende ziehen",
-      "Überschuss kürzen – Braid-Ende sehr kurz, FC-Ende ~3 mm",
+      {s:"FC-Vorfach in der linken Hand halten. Ca. 10 cm vom Ende eine U-förmige Schlaufe biegen – das Ende des FC zeigt nach unten, die stehende FC-Schnur nach oben. Diese Schlaufe fest zwischen Daumen und Zeigefinger der linken Hand klemmen.", k:"✓ FC-Schlaufe ~5 cm Durchmesser, fest zwischen den Fingern"},
+      {s:"Braid-Ende (ca. 30 cm) von oben durch die FC-Schlaufe führen – von rechts nach links (oder von deiner Seite weg). 20 cm Braid durchziehen – mehr ist besser als zu wenig!", k:"✓ 20 cm Braid-Tag-End hängt durch die Schlaufe"},
+      {s:"Braid, FC-Ende UND die stehende FC-Schnur gemeinsam zwischen Daumen und Zeigefinger klemmen – du hältst jetzt alle drei Stränge zusammen. Das ist dein Ankerpunkt.", k:"✓ Alle drei Stränge fest in der linken Hand"},
+      {s:"Mit der rechten Hand das Braid-Tag-End nehmen und 10× fest und ENGANLIEGEND um beide FC-Stränge wickeln. VON DER FC-SCHLAUFE WEG wickeln (Richtung: weg vom Öhr). Jede Wicklung muss direkt neben die vorherige – kein Platz dazwischen!", k:"✓ 10 saubere, eng liegende Wicklungen"},
+      {s:"Nach 10 Wicklungen: Braid-Tag-End zurück zur FC-Schlaufe führen. Es muss auf DERSELBEN SEITE durch die Schlaufe gehen wie es reingekommen ist (häufigster Fehler: falsche Seite!). Vorsichtig durch die Schlaufe fädeln ohne die Wicklungen zu verschieben.", k:"✓ Braid kommt auf derselben Seite der FC-Schlaufe raus wie es reingekommen ist"},
+      {s:"Jetzt alle Enden anfeuchten – Wicklungen, FC-Schlaufe, alles nass machen.", k:"✓ Alles feucht"},
+      {s:"Festziehen in drei Phasen: Erst leicht an Braid-stehende Schnur UND FC-stehende Schnur ziehen bis Wicklungen sich zusammenschieben. Dann kräftig an Braid-stehende Schnur ziehen. Zuletzt FC-stehende Schnur straff ziehen und Knoten in Position drücken.", k:"✓ Wicklungspaket sitzt dicht und symmetrisch, keine Lücken"},
+      {s:"Zugtest: kräftig an beiden Hauptschnüren ziehen. Der Knoten sollte sich nicht verschieben. Tag-Enden kürzen: Braid-Tag so kurz wie möglich (1 mm), FC-Tag ca. 3 mm.", k:"✓ Knoten sitzt fest, Tag-Enden kurz"},
     ],
-    tipp:"Tipp: Am Anfang mit dickerem Material (alte Schnur) üben bis die Abfolge sitzt. Der Knoten sieht kompliziert aus, ist aber nach 3× Üben routiniert."},
-  { name:"Palomar Knot", emoji:"⚓", einsatz:"Haken oder Wirbel direkt an Geflochtener Schnur",
-    warum:"Einfachster Knoten für Braid direkt am Haken. Hält nahezu 100% der Schnurbruchlast – einer der stärksten Knoten überhaupt.",
+    fehler:[
+      "Falsche Seite beim Zurückführen: Braid muss auf DERSELBEN Seite durch die FC-Schlaufe zurück wie es reingekommen ist – häufigster Fehler!",
+      "Weniger als 10 Wicklungen: Knoten rutscht durch – bei dünnem Braid (0,08–0,10 mm) sogar 12 Wicklungen",
+      "Wicklungen zu locker: Knoten hält nicht – jede Wicklung eng an die vorherige pressen",
+      "Trocken festgezogen: Wicklungen verdrillen und schwächen den Knoten",
+      "FC-Schlaufe zu klein: Braid schwer zu fädeln – Schlaufe mindestens 4–5 cm Durchmesser",
+    ],
+    ueben:"Übe mit zwei verschiedenfarbigen Schnüren (z.B. Baumwolle) zuhause. Wenn du die Abfolge 5× sauber schaffst, sitzt er. Nimm dann dünne Schnur – der Knoten fühlt sich mit echter Braid/FC anfangs rutschig an.",
+    youtube:"Albright Knot Schritt fuer Schritt",
+    tipp:"Wenn der Knoten nach dem Festziehen 'wühlt' oder Knubbel bildet, war die Wicklungsrichtung falsch. Aufschneiden und neu binden – nie einen unsauberen Knoten lassen!"},
+
+  { name:"Palomar Knot", emoji:"⚓",
+    festigkeit:"95–100 %", material:"Optimal für Braid · funktioniert auch mit Mono und FC",
+    einsatz:"Haken oder Wirbel direkt an Braid binden – schnell und extrem stark",
+    warum:"Der stärkste einfache Angelknoten. Besonders ideal für Braid (Geflochtene), weil er 100% der Schnurbruchlast halten kann. Nur 5 Schritte – einfach zu merken.",
+    diagram:
+`SCHRITT 1 – Doppelschnur durch Öhr:
+  ════╗
+      ║  ← Schlaufe (10 cm)    O Hakenöhr
+  ════╝──────────────────────► ◄
+  Doppelschnur (beide Stränge zusammen) durch Öhr
+
+SCHRITT 2 – Überhandknoten mit Doppelschnur:
+  ════╗     ╔════
+      ╚══►◄═╝
+       Locker lassen!
+      Haken hängt frei durch
+
+SCHRITT 3 – Schlaufe über den Haken stülpen:
+  Schlaufe ────► komplett über den Haken ziehen
+  (über Spitze, Bogen, Schaft – alles)
+
+FERTIG:
+  ════════[Knoten]════ O
+  Knoten sitzt über dem Öhr`,
     schritte:[
-      "Schnur doppelt nehmen: eine Schlaufe (~10 cm) durch das Hakenöhr fädeln",
-      "Mit der Doppelschnur einen einfachen Überhandknoten machen (locker lassen!)",
-      "Die Schlaufe über den Haken stülpen – komplett über den Hakenschaft",
-      "Feucht machen, dann an Schnurende und Haken gleichzeitig festziehen",
-      "Knoten sitzt oben am Hakenöhr – überschuss abschneiden",
+      {s:"Schnur in der Hand halten. Ca. 15 cm vom Ende eine Schlaufe bilden, indem du die Schnur umklappst – du hast jetzt eine Doppelschnur (zwei parallele Stränge, ca. 10 cm lang).", k:"✓ Schlaufe ca. 10 cm, beide Stränge parallel"},
+      {s:"Diese Doppelschnur (beide Stränge zusammen!) durch das Hakenöhr fädeln. 5–6 cm Schlaufe müssen auf der anderen Seite herausschauen.", k:"✓ Schlaufe ragt 5–6 cm auf der anderen Seite heraus"},
+      {s:"Haken kurz beiseite legen (er hängt am langen Schnurende). Mit der Doppelschnur einen einfachen Überhandknoten machen: Schlaufe einmal umschlagen wie beim normalen Einzieher, LOCKER lassen. Der Haken hängt dabei durch die Mitte des lockeren Knotens – das ist gewollt!", k:"✓ Lockerer Überhandknoten, Haken hängt frei durch die Knotenmitte"},
+      {s:"Jetzt die Schlaufe (die kleinere Schlaufe, die raus schaut) nehmen und über den GANZEN Haken stülpen – von der Spitze anfangend, über den Bogen, über den Schaft, alles muss durch die Schlaufe. Schlaufe muss groß genug sein – bei großen Haken ggf. längere Doppelschnur nehmen.", k:"✓ Schlaufe sitzt hinter dem Hakenschaft (zwischen Öhr und Schaft)"},
+      {s:"Alle Teile anfeuchten.", k:"✓ Alles feucht"},
+      {s:"Festziehen: an der stehenden Schnur UND am Tag-End gleichzeitig langsam und gleichmäßig ziehen. Der lockere Überhandknoten zieht sich zusammen und schließt sich über dem Hakenöhr.", k:"✓ Knoten sitzt kompakt direkt über dem Öhr"},
+      {s:"Zugtest: kräftig ziehen – Knoten darf sich nicht verschieben. Tag-End 2 mm über dem Knoten abschneiden.", k:"✓ Knoten sitzt fest, symmetrisch über dem Öhr"},
     ],
-    tipp:"Achtung: Bei größeren Haken mit breitem Bogen die Schlaufe groß genug machen, damit sie über den Haken passt. Beim Formen der Schlaufe darauf achten dass sie sauber liegt."},
+    fehler:[
+      "Schlaufe zu klein für den Haken: Schlaufe kommt nicht komplett über den Haken – Doppelschnur länger machen (20 cm statt 15)",
+      "Schlaufe landet vor dem Öhr statt hinter dem Schaft: Schlaufe muss komplett ÜBER den Haken gezogen werden",
+      "Überhandknoten zu fest gemacht: dann kann die Schlaufe nicht mehr drüber – locker lassen!",
+      "Nur eine Schnur (nicht doppelt) durch das Öhr gefädelt: dann ist es kein Palomar mehr – immer doppelt!",
+    ],
+    ueben:"Übe mit einem großen Karabiner oder einer Büroklammer als 'Haken' – dann siehst du die Schlaufe deutlicher. Mit echtem Haken immer vorsichtig mit der Hakenspitze!",
+    youtube:"Palomar Knot binden einfach",
+    tipp:"Für Braid ist das der Knoten der Wahl. Bei sehr kleinen Haken (Gr. 14–16) schwierig weil die Schlaufe kaum durchpasst – dann Improved Clinch nehmen."},
 ];
 
 function eiRenderKnoten(){
   return `<div class="ei-knoten-wrap">
-    <div class="ei-best-intro">Die 3 Knoten die du als Anfänger wirklich brauchst – kein einziger mehr. Lerne diese drei und du bist für 90% aller Situationen gerüstet.</div>
+    <div class="ei-best-intro">3 Knoten – mehr brauchst du nicht als Anfänger. Mit diesen drei bist du für 95% aller Situationen gerüstet. Jeden Knoten zuhause üben bevor du ans Wasser gehst!</div>
+
+    <div class="ei-info-block" style="margin-bottom:14px">
+      <div class="ei-info-titel">Welcher Knoten wofür?</div>
+      <div class="ei-check-item">🪢 <b>Improved Clinch</b> → Haken / Wirbel an <b>Mono oder FC</b></div>
+      <div class="ei-check-item">🔗 <b>Albright</b> → <b>Braid</b> an <b>FC-Vorfach</b> verbinden</div>
+      <div class="ei-check-item">⚓ <b>Palomar</b> → Haken / Wirbel direkt an <b>Braid</b></div>
+    </div>
+
     ${EI_KNOTEN.map((k,i)=>`
     <div class="ei-filet-block">
       <div class="ei-filet-head" data-knotidx="${i}">
         <span>${k.emoji} ${k.name}</span>
-        <span class="ei-filet-schwier" style="font-size:11px">${k.einsatz}</span>
+        <span class="ei-filet-schwier">${k.festigkeit} Bruchlast</span>
         <span class="ei-filet-chevron">▼</span>
       </div>
       <div class="ei-filet-body" id="ei-knot-${i}" style="display:none">
-        <div class="ei-filet-hinweis">🎯 <b>Wann benutzen:</b> ${k.warum}</div>
+
+        <div class="ei-info-block" style="margin-bottom:10px">
+          <div class="ei-check-item">🎯 <b>Wann:</b> ${k.einsatz}</div>
+          <div class="ei-check-item">📏 <b>Material:</b> ${k.material}</div>
+          <div class="ei-check-item">💪 <b>Warum:</b> ${k.warum}</div>
+        </div>
+
+        <div class="ei-filet-hinweis" style="font-family:monospace;white-space:pre;font-size:11px;line-height:1.5;overflow-x:auto">${k.diagram}</div>
+
+        <div class="ei-info-titel" style="margin:12px 0 6px">📋 Schritt für Schritt</div>
         <div class="ei-steps">
           ${k.schritte.map((s,si)=>`<div class="ei-step">
             <div class="ei-step-num">${si+1}</div>
-            <div class="ei-step-body"><div class="ei-step-text">${s}</div></div>
+            <div class="ei-step-body">
+              <div class="ei-step-text">${s.s}</div>
+              ${s.k?`<div style="font-size:11px;color:var(--accent);margin-top:3px">${s.k}</div>`:""}
+            </div>
           </div>`).join("")}
         </div>
-        <div class="ei-koeder-tipp">💡 ${k.tipp}</div>
+
+        <div class="ei-info-block" style="margin-top:10px;background:rgba(220,50,50,.07);border-left:3px solid #dc3232">
+          <div class="ei-info-titel" style="color:#dc3232">❌ Häufige Fehler</div>
+          ${k.fehler.map(f=>`<div class="ei-check-item" style="margin-bottom:4px;color:var(--muted)">• ${f}</div>`).join("")}
+        </div>
+
+        <div class="ei-info-block" style="margin-top:8px;background:rgba(51,195,166,.06)">
+          <div class="ei-check-item">🏠 <b>Üben:</b> ${k.ueben}</div>
+          <div class="ei-check-item" style="margin-top:6px">▶️ <b>YouTube:</b> Such nach <i>"${k.youtube}"</i> – 2-Minuten-Video hilft mehr als jeder Text</div>
+        </div>
+
+        <div class="ei-koeder-tipp" style="margin-top:8px">⚡ ${k.tipp}</div>
       </div>
     </div>`).join("")}
   </div>`;
