@@ -12,7 +12,7 @@ const AKTUELL = {
     rute: "Daiwa Prorex S Spin · 2,70 m · WG 15-50 g",
     rolle: "Freams LT4000-P",
     schnur: "J-Braid X8 Expedition 0,16 mm (geflochten) · 150 m",
-    vorfach: "Fluorocarbon 0,298 mm",
+    vorfach: "Daiwa J-Fluoro Carbon 0,298 mm · 5,83 kg · 100 m (für Hecht: + Stahlvorfach davor)",
     extra: "Stahlvorfach Perca (72 St.), Motor Snap Wirbel 18 kg, Easy Shiner 5\"",
     einsatz: "Aktives Spinnfischen auf Hecht, Zander, Barsch, Rapfen – auch Grund-/Posenansitz auf Raubfisch."
   },
@@ -22,7 +22,7 @@ const AKTUELL = {
     rute: "Daiwa Presso Imprimi ST · 2,15 m · WG 0,5-6 g",
     rolle: "Abu Garcia Cardinal X 2000",
     schnur: "J-Braid X8 Expedition 0,06 mm (geflochten)",
-    vorfach: "Fluorocarbon 0,298 mm (für Forelle feiner ausziehen, s. Montage)",
+    vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg · 100 m (für Forelle; Großforelle/Put&Take: 0,298 mm)",
     extra: "Spoon-Tasche Zite Fishing, Trout Attack Set",
     einsatz: "Ultraleichtes Spinnen mit Spoons/Mini-Ködern auf Forelle und Barsch."
   },
@@ -32,7 +32,7 @@ const AKTUELL = {
     rute: "SPRO Tactical Lake Sbiro · 3,9 m · WG 3-25 g",
     rolle: "SPRO Trout Master TT3 · Übersetzung 5:1 · 6 Kugellager · 301 g",
     schnur: "Monofil 0,25 mm · 170 m Fassung",
-    vorfach: "Fluorocarbon, ca. 1,5–2,5 m",
+    vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg · 100 m · ca. 1,5–2,5 m Länge",
     extra: "Sbirolinos Paladin, Posen Troutmaster Pilot, Schrotblei, Haken Gamakatsu Gr. 6, Berkley PowerBait",
     einsatz: "Weit auswerfen am Forellensee, Köder langsam absinken lassen (Sbirolino oder Pose)."
   },
@@ -42,7 +42,7 @@ const AKTUELL = {
     rute: "Savage Gear Revenge SG2 Light Game · 2,21 m · WG 5-18 g · 9 Ringe · 121 g · 2-teilig",
     rolle: "Daiwa 23 Ninja LT2500 · 4 Kugellager · Übersetzung 5,3:1 · 230 g · Frontbremse",
     schnur: "J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen deiner 0,06 mm (Setup 2) und 0,16 mm (Setup 1)",
-    vorfach: "Fluorocarbon 0,20–0,25 mm · ca. 60–100 cm",
+    vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg · 100 m · ca. 40–80 cm",
     extra: "",
     einsatz: "Leichtes, aktives Spinnfischen mit kleinen Gummifischen/Spinnern/Wobblern auf Barsch, Döbel, kleinen Zander – auch gut für Hornhecht/Meerforelle zum Reinschnuppern."
   },
@@ -52,7 +52,7 @@ const AKTUELL = {
     rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bereits fachgerecht bespult",
     schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Mono-/Fluorocarbon-Vorfachschnur umspulen",
-    vorfach: "je nach Zielfisch, z. B. 0,16–0,20 mm für Brasse/Karpfen",
+    vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg (für Brasse/Rotauge/Schleie), alternativ 0,298 mm für Karpfen",
     extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köderbox, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
     einsatz: "Grund- und Feederangeln auf Karpfen und andere Friedfische (Brasse, Schleie, Rotauge) – ruhiger Ansitz mit Futterkorb/Grundblei an See, Kanal oder ruhigem Fluss."
   },
@@ -62,7 +62,7 @@ const AKTUELL = {
     rute: "Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult",
     schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen",
-    vorfach: "Fluorocarbon 0,20–0,25 mm · ca. 60–100 cm",
+    vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg · 100 m · ca. 40–80 cm",
     extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köder, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
     einsatz: "Aktives Spinnfischen mit Kunstködern auf Forelle und Barsch – etwas kräftiger als Setup 2 (Ultraleicht) und Setup 4 (Light Game), WG bis 40 g deckt auch etwas größere Spinner/Wobbler/Blinker ab."
   },
