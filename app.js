@@ -3529,6 +3529,7 @@ renderWochenende();
 renderAnsitzAngeln();
 renderUnterlagen();
 renderTagebuch();
+let EI_SUBVIEW = "start"; // Starthilfe sub-tab
 renderEinsteiger();
 (async function(){try{const e=await tbIDBLadeAlle();tbUpdateStatsCache(e);}catch(err){}})();
 
@@ -3638,7 +3639,6 @@ let TB_KAL_MONTH = new Date().getMonth(); // 0-indexed
 let TB_KAL_SELECTED = null; // "YYYY-MM-DD"
 let TB_KAL_INITIALIZED = false;
 let TB_STATS_CACHE = {}; // setupKey → {ausfluge, faenge}
-let EI_SUBVIEW = "start"; // Starthilfe sub-tab
 
 /* --- Hilfsfunktionen --- */
 function tbWetterEmoji(bewoelkung, luftdruck){
