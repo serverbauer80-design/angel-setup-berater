@@ -201,7 +201,7 @@ const WUNSCH = {
     schnur: "Monofil 0,20–0,25 mm",
     preis: "ca. 176 € (Rute 86 € + Rolle ~90 €)",
     dazu: "Rutenhalter (vorhanden), Laufpose 3–15 g je nach Einsatz",
-    hinweis: "Vielseitiger als eine reine Forellensee-Zweitangel: klassische Posenrute (kein Feeder/Quivertip nötig, da die Montage über eine schwimmende Pose läuft) – nutzbar als passive Zweitangel am Forellensee, aktiv am Forellensee (Sbirolino/Pose), UND als Laufpose auf Weißfisch/Schleie/Karpfen an See/Kanal auf mittlere Distanz. Schließt die Lücke zwischen Setup 7 (Stippe, nur Ufernähe) und Setup 5 (Feeder, Grundmontage ohne Pose). Setup 3 und 6 funktionieren übergangsweise auch passiv, sind aber nicht dafür optimiert."
+    hinweis: "Vielseitiger als eine reine Forellensee-Zweitangel: klassische Posenrute (kein Feeder/Quivertip nötig, da die Montage über eine schwimmende Pose läuft) – nutzbar als passive Zweitangel am Forellensee, aktiv am Forellensee (Sbirolino/Pose), UND als Laufpose auf Weißfisch/Schleie/Karpfen an See/Kanal auf mittlere Distanz. Schließt die Lücke zwischen Setup 9 (Stippe, nur Ufernähe) und Setup 5 (Feeder, Grundmontage ohne Pose). Setup 3 und 7 funktionieren übergangsweise auch passiv, sind aber nicht dafür optimiert."
   },
   pilk: {
     key: "pilk", name: "Hochsee-/Kutter-Setup (Pilken)",
