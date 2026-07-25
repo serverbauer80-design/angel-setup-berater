@@ -271,7 +271,7 @@ const FISCHE = [
         tipp:"Faulenzen: 1–2 Kurbelumdrehungen, absinken lassen, Kontakt halten. Biss kommt meist beim Absinken – sofort anschlagen."
       },
       {
-        methode:"Ansitz – Köderfisch am Grund (Dämmerung/Nacht)", status:"bedingt", setup:"setup1", braucht:"ansitz",
+        methode:"Ansitz – Köderfisch am Grund (Dämmerung/Nacht)", status:"machbar", setup:"setup10",
         gewaesser:["eider","nok","elbe","see"],
         montage:[
           {k:"Hauptschnur", v:"J-Braid 0,16 mm"},
@@ -281,7 +281,7 @@ const FISCHE = [
           {k:"Vorfach", v:"Fluorocarbon 0,30–0,35 mm · 60–80 cm"},
           {k:"Haken", v:"Einzelhaken Gr. 1–1/0 · toter Köderfisch 8–12 cm"}
         ],
-        tipp:"Geht mit Setup 1, aber ohne Freilaufrolle/Bissanzeiger ungemütlich. Für echte Nachtansitze lohnt das Ansitz-Setup."
+        tipp:"Setup 6 (Ansitzangeln – Black Widow + Freilaufrolle + Bissanzeiger) ist hier das richtige Setup. Zur Not geht auch Setup 1, aber ohne Freilaufrolle ungemütlich."
       }
     ]
   },
@@ -433,7 +433,7 @@ const FISCHE = [
     info:"Nachtaktiver Schlängler mit feiner Nase. Warme Sommernächte, besonders bei Gewitterstimmung.",
     ansaetze:[
       {
-        methode:"Grundangeln – Tauwurm (Nachtansitz)", status:"bedingt", setup:"setup1", braucht:"ansitz",
+        methode:"Grundangeln – Tauwurm (Nachtansitz)", status:"machbar", setup:"setup10",
         gewaesser:["eider","nok","elbe","see"],
         montage:[
           {k:"Hauptschnur", v:"J-Braid 0,16 mm"},
@@ -443,7 +443,7 @@ const FISCHE = [
           {k:"Vorfach", v:"Mono/FC 0,30 mm · 40–60 cm"},
           {k:"Haken", v:"Aalhaken (langer Schenkel) Gr. 4–1 · Tauwurm"}
         ],
-        tipp:"Geht mit Setup 1 + Glöckchen/Bissanzeiger. Für regelmäßige Nachtansitze ist eine Freilaufrolle (Ansitz-Setup) deutlich komfortabler."
+        tipp:"Setup 6 (Ansitzangeln) ist hier optimal – die Freilaufrolle lässt dem Aal Zeit, den Köder zu nehmen. Zur Not geht Setup 1 + Glöckchen."
       }
     ]
   },
@@ -453,7 +453,7 @@ const FISCHE = [
     info:"Einziger heimischer Dorschartiger im Süßwasser – winteraktiv, geht in kalten Nächten am Grund auf Nahrungssuche.",
     ansaetze:[
       {
-        methode:"Grundangeln – Fisch-/Wurmköder (Winternacht)", status:"bedingt", setup:"setup1", braucht:"ansitz",
+        methode:"Grundangeln – Fisch-/Wurmköder (Winternacht)", status:"machbar", setup:"setup10",
         gewaesser:["elbe","eider"],
         montage:[
           {k:"Hauptschnur", v:"J-Braid 0,16 mm"},
@@ -463,7 +463,7 @@ const FISCHE = [
           {k:"Vorfach", v:"Mono 0,30 mm · 40 cm"},
           {k:"Haken", v:"Gr. 1–1/0 · Tauwurmbündel oder Fischfetzen"}
         ],
-        tipp:"Kalte, dunkle Nächte (Nov–Feb) sind die Zeit. Köder direkt am Grund anbieten. Machbar mit Setup 1, Ansitz-Setup ist komfortabler."
+        tipp:"Kalte, dunkle Nächte (Nov–Feb) sind die Zeit. Köder direkt am Grund, Setup 6 (Ansitzangeln) mit Bissanzeiger ist komfortabler als Setup 1."
       }
     ]
   },
