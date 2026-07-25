@@ -476,12 +476,12 @@ const FISCHE = [
         methode:"Grund-/Feederangeln – Futterkorb mit Boilie/Mais", status:"machbar", setup:"setup5",
         gewaesser:["see","nok","eider"],
         montage:[
-          {k:"Hauptschnur", v:"vorbespult (Setup 5) bzw. Monofil 0,25–0,30 mm"},
+          {k:"Hauptschnur", v:"Monofil 0,20–0,25 mm (Setup 5) oder 0,30 mm für größere Karpfen"},
           {k:"Futterkorb/Grundblei", v:"30–80 g je nach Wurfweite und Strömung"},
           {k:"Vorfach", v:"Boiliehaar oder Haarmontage 10–15 cm"},
           {k:"Haken", v:"Karpfenhaken Gr. 6–2 · Boilie/Mais am Haar"}
         ],
-        tipp:"Genau der Einsatzzweck von Setup 5 (Crivit Feeder-Set). Ruhiger Ansitz, Futterkorb regelmäßig nachfüttern, Rutenspitze auf feine Bisse beobachten."
+        tipp:"Genau der Einsatzzweck von Setup 5 (Daiwa Ninja Feeder). Ruhiger Ansitz, Futterkorb regelmäßig nachfüttern, Quivertip auf feine Bisse beobachten."
       }
     ]
   },
@@ -499,7 +499,7 @@ const FISCHE = [
           {k:"Schrotblei", v:"aufgeteilt, fein ausgebleit"},
           {k:"Haken", v:"Gr. 8–12 · Wurm/Mais/Made"}
         ],
-        tipp:"Genau der Einsatzzweck von Setup 7 (Stippe) – maximale Feinfühligkeit direkt an der Krautkante, aufsteigende Blasen verraten die Fressstelle. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen (Bäume/Steg)? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
+        tipp:"Genau der Einsatzzweck von Setup 9 (Stippe) – maximale Feinfühligkeit direkt an der Krautkante, aufsteigende Blasen verraten die Fressstelle. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen (Bäume/Steg)? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
       }
     ]
   },
@@ -517,13 +517,13 @@ const FISCHE = [
           {k:"Schrotblei", v:"fein ausgebleit, ein Fühlerblei am Grund"},
           {k:"Haken", v:"Gr. 14–18 · Made/Mais/Teig"}
         ],
-        tipp:"Klassischer Fall für Setup 7 (Stippe) – entspanntes Posenangeln mit maximaler Feinfühligkeit. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
+        tipp:"Klassischer Fall für Setup 9 (Stippe) – entspanntes Posenangeln mit maximaler Feinfühligkeit. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
       },
       {
         methode:"Grund-/Feederangeln (weitere Distanz)", status:"machbar", setup:"setup5",
         gewaesser:["eider","nok","see","elbe"],
         montage:[
-          {k:"Hauptschnur", v:"vorbespult (Setup 5) bzw. Monofil 0,16–0,20 mm"},
+          {k:"Hauptschnur", v:"Monofil 0,20–0,25 mm (Setup 5) – eher leichter Feeder"},
           {k:"Futterkorb/Grundblei", v:"20–40 g"},
           {k:"Vorfach", v:"0,14–0,16 mm · ca. 40–60 cm"},
           {k:"Haken", v:"Gr. 14–18 · Made/Mais/Teig"}
