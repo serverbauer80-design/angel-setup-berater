@@ -946,7 +946,7 @@ function renderInventar(){
   html += `<h3 class="inv-gruppe-titel">🎣 Ruten mit Rolle <span class="inv-gruppe-count">${mitRolle.length}</span></h3>`;
   html += `<div class="inv-grid">` + mitRolle.map(inventarKarteHTML).join("") + `</div>`;
   if(crivit.length > 0){
-    html += `<h3 class="inv-gruppe-titel">🏷️ Crivit-Setups (Geschenk/Backup) <span class="inv-gruppe-count">${crivit.length}</span></h3>`;
+    html += `<h3 class="inv-gruppe-titel">🏷️ Crivit-Setups (Backup) <span class="inv-gruppe-count">${crivit.length}</span></h3>`;
     html += `<div class="inv-grid">` + crivit.map(inventarKarteHTML).join("") + `</div>`;
   }
   if(stippen.length > 0){
