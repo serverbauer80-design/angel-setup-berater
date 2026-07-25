@@ -80,7 +80,7 @@ const AKTUELL = {
   setup11: {
     key: "setup11",
     kategorie: "crivit",
-    name: "Setup 8 – Crivit Feeder-Set (Backup/Leihkombo)",
+    name: "Setup 8 – Crivit Feeder-Set",
     rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult",
     schnur: "vorbespult ab Werk",
