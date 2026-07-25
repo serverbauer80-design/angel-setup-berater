@@ -76,39 +76,49 @@ const AKTUELL = {
     extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köder, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
     einsatz: "Aktives Spinnfischen mit Kunstködern auf Forelle und Barsch – etwas kräftiger als Setup 2 (Ultraleicht) und Setup 4 (Light Game), WG bis 40 g deckt auch etwas größere Spinner/Wobbler/Blinker ab."
   },
+  setup11: {
+    key: "setup11",
+    name: "Setup 8 – Crivit Feeder-Set (Backup/Leihkombo)",
+    rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
+    rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult",
+    schnur: "vorbespult ab Werk",
+    vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg",
+    extra: "Inkl. Tragetasche und Zielfisch-Zubehör (Köderbox, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
+    einsatz: "Backup- und Leih-Kombo für Grund- und Feederangeln – komplett ausgerüstete Tasche, sofort einsatzbereit. Ideal als Zweitrute am Ansitz oder zum Verleihen."
+  },
   setup7: {
     key: "setup7",
     kategorie: "stippe",
-    name: "Setup 8 – Stippe (Weißfisch)",
+    name: "Setup 9 – Stippe (Weißfisch)",
     rute: "Shimano Hyperloop 7,00 m · 7 Segmente",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1,5–2 m (deutlich kürzer als die 7 m Rute – zum Reinschwingen des Fischs)",
     vorfach: "optional: kleine Wirbel (Gr. 16–18) falls gewünscht",
     extra: "Posen 1–3 g, Haken Gr. 16–18, Schrotblei gemischt, Made/Wurm",
     einsatz: "Feines Stippen auf Rotauge, Schleie, Brasse an Eider, NOK, See – sehr entspannt, maximale Feinfühligkeit. Fisch landen: Rute im Bogen zu dir heranschwingen, bei wenig Platz stattdessen Segmente einschieben.",
-    tippKompakt: "Bei sehr engen Spots (Bäume, schmaler Steg, dichte Ufervegetation) ist Setup 9 (Kompakt-Stippe, 4 m) die entspanntere Alternative zur 7-m-Rute: kein Schwingen/Einschieben nötig, die Spitze bleibt praktisch immer in Reichweite. Dafür deutlich weniger Reichweite – nur für nahes Ufer-Fischen, nicht über Schilf/Seerosen hinweg."
+    tippKompakt: "Bei sehr engen Spots (Bäume, schmaler Steg, dichte Ufervegetation) ist Setup 10 (Kompakt-Stippe, 4 m) die entspanntere Alternative zur 7-m-Rute: kein Schwingen/Einschieben nötig, die Spitze bleibt praktisch immer in Reichweite. Dafür deutlich weniger Reichweite – nur für nahes Ufer-Fischen, nicht über Schilf/Seerosen hinweg."
   },
   setup8: {
     key: "setup8",
     kategorie: "stippe",
-    name: "Setup 9 – Kompakt-Stippe (enge Spots)",
+    name: "Setup 10 – Kompakt-Stippe (enge Spots)",
     rute: "Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert",
-    rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug, wie Setup 8",
+    rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug, wie Setup 9",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1–1,5 m (kürzer als die 4 m Rute – zum Reinschwingen des Fischs)",
     vorfach: "optional: kleine Wirbel (Gr. 16–18) falls gewünscht",
     extra: "",
-    einsatz: "Kompakte Alternative zu Setup 8 für sehr enge Angelplätze (Bäume, schmaler Steg, dichte Ufervegetation) – kein Schwingen/Einschieben der 7-m-Rute nötig, die Spitze bleibt fast immer in Reichweite. Feines Posenfischen auf Rotauge, Schleie & Co."
+    einsatz: "Kompakte Alternative zu Setup 9 für sehr enge Angelplätze (Bäume, schmaler Steg, dichte Ufervegetation) – kein Schwingen/Einschieben der 7-m-Rute nötig, die Spitze bleibt fast immer in Reichweite. Feines Posenfischen auf Rotauge, Schleie & Co."
   },
   setup9: {
     key: "setup9",
     kategorie: "stippe",
-    name: "Setup 10 – Stipp-Combo (Köderfisch/Einsteiger)",
+    name: "Setup 11 – Stipp-Combo (Köderfisch/Einsteiger)",
     rute: "Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk",
     rolle: "keine Rolle nötig",
     schnur: "Fertige Montage (Schnur, Pose, Haken) ab Werk auf Wickelbrett – sofort einsatzbereit",
     vorfach: "bereits in der Fertigmontage enthalten",
     extra: "Komplett vormontiert, kein Aufbau nötig",
-    einsatz: "Schnelle, unkomplizierte Stippe für Köderfischfang oder als Einsteiger-/Zweitrute – kürzer und einfacher als Setup 8/9, dafür ohne jede Vorbereitung sofort startklar."
+    einsatz: "Schnelle, unkomplizierte Stippe für Köderfischfang oder als Einsteiger-/Zweitrute – kürzer und einfacher als Setup 9/10, dafür ohne jede Vorbereitung sofort startklar."
   }
 };
 
@@ -140,7 +150,7 @@ const EINKAUF_KLEINKRAM = [
       { art:"Kugellagerwirbel", gr:"Gr. 8–10", kg:"~6–8 kg", fuer:"S4 Light Game · S7 Spin (Spinner, Anti-Drall)", setup:["S4","S7"], menge:"15 Stk.", prio:"sofort" },
       { art:"Wirbel (Sbirolino-/Blei-Stopper)", gr:"Gr. 10–12", kg:"~4–5 kg", fuer:"S3 – Sbirolino + Dänische Montage", setup:["S3"], menge:"20 Stk.", prio:"sofort" },
       { art:"Feeder-/Paternoster-Wirbel", gr:"Gr. 6–8", kg:"~8 kg", fuer:"S5 – Feeder/Grund (Paternoster-Rig)", setup:["S5"], menge:"10 Stk.", prio:"sinnvoll" },
-      { art:"Mini-Wirbel (optional)", gr:"Gr. 16–18", kg:"~2 kg", fuer:"S8/S9 – Stippe (wenn Schnur geteilt wird)", setup:["S8","S9"], menge:"10 Stk.", prio:"optional" },
+      { art:"Mini-Wirbel (optional)", gr:"Gr. 16–18", kg:"~2 kg", fuer:"S9/S10 – Stippe (wenn Schnur geteilt wird)", setup:["S9","S10"], menge:"10 Stk.", prio:"optional" },
     ]
   },
   {
