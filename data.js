@@ -48,13 +48,13 @@ const AKTUELL = {
   },
   setup5: {
     key: "setup5",
-    name: "Setup 5 – Grund-/Feederangel (Friedfisch)",
-    rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
-    rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bereits fachgerecht bespult",
-    schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Mono-/Fluorocarbon-Vorfachschnur umspulen",
-    vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg (für Brasse/Rotauge/Schleie), alternativ 0,298 mm für Karpfen",
-    extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köderbox, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
-    einsatz: "Grund- und Feederangeln auf Karpfen und andere Friedfische (Brasse, Schleie, Rotauge) – ruhiger Ansitz mit Futterkorb/Grundblei an See, Kanal oder ruhigem Fluss."
+    name: "Setup 5 – Feederangel (Friedfisch)",
+    rute: "Daiwa Ninja X Feeder · 3,90 m · WG bis 120 g · 3-teilig · inkl. Wechselspitzen (Quivertips)",
+    rolle: "Daiwa 23 Ninja Match&Feeder LT4000-C · Frontbremse",
+    schnur: "Monofil 0,20–0,25 mm (Hauptschnur) + kurze Vorfachschnur",
+    vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg (Brasse/Rotauge/Schleie), alternativ 0,298 mm für Karpfen",
+    extra: "Futterkorb / Method-Feeder, Haken Gr. 10–14, Schrotblei, Made/Mais/Pellet",
+    einsatz: "Feeder- und Grundangeln auf Friedfische (Brasse, Schleie, Rotauge, Karpfen) – ruhiger Ansitz mit Futterkorb an See, Kanal oder ruhigem Fluss. Deutlich kräftiger als die Crivit-Kombo: 3,90 m Wurfweite, Quivertip-Bisserkennung, Frontbremse."
   },
   setup6: {
     key: "setup6",
@@ -99,6 +99,16 @@ const AKTUELL = {
     vorfach: "bereits in der Fertigmontage enthalten",
     extra: "Komplett vormontiert, kein Aufbau nötig",
     einsatz: "Schnelle, unkomplizierte Stippe für Köderfischfang oder als Einsteiger-/Zweitrute – kürzer und einfacher als Setup 7/8, dafür ohne jede Vorbereitung sofort startklar."
+  },
+  setup10: {
+    key: "setup10",
+    name: "Setup 10 – Ansitzangeln (Karpfen/Aal/Schleie)",
+    rute: "Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig",
+    rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
+    schnur: "Monofil 0,30–0,35 mm · 200–300 m",
+    vorfach: "Daiwa J-Fluoro Carbon 0,298 mm · 5,83 kg (Karpfen/Aal), alternativ 0,35 mm für größere Karpfen",
+    extra: "Rutenhalter (Leeko vorhanden), Bissanzeiger, Boilies/Pellets/Mais/Tauwurm, Selbsthak-Montage / Method-Feeder",
+    einsatz: "Ruhiger Ansitz auf Karpfen, Aal, Schleie, Quappe – an See, NOK, Eider oder ruhigem Fluss. Der Baitrunner (Freilauf) gibt Schnur frei, wenn der Fisch den Köder nimmt, ohne Widerstand zu spüren – Bremse wird erst beim Anhieb zugedreht."
   }
 };
 
@@ -194,13 +204,6 @@ const WUNSCH = {
     schnur: "vorhandene J-Braid 0,16 mm",
     preis: "nur fertiges Paternoster ca. 5–10 €",
     dazu: "Heringspaternoster (5–10 Haken), Paternosterblei 30–60 g"
-  },
-  ansitz: {
-    key: "ansitz", name: "Ansitz-Allround (Karpfen, Aal, Quappe, Schleie)",
-    rute: "Daiwa Black Widow / Balzer Matze Koch 3,60 m, 3 lb", rolle: "Shimano Baitrunner ST 6000 (Freilauf)",
-    schnur: "Monofil 0,30–0,35 mm",
-    preis: "ca. 170–270 € pro Rute (Doppelansitz üblich → 2×)",
-    dazu: "Rod-Pod/Rutenhalter, elektr. Bissanzeiger, Boilies/Pellets/Mais/Wurm, Selbsthak-/Method-Feeder-Montage"
   },
   wels: {
     key: "wels", name: "Wels-Setup (bis ca. 1,5 m)",
