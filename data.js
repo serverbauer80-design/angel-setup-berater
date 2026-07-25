@@ -56,6 +56,16 @@ const AKTUELL = {
     extra: "Futterkorb / Method-Feeder, Haken Gr. 10–14, Schrotblei, Made/Mais/Pellet",
     einsatz: "Feeder- und Grundangeln auf Friedfische (Brasse, Schleie, Rotauge, Karpfen) – ruhiger Ansitz mit Futterkorb an See, Kanal oder ruhigem Fluss. Deutlich kräftiger als die Crivit-Kombo: 3,90 m Wurfweite, Quivertip-Bisserkennung, Frontbremse."
   },
+  setup10: {
+    key: "setup10",
+    name: "Setup 6 – Ansitzangeln (Karpfen/Aal/Schleie)",
+    rute: "Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig",
+    rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
+    schnur: "Monofil 0,30–0,35 mm · 200–300 m",
+    vorfach: "Daiwa J-Fluoro Carbon 0,298 mm · 5,83 kg (Karpfen/Aal), alternativ 0,35 mm für größere Karpfen",
+    extra: "Rutenhalter (Leeko vorhanden), Bissanzeiger, Boilies/Pellets/Mais/Tauwurm, Selbsthak-Montage / Method-Feeder",
+    einsatz: "Ruhiger Ansitz auf Karpfen, Aal, Schleie, Quappe – an See, NOK, Eider oder ruhigem Fluss. Der Baitrunner (Freilauf) gibt Schnur frei, wenn der Fisch den Köder nimmt, ohne Widerstand zu spüren – Bremse wird erst beim Anhieb zugedreht."
+  },
   setup6: {
     key: "setup6",
     name: "Setup 7 – Spinnangel Forelle/Barsch",
@@ -99,16 +109,6 @@ const AKTUELL = {
     vorfach: "bereits in der Fertigmontage enthalten",
     extra: "Komplett vormontiert, kein Aufbau nötig",
     einsatz: "Schnelle, unkomplizierte Stippe für Köderfischfang oder als Einsteiger-/Zweitrute – kürzer und einfacher als Setup 8/9, dafür ohne jede Vorbereitung sofort startklar."
-  },
-  setup10: {
-    key: "setup10",
-    name: "Setup 6 – Ansitzangeln (Karpfen/Aal/Schleie)",
-    rute: "Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig",
-    rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
-    schnur: "Monofil 0,30–0,35 mm · 200–300 m",
-    vorfach: "Daiwa J-Fluoro Carbon 0,298 mm · 5,83 kg (Karpfen/Aal), alternativ 0,35 mm für größere Karpfen",
-    extra: "Rutenhalter (Leeko vorhanden), Bissanzeiger, Boilies/Pellets/Mais/Tauwurm, Selbsthak-Montage / Method-Feeder",
-    einsatz: "Ruhiger Ansitz auf Karpfen, Aal, Schleie, Quappe – an See, NOK, Eider oder ruhigem Fluss. Der Baitrunner (Freilauf) gibt Schnur frei, wenn der Fisch den Köder nimmt, ohne Widerstand zu spüren – Bremse wird erst beim Anhieb zugedreht."
   }
 };
 
