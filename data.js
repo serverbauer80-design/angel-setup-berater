@@ -68,6 +68,7 @@ const AKTUELL = {
   },
   setup6: {
     key: "setup6",
+    kategorie: "crivit",
     name: "Setup 7 – Spinnangel Forelle/Barsch",
     rute: "Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult",
@@ -78,6 +79,7 @@ const AKTUELL = {
   },
   setup11: {
     key: "setup11",
+    kategorie: "crivit",
     name: "Setup 8 – Crivit Feeder-Set (Backup/Leihkombo)",
     rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult",

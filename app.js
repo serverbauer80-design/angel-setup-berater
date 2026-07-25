@@ -939,11 +939,16 @@ function renderInventar(){
   const el = $("#inventar");
   const alleSetups = Object.values(AKTUELL);
   const stippen = alleSetups.filter(s => s.kategorie === "stippe");
-  const mitRolle = alleSetups.filter(s => s.kategorie !== "stippe");
+  const crivit  = alleSetups.filter(s => s.kategorie === "crivit");
+  const mitRolle = alleSetups.filter(s => s.kategorie !== "stippe" && s.kategorie !== "crivit");
 
   let html = `<h2>🎒 Mein aktuelles Equipment</h2>`;
   html += `<h3 class="inv-gruppe-titel">🎣 Ruten mit Rolle <span class="inv-gruppe-count">${mitRolle.length}</span></h3>`;
   html += `<div class="inv-grid">` + mitRolle.map(inventarKarteHTML).join("") + `</div>`;
+  if(crivit.length > 0){
+    html += `<h3 class="inv-gruppe-titel">🏷️ Crivit-Setups (Geschenk/Backup) <span class="inv-gruppe-count">${crivit.length}</span></h3>`;
+    html += `<div class="inv-grid">` + crivit.map(inventarKarteHTML).join("") + `</div>`;
+  }
   if(stippen.length > 0){
     html += `<h3 class="inv-gruppe-titel">🪁 Stippruten (ohne Rolle) <span class="inv-gruppe-count">${stippen.length}</span></h3>`;
     html += `<div class="inv-grid">` + stippen.map(inventarKarteHTML).join("") + `</div>`;
