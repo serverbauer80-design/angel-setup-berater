@@ -22,7 +22,7 @@ const AKTUELL = {
     rute: "Daiwa Presso Imprimi ST · 2,15 m · WG 0,5-6 g",
     rolle: "Daiwa Iprimi LT 1000 S-P",
     schnur: "J-Braid X8 Expedition 0,06 mm (geflochten)",
-    vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg · 100 m (für Forelle; Großforelle/Put&Take: 0,298 mm)",
+    vorfach: "Daiwa J-Fluoro Carbon 0,200 mm (Standard/feiner Köder) oder 0,218 mm · Großforelle/Put&Take: 0,298 mm",
     extra: "Spoon-Tasche Zite Fishing, Trout Attack Set",
     einsatz: "Ultraleichtes Spinnen mit Spoons/Mini-Ködern auf Forelle und Barsch."
   },
@@ -32,7 +32,7 @@ const AKTUELL = {
     rute: "SPRO Tactical Lake Sbiro · 3,9 m · WG 3-25 g",
     rolle: "SPRO Trout Master TT3 · Übersetzung 5:1 · 6 Kugellager · 301 g",
     schnur: "Monofil 0,25 mm · 170 m Fassung",
-    vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg · 100 m · ca. 1,5–2,5 m Länge",
+    vorfach: "Daiwa J-Fluoro Carbon 0,200 mm oder 0,218 mm · ca. 1,5–2,5 m Länge",
     extra: "Sbirolinos Paladin, Posen Troutmaster Pilot, Schrotblei, Haken Gamakatsu Gr. 6, Berkley PowerBait",
     einsatz: "Weit auswerfen am Forellensee, Köder langsam absinken lassen (Sbirolino oder Pose)."
   },
@@ -42,7 +42,7 @@ const AKTUELL = {
     rute: "Savage Gear Revenge SG2 Light Game · 2,21 m · WG 5-18 g · 9 Ringe · 121 g · 2-teilig",
     rolle: "Daiwa 23 Ninja LT2500 · 4 Kugellager · Übersetzung 5,3:1 · 230 g · Frontbremse",
     schnur: "J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen deiner 0,06 mm (Setup 2) und 0,16 mm (Setup 1)",
-    vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg · 100 m · ca. 40–80 cm",
+    vorfach: "Daiwa J-Fluoro Carbon 0,200 mm (Barsch/fein) oder 0,218 mm · ca. 40–80 cm",
     extra: "",
     einsatz: "Leichtes, aktives Spinnfischen mit kleinen Gummifischen/Spinnern/Wobblern auf Barsch, Döbel, kleinen Zander – auch gut für Hornhecht/Meerforelle zum Reinschnuppern."
   },
@@ -52,7 +52,7 @@ const AKTUELL = {
     rute: "Daiwa Ninja X Feeder · 3,90 m · WG bis 120 g · 3-teilig · inkl. Wechselspitzen (Quivertips)",
     rolle: "Daiwa 23 Ninja Match&Feeder LT4000-C · Frontbremse",
     schnur: "Monofil 0,20–0,25 mm (Hauptschnur) + kurze Vorfachschnur",
-    vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg (Brasse/Rotauge/Schleie), alternativ 0,298 mm für Karpfen",
+    vorfach: "Daiwa J-Fluoro Carbon 0,200 mm oder 0,218 mm (Brasse/Rotauge/Schleie), 0,298 mm für Karpfen",
     extra: "Futterkorb / Method-Feeder, Haken Gr. 10–14, Schrotblei, Made/Mais/Pellet",
     einsatz: "Feeder- und Grundangeln auf Friedfische (Brasse, Schleie, Rotauge, Karpfen) – ruhiger Ansitz mit Futterkorb an See, Kanal oder ruhigem Fluss. Deutlich kräftiger als die Crivit-Kombo: 3,90 m Wurfweite, Quivertip-Bisserkennung, Frontbremse."
   },
@@ -62,7 +62,7 @@ const AKTUELL = {
     rute: "Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig",
     rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
     schnur: "Monofil 0,30–0,35 mm · 200–300 m",
-    vorfach: "Daiwa J-Fluoro Carbon 0,298 mm · 5,83 kg (Karpfen/Aal), alternativ 0,35 mm für größere Karpfen",
+    vorfach: "Daiwa J-Fluoro Carbon 0,298 mm · 5,83 kg (Karpfen/Aal)",
     extra: "Rutenhalter (Leeko vorhanden), Bissanzeiger, Boilies/Pellets/Mais/Tauwurm, Selbsthak-Montage / Method-Feeder",
     einsatz: "Ruhiger Ansitz auf Karpfen, Aal, Schleie, Quappe – an See, NOK, Eider oder ruhigem Fluss. Der Baitrunner (Freilauf) gibt Schnur frei, wenn der Fisch den Köder nimmt, ohne Widerstand zu spüren – Bremse wird erst beim Anhieb zugedreht."
   },
