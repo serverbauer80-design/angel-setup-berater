@@ -3400,105 +3400,83 @@ document.getElementById("ul-viewer-close").addEventListener("click", ulSchliesse
 /* ---------- Ansitzangeln ---------- */
 function renderAnsitzAngeln(){
   const el = $("#ansitz");
+  const s = AKTUELL.setup10;
 
-  function preisklasse(titel, emoji, items, hinweis){
-    const rows = items.map(([label, wert, url]) => {
-      const val = url
-        ? `<a class="shop-link" href="${url}" target="_blank" rel="noopener noreferrer">${wert}</a>`
-        : `<b>${wert}</b>`;
-      return `<div class="row"><span>${label}</span><span>${val}</span></div>`;
-    }).join("");
-    const hinweisHTML = hinweis ? `<div class="need-hinweis" style="margin-top:6px">${hinweis}</div>` : "";
+  function methode(titel, zeilen, hinweis){
+    const rows = zeilen.map(([k,v]) => `<div class="row"><span>${k}</span><b>${v}</b></div>`).join("");
+    const hw = hinweis ? `<div class="need-hinweis" style="margin-top:6px">${hinweis}</div>` : "";
     return `<article class="ansatz" style="margin-bottom:12px">
-      <div class="ansatz-head">
-        <span class="badge machbar">${emoji} ${titel}</span>
-      </div>
-      <div class="ansatz-body">
-        ${rows}
-        ${hinweisHTML}
-      </div>
+      <div class="ansatz-head"><span class="badge machbar">🎣 ${titel}</span></div>
+      <div class="ansatz-body">${rows}${hw}</div>
     </article>`;
   }
 
-  const html = `
+  el.innerHTML = `
     <div class="k-intro card">
-      <h2>⚓ Ansitzangeln – Setups</h2>
-      <p>Karpfen und Aal – die klassischen Ansitzfische. Der entscheidende Unterschied sitzt
-      nicht im Preis, sondern in Rutenlänge und Testkurve: Karpfen braucht Wurfweite und
-      Rückgrat (3,00 lb), Aal braucht eine weichere Spitze für feine Bisse und kommt meist
-      mit kürzeren Distanzen aus (2,25–2,75 lb). Preise sind Richtwerte – vor Kauf immer
-      aktuell prüfen.</p>
+      <h2>⚓ Ansitzangeln – Setup 6</h2>
+      <p>Ruhiges Angeln mit Köder am Grund – Karpfen, Aal, Schleie. Das Setup liegt im Rutenhalter,
+      der Baitrunner gibt Schnur frei, wenn der Fisch den Köder nimmt. Erst beim Anhieb die Bremse schließen.</p>
     </div>
+
+    <article class="card" style="margin-bottom:16px">
+      <div class="inv-setup-name" style="font-size:15px;font-weight:700;margin-bottom:10px">✅ ${s.name}</div>
+      <div class="row"><span class="k">Rute</span><span>${s.rute}</span></div>
+      <div class="row"><span class="k">Rolle</span><span>${s.rolle}</span></div>
+      <div class="row"><span class="k">Schnur</span><span>${s.schnur}</span></div>
+      <div class="row"><span class="k">Vorfach</span><span>${s.vorfach}</span></div>
+      <div class="need-hinweis" style="margin-top:10px">
+        💡 <b>Baitrunner-Tipp:</b> Freilauf vor dem Auswerfen öffnen (kleines Rädchen hinten an der Rolle drehen). Beim Biss läuft die Schnur ohne Widerstand – Fisch merkt nichts. Zum Anhieb Rädchen zurück oder Kurbel drehen: Bremse greift sofort.
+      </div>
+    </article>
 
     <div class="k-intro card" style="margin-bottom:8px">
-      <h2>🐟 Karpfen</h2>
-      <p class="k-hint">Freie Hegehaken, Boilies oder Mais – ruhiger Ansitz an See oder Kanal.
-      Freilaufrolle (Baitrunner) ist Pflicht: Karpfen nehmen den Köder, ziehen Schnur ab –
-      erst dann anschlagen.</p>
+      <h2>🎏 Karpfen</h2>
+      <p class="k-hint">Anfüttern lohnt sich immer – Mais, Pellet oder Boilies im Zielbereich einwerfen, 30–60 Min. warten, dann erst angeln.</p>
     </div>
 
-    ${preisklasse("Einsteiger · ~100–110 €", "🟢", [
-      ["Rute", "Daiwa Black Widow XT Carp · 3,60 m · 3,00 lb · ca. 54 €",
-        "https://www.angelsport.de/daiwa-karpfenrute-black-widow-xt-tele-carp-xt-tele-carp_0225557.html"],
-      ["Rolle", "DAM Quick 2 FS · Gr. 6000 · ca. 30–40 €",
-        "https://www.gerlinger.de/DAM-Rolle-Quick-2-FS-Freilaufrolle-verschiedene-Groessen-Karpfenrolle-Ansitzrolle"],
-      ["Schnur", "Cormoran Profiline Karpfen · 0,35 mm / 10 kg · 400 m",
-        "https://www.angeljoe.de/Cormoran-Profiline-Schnur-Karpfen-400m-Braun-0-35mm-10kg/110421"]
-    ])}
+    ${methode("Selbsthak-Montage (Boilie / Mais)", [
+      ["Blei", "Birnenblei / Inline 60–120 g"],
+      ["Haarmontage", "10–15 cm · Boilie, Mais oder Pellet am Haar"],
+      ["Vorfach", "FC 0,298 mm · 30–50 cm"],
+      ["Haken", "Karpfenhaken Gr. 4–8"]
+    ], "Karpfen haken sich bei der Selbsthak-Montage fast von selbst – Blei liegt fest, Fisch merkt Widerstand und läuft, Haken dreht sich ein.")}
 
-    ${preisklasse("Mittelklasse · ~150–200 €", "🟡", [
-      ["Rute", "Sportex Catapult CS-4 Carp · 3,60 m · 3,00 lb – Carbon-Blank, Fuji-Rollenhalter, 10 J. Garantie",
-        "https://fischdeal.de/t/karpfenruten/sportex-catapult-cs-4-carp-karpfenrute-12ft-3-00lb"],
-      ["Rolle", "Shimano Baitrunner DL 6000 – Referenz im Karpfensegment",
-        "https://www.angelsport.de/shimano-freilaufrolle-baitrunner-dl_0120859.html"],
-      ["Schnur", "Cormoran Profiline Karpfen 0,35 mm (wie Einsteiger) oder Fox Exocet Fluoro Mono", ""]
-    ])}
-
-    ${preisklasse("Gehoben · 250 €+", "🔴", [
-      ["Rute", "Fox Horizon X3 · 12 ft · ca. 93 €",
-        "https://www.carp-world.de/Fox-Horizon-X3"],
-      ["Rolle", "Shimano Baitrunner XT-A Medium · ca. 150–195 € (bei Askari teils ausverkauft)",
-        "https://www.angelplatz.de/shimano-medium-baitrunner-xt-a-lc-freilaufrolle--ro0041"],
-      ["Schnur", "Geflochtene 0,20 mm + Monofil-Schlagschnur für max. Wurfweite, alternativ Prologic Mimicry Mirage XP", ""]
-    ])}
+    ${methode("Method-Feeder / Futterkorb", [
+      ["Feeder", "Method-Feeder 30–60 g · Pellet/Groundbait fest pressen"],
+      ["Vorfach", "FC 0,298 mm · 20–30 cm (kurz = Selbsthak-Effekt)"],
+      ["Haken", "Gr. 8–12 · Mais, Pellet, Tigernuss"]
+    ], "Quivertip von Setup 5 (Ninja Feeder) für mittlere Distanzen – oder auch Setup 6 ohne Quivertip mit Bissanzeiger.")}
 
     <div class="k-intro card" style="margin-top:20px;margin-bottom:8px">
       <h2>🐍 Aal</h2>
-      <p class="k-hint">Dämmerungs- und Nachtfisch. Weiche Rutenspitze wichtig – Aal zieht
-      zögerlich. Fein einstellbarer Freilauf ist hier noch wichtiger als beim Karpfen.</p>
+      <p class="k-hint">Dämmerungs- und Nachtfisch (Mai–Oktober). Baitrunner auf ganz leicht stellen – Aal nimmt den Köder langsam und dreht ihn. Kopflampe nicht vergessen.</p>
     </div>
 
-    ${preisklasse("Einsteiger · ~50–65 €", "🟢", [
-      ["Rute", "Cormoran Topfish Aal · 1,80 m · 50–100 g · mit Knicklichthalter · ca. 20–23 €",
-        "https://www.fang-shop.de/angelruten/steckruten/2220/cormoran-topfish-aalrute-2tlg-50-100g-1-80m-2-10m-aal-grundangel-allround-boot"],
-      ["Rolle", "DAM Quick 1 FS · Gr. 3000/4000",
-        "https://akm-angelgeraete.de/DAM-Quick-1-FS-Freilaufrolle"],
-      ["Schnur", "Monofil 0,25–0,30 mm", ""]
-    ])}
+    ${methode("Laufblei-Montage (Tauwurm)", [
+      ["Laufblei", "See 15–25 g · Strömung (Eider/NOK) 30–50 g"],
+      ["Gummiperle", "1 Prellperle zwischen Blei und Wirbel (Knoten-Schutz)"],
+      ["Vorfach", "Mono/FC 0,298 mm · 40–60 cm"],
+      ["Haken", "Aalhaken (langer Schenkel) Gr. 4–1 · Tauwurm"]
+    ], "Glöckchen als Zusatz-Bissanzeiger. Aal oft am Knick zwischen Flach- und Tiefwasser, in der Nähe von Einläufen oder unter überhängenden Bäumen.")}
 
-    ${preisklasse("Mittelklasse · ~150–170 €", "🟡", [
-      ["Rute", "Karpfenrute 2,25–2,5 lb · 3,60 m – weicher als Karpfenmodell, mehr Reichweite als Einsteiger-Aalrute",
-        "https://www.angelgeraete-bode.de/ruten/karpfenruten/"],
-      ["Rolle", "Daiwa Black Widow BR LT 4000-C · ca. 65–77 € – superfein einstellbarer Freilauf für scheue Bisse",
-        "https://www.gerlinger.de/Daiwa-Freilaufrolle-Black-Widow-BR-LT"],
-      ["Schnur", "Monofil 0,28–0,30 mm", ""]
-    ])}
+    ${methode("Köderfisch (toter Döbel / Rotauge)", [
+      ["Laufblei", "20–40 g"],
+      ["Vorfach", "FC 0,298 mm · 60–80 cm"],
+      ["Haken", "Einzelhaken Gr. 1–1/0 · toter Köderfisch 8–12 cm"]
+    ], "Aal liebt tote Köderfische – Nachtansitz an Kanten, Einläufen, tiefen Kolken.")}
 
-    ${preisklasse("Gehoben · Schätzung", "🔴", [
-      ["Rute", "Sportex Catapult oder Fox Horizon (wie Karpfen), aber 2,25–2,75 lb statt 3,00 lb", ""],
-      ["Rolle", "Shimano Baitrunner XT-A in kleinerer Größe (4000)", ""],
-      ["Schnur", "Monofil, ggf. Fluorocarbon-Vorfach gegen Abrieb an Aal-Verstecken", ""]
-    ], "Kein etabliertes Aal-Premiumsegment – die meisten erfahrenen Angler greifen hier ohnehin auf Karpfenruten zurück.")}
-
-    <div class="need-hinweis" style="margin-top:20px;padding:14px 16px;font-size:13.5px">
-      💡 <b>Wichtiger Hinweis:</b> Bei Aal „Gehoben" zahlst du im Wesentlichen für
-      Freilauf-Feinmechanik drauf – die Rute bringt kaum Mehrwert, weil Aal keine
-      Präzisionswürfe verlangt. Das Geld ist beim Karpfen-Setup in der Gehoben-Stufe
-      besser investiert.
+    <div class="k-intro card" style="margin-top:20px;margin-bottom:8px">
+      <h2>🐟 Schleie</h2>
+      <p class="k-hint">Aufsteigende Blasen verraten fressende Schleien. Dämmerung in flachen, krautreichen Buchten.</p>
     </div>
+
+    ${methode("Laufpose knapp über Grund", [
+      ["Laufpose", "3–8 g · knapp über Grund eingestellt"],
+      ["Schrotblei", "fein aufgeteilt, 1 Fühlerblei"],
+      ["Vorfach", "FC 0,200 mm · 40–60 cm"],
+      ["Haken", "Gr. 8–12 · Wurm, Mais, Brot"]
+    ], "Schleien beißen zögerlich und kehren oft um – Baitrunner hilft. Ruhige, flache Buchten am Krautrand.")}
   `;
-
-  el.innerHTML = html;
 }
 
 /* ---------- Einkaufsliste ---------- */

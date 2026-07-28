@@ -473,15 +473,27 @@ const FISCHE = [
     info:"Kräftiger Kämpfer, der Anfüttern und Geduld belohnt. Braucht kräftiges Ansitzgerät + Selbsthakmontage.",
     ansaetze:[
       {
-        methode:"Grund-/Feederangeln – Futterkorb mit Boilie/Mais", status:"machbar", setup:"setup5",
+        methode:"Ansitz – Selbsthak-Montage (Boilie/Mais)", status:"machbar", setup:"setup10",
         gewaesser:["see","nok","eider"],
         montage:[
-          {k:"Hauptschnur", v:"Monofil 0,20–0,25 mm (Setup 5) oder 0,30 mm für größere Karpfen"},
-          {k:"Futterkorb/Grundblei", v:"30–80 g je nach Wurfweite und Strömung"},
-          {k:"Vorfach", v:"Boiliehaar oder Haarmontage 10–15 cm"},
-          {k:"Haken", v:"Karpfenhaken Gr. 6–2 · Boilie/Mais am Haar"}
+          {k:"Hauptschnur", v:"Monofil 0,30–0,35 mm (Black Widow + Baitrunner)"},
+          {k:"Blei", v:"Birnenblei/Inline 60–120 g · Selbsthakmontage"},
+          {k:"Haarmontage", v:"10–15 cm · Boilie, Mais oder Pellet am Haar"},
+          {k:"Haken", v:"Karpfenhaken Gr. 4–8"},
+          {k:"Vorfach", v:"FC 0,298 mm · 30–50 cm"}
         ],
-        tipp:"Genau der Einsatzzweck von Setup 5 (Daiwa Ninja Feeder). Ruhiger Ansitz, Futterkorb regelmäßig nachfüttern, Quivertip auf feine Bisse beobachten."
+        tipp:"Genau der Einsatzzweck von Setup 6 (Black Widow + Baitrunner). Rute ins Rutenhalter, Baitrunner öffnen – Karpfen laufen beim Biss, Schnur läuft frei. Erst beim Anhieb Baitrunner schließen."
+      },
+      {
+        methode:"Feederangeln – Futterkorb/Method-Feeder", status:"machbar", setup:"setup5",
+        gewaesser:["see","nok","eider"],
+        montage:[
+          {k:"Hauptschnur", v:"Monofil 0,25 mm (Setup 5)"},
+          {k:"Method-Feeder", v:"30–60 g · Pellet/Groundbait pressen"},
+          {k:"Vorfach", v:"FC 0,298 mm · 20–30 cm (kurz – Selbsthak-Effekt)"},
+          {k:"Haken", v:"Karpfenhaken Gr. 8–12 · Mais, Pellet, Tigernuss"}
+        ],
+        tipp:"Setup 5 (Ninja Feeder) für mittlere Distanzen – Quivertip auf feine Bisse beobachten, Karpfen haken sich am Method-Feeder oft selbst."
       }
     ]
   },
@@ -500,6 +512,29 @@ const FISCHE = [
           {k:"Haken", v:"Gr. 8–12 · Wurm/Mais/Made"}
         ],
         tipp:"Genau der Einsatzzweck von Setup 9 (Stippe) – maximale Feinfühligkeit direkt an der Krautkante, aufsteigende Blasen verraten die Fressstelle. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen (Bäume/Steg)? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
+      },
+      {
+        methode:"Feederangeln – Method-Feeder", status:"machbar", setup:"setup5",
+        gewaesser:["see","nok"],
+        montage:[
+          {k:"Hauptschnur", v:"Monofil 0,25 mm (Setup 5)"},
+          {k:"Method-Feeder", v:"20–40 g · Pellet/Futterbrei pressen"},
+          {k:"Vorfach", v:"FC 0,180–0,200 mm · 20–30 cm"},
+          {k:"Haken", v:"Gr. 10–14 · Mais, Wurm, Pellet"}
+        ],
+        tipp:"Schleie auf den Method-Feeder – kurzes Vorfach für schnellen Selbsthak-Effekt, Quivertip auf ganz feinen, zögernden Biss beobachten."
+      },
+      {
+        methode:"Ansitz (Dämmerung) – Laufpose am Grund", status:"machbar", setup:"setup10",
+        gewaesser:["see","nok"],
+        montage:[
+          {k:"Hauptschnur", v:"Monofil 0,30 mm (Black Widow)"},
+          {k:"Laufpose", v:"3–8 g · Tiefeneinstellung knapp über Grund"},
+          {k:"Schrotblei", v:"fein aufgeteilt, 1 Fühlerblei"},
+          {k:"Vorfach", v:"FC 0,200 mm · 40–60 cm"},
+          {k:"Haken", v:"Gr. 8–12 · Wurm, Mais, Brot"}
+        ],
+        tipp:"Schleie gehen in ruhigen Dämmerungsstunden – flache Buchten, Krautrand. Baitrunner auf ganz leicht: Schleien beißen zögerlich und kehren oft um."
       }
     ]
   },
