@@ -20,7 +20,7 @@ const AKTUELL = {
     key: "setup2",
     name: "Setup 2 – Forelle (Trout Area)",
     rute: "Daiwa Presso Imprimi ST · 2,15 m · WG 0,5-6 g",
-    rolle: "Abu Garcia Cardinal X 2000",
+    rolle: "Daiwa Iprimi LT 1000 S-P",
     schnur: "J-Braid X8 Expedition 0,06 mm (geflochten)",
     vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg · 100 m (für Forelle; Großforelle/Put&Take: 0,298 mm)",
     extra: "Spoon-Tasche Zite Fishing, Trout Attack Set",
