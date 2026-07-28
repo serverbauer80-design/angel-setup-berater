@@ -18,20 +18,20 @@
     </div>
     <nav class="tabs">
       <button class="tab active" data-view="berater">Berater</button>
-      <button class="tab" data-view="wochenende">🎒 Planung</button>
       <button class="tab" data-view="tagescheck">Lohnt sich heute?</button>
-      <button class="tab" data-view="knoten">Knotenkunde</button>
-      <button class="tab" data-view="methoden">🎣 Angelmethoden</button>
-      <button class="tab" data-view="checkliste">Zubehör-Check</button>
+      <button class="tab" data-view="wochenende">🎒 Planung</button>
       <button class="tab" data-view="saison">Saisonkalender</button>
       <button class="tab" data-view="lav">💳 LAV-Gewässer</button>
       <button class="tab" data-view="faenge">Fänge &amp; Spots</button>
-      <button class="tab" data-view="inventar">Mein Equipment</button>
+      <button class="tab" data-view="methoden">🎣 Angelmethoden</button>
       <button class="tab" data-view="ansitz">⚓ Ansitzangeln</button>
+      <button class="tab" data-view="knoten">Knotenkunde</button>
+      <button class="tab" data-view="inventar">Mein Equipment</button>
+      <button class="tab" data-view="checkliste">Zubehör-Check</button>
+      <button class="tab" data-view="einkauf">🛒 Einkaufsliste</button>
       <button class="tab" data-view="tagebuch">📔 Tagebuch</button>
       <button class="tab" data-view="unterlagen">📄 Unterlagen</button>
       <button class="tab" data-view="einsteiger">🎓 Starthilfe</button>
-      <button class="tab" data-view="einkauf">🛒 Einkaufsliste</button>
     </nav>
     <button id="sync-status-btn" type="button" class="sync-status" title="Synchronisation">☁️ Nicht angemeldet</button>
   </header>
@@ -297,7 +297,7 @@
     firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {});
   </script>
 
-  <script src="data.js?v=20260722-21"></script>
-  <script src="app.js?v=20260722-21"></script>
+  <script src="data.js?v=20260722-22"></script>
+  <script src="app.js?v=20260722-22"></script>
 </body>
 </html>
