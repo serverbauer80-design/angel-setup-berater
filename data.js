@@ -51,7 +51,7 @@ const AKTUELL = {
     name: "Setup 5 – Feederangel (Friedfisch)",
     rute: "Daiwa Ninja X Feeder · 3,90 m · WG bis 120 g · 3-teilig · inkl. Wechselspitzen (Quivertips)",
     rolle: "Daiwa 23 Ninja Match&Feeder LT4000-C · Frontbremse",
-    schnur: "Monofil 0,20–0,25 mm (Hauptschnur) + kurze Vorfachschnur",
+    schnur: "J-Braid X8 0,12 mm (geflochten) – Vorfach Mono/FC 0,20–0,25 mm, ca. 50–80 cm",
     vorfach: "Daiwa J-Fluoro Carbon 0,180 mm oder 0,200 mm (Rotauge/Brasse fein) · 0,218 mm (Standard) · 0,298 mm für Karpfen",
     extra: "Futterkorb / Method-Feeder, Haken Gr. 10–14, Schrotblei, Made/Mais/Pellet",
     einsatz: "Feeder- und Grundangeln auf Friedfische (Brasse, Schleie, Rotauge, Karpfen) – ruhiger Ansitz mit Futterkorb an See, Kanal oder ruhigem Fluss. Deutlich kräftiger als die Crivit-Kombo: 3,90 m Wurfweite, Quivertip-Bisserkennung, Frontbremse."
@@ -61,7 +61,7 @@ const AKTUELL = {
     name: "Setup 6 – Ansitzangeln (Karpfen/Aal/Schleie)",
     rute: "Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig",
     rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
-    schnur: "Monofil 0,30–0,35 mm · 200–300 m",
+    schnur: "Daiwa Monofil 0,35 mm (durchgehend)",
     vorfach: "Daiwa J-Fluoro Carbon 0,298 mm (Karpfen/Aal) oder 0,35 mm für große Karpfen",
     extra: "Rutenhalter (Leeko vorhanden), Bissanzeiger, Boilies/Pellets/Mais/Tauwurm, Selbsthak-Montage / Method-Feeder",
     einsatz: "Ruhiger Ansitz auf Karpfen, Aal, Schleie, Quappe – an See, NOK, Eider oder ruhigem Fluss. Der Baitrunner (Freilauf) gibt Schnur frei, wenn der Fisch den Köder nimmt, ohne Widerstand zu spüren – Bremse wird erst beim Anhieb zugedreht."
@@ -476,7 +476,7 @@ const FISCHE = [
         methode:"Ansitz – Selbsthak-Montage (Boilie/Mais)", status:"machbar", setup:"setup10",
         gewaesser:["see","nok","eider"],
         montage:[
-          {k:"Hauptschnur", v:"Monofil 0,30–0,35 mm (Black Widow + Baitrunner)"},
+          {k:"Hauptschnur", v:"Daiwa Monofil 0,35 mm (Black Widow + Baitrunner)"},
           {k:"Blei", v:"Birnenblei/Inline 60–120 g · Selbsthakmontage"},
           {k:"Haarmontage", v:"10–15 cm · Boilie, Mais oder Pellet am Haar"},
           {k:"Haken", v:"Karpfenhaken Gr. 4–8"},
@@ -488,7 +488,7 @@ const FISCHE = [
         methode:"Feederangeln – Futterkorb/Method-Feeder", status:"machbar", setup:"setup5",
         gewaesser:["see","nok","eider"],
         montage:[
-          {k:"Hauptschnur", v:"Monofil 0,25 mm (Setup 5)"},
+          {k:"Hauptschnur", v:"J-Braid 0,12 mm (Setup 5) + Mono/FC-Vorfach"},
           {k:"Method-Feeder", v:"30–60 g · Pellet/Groundbait pressen"},
           {k:"Vorfach", v:"FC 0,298 mm · 20–30 cm (kurz – Selbsthak-Effekt)"},
           {k:"Haken", v:"Karpfenhaken Gr. 8–12 · Mais, Pellet, Tigernuss"}
@@ -517,7 +517,7 @@ const FISCHE = [
         methode:"Feederangeln – Method-Feeder", status:"machbar", setup:"setup5",
         gewaesser:["see","nok"],
         montage:[
-          {k:"Hauptschnur", v:"Monofil 0,25 mm (Setup 5)"},
+          {k:"Hauptschnur", v:"J-Braid 0,12 mm (Setup 5) + Mono/FC-Vorfach"},
           {k:"Method-Feeder", v:"20–40 g · Pellet/Futterbrei pressen"},
           {k:"Vorfach", v:"FC 0,180–0,200 mm · 20–30 cm"},
           {k:"Haken", v:"Gr. 10–14 · Mais, Wurm, Pellet"}
@@ -558,7 +558,7 @@ const FISCHE = [
         methode:"Grund-/Feederangeln (weitere Distanz)", status:"machbar", setup:"setup5",
         gewaesser:["eider","nok","see","elbe"],
         montage:[
-          {k:"Hauptschnur", v:"Monofil 0,20–0,25 mm (Setup 5) – eher leichter Feeder"},
+          {k:"Hauptschnur", v:"J-Braid 0,12 mm (Setup 5) + Mono/FC-Vorfach 0,20–0,25 mm"},
           {k:"Futterkorb/Grundblei", v:"20–40 g"},
           {k:"Vorfach", v:"0,14–0,16 mm · ca. 40–60 cm"},
           {k:"Haken", v:"Gr. 14–18 · Made/Mais/Teig"}
