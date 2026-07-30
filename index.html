@@ -9,31 +9,23 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">
-      <span class="brand-emoji">🎣</span>
-      <div>
-        <h1>Angel-Setup-Berater</h1>
-        <p class="sub">Welcher Fisch, welches Gewässer – welches Setup &amp; welche Montage?</p>
+    <div class="topbar-brand">
+      <div class="brand">
+        <span class="brand-emoji">🎣</span>
+        <div>
+          <h1>Angel-Setup-Berater</h1>
+          <p class="sub">Welcher Fisch, welches Gewässer – welches Setup &amp; welche Montage?</p>
+        </div>
       </div>
+      <button id="sync-status-btn" type="button" class="sync-status" title="Synchronisation">☁️ Nicht angemeldet</button>
     </div>
-    <nav class="tabs">
-      <button class="tab active" data-view="berater">Berater</button>
-      <button class="tab" data-view="tagescheck">Lohnt sich heute?</button>
-      <button class="tab" data-view="wochenende">🎒 Planung</button>
-      <button class="tab" data-view="saison">Saisonkalender</button>
-      <button class="tab" data-view="lav">💳 LAV-Gewässer</button>
-      <button class="tab" data-view="faenge">Fänge &amp; Spots</button>
-      <button class="tab" data-view="methoden">🎣 Angelmethoden</button>
-      <button class="tab" data-view="ansitz">⚓ Ansitzangeln</button>
-      <button class="tab" data-view="knoten">Knotenkunde</button>
-      <button class="tab" data-view="inventar">Mein Equipment</button>
-      <button class="tab" data-view="checkliste">Zubehör-Check</button>
-      <button class="tab" data-view="einkauf">🛒 Einkaufsliste</button>
-      <button class="tab" data-view="tagebuch">📔 Tagebuch</button>
-      <button class="tab" data-view="unterlagen">📄 Unterlagen</button>
-      <button class="tab" data-view="einsteiger">🎓 Starthilfe</button>
+    <nav class="nav-groups" id="nav-groups">
+      <button class="group-tab active" data-group="planen">Planen</button>
+      <button class="group-tab" data-group="spots">Spots</button>
+      <button class="group-tab" data-group="methoden">Methoden</button>
+      <button class="group-tab" data-group="zeug">Mein Zeug</button>
     </nav>
-    <button id="sync-status-btn" type="button" class="sync-status" title="Synchronisation">☁️ Nicht angemeldet</button>
+    <nav class="nav-subs" id="nav-subs"></nav>
   </header>
 
   <!-- ============ SYNC-LOGIN ============ -->
@@ -297,7 +289,7 @@
     firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {});
   </script>
 
-  <script src="data.js?v=20260722-24"></script>
-  <script src="app.js?v=20260722-24"></script>
+  <script src="data.js?v=20260722-26"></script>
+  <script src="app.js?v=20260722-26"></script>
 </body>
 </html>

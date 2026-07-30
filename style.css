@@ -28,23 +28,48 @@ body{
 
 /* ---------- Topbar ---------- */
 .topbar{
-  display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;
-  padding:18px 22px;background:rgba(9,20,27,.7);backdrop-filter:blur(6px);
+  display:flex;flex-direction:column;
+  background:rgba(9,20,27,.85);backdrop-filter:blur(6px);
   border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;
+}
+.topbar-brand{
+  display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;
+  padding:14px 22px;
 }
 .brand{display:flex;align-items:center;gap:14px}
 .brand-emoji{font-size:34px}
 .topbar h1{font-size:20px;margin:0;letter-spacing:.2px}
 .sub{margin:2px 0 0;font-size:13px;color:var(--muted)}
-.tabs{display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{
-  background:transparent;border:1px solid var(--line);color:var(--muted);
-  padding:8px 16px;border-radius:999px;cursor:pointer;font-size:14px;font-weight:600;transition:.15s;
-  white-space:nowrap;flex:none;
+
+/* Gruppe-Tabs (Ebene 1) */
+.nav-groups{
+  display:flex;gap:2px;padding:0 16px;
+  overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  border-top:1px solid var(--line);
 }
-.tab:hover{color:var(--text);border-color:var(--accent)}
-.tab.active{background:var(--accent);color:#062018;border-color:var(--accent)}
+.nav-groups::-webkit-scrollbar{display:none}
+.group-tab{
+  flex-shrink:0;background:transparent;border:none;border-bottom:2px solid transparent;
+  color:var(--muted);padding:9px 16px 7px;cursor:pointer;font-size:14px;font-weight:600;
+  transition:.15s;white-space:nowrap;
+}
+.group-tab:hover{color:var(--text)}
+.group-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* Sub-Tabs (Ebene 2) */
+.nav-subs{
+  display:flex;gap:4px;padding:5px 16px 6px;
+  background:var(--card);border-top:1px solid var(--line);
+  overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;min-height:36px;
+}
+.nav-subs::-webkit-scrollbar{display:none}
+.sub-tab{
+  flex-shrink:0;background:transparent;border:none;color:var(--muted);
+  padding:4px 13px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:600;
+  transition:.15s;white-space:nowrap;
+}
+.sub-tab:hover{color:var(--text);background:rgba(255,255,255,.07)}
+.sub-tab.active{background:var(--accent);color:#062018}
 
 .sync-status{
   background:var(--bg2);border:1px solid var(--line);color:var(--muted);

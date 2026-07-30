@@ -1715,11 +1715,15 @@ function renderFaengeTop(){
       <button id="fs-export-btn" type="button" class="fs-chip">⬇️ Backup exportieren</button>
       <button id="fs-import-btn" type="button" class="fs-chip">⬆️ Backup importieren</button>
       <input type="file" id="fs-import-file" accept=".json" style="display:none">
+      <button id="fs-gmaps-btn" type="button" class="fs-chip">📥 Google Maps importieren</button>
+      <input type="file" id="fs-gmaps-file" accept=".json" style="display:none">
     </div>
   </div>`;
   $("#fs-export-btn").addEventListener("click", fsExportData);
   $("#fs-import-btn").addEventListener("click", () => $("#fs-import-file").click());
   $("#fs-import-file").addEventListener("change", fsImportData);
+  $("#fs-gmaps-btn").addEventListener("click", () => $("#fs-gmaps-file").click());
+  $("#fs-gmaps-file").addEventListener("change", fsImportGoogleMaps);
 }
 
 /* ---------- Karte ---------- */
@@ -2750,6 +2754,112 @@ function fsImportData(e){
   e.target.value = "";
 }
 
+function fsImportGoogleMaps(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+
+      // Akzeptiert FeatureCollection (Standard-Takeout) oder direktes Array
+      let features = [];
+      if(data.type === "FeatureCollection" && Array.isArray(data.features)){
+        features = data.features;
+      } else if(Array.isArray(data)){
+        features = data;
+      } else {
+        throw new Error("Kein gültiges Google Maps Takeout-Format (erwartet: FeatureCollection)");
+      }
+
+      // Features → interne Spot-Rohdaten
+      const parsed = [];
+      for(const f of features){
+        let lat = null, lng = null, name = "", address = "";
+        const props = f.properties || {};
+        const loc   = props.Location || {};
+
+        // Koordinaten: GeoJSON-Reihenfolge ist [lng, lat]
+        if(f.geometry?.coordinates?.length >= 2){
+          lng = parseFloat(f.geometry.coordinates[0]);
+          lat = parseFloat(f.geometry.coordinates[1]);
+        }
+        // Fallback: explizite Geo Coordinates im Location-Block
+        if((!lat || !lng) && loc["Geo Coordinates"]){
+          lat = parseFloat(loc["Geo Coordinates"].Latitude);
+          lng = parseFloat(loc["Geo Coordinates"].Longitude);
+        }
+        if(!lat || !lng || isNaN(lat) || isNaN(lng)) continue;
+
+        name    = props.Title || loc["Business Name"] || loc.Address || "Unbekannter Spot";
+        address = loc.Address || "";
+        parsed.push({ lat, lng, name, address });
+      }
+
+      if(parsed.length === 0){
+        fsToast("Keine Spots mit Koordinaten in der Datei gefunden");
+        e.target.value = ""; return;
+      }
+
+      // Dublettenprüfung: gleicher Name (case-insensitive) ODER Abstand < 100 m
+      const toAdd = [], skipped = [];
+      for(const p of parsed){
+        const isDupe = FAENGE.spots.some(s => {
+          if(s.name.toLowerCase() === p.name.toLowerCase()) return true;
+          const dlat = (s.lat - p.lat) * 111000;
+          const dlng = (s.lng - p.lng) * 111000 * Math.cos(s.lat * Math.PI / 180);
+          return Math.sqrt(dlat * dlat + dlng * dlng) < 100;
+        });
+        if(isDupe) skipped.push(p.name);
+        else toAdd.push(p);
+      }
+
+      let msg = `${parsed.length} Spots in der Datei gefunden.\n✅ Neu: ${toAdd.length}`;
+      if(skipped.length){
+        const preview = skipped.slice(0, 5).join(", ") + (skipped.length > 5 ? ` … (+${skipped.length - 5})` : "");
+        msg += `\n⏭ Bereits vorhanden (übersprungen): ${skipped.length}\n(${preview})`;
+      }
+      if(toAdd.length === 0){ alert(msg + "\n\nNichts Neues zu importieren."); e.target.value = ""; return; }
+      msg += `\n\n${toAdd.length} neue Spots importieren?`;
+      if(!confirm(msg)){ e.target.value = ""; return; }
+
+      for(const p of toAdd){
+        // Gewässertyp anhand Name + Adresse raten
+        const t = (p.name + " " + p.address).toLowerCase();
+        let type = "see";
+        if(/forellen|put.?&.?take|angelsee|fischteich/.test(t)) type = "forellensee";
+        else if(/fluss|bach|elbe|weser|eider|trave|stör/.test(t))  type = "fluss";
+        else if(/kanal/.test(t))  type = "kanal";
+        else if(/meer|ostsee|nordsee|küste|fjord|bucht|haff/.test(t)) type = "kueste";
+        else if(/teich|weiher/.test(t)) type = "see";
+
+        // Region grob anhand Koordinaten (Bounding-Boxes DE-Nord)
+        let region = "sh";
+        if(p.lat >= 53.4 && p.lat <= 53.75 && p.lng >= 9.7 && p.lng <= 10.35) region = "hh";
+        else if(p.lat < 53.35) region = "ni";
+        else if(p.lng > 11.5 || (p.lat > 53.5 && p.lng > 11.2))  region = "mv";
+        else if(p.lat > 55.05) region = "dk";
+
+        FAENGE.spots.push({
+          id: genId(), name: p.name, type, region,
+          lat: p.lat, lng: p.lng, price: 0,
+          notes: p.address, rating: 0, visited: false,
+          created: new Date().toISOString()
+        });
+      }
+
+      speichereFaenge();
+      if(fsMap) fsRenderMarkers();
+      renderFaengeTop();
+      fsToast(`✅ ${toAdd.length} Spots importiert${skipped.length ? ` · ${skipped.length} Dubletten übersprungen` : ""}`);
+    } catch(err){
+      fsToast("Fehler beim Lesen: " + err.message);
+    }
+  };
+  reader.readAsText(file, "utf-8");
+  e.target.value = "";
+}
+
 /* ---------- Knotenkunde-Ansicht ---------- */
 function sterne(n){ return "★".repeat(n) + "☆".repeat(3 - n); }
 
@@ -2976,10 +3086,7 @@ document.addEventListener("click", (e) => {
 
 /* Zu einem Knoten springen (aus dem Berater heraus) */
 function zeigeKnoten(id){
-  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  document.querySelector('.tab[data-view="knoten"]').classList.add("active");
-  $("#view-knoten").classList.add("active");
+  switchView("knoten");
   const target = document.getElementById("knoten-" + id);
   if(target){ target.scrollIntoView({behavior:"smooth", block:"start"}); target.classList.add("flash"); setTimeout(()=>target.classList.remove("flash"), 1500); }
 }
@@ -2993,13 +3100,10 @@ document.addEventListener("click", (e) => {
    (Luftdruck/Himmel/Wind), die sich nicht automatisch ermitteln lassen – daher
    kein stiller Score auf der Trip-Karte, sondern direkter Sprung zum vollen Check. */
 function zeigeTagescheck(fischId){
-  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  document.querySelector('.tab[data-view="tagescheck"]').classList.add("active");
-  $("#view-tagescheck").classList.add("active");
+  switchView("tagescheck");
   const sel = document.getElementById("tc-fisch");
   if(sel && fischId){ sel.value = fischId; tagescheckBerechnen(); }
-  $("#view-tagescheck").scrollIntoView({behavior:"smooth", block:"start"});
+  document.getElementById("view-tagescheck").scrollIntoView({behavior:"smooth", block:"start"});
 }
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("[data-tagescheck]");
@@ -3538,19 +3642,53 @@ function renderEinkauf(){
   });
 }
 
-/* ---------- Tabs ---------- */
-document.querySelectorAll(".tab").forEach(t => {
-  t.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
-    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-    t.classList.add("active");
-    $("#view-" + t.dataset.view).classList.add("active");
-    if(t.dataset.view === "faenge") fsOnTabShown();
-    if(t.dataset.view === "lav") lavOnTabShown();
-    if(t.dataset.view === "tagebuch"){ TB_VIEW = "list"; TB_DETAIL = null; renderTagebuch(); }
-    if(t.dataset.view === "einsteiger") renderEinsteiger();
+/* ---------- Zwei-Ebenen-Navigation ---------- */
+const NAV_GROUPS = {
+  planen:   [{view:"berater",label:"Berater"},{view:"tagescheck",label:"Lohnt sich heute?"},{view:"wochenende",label:"🎒 Planung"},{view:"saison",label:"Saisonkalender"}],
+  spots:    [{view:"lav",label:"💳 LAV-Gewässer"},{view:"faenge",label:"Fänge & Spots"}],
+  methoden: [{view:"methoden",label:"🎣 Angelmethoden"},{view:"ansitz",label:"⚓ Ansitzangeln"},{view:"knoten",label:"Knotenkunde"}],
+  zeug:     [{view:"inventar",label:"Mein Equipment"},{view:"checkliste",label:"Zubehör-Check"},{view:"einkauf",label:"🛒 Einkaufsliste"},{view:"tagebuch",label:"📔 Tagebuch"},{view:"unterlagen",label:"📄 Unterlagen"},{view:"einsteiger",label:"🎓 Starthilfe"}],
+};
+
+function renderSubTabs(group){
+  const nav = document.getElementById("nav-subs");
+  nav.innerHTML = "";
+  NAV_GROUPS[group].forEach(item => {
+    const btn = document.createElement("button");
+    btn.className = "sub-tab";
+    btn.dataset.view = item.view;
+    btn.textContent = item.label;
+    btn.addEventListener("click", () => switchView(item.view));
+    nav.appendChild(btn);
   });
+}
+
+function switchView(viewName){
+  let targetGroup = null;
+  for(const [g, items] of Object.entries(NAV_GROUPS)){
+    if(items.some(i => i.view === viewName)){ targetGroup = g; break; }
+  }
+  if(!targetGroup) return;
+  document.querySelectorAll(".group-tab").forEach(t => t.classList.remove("active"));
+  document.querySelector(`.group-tab[data-group="${targetGroup}"]`).classList.add("active");
+  renderSubTabs(targetGroup);
+  document.querySelectorAll(".sub-tab").forEach(t => t.classList.remove("active"));
+  document.querySelector(`.sub-tab[data-view="${viewName}"]`).classList.add("active");
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById("view-" + viewName).classList.add("active");
+  if(viewName === "faenge") fsOnTabShown();
+  if(viewName === "lav") lavOnTabShown();
+  if(viewName === "tagebuch"){ TB_VIEW = "list"; TB_DETAIL = null; renderTagebuch(); }
+  if(viewName === "einsteiger") renderEinsteiger();
+}
+
+document.querySelectorAll(".group-tab").forEach(t => {
+  t.addEventListener("click", () => switchView(NAV_GROUPS[t.dataset.group][0].view));
 });
+
+/* Sub-Tabs für initiale Gruppe rendern und Berater als aktiv setzen */
+renderSubTabs("planen");
+document.querySelector('.sub-tab[data-view="berater"]').classList.add("active");
 
 /* ---------- Events ---------- */
 fischSel.addEventListener("change", () => { fuelleGewaesser(fischSel.value); berechne(); });
