@@ -90,6 +90,11 @@ function ladeWartung(){
 function speichereWartung(){ try { localStorage.setItem(WARTUNG_KEY, JSON.stringify(WARTUNG)); } catch(e){} fsSyncPushDebounced(); }
 let WARTUNG = ladeWartung();
 
+const SCHNUR_KEY = "schnur_v1";
+function ladeSchnur(){ try { return JSON.parse(localStorage.getItem(SCHNUR_KEY)) || {}; } catch(e){ return {}; } }
+function speichereSchnur(){ try { localStorage.setItem(SCHNUR_KEY, JSON.stringify(SCHNUR)); } catch(e){} fsSyncPushDebounced(); }
+let SCHNUR = ladeSchnur();
+
 /* Einmalige Migration: Setup 4/5/6/7 wurden umnummeriert (Stippruten in eigene
    Gruppe verschoben, Rest rutscht nach: alt4->neu7, alt5->neu4, alt6->neu5,
    alt7->neu6). Wartungsdaten sind unter dem alten setup.key gespeichert und
@@ -111,6 +116,25 @@ let WARTUNG = ladeWartung();
 function tageSeit(datumStr){
   const then = new Date(datumStr + "T00:00:00");
   return Math.floor((Date.now() - then.getTime()) / (1000*60*60*24));
+}
+
+function berechneMondphase(datum){
+  const d = datum instanceof Date ? datum : new Date(datum + "T12:00:00");
+  const synodicMonth = 29.53058867;
+  const knownNewMoon = new Date("2000-01-06T18:14:00Z");
+  const diff = (d - knownNewMoon) / (1000 * 60 * 60 * 24);
+  const phase = ((diff % synodicMonth) + synodicMonth) % synodicMonth;
+  const pct = phase / synodicMonth;
+  let name, emoji, tipp;
+  if(pct < 0.03 || pct > 0.97) { name="Neumond"; emoji="🌑"; tipp="Dunkle Nächte – Raubfische besonders am Abend aktiv."; }
+  else if(pct < 0.22){ name="Zunehmende Sichel"; emoji="🌒"; tipp="Mond wächst – Fische werden aktiver, gute Beißzeiten."; }
+  else if(pct < 0.28){ name="Erstes Viertel"; emoji="🌓"; tipp="Halbmond zunehmend – mittlere Aktivität."; }
+  else if(pct < 0.47){ name="Zunehmender Dreiviertelmond"; emoji="🌔"; tipp="Mond fast voll – Fischaktivität steigt spürbar."; }
+  else if(pct < 0.53){ name="Vollmond"; emoji="🌕"; tipp="Vollmond – sehr gute Beißzeiten, besonders in der Dämmerung und nachts."; }
+  else if(pct < 0.72){ name="Abnehmender Dreiviertelmond"; emoji="🌖"; tipp="Mond nimmt ab – noch gute Aktivität."; }
+  else if(pct < 0.78){ name="Letztes Viertel"; emoji="🌗"; tipp="Halbmond abnehmend – durchschnittliche Aktivität."; }
+  else { name="Abnehmende Sichel"; emoji="🌘"; tipp="Auf dem Weg zum Neumond – ruhige Phase."; }
+  return { name, emoji, tipp, pct };
 }
 
 /* ---------- Packliste fürs Wochenende (im Browser gespeichert) ----------
@@ -140,7 +164,7 @@ function fsSyncCollectState(){
     return rest;
   }) };
   return {
-    zusatz: ZUSATZ, faenge: faengeOhneFotos, manuell: MANUELL, wartung: WARTUNG, packliste: PACKLISTE,
+    zusatz: ZUSATZ, faenge: faengeOhneFotos, manuell: MANUELL, wartung: WARTUNG, schnur: SCHNUR, packliste: PACKLISTE,
     osmCache: typeof OSM_CACHE !== "undefined" ? OSM_CACHE : [],
     flussCache: typeof FLUSS_CACHE !== "undefined" ? FLUSS_CACHE : [],
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -160,6 +184,7 @@ function fsSyncApplyState(data){
   }
   if(data.manuell){ MANUELL = data.manuell; try{localStorage.setItem(MANUAL_KEY, JSON.stringify(MANUELL));}catch(e){} }
   if(data.wartung){ WARTUNG = data.wartung; try{localStorage.setItem(WARTUNG_KEY, JSON.stringify(WARTUNG));}catch(e){} }
+  if(data.schnur){ SCHNUR = data.schnur; try{localStorage.setItem(SCHNUR_KEY, JSON.stringify(SCHNUR));}catch(e){} }
   if(data.packliste){ PACKLISTE = data.packliste; try{localStorage.setItem(PACKLISTE_KEY, JSON.stringify(PACKLISTE));}catch(e){} }
   if(data.osmCache){ OSM_CACHE = data.osmCache; try{localStorage.setItem(OSM_CACHE_KEY, JSON.stringify(OSM_CACHE));}catch(e){} }
   if(data.flussCache){ FLUSS_CACHE = data.flussCache; try{localStorage.setItem(FLUSS_CACHE_KEY, JSON.stringify(FLUSS_CACHE));}catch(e){} }
@@ -914,11 +939,57 @@ function berechne(){
   ergEl.innerHTML = html;
 }
 
+function renderNaechstenSpot(){
+  const wrap = document.getElementById("naechster-spot-wrap");
+  if(!wrap) return;
+  if(!FAENGE || FAENGE.spots.length === 0){ wrap.innerHTML = ""; return; }
+  if(!navigator.geolocation){ wrap.innerHTML = ""; return; }
+  // Show button if no GPS result yet
+  if(!wrap.dataset.loaded){
+    wrap.innerHTML = `<div class="naechster-spot-btn-wrap">
+      <button type="button" id="naechster-spot-btn" class="fs-chip">📍 Nächsten gespeicherten Spot finden</button>
+    </div>`;
+    document.getElementById("naechster-spot-btn").addEventListener("click", () => {
+      wrap.innerHTML = `<div class="naechster-spot-loading">📡 GPS wird ermittelt …</div>`;
+      navigator.geolocation.getCurrentPosition(pos => {
+        wrap.dataset.loaded = "1";
+        const lat = pos.coords.latitude, lng = pos.coords.longitude;
+        let naechster = null, minDist = Infinity;
+        FAENGE.spots.forEach(s => {
+          const dLat = (s.lat - lat)*111000;
+          const dLng = (s.lng - lng)*111000*Math.cos(lat*Math.PI/180);
+          const dist = Math.sqrt(dLat*dLat + dLng*dLng);
+          if(dist < minDist){ minDist = dist; naechster = s; }
+        });
+        if(!naechster){ wrap.innerHTML = ""; return; }
+        const distText = minDist > 1000 ? (minDist/1000).toFixed(1)+" km" : Math.round(minDist)+" m";
+        const catchCount = FAENGE.catches.filter(c => c.spotId === naechster.id).length;
+        wrap.innerHTML = `<div class="naechster-spot card">
+          <div class="naechster-spot-label">📍 Nächster Spot</div>
+          <div class="naechster-spot-name">${naechster.name}</div>
+          <div class="naechster-spot-meta">${FS_TYPE_LABEL[naechster.type]||naechster.type} · ${distText} entfernt · ${catchCount} Fänge</div>
+          ${naechster.notes ? `<div class="fang-notiz">${naechster.notes}</div>` : ""}
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button type="button" class="fs-chip" onclick="window.open('https://maps.google.com/?q=${naechster.lat},${naechster.lng}','_blank')">🗺️ Navigation</button>
+            <button type="button" class="fs-chip" onclick="switchView('faenge')">📋 Zum Spot</button>
+          </div>
+        </div>`;
+      }, () => {
+        wrap.innerHTML = `<div class="naechster-spot-btn-wrap"><span class="k-hint">GPS-Zugriff nicht möglich.</span></div>`;
+      }, { timeout:8000 });
+    });
+  }
+}
+
 /* ---------- Inventar-Ansicht ---------- */
 function inventarKarteHTML(s){
   const letzteWartung = WARTUNG[s.key];
   const tage = letzteWartung ? tageSeit(letzteWartung) : null;
-  const faellig = tage === null || tage > 180; // > 6 Monate ohne Eintrag = Erinnerung
+  const faellig = tage === null || tage > 180;
+  const letzteSchnur = SCHNUR[s.key];
+  const schnurTage = letzteSchnur ? tageSeit(letzteSchnur) : null;
+  const schnurMonate = schnurTage !== null ? (schnurTage / 30).toFixed(1) : null;
+  const schnurFaellig = schnurTage === null || schnurTage > 120;
   return `<div class="inv-card">
       <h3>${s.name}</h3>
       <div class="row"><span class="k">Rute</span><span>${s.rute}</span></div>
@@ -931,6 +1002,10 @@ function inventarKarteHTML(s){
       <div class="wartung-box${faellig ? " faellig" : ""}">
         <span>🔧 ${letzteWartung ? `Zuletzt gewartet: ${letzteWartung} (vor ${tage} Tagen)` : "Noch keine Wartung eingetragen"}</span>
         <button type="button" class="fs-chip" data-wartung="${s.key}">Heute gewartet</button>
+      </div>
+      <div class="wartung-box schnur-box${schnurFaellig ? " faellig" : ""}">
+        <span>🧵 ${letzteSchnur ? `Schnur gewechselt: ${letzteSchnur} (vor ${schnurMonate} Monaten)` : "Kein Schnurwechsel eingetragen"}</span>
+        <button type="button" class="fs-chip" data-schnur="${s.key}">Heute gewechselt</button>
       </div>
     </div>`;
 }
@@ -1054,6 +1129,14 @@ function renderInventar(){
     btn.addEventListener("click", () => {
       WARTUNG[btn.dataset.wartung] = heuteISO();
       speichereWartung();
+      renderInventar();
+    });
+  });
+  // ----- Handler: Schnurwechsel eintragen -----
+  el.querySelectorAll("[data-schnur]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      SCHNUR[btn.dataset.schnur] = heuteISO();
+      speichereSchnur();
       renderInventar();
     });
   });
@@ -1417,6 +1500,7 @@ function renderTagescheck(){
     <button type="button" class="add-btn" id="tc-wetter-btn" style="margin-top:12px">🌤️ Wetter automatisch laden</button>
     <div id="tc-wetter-status" class="k-hint" style="margin-top:8px"></div>
   </div>
+  <div id="tc-mondphase"></div>
   <div id="tc-gezeiten-result"></div>
   <div id="tc-result"></div>`;
 
@@ -1441,6 +1525,20 @@ function tagescheckBerechnen(){
   const himmel = $("#tc-himmel").value;
   const wind = $("#tc-wind").value;
   const regen = $("#tc-regen").value;
+
+  // Mondphase anzeigen
+  const mondEl = document.getElementById("tc-mondphase");
+  if(mondEl){
+    const mond = berechneMondphase(datumVal || new Date());
+    const mondPct = Math.round(mond.pct * 100);
+    mondEl.innerHTML = `<div class="tc-mond-box card">
+      <div class="tc-mond-emoji">${mond.emoji}</div>
+      <div class="tc-mond-info">
+        <div class="tc-mond-name">${mond.name} <span class="tc-mond-pct">(${mondPct}% Zyklus)</span></div>
+        <div class="tc-mond-tipp">${mond.tipp}</div>
+      </div>
+    </div>`;
+  }
 
   const fisch = fischId ? FISCHE.find(f => f.id === fischId) : null;
   const hint = fischId ? (TAGESCHECK_HINT[fischId] || {}) : {};
@@ -1600,12 +1698,42 @@ function parseSchonzeitMonate(text){
 
 function renderSaison(){
   const el = $("#saison");
+  const heute = new Date();
+  const heuteMonat = heute.getMonth() + 1;
+  const MONAT_NAMEN_DE = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+  const heuteMonatName = MONAT_NAMEN_DE[heuteMonat - 1];
+
+  // Schonzeiten-Ampel
+  const ampelFrei = [], ampelGesperrt = [];
+  FISCHE.forEach(f => {
+    const recht = RECHT_SH[f.id];
+    if(!recht) return;
+    const schonMonate = parseSchonzeitMonate(recht.schonzeit);
+    if(!schonMonate || schonMonate.length === 0) return;
+    if(schonMonate.includes(heuteMonat)) ampelGesperrt.push(f);
+    else ampelFrei.push(f);
+  });
+
+  let ampelHTML = `<div class="schonzeit-ampel card">
+    <h3>🚦 Schonzeiten-Ampel – heute (${heuteMonatName} ${heute.getFullYear()})</h3>
+    <div class="ampel-grid">`;
+  if(ampelFrei.length > 0){
+    ampelHTML += `<div class="ampel-gruppe"><div class="ampel-label ampel-gruen">✅ Frei – kein Schonstatus</div>
+      <div class="ampel-fische">${ampelFrei.map(f => `<span class="ampel-fish">${f.emoji} ${f.name}</span>`).join("")}</div></div>`;
+  }
+  if(ampelGesperrt.length > 0){
+    ampelHTML += `<div class="ampel-gruppe"><div class="ampel-label ampel-rot">🔴 Schonzeit – nicht entnehmen</div>
+      <div class="ampel-fische">${ampelGesperrt.map(f => `<span class="ampel-fish ampel-fish-rot">${f.emoji} ${f.name}</span>`).join("")}</div></div>`;
+  }
+  ampelHTML += `</div><p class="k-hint" style="margin:8px 0 0">Nur Arten mit Schonzeitregelung in Schleswig-Holstein. Mindestmaße und Vereinsregeln immer zusätzlich prüfen.</p></div>`;
+
   let html = `<div class="k-intro card">
     <h2>📅 Saisonkalender</h2>
     <p>Auf einen Blick: <b>Hauptsaison</b> (🟢 grün) und <b>gesetzliche Schonzeit</b> (🔴 rot schraffiert) pro Fisch.
     Fische ohne markierte Hauptsaison sind ganzjährig ungefähr gleich gut fangbar.</p>
     <p class="k-hint">⚠️ Schonzeiten sind Orientierungswerte (Stand 2026) – vor jedem Angeltag Gewässerordnung/Erlaubnisschein prüfen. Details siehe „Berater"-Tab pro Fisch.</p>
-  </div>`;
+  </div>
+  ${ampelHTML}`;
 
   html += `<div class="saison-scroll"><table class="saison-table">
     <thead><tr><th class="saison-fisch-col">Fisch</th>${MONATE_KURZ.map(m => `<th>${m}</th>`).join("")}</tr></thead>
@@ -2349,14 +2477,23 @@ function fsRenderSpotsList(){
   const sorted = [...FAENGE.spots].sort((a,b) => (b.rating||0) - (a.rating||0));
   let html = `<div class="fs-spot-grid">`;
   sorted.forEach(s => {
-    const catchCount = FAENGE.catches.filter(c => c.spotId === s.id).length;
+    const spotCatches = FAENGE.catches.filter(c => c.spotId === s.id);
+    const catchCount = spotCatches.length;
     const stars = s.rating ? "★".repeat(s.rating) + "☆".repeat(5-s.rating) : "";
+    // Top species at this spot
+    const artCounts = {};
+    spotCatches.forEach(c => { if(c.fischName) artCounts[c.fischName] = (artCounts[c.fischName]||0)+1; });
+    const topArten = Object.entries(artCounts).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([art,cnt]) => {
+      const fisch = FISCHE.find(f => f.name.toLowerCase() === art.toLowerCase());
+      return `${fisch ? fisch.emoji+" " : ""}${art}${cnt>1?" ("+cnt+"×)":""}`;
+    });
     html += `<div class="fs-spot-card card" data-fs-open="${s.id}">
       <div class="fs-spot-card-head">
         <h3>${s.name}${s.visited ? ' <span class="ok-pill">✓ besucht</span>' : ""}</h3>
         <span class="fs-chip" style="border-color:${FS_TYPE_COLOR[s.type]||"#295064"}">${FS_TYPE_LABEL[s.type]||s.type}</span>
       </div>
       <div class="fang-meta">${FS_REGION_LABEL[s.region]||""} · ${catchCount === 1 ? "1 Fang" : catchCount + " Fänge"}${s.price ? " · " + s.price.toFixed(2)+"€" : ""}</div>
+      ${topArten.length > 0 ? `<div class="spot-top-arten">${topArten.join(" · ")}</div>` : ""}
       ${stars ? `<div class="fs-stars">${stars}</div>` : ""}
     </div>`;
   });
@@ -2708,8 +2845,64 @@ function fsRenderStats(){
     });
     html += `</div>`;
   }
+  // Jahresrückblick – Fänge des aktuellen Jahres pro Monat als Balkendiagramm
+  const aktJahr = new Date().getFullYear();
+  const jahrFaenge = FAENGE.catches.filter(c => (c.datum||"").startsWith(aktJahr));
+  const jahrMonat = Array.from({length:12}, (_,i) => ({ m:i+1, n:0 }));
+  jahrFaenge.forEach(c => {
+    const m = parseInt((c.datum||"").split("-")[1],10);
+    if(m >= 1 && m <= 12) jahrMonat[m-1].n++;
+  });
+  const jahrMax = Math.max(1, ...jahrMonat.map(x=>x.n));
+  const MONAT_K = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+  if(jahrFaenge.length > 0){
+    html += `<div class="card fs-stats-block">
+      <h3>📆 Jahresrückblick ${aktJahr} (${jahrFaenge.length} Fänge)</h3>
+      <div class="jahres-chart">
+        ${jahrMonat.map(({m,n}) => `<div class="jahres-col">
+          <div class="jahres-bar-wrap">
+            <div class="jahres-bar" style="height:${n>0?Math.max(8,Math.round(n/jahrMax*80)):0}px"></div>
+          </div>
+          <div class="jahres-count">${n||""}</div>
+          <div class="jahres-label">${MONAT_K[m-1]}</div>
+        </div>`).join("")}
+      </div>
+    </div>`;
+  }
+
+  // CSV-Export
+  html += `<div class="card fs-stats-block fs-csv-block">
+    <h3>📥 Daten exportieren</h3>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button type="button" class="add-btn" id="fs-csv-btn">⬇️ Fänge als CSV</button>
+    </div>
+    <p class="k-hint" style="margin-top:8px">CSV-Datei öffnet sich in Excel oder Google Tabellen.</p>
+  </div>`;
+
   if(totalSpots === 0) html = `<div class="empty">Füge deinen ersten Spot auf der Karte hinzu, um Statistiken zu sehen.</div>`;
   el.innerHTML = html;
+  const csvBtn = el.querySelector("#fs-csv-btn");
+  if(csvBtn) csvBtn.addEventListener("click", fsExportCSV);
+}
+
+function fsExportCSV(){
+  const MONATSNAMEN_CSV = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  const header = ["Datum","Fischart","Gewicht (kg)","Länge (cm)","Methode","Spot","Tageszeit","Notiz"].join(";");
+  const rows = FAENGE.catches.map(c => {
+    const spot = c.spotId ? (FAENGE.spots.find(s => s.id === c.spotId)||{}).name || "" : "";
+    const zeitMap = {daemmerung_morgen:"Morgendämmerung",vormittag:"Vormittag",mittag:"Mittag",nachmittag:"Nachmittag",daemmerung_abend:"Abenddämmerung",nacht:"Nacht"};
+    const felder = [
+      c.datum||"", c.fischName||"", c.gewicht||"", c.laenge||"",
+      c.methode||"", spot, zeitMap[c.zeit]||"", (c.notiz||"").replace(/;/g,",")
+    ];
+    return felder.map(f => `"${String(f).replace(/"/g,'""')}"`).join(";");
+  }).sort().reverse();
+  const csv = "﻿" + header + "\n" + rows.join("\n");
+  const blob = new Blob([csv], { type:"text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href=url; a.download="faenge_"+heuteISO()+".csv"; a.click();
+  URL.revokeObjectURL(url);
+  fsToast("CSV heruntergeladen");
 }
 
 /* ---------- Export / Import (Backup) ---------- */
@@ -3033,6 +3226,45 @@ function lavEnsureMap(){
    Montage und eine abhakbare Packliste, aus denselben Ansätzen wie im Berater
    (ansatzHTML wird 1:1 wiederverwendet, keine doppelte Logik). ---------- */
 let wochenendeOffenId = null;
+let tourAssistentDatum = heuteISO();
+function renderTourAssistent(container){
+  if(!container) return;
+  const datum = new Date(tourAssistentDatum + "T12:00:00");
+  const monat = datum.getMonth() + 1;
+  const tagName = ["So","Mo","Di","Mi","Do","Fr","Sa"][datum.getDay()];
+  const datumLabel = `${tagName}., ${datum.toLocaleDateString("de-DE",{day:"2-digit",month:"long",year:"numeric"})}`;
+  // Check fish seasons
+  const freieFische = [], schonFische = [];
+  FISCHE.forEach(f => {
+    const hint = TAGESCHECK_HINT[f.id] || {};
+    const recht = RECHT_SH[f.id];
+    const schonMonate = recht ? (parseSchonzeitMonate(recht.schonzeit)||[]) : [];
+    const istSchon = schonMonate.includes(monat);
+    const saisonName = jahreszeitVonMonat(monat);
+    const istHauptsaison = (hint.topSaison||[]).includes(saisonName);
+    if(!istSchon && istHauptsaison) freieFische.push(f);
+    else if(istSchon) schonFische.push(f);
+  });
+  container.innerHTML = `<div class="tour-assistent card">
+    <h3>🗓️ Tour-Assistent</h3>
+    <div class="tour-datum-row">
+      <input type="date" id="tour-datum" value="${tourAssistentDatum}" class="tour-datum-input">
+      <span class="tour-datum-label">${datumLabel}</span>
+    </div>
+    <div class="tour-saison-info">
+      ${freieFische.length > 0 ? `<div class="tour-gruppe"><div class="tour-badge tour-gruen">🎯 Jetzt Hauptsaison</div>
+        <div class="tour-fische">${freieFische.map(f=>`<span class="ampel-fish">${f.emoji} ${f.name}</span>`).join("")}</div></div>` : ""}
+      ${schonFische.length > 0 ? `<div class="tour-gruppe"><div class="tour-badge tour-rot">🔴 Schonzeit</div>
+        <div class="tour-fische">${schonFische.map(f=>`<span class="ampel-fish ampel-fish-rot">${f.emoji} ${f.name}</span>`).join("")}</div></div>` : ""}
+      ${freieFische.length === 0 && schonFische.length === 0 ? `<p class="k-hint">Keine Saisondaten verfügbar.</p>` : ""}
+    </div>
+  </div>`;
+  document.getElementById("tour-datum").addEventListener("change", e => {
+    tourAssistentDatum = e.target.value;
+    renderTourAssistent(container);
+  });
+}
+
 function renderWochenende(){
   const el = document.getElementById("wochenende");
   if(!el) return;
@@ -3040,7 +3272,8 @@ function renderWochenende(){
   let html = `<div class="k-intro card">
     <h2>🎒 Trip-Planung</h2>
     <p>Wähl aus, was du vorhast – egal ob am Wochenende oder unter der Woche. Du bekommst das passende Setup, die Montage und eine abhakbare Packliste zum Vorbereiten. So kannst du zu Hause alles fertig machen und vor Ort direkt loslegen.</p>
-  </div>`;
+  </div>
+  <div id="tour-assistent-wrap"></div>`;
 
   html += VORHABEN.map(v => {
     const offen = wochenendeOffenId === v.id;
@@ -3069,6 +3302,7 @@ function renderWochenende(){
   }).join("");
 
   el.innerHTML = html;
+  renderTourAssistent(document.getElementById("tour-assistent-wrap"));
 }
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("[data-vorhaben]");
@@ -3696,7 +3930,15 @@ gwSel.addEventListener("change", berechne);
 $("#losButton").addEventListener("click", berechne);
 
 /* ---------- Init ---------- */
+// Schnell-Fang-Button (FAB)
+const fabBtn = document.getElementById("fab-fang");
+if(fabBtn) fabBtn.addEventListener("click", () => {
+  switchView("faenge");
+  requestAnimationFrame(() => fsOpenCatchModal(null, null));
+});
+
 initFischDropdown();
+renderNaechstenSpot();
 renderInventar();
 renderKnoten();
 renderAngelmethoden();

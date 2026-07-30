@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Angel-Setup-Berater</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0e1b24">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=20260722-27">
+  <link rel="stylesheet" href="style.css?v=20260722-28">
 </head>
 <body>
   <header class="topbar">
@@ -67,6 +69,7 @@
       <button id="losButton" class="go">Setup anzeigen</button>
     </section>
 
+    <div id="naechster-spot-wrap"></div>
     <div id="heute-dabei-wrap"></div>
     <p id="hint" class="hint">Wähle einen Zielfisch – die passenden Gewässer stellen sich automatisch ein.</p>
 
@@ -266,6 +269,9 @@
     <section id="einkauf-main"></section>
   </main>
 
+  <!-- Schnell-Fang-Button (FAB) -->
+  <button id="fab-fang" type="button" class="fab" title="Fang eintragen">＋</button>
+
   <footer class="foot">
     <p>Alle Montagen &amp; Gewichte sind Richtwerte. Schonzeiten, Mindestmaße und Gerätevorschriften (z. B. Bundesland/Verein) immer vor Ort prüfen. Waidgerecht angeln! 🐟</p>
   </footer>
@@ -289,7 +295,12 @@
     firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {});
   </script>
 
-  <script src="data.js?v=20260722-27"></script>
-  <script src="app.js?v=20260722-27"></script>
+  <script src="data.js?v=20260722-28"></script>
+  <script src="app.js?v=20260722-28"></script>
+  <script>
+    if("serviceWorker" in navigator){
+      navigator.serviceWorker.register("sw.js").catch(()=>{});
+    }
+  </script>
 </body>
 </html>
