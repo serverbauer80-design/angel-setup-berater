@@ -69,7 +69,7 @@ const AKTUELL = {
   setup6: {
     key: "setup6",
     kategorie: "crivit",
-    name: "Setup 7 – Spinnangel Forelle/Barsch",
+    name: "Setup 9 – Spinnangel Forelle/Barsch",
     rute: "Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult",
     schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen",
@@ -80,7 +80,7 @@ const AKTUELL = {
   setup11: {
     key: "setup11",
     kategorie: "crivit",
-    name: "Setup 8 – Crivit Feeder-Set",
+    name: "Setup 10 – Crivit Feeder-Set",
     rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult",
     schnur: "vorbespult ab Werk",
@@ -91,7 +91,7 @@ const AKTUELL = {
   setup7: {
     key: "setup7",
     kategorie: "stippe",
-    name: "Setup 9 – Stippe (Weißfisch)",
+    name: "Setup 11 – Stippe (Weißfisch)",
     rute: "Shimano Hyperloop 7,00 m · 7 Segmente",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1,5–2 m (deutlich kürzer als die 7 m Rute – zum Reinschwingen des Fischs)",
@@ -103,7 +103,7 @@ const AKTUELL = {
   setup8: {
     key: "setup8",
     kategorie: "stippe",
-    name: "Setup 10 – Kompakt-Stippe (enge Spots)",
+    name: "Setup 12 – Kompakt-Stippe (enge Spots)",
     rute: "Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug, wie Setup 9",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1–1,5 m (kürzer als die 4 m Rute – zum Reinschwingen des Fischs)",
@@ -114,7 +114,7 @@ const AKTUELL = {
   setup9: {
     key: "setup9",
     kategorie: "stippe",
-    name: "Setup 11 – Stipp-Combo (Köderfisch/Einsteiger)",
+    name: "Setup 13 – Stipp-Combo (Köderfisch/Einsteiger)",
     rute: "Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk",
     rolle: "keine Rolle nötig",
     schnur: "Fertige Montage (Schnur, Pose, Haken) ab Werk auf Wickelbrett – sofort einsatzbereit",
@@ -124,23 +124,23 @@ const AKTUELL = {
   },
   setup12: {
     key: "setup12",
-    name: "Setup 12 – Trout Area Spoon (Tubertini Aryas)",
-    rute: "Tubertini Aryas 2 · 3× vorhanden (2 aktiv, 1 Backup)",
-    rolle: "Tubertini Aryas 2000 Spoonrolle · Spinrolle · 6 Kugellager",
+    name: "Setup 7 – Trout Area Spoon (FTM Black Aryas 2)",
+    rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
+    rolle: "Tubertini Aryas 2000 Spoonrolle · Spinrolle",
     schnur: "Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult",
     vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m",
-    extra: "Spoon-Set (1,5–5 g), Micro Snap ohne Wirbel (für volle Köderaktion)",
-    einsatz: "Spoon-Angeln am Forellensee (Put & Take / Trout Area). Frisch bespult mit Stroft GTM 0,14mm. 3 Ruten insgesamt – 2 aktiv, 1 als Backup."
+    extra: "Spoon-Set (1,5–5 g), Micro Snap ohne Wirbel",
+    einsatz: "Ultraleichtes Spoon-Angeln am Forellensee (Put & Take / Trout Area). Frisch bespult mit Stroft GTM Monofil 0,14 mm. Micro Snap ohne Wirbel – damit pendelt der Spoon frei."
   },
   setup13: {
     key: "setup13",
-    name: "Setup 13 – Trout Area Spoon (Tubertini + Abu Garcia)",
-    rute: "Tubertini Aryas 2",
-    rolle: "Abu Garcia [Modell bitte in App ergänzen]",
-    schnur: "[Schnur bitte in App ergänzen]",
+    name: "Setup 8 – Trout Area Spoon (FTM Black Aryas 2 + Abu Garcia)",
+    rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
+    rolle: "Abu Garcia Cardinal X · Spinrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
+    schnur: "Geflochten 0,06 mm",
     vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m",
     extra: "",
-    einsatz: "Zweite Trout-Area-Rute mit vorhandener Abu Garcia Rolle. Selbe Rute wie Setup 12, andere Rolle. Dritte Rute (Backup) ohne Rolle."
+    einsatz: "Zweite Trout-Area-Kombo – selbe Rute wie Setup 7, mit Abu Garcia Cardinal X und geflochtener 0,06 mm bespult."
   }
 };
 
@@ -388,15 +388,15 @@ const FISCHE = [
         tipp:"Farben & Einholtempo durchprobieren, bis eine Kombi läuft. Langsam und gleichmäßig führen."
       },
       {
-        methode:"Trout Area – Spoons (Tubertini)", status:"machbar", setup:"setup12",
+        methode:"Trout Area – Spoons (FTM Black Aryas 2)", status:"machbar", setup:"setup12",
         gewaesser:["forellensee","see"],
         montage:[
           {k:"Hauptschnur", v:"Stroft GTM Monofil 0,14 mm"},
           {k:"Vorfach", v:"Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m"},
-          {k:"Köder", v:"Spoon 1,5–5 g · kein Snap-Wirbel, nur reiner Micro Snap"},
-          {k:"Tipp", v:"3 Ruten verfügbar – Setup 12 (Aryas 2000 Rolle) und Setup 13 (Abu Garcia)"}
+          {k:"Köder", v:"Spoon 1,5–5 g"},
+          {k:"Verbindung", v:"Micro Snap ohne Wirbel – damit pendelt der Spoon frei"}
         ],
-        tipp:"Monofil 0,14 mm ist ideal für den Spoon – geschmeidig, kaum Schnurgedächtnis. Micro Snap ohne Wirbel verwenden, damit der Spoon frei pendeln kann."
+        tipp:"Monofil 0,14 mm läuft weich und ohne Schnurgedächtnis vom Spoon weg – ideal für leichte Köder. Micro Snap statt Snap-Wirbel, sonst verliert der Spoon seine Aktion."
       },
       {
         methode:"Sbirolino / Pose (Forellensee)", status:"machbar", setup:"setup3",
