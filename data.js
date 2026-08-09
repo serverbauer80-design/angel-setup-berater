@@ -121,6 +121,26 @@ const AKTUELL = {
     vorfach: "bereits in der Fertigmontage enthalten",
     extra: "Komplett vormontiert, kein Aufbau nötig",
     einsatz: "Schnelle, unkomplizierte Stippe für Köderfischfang oder als Einsteiger-/Zweitrute – kürzer und einfacher als Setup 9/10, dafür ohne jede Vorbereitung sofort startklar."
+  },
+  setup12: {
+    key: "setup12",
+    name: "Setup 12 – Trout Area Spoon (Tubertini Aryas)",
+    rute: "Tubertini Aryas 2 · 3× vorhanden (2 aktiv, 1 Backup)",
+    rolle: "Tubertini Aryas 2000 Spoonrolle · Spinrolle · 6 Kugellager",
+    schnur: "Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult",
+    vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m",
+    extra: "Spoon-Set (1,5–5 g), Micro Snap ohne Wirbel (für volle Köderaktion)",
+    einsatz: "Spoon-Angeln am Forellensee (Put & Take / Trout Area). Frisch bespult mit Stroft GTM 0,14mm. 3 Ruten insgesamt – 2 aktiv, 1 als Backup."
+  },
+  setup13: {
+    key: "setup13",
+    name: "Setup 13 – Trout Area Spoon (Tubertini + Abu Garcia)",
+    rute: "Tubertini Aryas 2",
+    rolle: "Abu Garcia [Modell bitte in App ergänzen]",
+    schnur: "[Schnur bitte in App ergänzen]",
+    vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m",
+    extra: "",
+    einsatz: "Zweite Trout-Area-Rute mit vorhandener Abu Garcia Rolle. Selbe Rute wie Setup 12, andere Rolle. Dritte Rute (Backup) ohne Rolle."
   }
 };
 
@@ -366,6 +386,17 @@ const FISCHE = [
           {k:"Köder", v:"Spoon 1,5–4 g (aus deiner Zite Spoon-Tasche)"}
         ],
         tipp:"Farben & Einholtempo durchprobieren, bis eine Kombi läuft. Langsam und gleichmäßig führen."
+      },
+      {
+        methode:"Trout Area – Spoons (Tubertini)", status:"machbar", setup:"setup12",
+        gewaesser:["forellensee","see"],
+        montage:[
+          {k:"Hauptschnur", v:"Stroft GTM Monofil 0,14 mm"},
+          {k:"Vorfach", v:"Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m"},
+          {k:"Köder", v:"Spoon 1,5–5 g · kein Snap-Wirbel, nur reiner Micro Snap"},
+          {k:"Tipp", v:"3 Ruten verfügbar – Setup 12 (Aryas 2000 Rolle) und Setup 13 (Abu Garcia)"}
+        ],
+        tipp:"Monofil 0,14 mm ist ideal für den Spoon – geschmeidig, kaum Schnurgedächtnis. Micro Snap ohne Wirbel verwenden, damit der Spoon frei pendeln kann."
       },
       {
         methode:"Sbirolino / Pose (Forellensee)", status:"machbar", setup:"setup3",
