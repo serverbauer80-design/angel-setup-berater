@@ -1181,7 +1181,7 @@ function empfehlungHTML(){
   });
 
   // Zubehör
-  html += `<h3 class="empf-sub">🧰 Zubehör, das oft mehr bringt als eine 4. Rute</h3><div class="inv-grid">`;
+  html += `<h3 class="empf-sub">🧰 Zubehör, das jetzt mehr bringt als eine weitere Rute</h3><div class="inv-grid">`;
   E.zubehoer.forEach(z => {
     html += `<div class="inv-card empf">
       <h3>${z.name}</h3>

@@ -203,7 +203,9 @@ const ZUBEHOER = [
   "Fertigmontage Saenger C-2 (2,5g)", "Fertigmontage Saenger C-1 (3,0g)",
   "Vorfachset Saenger Rotauge S-515 (60cm, 10 Stück)", "Wirbel Zebco",
   "Spoon (Einzelköder)", "Micro-Köder-Set",
-  "F. Dick Filetiermesser 21 cm Blue (blaue Scheide, flexibel)", "Zwilling Wetzstahl 26 cm (Diamant, fein)"
+  "F. Dick Filetiermesser 21 cm Blue (blaue Scheide, flexibel)", "Zwilling Wetzstahl 26 cm (Diamant, fein)",
+  "Kopflampe", "Bissanzeiger + Glöckchen", "Angelstuhl / Sitzmöglichkeit", "Angelschirm",
+  "Kleinteile-Grundsortiment (Haken, Blei, Wirbel/Snaps, Perlen, Posen)"
 ];
 
 /* ---------- 2) KLEINKRAM-EINKAUFSLISTE ---------- */
@@ -255,7 +257,8 @@ const WUNSCH = {
     rute: "Browning/Daiwa Bolognese 6,00–7,00 m, WG 5–25 g", rolle: "Shimano/Daiwa 2500er",
     schnur: "Monofil 0,14–0,18 mm",
     preis: "ca. 250–400 € gehoben (Einsteiger ca. 60–100 €)",
-    dazu: "Posen-Sortiment 2–8 g, feine Haken Gr. 14–18, Made/Wurm"
+    dazu: "Posen-Sortiment 2–8 g, feine Haken Gr. 14–18, Made/Wurm",
+    hinweis: "Deutlich weniger dringend als früher: die Hyperloop (7,00 m) deckt das feine Stippen ab, die FTM Black Aryas 2 (3,90 m) das lange Posenfischen im leichten Bereich. Was wirklich fehlt, ist nur noch die Kombination aus großer Länge UND Rolle – also Pose im Fließwasser ablaufen lassen und dabei Schnur nachgeben können. Erst kaufen, wenn du merkst, dass dir genau das am Fluss fehlt."
   },
   posenrute: {
     key: "posenrute", name: "Allround-Posenrute (Forellensee + Ansitz)",
@@ -264,7 +267,7 @@ const WUNSCH = {
     schnur: "Monofil 0,20–0,25 mm",
     preis: "ca. 176 € (Rute 86 € + Rolle ~90 €)",
     dazu: "Rutenhalter (vorhanden), Laufpose 3–15 g je nach Einsatz",
-    hinweis: "Vielseitiger als eine reine Forellensee-Zweitangel: klassische Posenrute (kein Feeder/Quivertip nötig, da die Montage über eine schwimmende Pose läuft) – nutzbar als passive Zweitangel am Forellensee, aktiv am Forellensee (Sbirolino/Pose), UND als Laufpose auf Weißfisch/Schleie/Karpfen an See/Kanal auf mittlere Distanz. Schließt die Lücke zwischen der Stippe (Hyperloop, nur Ufernähe) und dem Feeder (Ninja X, Grundmontage ohne Pose). Sbiro und Crivit-Spin funktionieren übergangsweise auch passiv, sind aber nicht dafür optimiert."
+    hinweis: "Vielseitiger als eine reine Forellensee-Zweitangel: klassische Posenrute (kein Feeder/Quivertip nötig, da die Montage über eine schwimmende Pose läuft) – nutzbar als passive Zweitangel am Forellensee, aktiv am Forellensee (Sbirolino/Pose), UND als Laufpose auf Weißfisch/Schleie/Karpfen an See/Kanal auf mittlere Distanz. Schließt die Lücke zwischen der Stippe (Hyperloop, nur Ufernähe) und dem Feeder (Ninja X, Grundmontage ohne Pose). Sbiro und Crivit-Spin funktionieren übergangsweise auch passiv, sind aber nicht dafür optimiert. Achtung Überschneidung: Die FTM Black Aryas 2 (3,90 m) hat dieselbe Länge – nur eben 1–4 g statt 10–35 g. Für leichte Posenmontagen brauchst du diese Rute also nicht mehr, der Mehrwert liegt allein im schwereren Wurfgewicht (Laufpose auf Karpfen/Schleie, mehr Blei, Wind)."
   },
   pilk: {
     key: "pilk", name: "Hochsee-/Kutter-Setup (Pilken)",
@@ -879,11 +882,11 @@ const KNOTEN_KURZ = {
 ------------------------------------------------------------ */
 const EMPFEHLUNG = {
   reihenfolge: [
-    "Zuerst deine <b>3 vorhandenen Setups</b> sicher beherrschen (Spinnen auf Zander/Barsch, Forelle). Kostet 0 € und bringt den größten Lerneffekt.",
-    "<b>Zubehör-Basics</b> vor der 4. Rute: Kopflampe, Kleinteile-Sortiment, Ersatzspule, Wathose.",
-    "<b>Bolognese/Pose</b> – der schnellste Weg zum ersten sicheren Fang (Weißfisch beißt zuverlässig, gut für Erfolgserlebnisse).",
-    "<b>Küstenspinnen</b> auf Meerforelle/Hornhecht – der natürlichste Schritt aus deinem Spinnen heraus (SH-Küste!).",
-    "<b>Ansitz-Allround</b> (Aal, Karpfen, Schleie) als nächste eigenständige Spielart.",
+    "Deine <b>Rutenseite ist durch</b>: Raubfisch, Forelle, Ansitz, Feeder und Stippe sind alle abgedeckt. Eine weitere Rute schließt keine Lücke mehr – der Zuwachs kommt jetzt aus Technik und Zubehör.",
+    "<b>Der Aryas Nr. 3 fehlt Rolle und Schnur</b> – das ist der einzige offene Punkt an vorhandenem Gerät und die günstigste echte Verbesserung (siehe Tipp auf der Setup-Karte).",
+    "<b>Pflicht-Lücke zuerst:</b> Maßband/Messlatte. Mindestmaß am Wasser prüfen zu können ist rechtlich relevant, kostet aber fast nichts.",
+    "<b>Sicherheit &amp; Komfort</b> als Nächstes: Polbrille (Augenschutz!), Regenkleidung, Kühltasche für den Fang. Das verlängert die Zeit am Wasser mehr als jedes neue Gerät.",
+    "<b>Küstenspinnen</b> auf Meerforelle/Hornhecht – die einzige wirklich neue Spielart, die dein Gerät noch nicht abdeckt (SH-Küste vor der Tür).",
     "<b>Brandung &amp; Pilk</b> erst kurz vor dem tatsächlichen Küsten-/Kuttertermin kaufen (Kutter vermieten oft Gerät).",
     "<b>Reise-Steckrute &amp; Großwels</b>: Fernziele – ganz nach hinten."
   ],
@@ -895,7 +898,7 @@ const EMPFEHLUNG = {
       schnur:"Hauptschnur Daiwa J-Braid Grand X8 0,10 mm · Vorfach Fluorocarbon 0,28–0,30 mm, 1,0–1,5 m",
       preis:"Primär-Setup ca. 300–380 € (Rute ~190 €, Rolle ~110 €, Schnur ~25 €)",
       dazu:"Küstenblinker 12–28 g (Snaps, Møre Silda, Hansen Fight), Wathose, Polbrille – Rolle & Schnur nach jedem Einsatz mit Süßwasser spülen",
-      warum:"Die eigentliche Lücke: Du kannst schon spinnen und wohnst an der Küste – Meerforelle/Hornhecht sind der logische nächste Schritt. Deine Setup-1-Rute (2,70 m) geht zum Reinschnuppern, ist aber kurz und die Rolle nicht salzwasserfest.",
+      warum:"Die einzige echte Lücke, die dein Gerät nicht abdeckt: Du kannst schon spinnen und wohnst an der Küste – Meerforelle/Hornhecht sind der logische nächste Schritt. Die Prorex (2,70 m) geht zum Reinschnuppern, ist aber kurz und die Rolle nicht salzwasserfest.",
       stufen:[
         { label:"💰 Günstiger Einstieg (ca. 180–230 €)", rute:"Savage Gear SGS6 Coastal · 3,00 m · WG 12–36 g (~120 €)", rolle:"Shimano Nasci 4000 XG (~100 €)", schnur:"Daiwa J-Braid X8 0,10 mm + FC-Vorfach 0,28 mm (~20 €)" },
         { label:"⭐ Empfehlung – gehobene Mittelklasse (ca. 300–380 €)", rute:"Sportex Air Spin Seatrout · 3,05 m · WG 15–40 g (~190 €)", rolle:"Daiwa Fuego LT 4000-C (~110 €)", schnur:"Daiwa J-Braid Grand X8 0,10 mm + FC-Vorfach 0,28–0,30 mm (~25 €)" },
@@ -905,12 +908,13 @@ const EMPFEHLUNG = {
     }
   },
   zubehoer: [
-    { name:"Kopflampe", warum:"Aal, Zander & Quappe sind Nacht-/Dämmerungsfische – ohne Licht kein Nachtansitz.", preis:"ca. 20–40 €" },
-    { name:"Wathose / Watstiefel", warum:"Erweitert erreichbare Stellen enorm: Eider-Ufer, Küste, Brandung, Meerforelle.", preis:"ca. 60–150 €" },
-    { name:"Kleinteile-Grundsortiment", warum:"Haken, Blei, Wirbel/Snaps, Perlen, Posen, Vorfachmaterial (Mono + FC) – Basis für jede Montage.", preis:"ca. 40–70 €" },
-    { name:"Ersatzspule + Ersatzschnur (je Rolle)", warum:"Ein Schnurbruch am Wasser beendet sonst den Angeltag.", preis:"ca. 15–30 € je" },
-    { name:"Banksticks/Rutenhalter + Glöckchen/Bissanzeiger", warum:"Schon fürs improvisierte Aal-/Zanderansitzen mit der Prorex (steht in der App als 🟡).", preis:"ca. 20–50 €" },
-    { name:"Sitzmöglichkeit / Schirm", warum:"Für längere Ansitze – Komfort hält dich länger konzentriert am Wasser.", preis:"ca. 30–80 €" }
+    { name:"Maßband / Messlatte", warum:"Die einzige offene Pflicht-Position: Mindestmaß muss am Wasser prüfbar sein, untermaßige Fische sofort zurück. Kostet fast nichts und schützt dich rechtlich.", preis:"ca. 5–15 €" },
+    { name:"Polarisationsbrille (Polbrille)", warum:"Doppelter Nutzen: du siehst Fisch und Struktur im Wasser – und sie schützt die Augen vor Ködern, die beim Wurf zurückkommen. Bei 15 Ruten im Bestand die günstigste Sicherheitsinvestition.", preis:"ca. 25–80 €" },
+    { name:"Kühltasche für den Fang", warum:"Ab Frühsommer entscheidet sie über die Qualität des Fisches auf dem Teller – gerade bei längeren Ansitzen und der Fahrt nach Hause.", preis:"ca. 20–40 €" },
+    { name:"Regenkleidung / Angeljacke", warum:"Du hast Ansitz- und Tremarella-Gerät für lange Sessions – nass und ausgekühlt brichst du trotzdem früher ab.", preis:"ca. 60–150 €" },
+    { name:"Ersatzspule + Ersatzschnur", warum:"Bei den Ruten, die du wirklich oft fischst (Prorex, Presso, die Aryas): ein Schnurbruch beendet sonst den Tag. Nicht für jede Rolle nötig.", preis:"ca. 15–30 € je" },
+    { name:"Müllbeutel für Schnurreste", warum:"Geflochtene und FC-Reste sind für Vögel tödlich. Kostet nichts, gehört in jede Tasche.", preis:"ca. 0 €" },
+    { name:"Wathose / Watstiefel", warum:"Erweitert erreichbare Stellen enorm: Eider-Ufer, Küste, Brandung, Meerforelle. Wird relevant, sobald das Küstenspinnen dazukommt.", preis:"ca. 60–150 €" }
   ],
   aufschieben: [
     "<b>Reise-Steckrute</b> aufschieben, solange du deine Heimatgewässer lernst – schön, aber Luxus.",
