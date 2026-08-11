@@ -66,10 +66,20 @@ const AKTUELL = {
     extra: "Rutenhalter (Leeko vorhanden), Bissanzeiger, Boilies/Pellets/Mais/Tauwurm, Selbsthak-Montage / Method-Feeder",
     einsatz: "Ruhiger Ansitz auf Karpfen, Aal, Schleie, Quappe – an See, NOK, Eider oder ruhigem Fluss. Der Baitrunner (Freilauf) gibt Schnur frei, wenn der Fisch den Köder nimmt, ohne Widerstand zu spüren – Bremse wird erst beim Anhieb zugedreht."
   },
+  setup14: {
+    key: "setup14",
+    name: "Setup 9 – Ansitzangeln Zweitrute (Black Widow Bait)",
+    rute: "Daiwa Black Widow XT Bait · 3,60 m · WG 20–60 g",
+    rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
+    schnur: "Daiwa Monofil 0,35 mm (durchgehend)",
+    vorfach: "Daiwa J-Fluoro Carbon 0,298 mm (Karpfen/Aal) oder 0,352 mm für große Karpfen",
+    extra: "Bissanzeiger, Boilies/Pellets/Mais/Tauwurm, Selbsthak-Montage / Method-Feeder",
+    einsatz: "Zweite Ansitz-Kombo als Zweitrute neben Setup 6 – gleiche Rolle, schwerere Bait-Rute (bis 60 g WG). Ideal für zwei Ruten gleichzeitig am Karpfen-/Aalansitz."
+  },
   setup6: {
     key: "setup6",
     kategorie: "crivit",
-    name: "Setup 9 – Spinnangel Forelle/Barsch",
+    name: "Setup 10 – Spinnangel Forelle/Barsch",
     rute: "Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult",
     schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen",
@@ -80,7 +90,7 @@ const AKTUELL = {
   setup11: {
     key: "setup11",
     kategorie: "crivit",
-    name: "Setup 10 – Crivit Feeder-Set",
+    name: "Setup 11 – Crivit Feeder-Set",
     rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult",
     schnur: "vorbespult ab Werk",
@@ -91,7 +101,7 @@ const AKTUELL = {
   setup7: {
     key: "setup7",
     kategorie: "stippe",
-    name: "Setup 11 – Stippe (Weißfisch)",
+    name: "Setup 12 – Stippe (Weißfisch)",
     rute: "Shimano Hyperloop 7,00 m · 7 Segmente",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1,5–2 m (deutlich kürzer als die 7 m Rute – zum Reinschwingen des Fischs)",
@@ -103,7 +113,7 @@ const AKTUELL = {
   setup8: {
     key: "setup8",
     kategorie: "stippe",
-    name: "Setup 12 – Kompakt-Stippe (enge Spots)",
+    name: "Setup 13 – Kompakt-Stippe (enge Spots)",
     rute: "Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug, wie Setup 9",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1–1,5 m (kürzer als die 4 m Rute – zum Reinschwingen des Fischs)",
@@ -114,7 +124,7 @@ const AKTUELL = {
   setup9: {
     key: "setup9",
     kategorie: "stippe",
-    name: "Setup 13 – Stipp-Combo (Köderfisch/Einsteiger)",
+    name: "Setup 14 – Stipp-Combo (Köderfisch/Einsteiger)",
     rute: "Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk",
     rolle: "keine Rolle nötig",
     schnur: "Fertige Montage (Schnur, Pose, Haken) ab Werk auf Wickelbrett – sofort einsatzbereit",
