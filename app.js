@@ -5788,8 +5788,16 @@ document.addEventListener("click", async e => {
       "padding:14px 16px","font-size:15px","font-weight:700","cursor:pointer",
       "box-shadow:0 -2px 12px rgba(0,0,0,.4)"
     ].join(";");
-    div.addEventListener("click", () => {
+    div.addEventListener("click", async () => {
       localStorage.setItem(VERSION_KEY, version);
+      // Caches des Service Workers mitleeren: sonst kann eine alte
+      // gecachte index.html den neuen Stand weiter ueberdecken.
+      try {
+        if(window.caches){
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+      } catch(e){}
       location.href = location.pathname + "?r=" + Date.now();
     });
     document.body.appendChild(div);
@@ -5805,6 +5813,17 @@ document.addEventListener("click", async e => {
       if(bekannt && bekannt !== version) zeigeUpdateBanner(version);
       else if(!bekannt) localStorage.setItem(VERSION_KEY, version);
     } catch(e) {}
+  }
+
+  /* Uebernimmt ein neuer Service Worker die Kontrolle, laeuft im Tab noch
+     der alte Code. Einmal neu laden, damit beides zusammenpasst. */
+  if("serviceWorker" in navigator){
+    let neugeladen = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if(neugeladen) return;
+      neugeladen = true;
+      location.reload();
+    });
   }
 
   pruefeVersion();
