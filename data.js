@@ -90,9 +90,9 @@ const AKTUELL = {
     rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
     rolle: "Tubertini Aryas 2000 Spoonrolle · Spinrolle",
     schnur: "Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult",
-    vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m",
-    extra: "Spoon-Set (1,5–5 g), Micro Snap ohne Wirbel",
-    einsatz: "Ultraleichtes Spoon-Angeln am Forellensee (Put & Take / Trout Area). Frisch bespult mit Stroft GTM Monofil 0,14 mm. Micro Snap ohne Wirbel – damit pendelt der Spoon frei."
+    vorfach: "Fluorocarbon 0,12–0,16 mm · 1,5–3 m – beim Tremarella bewusst lang",
+    extra: "Camole (echt oder Kunstköder-Larven), Piombini/Olivette 0,5–3 g, Micro Snap ohne Wirbel; Spoons 1,5–4 g als Alternative",
+    einsatz: "Tremarella am Forellensee: Rute beim sehr langsamen Einholen dauerhaft in Vibration halten, die Larve zittert verführerisch. Die Stroft GTM Mono überträgt das weich und ihre Dehnung puffert zusammen mit dem parabolischen Blank den zaghaften Biss ab – klassische Tremarella-Kombo. Leichte Spoons gehen auch."
   },
   setup13: {
     key: "setup13",
@@ -101,9 +101,9 @@ const AKTUELL = {
     rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
     rolle: "Abu Garcia Cardinal X · Spinrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
     schnur: "Geflochten 0,06 mm",
-    vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m",
-    extra: "",
-    einsatz: "Trout-Area-Kombo mit geflochtener 0,06 mm – direkterer Kontakt und härterer Anhieb als die Mono-Variante. Selbe Rute, Rolle Abu Garcia Cardinal X."
+    vorfach: "Fluorocarbon 0,14–0,18 mm · 1,5–2,5 m – bei Geflochtener eher länger, sie federt nichts ab",
+    extra: "Spoons 1,5–4 g, Micro Snap ohne Wirbel",
+    einsatz: "Direkter-Kontakt-Variante: die geflochtene 0,06 mm überträgt jede Bewegung ohne Dehnung. Fürs Tremarella eher untypisch – ohne Dehnung reißt der Haken bei weichmäuligen Forellen schneller aus. Stärke liegt bei Spoons, tieferem Fischen und wenn du den Köderkontakt genau spüren willst."
   },
   setup15: {
     key: "setup15",
@@ -113,10 +113,10 @@ const AKTUELL = {
     rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
     rolle: "⚠️ noch keine Rolle vorhanden – Empfehlung siehe Tipp",
     schnur: "⚠️ noch nicht bespult",
-    vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m – entfällt, sobald FC als Hauptschnur gefischt wird",
-    extra: "Spoon-Set (1,5–5 g), Micro Snap ohne Wirbel",
-    einsatz: "Dritte FTM Black Aryas 2 – Rute liegt bereit, Rolle und Schnur fehlen noch. Geplant als Fluorocarbon-Variante: sinkende Hauptschnur für tiefer laufende Spoons, ergänzt die Mono- (treibt oben) und die Geflochtene-Kombo (max. Kontakt).",
-    tippKompakt: "Empfehlung: Rolle Größe 2000 mit flacher Spule (z. B. Shimano Nasci FC 2000 oder Miravel 2000) – die 3,90 m Rute braucht das Gegengewicht, eine 1000er macht sie kopflastig. Wichtigstes Kriterium ist eine feinfühlige Bremse: bei 0,13 mm und weichem Forellenmaul kostet jedes Ruckeln Fische. Dazu Area-Fluorocarbon 0,128–0,148 mm, ca. 100 m – weiches, für Trout Area gemachtes FC nehmen, kein steifes Vorfach-FC. Achtung: FC hat mehr Memory, deshalb Spule nicht bis zur Kante füllen und weiterhin Micro Snap ohne Wirbel fischen. Unter 1,5 g Ködergewicht bleibt die Mono-Kombo die angenehmere Wahl."
+    vorfach: "Fluorocarbon 0,12–0,16 mm · 1,5–3 m – Länge je nach Zieltiefe wählen",
+    extra: "Camole (echt oder Kunstköder-Larven), Piombini/Olivette 0,5–3 g, Micro Snap ohne Wirbel",
+    einsatz: "Dritte FTM Black Aryas 2 – Rute liegt bereit, Rolle und Schnur fehlen noch. Gedacht als zweite Tremarella-Kombo: mit anderem Bleigewicht und anderer Vorfachlänge vorgerüstet, damit du am Wasser zwischen zwei Tiefenzonen wechseln kannst, ohne die Montage umzubauen.",
+    tippKompakt: "Empfehlung fürs Tremarella: weiches Monofil 0,16 mm als Hauptschnur – bewusst kein Fluorocarbon. FC ist steifer und speichert Windungen; beim dauerhaften Vibrieren und sehr langsamen Einholen stört das die Köderführung. Die Dehnung der Mono ist hier gewollt: sie puffert zusammen mit dem parabolischen Blank den zaghaften Biss ab, damit der Haken nicht aus dem weichen Forellenmaul reißt. 0,16 mm statt der 0,14 auf der Tubertini gibt Reserve für größere Fische, mehr Blei und Wind. Rolle: Größe 2000 mit feiner, ruckfreier Frontbremse und sauberer Schnurverlegung – noch eine Tubertini 2000 hält Balance und Bremsgefühl identisch zur bestehenden Kombo, was beim Rutenwechsel während der Technik mehr wert ist als Markenvielfalt. Alternative: Shimano/Daiwa 2000–2500, dann mit Ersatzspule für den Wechsel zwischen 0,14 und 0,16 mm."
   },
   setup6: {
     key: "setup6",
@@ -180,7 +180,7 @@ const AKTUELL = {
    Jedes Setup in AKTUELL trägt genau eine dieser Kategorien. */
 const SETUP_KATEGORIEN = [
   { key:"raubfisch", icon:"🎣", titel:"Raubfisch",  hinweis:"Aktives Spinnfischen auf Hecht, Zander, Barsch, Döbel" },
-  { key:"forelle",   icon:"🐟", titel:"Forelle",    hinweis:"Forellensee, Trout Area, Sbirolino" },
+  { key:"forelle",   icon:"🐟", titel:"Forelle",    hinweis:"Forellensee – Tremarella, Spoon, Sbirolino" },
   { key:"ansitz",    icon:"⚓", titel:"Ansitz",     hinweis:"Karpfen, Aal, Schleie – Freilaufrolle & Bissanzeiger" },
   { key:"feeder",    icon:"🌾", titel:"Feeder",     hinweis:"Friedfisch am Futterkorb" },
   { key:"stippe",    icon:"🪁", titel:"Stippe",     hinweis:"Ohne Rolle – Schnur fest an der Spitze" },
