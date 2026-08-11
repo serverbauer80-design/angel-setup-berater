@@ -8,7 +8,7 @@
 const AKTUELL = {
   setup1: {
     key: "setup1",
-    name: "Setup 1 – Raubfisch (Spinnen)",
+    name: "Setup 1 – Raubfisch · Daiwa Prorex 2,70 m",
     rute: "Daiwa Prorex S Spin · 2,70 m · WG 15-50 g",
     rolle: "Freams LT4000-P",
     schnur: "J-Braid X8 Expedition 0,16 mm (geflochten) · 150 m",
@@ -18,7 +18,7 @@ const AKTUELL = {
   },
   setup2: {
     key: "setup2",
-    name: "Setup 2 – Forelle (Trout Area)",
+    name: "Setup 2 – Forelle UL · Daiwa Presso 2,15 m",
     rute: "Daiwa Presso Imprimi ST · 2,15 m · WG 0,5-6 g",
     rolle: "Daiwa Iprimi LT 1000 S-P",
     schnur: "J-Braid X8 Expedition 0,06 mm (geflochten)",
@@ -28,7 +28,7 @@ const AKTUELL = {
   },
   setup3: {
     key: "setup3",
-    name: "Setup 3 – Sbirolino (Forellensee)",
+    name: "Setup 3 – Sbirolino · SPRO Tactical Lake 3,90 m",
     rute: "SPRO Tactical Lake Sbiro · 3,9 m · WG 3-25 g",
     rolle: "SPRO Trout Master TT3 · Übersetzung 5:1 · 6 Kugellager · 301 g",
     schnur: "Monofil 0,25 mm · 170 m Fassung",
@@ -38,7 +38,7 @@ const AKTUELL = {
   },
   setup4: {
     key: "setup4",
-    name: "Setup 4 – Light Game (Barsch/Döbel)",
+    name: "Setup 4 – Light Game · Savage Gear Revenge 2,21 m",
     rute: "Savage Gear Revenge SG2 Light Game · 2,21 m · WG 5-18 g · 9 Ringe · 121 g · 2-teilig",
     rolle: "Daiwa 23 Ninja LT2500 · 4 Kugellager · Übersetzung 5,3:1 · 230 g · Frontbremse",
     schnur: "J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen deiner 0,06 mm (Setup 2) und 0,16 mm (Setup 1)",
@@ -48,7 +48,7 @@ const AKTUELL = {
   },
   setup5: {
     key: "setup5",
-    name: "Setup 5 – Feederangel (Friedfisch)",
+    name: "Setup 5 – Feeder · Daiwa Ninja X 3,90 m",
     rute: "Daiwa Ninja X Feeder · 3,90 m · WG bis 120 g · 3-teilig · inkl. Wechselspitzen (Quivertips)",
     rolle: "Daiwa 23 Ninja Match&Feeder LT4000-C · Frontbremse",
     schnur: "J-Braid X8 0,12 mm (geflochten) – Vorfach Mono/FC 0,20–0,25 mm, ca. 50–80 cm",
@@ -58,7 +58,7 @@ const AKTUELL = {
   },
   setup10: {
     key: "setup10",
-    name: "Setup 6 – Ansitzangeln (Karpfen/Aal/Schleie)",
+    name: "Setup 6 – Ansitz · Black Widow XT Carp 3,60 m",
     rute: "Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig",
     rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
     schnur: "Daiwa Monofil 0,35 mm (durchgehend)",
@@ -68,7 +68,7 @@ const AKTUELL = {
   },
   setup14: {
     key: "setup14",
-    name: "Setup 9 – Ansitzangeln Zweitrute (Black Widow Bait)",
+    name: "Setup 9 – Ansitz Zweitrute · Black Widow XT Bait 3,60 m",
     rute: "Daiwa Black Widow XT Bait · 3,60 m · WG 20–60 g",
     rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
     schnur: "Daiwa Monofil 0,35 mm (durchgehend)",
@@ -79,7 +79,7 @@ const AKTUELL = {
   setup6: {
     key: "setup6",
     kategorie: "crivit",
-    name: "Setup 10 – Spinnangel Forelle/Barsch",
+    name: "Setup 10 – Spin Forelle/Barsch · Crivit 2,10 m",
     rute: "Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult",
     schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen",
@@ -90,7 +90,7 @@ const AKTUELL = {
   setup11: {
     key: "setup11",
     kategorie: "crivit",
-    name: "Setup 11 – Crivit Feeder-Set",
+    name: "Setup 11 – Feeder · Crivit 3,00 m",
     rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult",
     schnur: "vorbespult ab Werk",
@@ -101,7 +101,7 @@ const AKTUELL = {
   setup7: {
     key: "setup7",
     kategorie: "stippe",
-    name: "Setup 12 – Stippe (Weißfisch)",
+    name: "Setup 12 – Stippe · Shimano Hyperloop 7,00 m",
     rute: "Shimano Hyperloop 7,00 m · 7 Segmente",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1,5–2 m (deutlich kürzer als die 7 m Rute – zum Reinschwingen des Fischs)",
@@ -113,7 +113,7 @@ const AKTUELL = {
   setup8: {
     key: "setup8",
     kategorie: "stippe",
-    name: "Setup 13 – Kompakt-Stippe (enge Spots)",
+    name: "Setup 13 – Stippe kompakt · Rod Rodman Focus 4,00 m",
     rute: "Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug, wie Setup 9",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1–1,5 m (kürzer als die 4 m Rute – zum Reinschwingen des Fischs)",
@@ -124,7 +124,7 @@ const AKTUELL = {
   setup9: {
     key: "setup9",
     kategorie: "stippe",
-    name: "Setup 14 – Stipp-Combo (Köderfisch/Einsteiger)",
+    name: "Setup 14 – Stippe · Rod Rodman AXXA 2,80 m",
     rute: "Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk",
     rolle: "keine Rolle nötig",
     schnur: "Fertige Montage (Schnur, Pose, Haken) ab Werk auf Wickelbrett – sofort einsatzbereit",
@@ -134,7 +134,7 @@ const AKTUELL = {
   },
   setup12: {
     key: "setup12",
-    name: "Setup 7 – Trout Area Spoon (FTM Black Aryas 2)",
+    name: "Setup 7 – Trout Area · FTM Black Aryas 2 · Spoonrolle 3,90 m",
     rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
     rolle: "Tubertini Aryas 2000 Spoonrolle · Spinrolle",
     schnur: "Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult",
@@ -144,7 +144,7 @@ const AKTUELL = {
   },
   setup13: {
     key: "setup13",
-    name: "Setup 8 – Trout Area Spoon (FTM Black Aryas 2 + Abu Garcia)",
+    name: "Setup 8 – Trout Area · FTM Black Aryas 2 · Abu Garcia 3,90 m",
     rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
     rolle: "Abu Garcia Cardinal X · Spinrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
     schnur: "Geflochten 0,06 mm",
