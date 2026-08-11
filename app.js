@@ -998,8 +998,8 @@ function inventarKarteHTML(s){
   const schnurTage = letzteSchnur ? tageSeit(letzteSchnur) : null;
   const schnurMonate = schnurTage !== null ? (schnurTage / 30).toFixed(1) : null;
   const schnurFaellig = schnurTage === null || schnurTage > 120;
-  return `<div class="inv-card">
-      <h3>${s.name}</h3>
+  return `<div class="inv-card${s.unvollstaendig ? " unvollstaendig" : ""}">
+      <h3>${s.name}${s.unvollstaendig ? ` <span class="unvoll-tag">unvollständig</span>` : ""}</h3>
       <div class="row"><span class="k">Rute</span><span>${s.rute}</span></div>
       <div class="row"><span class="k">Rolle</span><span>${s.rolle}</span></div>
       <div class="row"><span class="k">Schnur</span><span>${s.schnur}</span></div>
@@ -1011,10 +1011,10 @@ function inventarKarteHTML(s){
         <span>🔧 ${letzteWartung ? `Zuletzt gewartet: ${letzteWartung} (vor ${tage} Tagen)` : "Noch keine Wartung eingetragen"}</span>
         <button type="button" class="fs-chip" data-wartung="${s.key}">Heute gewartet</button>
       </div>
-      <div class="wartung-box schnur-box${schnurFaellig ? " faellig" : ""}">
+      ${s.unvollstaendig ? "" : `<div class="wartung-box schnur-box${schnurFaellig ? " faellig" : ""}">
         <span>🧵 ${letzteSchnur ? `Schnur gewechselt: ${letzteSchnur} (vor ${schnurMonate} Monaten)` : "Kein Schnurwechsel eingetragen"}</span>
         <button type="button" class="fs-chip" data-schnur="${s.key}">Heute gewechselt</button>
-      </div>
+      </div>`}
     </div>`;
 }
 

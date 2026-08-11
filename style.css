@@ -229,6 +229,8 @@ select:focus{outline:none;border-color:var(--accent)}
 .inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:18px}
 .inv-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
 .inv-card.wunsch{border-style:dashed;opacity:.95}
+.inv-card.unvollstaendig{border-style:dashed;border-color:var(--warn)}
+.unvoll-tag{display:inline-block;vertical-align:middle;font-size:11px;font-weight:700;color:var(--warn);border:1px solid var(--warn);border-radius:999px;padding:1px 8px;white-space:nowrap}
 .inv-card h3{margin:0 0 10px;font-size:16px}
 .inv-card .row{display:flex;gap:8px;font-size:14px;padding:3px 0}
 .inv-card .row .k{color:var(--muted);min-width:78px}

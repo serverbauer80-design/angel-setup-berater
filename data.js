@@ -105,6 +105,19 @@ const AKTUELL = {
     extra: "",
     einsatz: "Trout-Area-Kombo mit geflochtener 0,06 mm – direkterer Kontakt und härterer Anhieb als die Mono-Variante. Selbe Rute, Rolle Abu Garcia Cardinal X."
   },
+  setup15: {
+    key: "setup15",
+    kategorie: "forelle",
+    unvollstaendig: true,
+    name: "FTM Black Aryas 2 · 3,90 m (ohne Rolle)",
+    rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
+    rolle: "⚠️ noch keine Rolle vorhanden – Empfehlung siehe Tipp",
+    schnur: "⚠️ noch nicht bespult",
+    vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m – entfällt, sobald FC als Hauptschnur gefischt wird",
+    extra: "Spoon-Set (1,5–5 g), Micro Snap ohne Wirbel",
+    einsatz: "Dritte FTM Black Aryas 2 – Rute liegt bereit, Rolle und Schnur fehlen noch. Geplant als Fluorocarbon-Variante: sinkende Hauptschnur für tiefer laufende Spoons, ergänzt die Mono- (treibt oben) und die Geflochtene-Kombo (max. Kontakt).",
+    tippKompakt: "Empfehlung: Rolle Größe 2000 mit flacher Spule (z. B. Shimano Nasci FC 2000 oder Miravel 2000) – die 3,90 m Rute braucht das Gegengewicht, eine 1000er macht sie kopflastig. Wichtigstes Kriterium ist eine feinfühlige Bremse: bei 0,13 mm und weichem Forellenmaul kostet jedes Ruckeln Fische. Dazu Area-Fluorocarbon 0,128–0,148 mm, ca. 100 m – weiches, für Trout Area gemachtes FC nehmen, kein steifes Vorfach-FC. Achtung: FC hat mehr Memory, deshalb Spule nicht bis zur Kante füllen und weiterhin Micro Snap ohne Wirbel fischen. Unter 1,5 g Ködergewicht bleibt die Mono-Kombo die angenehmere Wahl."
+  },
   setup6: {
     key: "setup6",
     kategorie: "backup",
