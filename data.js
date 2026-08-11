@@ -8,7 +8,7 @@
 const AKTUELL = {
   setup1: {
     key: "setup1",
-    name: "Setup 1 – Raubfisch · Daiwa Prorex 2,70 m",
+    name: "Raubfisch · Daiwa Prorex 2,70 m",
     rute: "Daiwa Prorex S Spin · 2,70 m · WG 15-50 g",
     rolle: "Freams LT4000-P",
     schnur: "J-Braid X8 Expedition 0,16 mm (geflochten) · 150 m",
@@ -18,7 +18,7 @@ const AKTUELL = {
   },
   setup2: {
     key: "setup2",
-    name: "Setup 2 – Forelle UL · Daiwa Presso 2,15 m",
+    name: "Forelle UL · Daiwa Presso 2,15 m",
     rute: "Daiwa Presso Imprimi ST · 2,15 m · WG 0,5-6 g",
     rolle: "Daiwa Iprimi LT 1000 S-P",
     schnur: "J-Braid X8 Expedition 0,06 mm (geflochten)",
@@ -28,7 +28,7 @@ const AKTUELL = {
   },
   setup3: {
     key: "setup3",
-    name: "Setup 3 – Sbirolino · SPRO Tactical Lake 3,90 m",
+    name: "Sbirolino · SPRO Tactical Lake 3,90 m",
     rute: "SPRO Tactical Lake Sbiro · 3,9 m · WG 3-25 g",
     rolle: "SPRO Trout Master TT3 · Übersetzung 5:1 · 6 Kugellager · 301 g",
     schnur: "Monofil 0,25 mm · 170 m Fassung",
@@ -38,7 +38,7 @@ const AKTUELL = {
   },
   setup4: {
     key: "setup4",
-    name: "Setup 4 – Light Game · Savage Gear Revenge 2,21 m",
+    name: "Barsch/Döbel · Savage Gear Revenge 2,21 m",
     rute: "Savage Gear Revenge SG2 Light Game · 2,21 m · WG 5-18 g · 9 Ringe · 121 g · 2-teilig",
     rolle: "Daiwa 23 Ninja LT2500 · 4 Kugellager · Übersetzung 5,3:1 · 230 g · Frontbremse",
     schnur: "J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen deiner 0,06 mm (Setup 2) und 0,16 mm (Setup 1)",
@@ -48,7 +48,7 @@ const AKTUELL = {
   },
   setup5: {
     key: "setup5",
-    name: "Setup 5 – Feeder · Daiwa Ninja X 3,90 m",
+    name: "Feeder · Daiwa Ninja X 3,90 m",
     rute: "Daiwa Ninja X Feeder · 3,90 m · WG bis 120 g · 3-teilig · inkl. Wechselspitzen (Quivertips)",
     rolle: "Daiwa 23 Ninja Match&Feeder LT4000-C · Frontbremse",
     schnur: "J-Braid X8 0,12 mm (geflochten) – Vorfach Mono/FC 0,20–0,25 mm, ca. 50–80 cm",
@@ -58,7 +58,7 @@ const AKTUELL = {
   },
   setup10: {
     key: "setup10",
-    name: "Setup 6 – Ansitz · Black Widow XT Carp 3,60 m",
+    name: "Ansitz · Black Widow XT Carp 3,60 m",
     rute: "Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig",
     rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
     schnur: "Daiwa Monofil 0,35 mm (durchgehend)",
@@ -68,7 +68,7 @@ const AKTUELL = {
   },
   setup14: {
     key: "setup14",
-    name: "Setup 9 – Ansitz Zweitrute · Black Widow XT Bait 3,60 m",
+    name: "Ansitz Zweitrute · Black Widow XT Bait 3,60 m",
     rute: "Daiwa Black Widow XT Bait · 3,60 m · WG 20–60 g",
     rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
     schnur: "Daiwa Monofil 0,35 mm (durchgehend)",
@@ -76,21 +76,41 @@ const AKTUELL = {
     extra: "Bissanzeiger, Boilies/Pellets/Mais/Tauwurm, Selbsthak-Montage / Method-Feeder",
     einsatz: "Zweite Ansitz-Kombo als Zweitrute neben Setup 6 – gleiche Rolle, schwerere Bait-Rute (bis 60 g WG). Ideal für zwei Ruten gleichzeitig am Karpfen-/Aalansitz."
   },
+  setup12: {
+    key: "setup12",
+    name: "Trout Area · FTM Black Aryas 2 · Spoonrolle 3,90 m",
+    rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
+    rolle: "Tubertini Aryas 2000 Spoonrolle · Spinrolle",
+    schnur: "Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult",
+    vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m",
+    extra: "Spoon-Set (1,5–5 g), Micro Snap ohne Wirbel",
+    einsatz: "Ultraleichtes Spoon-Angeln am Forellensee (Put & Take / Trout Area). Frisch bespult mit Stroft GTM Monofil 0,14 mm. Micro Snap ohne Wirbel – damit pendelt der Spoon frei."
+  },
+  setup13: {
+    key: "setup13",
+    name: "Trout Area · FTM Black Aryas 2 · Abu Garcia 3,90 m",
+    rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
+    rolle: "Abu Garcia Cardinal X · Spinrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
+    schnur: "Geflochten 0,06 mm",
+    vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m",
+    extra: "",
+    einsatz: "Zweite Trout-Area-Kombo – selbe Rute, mit Abu Garcia Cardinal X und geflochtener 0,06 mm bespult."
+  },
   setup6: {
     key: "setup6",
     kategorie: "crivit",
-    name: "Setup 10 – Spin Forelle/Barsch · Crivit 2,10 m",
+    name: "Backup · Crivit Spin 2,10 m",
     rute: "Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult",
     schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen",
     vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg · 100 m · ca. 40–80 cm",
     extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köder, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
-    einsatz: "Aktives Spinnfischen mit Kunstködern auf Forelle und Barsch – etwas kräftiger als Setup 2 (Ultraleicht) und Setup 4 (Light Game), WG bis 40 g deckt auch etwas größere Spinner/Wobbler/Blinker ab."
+    einsatz: "Backup-Spinnangel auf Forelle und Barsch – als Leih- oder Zweitrute. WG bis 40 g deckt auch etwas größere Spinner/Wobbler/Blinker ab."
   },
   setup11: {
     key: "setup11",
     kategorie: "crivit",
-    name: "Setup 11 – Feeder · Crivit 3,00 m",
+    name: "Backup · Crivit Feeder 3,00 m",
     rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult",
     schnur: "vorbespult ab Werk",
@@ -101,56 +121,36 @@ const AKTUELL = {
   setup7: {
     key: "setup7",
     kategorie: "stippe",
-    name: "Setup 12 – Stippe · Shimano Hyperloop 7,00 m",
+    name: "Stippe · Shimano Hyperloop 7,00 m",
     rute: "Shimano Hyperloop 7,00 m · 7 Segmente",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1,5–2 m (deutlich kürzer als die 7 m Rute – zum Reinschwingen des Fischs)",
     vorfach: "optional: kleine Wirbel (Gr. 16–18) falls gewünscht",
     extra: "Posen 1–3 g, Haken Gr. 16–18, Schrotblei gemischt, Made/Wurm",
     einsatz: "Feines Stippen auf Rotauge, Schleie, Brasse an Eider, NOK, See – sehr entspannt, maximale Feinfühligkeit. Fisch landen: Rute im Bogen zu dir heranschwingen, bei wenig Platz stattdessen Segmente einschieben.",
-    tippKompakt: "Bei sehr engen Spots (Bäume, schmaler Steg, dichte Ufervegetation) ist Setup 10 (Kompakt-Stippe, 4 m) die entspanntere Alternative zur 7-m-Rute: kein Schwingen/Einschieben nötig, die Spitze bleibt praktisch immer in Reichweite. Dafür deutlich weniger Reichweite – nur für nahes Ufer-Fischen, nicht über Schilf/Seerosen hinweg."
+    tippKompakt: "Bei sehr engen Spots (Bäume, schmaler Steg, dichte Ufervegetation) ist die Kompakt-Stippe (4 m) die entspanntere Alternative zur 7-m-Rute: kein Schwingen/Einschieben nötig, die Spitze bleibt praktisch immer in Reichweite. Dafür deutlich weniger Reichweite – nur für nahes Ufer-Fischen, nicht über Schilf/Seerosen hinweg."
   },
   setup8: {
     key: "setup8",
     kategorie: "stippe",
-    name: "Setup 13 – Stippe kompakt · Rod Rodman Focus 4,00 m",
+    name: "Stippe kompakt · Rod Rodman Focus 4,00 m",
     rute: "Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert",
-    rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug, wie Setup 9",
+    rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1–1,5 m (kürzer als die 4 m Rute – zum Reinschwingen des Fischs)",
     vorfach: "optional: kleine Wirbel (Gr. 16–18) falls gewünscht",
     extra: "",
-    einsatz: "Kompakte Alternative zu Setup 9 für sehr enge Angelplätze (Bäume, schmaler Steg, dichte Ufervegetation) – kein Schwingen/Einschieben der 7-m-Rute nötig, die Spitze bleibt fast immer in Reichweite. Feines Posenfischen auf Rotauge, Schleie & Co."
+    einsatz: "Kompakte Alternative zur 7-m-Stippe für sehr enge Angelplätze (Bäume, schmaler Steg, dichte Ufervegetation) – kein Schwingen/Einschieben nötig, die Spitze bleibt fast immer in Reichweite. Feines Posenfischen auf Rotauge, Schleie & Co."
   },
   setup9: {
     key: "setup9",
     kategorie: "stippe",
-    name: "Setup 14 – Stippe · Rod Rodman AXXA 2,80 m",
+    name: "Stippe · Rod Rodman AXXA 2,80 m",
     rute: "Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk",
     rolle: "keine Rolle nötig",
     schnur: "Fertige Montage (Schnur, Pose, Haken) ab Werk auf Wickelbrett – sofort einsatzbereit",
     vorfach: "bereits in der Fertigmontage enthalten",
     extra: "Komplett vormontiert, kein Aufbau nötig",
-    einsatz: "Schnelle, unkomplizierte Stippe für Köderfischfang oder als Einsteiger-/Zweitrute – kürzer und einfacher als Setup 9/10, dafür ohne jede Vorbereitung sofort startklar."
-  },
-  setup12: {
-    key: "setup12",
-    name: "Setup 7 – Trout Area · FTM Black Aryas 2 · Spoonrolle 3,90 m",
-    rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
-    rolle: "Tubertini Aryas 2000 Spoonrolle · Spinrolle",
-    schnur: "Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult",
-    vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m",
-    extra: "Spoon-Set (1,5–5 g), Micro Snap ohne Wirbel",
-    einsatz: "Ultraleichtes Spoon-Angeln am Forellensee (Put & Take / Trout Area). Frisch bespult mit Stroft GTM Monofil 0,14 mm. Micro Snap ohne Wirbel – damit pendelt der Spoon frei."
-  },
-  setup13: {
-    key: "setup13",
-    name: "Setup 8 – Trout Area · FTM Black Aryas 2 · Abu Garcia 3,90 m",
-    rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
-    rolle: "Abu Garcia Cardinal X · Spinrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
-    schnur: "Geflochten 0,06 mm",
-    vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m",
-    extra: "",
-    einsatz: "Zweite Trout-Area-Kombo – selbe Rute wie Setup 7, mit Abu Garcia Cardinal X und geflochtener 0,06 mm bespult."
+    einsatz: "Schnelle, unkomplizierte Stippe für Köderfischfang oder als Einsteiger-/Zweitrute – kürzer und einfacher als die anderen Stippen, dafür ohne jede Vorbereitung sofort startklar."
   }
 };
 
