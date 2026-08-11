@@ -8,7 +8,8 @@
 const AKTUELL = {
   setup1: {
     key: "setup1",
-    name: "Raubfisch · Daiwa Prorex 2,70 m",
+    kategorie: "raubfisch",
+    name: "Daiwa Prorex S Spin · 2,70 m",
     rute: "Daiwa Prorex S Spin · 2,70 m · WG 15-50 g",
     rolle: "Freams LT4000-P",
     schnur: "J-Braid X8 Expedition 0,16 mm (geflochten) · 150 m",
@@ -18,7 +19,8 @@ const AKTUELL = {
   },
   setup2: {
     key: "setup2",
-    name: "Forelle UL · Daiwa Presso 2,15 m",
+    kategorie: "forelle",
+    name: "Daiwa Presso Imprimi ST · 2,15 m",
     rute: "Daiwa Presso Imprimi ST · 2,15 m · WG 0,5-6 g",
     rolle: "Daiwa Iprimi LT 1000 S-P",
     schnur: "J-Braid X8 Expedition 0,06 mm (geflochten)",
@@ -28,7 +30,8 @@ const AKTUELL = {
   },
   setup3: {
     key: "setup3",
-    name: "Sbirolino · SPRO Tactical Lake 3,90 m",
+    kategorie: "forelle",
+    name: "SPRO Tactical Lake Sbiro · 3,90 m",
     rute: "SPRO Tactical Lake Sbiro · 3,9 m · WG 3-25 g",
     rolle: "SPRO Trout Master TT3 · Übersetzung 5:1 · 6 Kugellager · 301 g",
     schnur: "Monofil 0,25 mm · 170 m Fassung",
@@ -38,17 +41,19 @@ const AKTUELL = {
   },
   setup4: {
     key: "setup4",
-    name: "Barsch/Döbel · Savage Gear Revenge 2,21 m",
+    kategorie: "raubfisch",
+    name: "Savage Gear Revenge SG2 · 2,21 m",
     rute: "Savage Gear Revenge SG2 Light Game · 2,21 m · WG 5-18 g · 9 Ringe · 121 g · 2-teilig",
     rolle: "Daiwa 23 Ninja LT2500 · 4 Kugellager · Übersetzung 5,3:1 · 230 g · Frontbremse",
-    schnur: "J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen deiner 0,06 mm (Setup 2) und 0,16 mm (Setup 1)",
+    schnur: "J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen der 0,06 mm (Presso) und 0,16 mm (Prorex)",
     vorfach: "Daiwa J-Fluoro Carbon 0,178 mm oder 0,200 mm (Barsch/fein) · 0,218 mm (Standard) · ca. 40–80 cm",
     extra: "",
     einsatz: "Leichtes, aktives Spinnfischen mit kleinen Gummifischen/Spinnern/Wobblern auf Barsch, Döbel, kleinen Zander – auch gut für Hornhecht/Meerforelle zum Reinschnuppern."
   },
   setup5: {
     key: "setup5",
-    name: "Feeder · Daiwa Ninja X 3,90 m",
+    kategorie: "feeder",
+    name: "Daiwa Ninja X Feeder · 3,90 m",
     rute: "Daiwa Ninja X Feeder · 3,90 m · WG bis 120 g · 3-teilig · inkl. Wechselspitzen (Quivertips)",
     rolle: "Daiwa 23 Ninja Match&Feeder LT4000-C · Frontbremse",
     schnur: "J-Braid X8 0,12 mm (geflochten) – Vorfach Mono/FC 0,20–0,25 mm, ca. 50–80 cm",
@@ -58,7 +63,8 @@ const AKTUELL = {
   },
   setup10: {
     key: "setup10",
-    name: "Ansitz · Black Widow XT Carp 3,60 m",
+    kategorie: "ansitz",
+    name: "Daiwa Black Widow XT Carp · 3,60 m",
     rute: "Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig",
     rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
     schnur: "Daiwa Monofil 0,35 mm (durchgehend)",
@@ -68,17 +74,19 @@ const AKTUELL = {
   },
   setup14: {
     key: "setup14",
-    name: "Ansitz Zweitrute · Black Widow XT Bait 3,60 m",
+    kategorie: "ansitz",
+    name: "Daiwa Black Widow XT Bait · 3,60 m",
     rute: "Daiwa Black Widow XT Bait · 3,60 m · WG 20–60 g",
     rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
     schnur: "Daiwa Monofil 0,35 mm (durchgehend)",
     vorfach: "Daiwa J-Fluoro Carbon 0,298 mm (Karpfen/Aal) oder 0,352 mm für große Karpfen",
     extra: "Bissanzeiger, Boilies/Pellets/Mais/Tauwurm, Selbsthak-Montage / Method-Feeder",
-    einsatz: "Zweite Ansitz-Kombo als Zweitrute neben Setup 6 – gleiche Rolle, schwerere Bait-Rute (bis 60 g WG). Ideal für zwei Ruten gleichzeitig am Karpfen-/Aalansitz."
+    einsatz: "Ansitz-Kombo mit schwererer Bait-Rute (bis 60 g WG) – gleiche Freilaufrolle wie die Carp. Ideal, um zwei Ruten gleichzeitig am Karpfen-/Aalansitz zu fischen."
   },
   setup12: {
     key: "setup12",
-    name: "Trout Area · FTM Black Aryas 2 · Spoonrolle 3,90 m",
+    kategorie: "forelle",
+    name: "FTM Black Aryas 2 · 3,90 m (Mono)",
     rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
     rolle: "Tubertini Aryas 2000 Spoonrolle · Spinrolle",
     schnur: "Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult",
@@ -88,18 +96,19 @@ const AKTUELL = {
   },
   setup13: {
     key: "setup13",
-    name: "Trout Area · FTM Black Aryas 2 · Abu Garcia 3,90 m",
+    kategorie: "forelle",
+    name: "FTM Black Aryas 2 · 3,90 m (Geflochten)",
     rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
     rolle: "Abu Garcia Cardinal X · Spinrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
     schnur: "Geflochten 0,06 mm",
     vorfach: "Fluorocarbon 0,16–0,18 mm · ca. 1–1,5 m",
     extra: "",
-    einsatz: "Zweite Trout-Area-Kombo – selbe Rute, mit Abu Garcia Cardinal X und geflochtener 0,06 mm bespult."
+    einsatz: "Trout-Area-Kombo mit geflochtener 0,06 mm – direkterer Kontakt und härterer Anhieb als die Mono-Variante. Selbe Rute, Rolle Abu Garcia Cardinal X."
   },
   setup6: {
     key: "setup6",
-    kategorie: "crivit",
-    name: "Backup · Crivit Spin 2,10 m",
+    kategorie: "backup",
+    name: "Crivit Spinnangel-Set 210-5 · 2,10 m",
     rute: "Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult",
     schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen",
@@ -109,8 +118,8 @@ const AKTUELL = {
   },
   setup11: {
     key: "setup11",
-    kategorie: "crivit",
-    name: "Backup · Crivit Feeder 3,00 m",
+    kategorie: "backup",
+    name: "Crivit Multi-X Feeder 300-5 · 3,00 m",
     rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
     rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult",
     schnur: "vorbespult ab Werk",
@@ -121,7 +130,7 @@ const AKTUELL = {
   setup7: {
     key: "setup7",
     kategorie: "stippe",
-    name: "Stippe · Shimano Hyperloop 7,00 m",
+    name: "Shimano Hyperloop · 7,00 m",
     rute: "Shimano Hyperloop 7,00 m · 7 Segmente",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1,5–2 m (deutlich kürzer als die 7 m Rute – zum Reinschwingen des Fischs)",
@@ -133,7 +142,7 @@ const AKTUELL = {
   setup8: {
     key: "setup8",
     kategorie: "stippe",
-    name: "Stippe kompakt · Rod Rodman Focus 4,00 m",
+    name: "Rod Rodman Focus · 4,00 m",
     rute: "Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert",
     rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
     schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1–1,5 m (kürzer als die 4 m Rute – zum Reinschwingen des Fischs)",
@@ -144,7 +153,7 @@ const AKTUELL = {
   setup9: {
     key: "setup9",
     kategorie: "stippe",
-    name: "Stippe · Rod Rodman AXXA 2,80 m",
+    name: "Rod Rodman AXXA · 2,80 m",
     rute: "Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk",
     rolle: "keine Rolle nötig",
     schnur: "Fertige Montage (Schnur, Pose, Haken) ab Werk auf Wickelbrett – sofort einsatzbereit",
@@ -153,6 +162,17 @@ const AKTUELL = {
     einsatz: "Schnelle, unkomplizierte Stippe für Köderfischfang oder als Einsteiger-/Zweitrute – kürzer und einfacher als die anderen Stippen, dafür ohne jede Vorbereitung sofort startklar."
   }
 };
+
+/* Reihenfolge & Beschriftung der Setup-Gruppen im Inventar.
+   Jedes Setup in AKTUELL trägt genau eine dieser Kategorien. */
+const SETUP_KATEGORIEN = [
+  { key:"raubfisch", icon:"🎣", titel:"Raubfisch",  hinweis:"Aktives Spinnfischen auf Hecht, Zander, Barsch, Döbel" },
+  { key:"forelle",   icon:"🐟", titel:"Forelle",    hinweis:"Forellensee, Trout Area, Sbirolino" },
+  { key:"ansitz",    icon:"⚓", titel:"Ansitz",     hinweis:"Karpfen, Aal, Schleie – Freilaufrolle & Bissanzeiger" },
+  { key:"feeder",    icon:"🌾", titel:"Feeder",     hinweis:"Friedfisch am Futterkorb" },
+  { key:"stippe",    icon:"🪁", titel:"Stippe",     hinweis:"Ohne Rolle – Schnur fest an der Spitze" },
+  { key:"backup",    icon:"🏷️", titel:"Backup",     hinweis:"Crivit-Sets zum Verleihen oder als Ersatz" }
+];
 
 const ZUBEHOER = [
   "Kescher Shirasu Shot Net XL", "Messer Morakniv Companion S", "Fischtöter FTM Messingkopf",
@@ -178,32 +198,32 @@ const EINKAUF_KLEINKRAM = [
   {
     kat: "Wirbel", icon: "🔄",
     items: [
-      { art:"Kugellagerwirbel", gr:"Gr. 6", kg:"~12 kg", fuer:"S1 – Raubfisch (Spinner, Anti-Drall)", setup:["S1"], menge:"10–15 Stk.", prio:"sinnvoll" },
-      { art:"Kugellagerwirbel", gr:"Gr. 8–10", kg:"~6–8 kg", fuer:"S4 Light Game · S7 Spin (Spinner, Anti-Drall)", setup:["S4","S7"], menge:"15 Stk.", prio:"sofort" },
-      { art:"Wirbel (Sbirolino-/Blei-Stopper)", gr:"Gr. 10–12", kg:"~4–5 kg", fuer:"S3 – Sbirolino + Dänische Montage", setup:["S3"], menge:"20 Stk.", prio:"sofort" },
-      { art:"Feeder-/Paternoster-Wirbel", gr:"Gr. 6–8", kg:"~8 kg", fuer:"S5 – Feeder/Grund (Paternoster-Rig)", setup:["S5"], menge:"10 Stk.", prio:"sinnvoll" },
-      { art:"Mini-Wirbel (optional)", gr:"Gr. 16–18", kg:"~2 kg", fuer:"S9/S10 – Stippe (wenn Schnur geteilt wird)", setup:["S9","S10"], menge:"10 Stk.", prio:"optional" },
+      { art:"Kugellagerwirbel", gr:"Gr. 6", kg:"~12 kg", fuer:"Prorex – Raubfisch (Spinner, Anti-Drall)", setup:["setup1"], menge:"10–15 Stk.", prio:"sinnvoll" },
+      { art:"Kugellagerwirbel", gr:"Gr. 8–10", kg:"~6–8 kg", fuer:"Savage Gear Revenge · Crivit Spin (Spinner, Anti-Drall)", setup:["setup4","setup6"], menge:"15 Stk.", prio:"sofort" },
+      { art:"Wirbel (Sbirolino-/Blei-Stopper)", gr:"Gr. 10–12", kg:"~4–5 kg", fuer:"Sbiro – Sbirolino + Dänische Montage", setup:["setup3"], menge:"20 Stk.", prio:"sofort" },
+      { art:"Feeder-/Paternoster-Wirbel", gr:"Gr. 6–8", kg:"~8 kg", fuer:"Ninja X Feeder – Grund (Paternoster-Rig)", setup:["setup5"], menge:"10 Stk.", prio:"sinnvoll" },
+      { art:"Mini-Wirbel (optional)", gr:"Gr. 16–18", kg:"~2 kg", fuer:"Stippen (wenn Schnur geteilt wird)", setup:["setup7","setup8","setup9"], menge:"10 Stk.", prio:"optional" },
     ]
   },
   {
     kat: "Snaps / Karabiner", icon: "🔗",
     items: [
-      { art:"Micro Snap (z. B. Duo Lock Snap)", gr:"Gr. 12–14", kg:"max. 2–3 kg", fuer:"S2 – UL-Forelle (Spoon-Wechsel)", setup:["S2"], menge:"20 Stk.", prio:"sofort", hinweis:"Kein Snap-Wirbel! Nur reiner Snap – ein Wirbel am Ende tötet die Köderaktion beim Spoon." },
-      { art:"Small Snap", gr:"Gr. 8–10", kg:"~5–6 kg", fuer:"S4 – Light Game (Wobbler/Gummifisch wechseln)", setup:["S4"], menge:"15 Stk.", prio:"sinnvoll" },
+      { art:"Micro Snap (z. B. Duo Lock Snap)", gr:"Gr. 12–14", kg:"max. 2–3 kg", fuer:"Presso & FTM Black Aryas 2 – Spoon-Wechsel", setup:["setup2","setup12","setup13"], menge:"20 Stk.", prio:"sofort", hinweis:"Kein Snap-Wirbel! Nur reiner Snap – ein Wirbel am Ende tötet die Köderaktion beim Spoon." },
+      { art:"Small Snap", gr:"Gr. 8–10", kg:"~5–6 kg", fuer:"Savage Gear Revenge – Wobbler/Gummifisch wechseln", setup:["setup4"], menge:"15 Stk.", prio:"sinnvoll" },
     ]
   },
   {
     kat: "Karabinerwirbel", icon: "🪝",
     items: [
-      { art:"Karabinerwirbel", gr:"Gr. 2–4", kg:"~15–20 kg", fuer:"S1 – Raubfisch (Köder & Vorfach-Wechsel, ohne Hecht/Stahlvorfach)", setup:["S1"], menge:"10 Stk.", prio:"sinnvoll" },
-      { art:"Karabinerwirbel", gr:"Gr. 6–8", kg:"~8–10 kg", fuer:"S7 – Spin Forelle/Barsch", setup:["S7"], menge:"10 Stk.", prio:"sinnvoll" },
-      { art:"Schleppwirbel", gr:"Gr. 10–12", kg:"~4–5 kg", fuer:"S3 – Dänische Montage (zwischen Blinker und FC-Vorfach)", setup:["S3"], menge:"10 Stk.", prio:"sofort" },
+      { art:"Karabinerwirbel", gr:"Gr. 2–4", kg:"~15–20 kg", fuer:"Prorex – Köder & Vorfach-Wechsel (ohne Hecht/Stahlvorfach)", setup:["setup1"], menge:"10 Stk.", prio:"sinnvoll" },
+      { art:"Karabinerwirbel", gr:"Gr. 6–8", kg:"~8–10 kg", fuer:"Crivit Spin – Forelle/Barsch", setup:["setup6"], menge:"10 Stk.", prio:"sinnvoll" },
+      { art:"Schleppwirbel", gr:"Gr. 10–12", kg:"~4–5 kg", fuer:"Sbiro – Dänische Montage (zwischen Blinker und FC-Vorfach)", setup:["setup3"], menge:"10 Stk.", prio:"sofort" },
     ]
   },
   {
     kat: "Perlen & Stopper", icon: "🟠",
     items: [
-      { art:"Glasperlen (Puffer vor Wirbel)", gr:"4–5 mm", kg:"–", fuer:"S3/S5 – Knoten-Schutz vor Blei", setup:["S3","S5"], menge:"~50 Stk.", prio:"optional", hinweis:"Nur wenn du Glasperlen bevorzugst – Gummiperlen (Paradox Fishing, 200 Stk.) hast du bereits." },
+      { art:"Glasperlen (Puffer vor Wirbel)", gr:"4–5 mm", kg:"–", fuer:"Sbiro & Ninja X Feeder – Knoten-Schutz vor Blei", setup:["setup3","setup5"], menge:"~50 Stk.", prio:"optional", hinweis:"Nur wenn du Glasperlen bevorzugst – Gummiperlen (Paradox Fishing, 200 Stk.) hast du bereits." },
     ]
   }
 ];
@@ -231,7 +251,7 @@ const WUNSCH = {
     schnur: "Monofil 0,20–0,25 mm",
     preis: "ca. 176 € (Rute 86 € + Rolle ~90 €)",
     dazu: "Rutenhalter (vorhanden), Laufpose 3–15 g je nach Einsatz",
-    hinweis: "Vielseitiger als eine reine Forellensee-Zweitangel: klassische Posenrute (kein Feeder/Quivertip nötig, da die Montage über eine schwimmende Pose läuft) – nutzbar als passive Zweitangel am Forellensee, aktiv am Forellensee (Sbirolino/Pose), UND als Laufpose auf Weißfisch/Schleie/Karpfen an See/Kanal auf mittlere Distanz. Schließt die Lücke zwischen Setup 9 (Stippe, nur Ufernähe) und Setup 5 (Feeder, Grundmontage ohne Pose). Setup 3 und 7 funktionieren übergangsweise auch passiv, sind aber nicht dafür optimiert."
+    hinweis: "Vielseitiger als eine reine Forellensee-Zweitangel: klassische Posenrute (kein Feeder/Quivertip nötig, da die Montage über eine schwimmende Pose läuft) – nutzbar als passive Zweitangel am Forellensee, aktiv am Forellensee (Sbirolino/Pose), UND als Laufpose auf Weißfisch/Schleie/Karpfen an See/Kanal auf mittlere Distanz. Schließt die Lücke zwischen der Stippe (Hyperloop, nur Ufernähe) und dem Feeder (Ninja X, Grundmontage ohne Pose). Sbiro und Crivit-Spin funktionieren übergangsweise auch passiv, sind aber nicht dafür optimiert."
   },
   pilk: {
     key: "pilk", name: "Hochsee-/Kutter-Setup (Pilken)",
@@ -242,7 +262,7 @@ const WUNSCH = {
   },
   paternoster: {
     key: "paternoster", name: "Heringspaternoster (saisonal, Mole/Küste)",
-    rute: "Reicht mit Setup 1 (Prorex) – kein neues Gerät zwingend nötig", rolle: "Freams LT4000 (vorhanden)",
+    rute: "Reicht mit der Prorex – kein neues Gerät zwingend nötig", rolle: "Freams LT4000 (vorhanden)",
     schnur: "vorhandene J-Braid 0,16 mm",
     preis: "nur fertiges Paternoster ca. 5–10 €",
     dazu: "Heringspaternoster (5–10 Haken), Paternosterblei 30–60 g"
@@ -311,7 +331,7 @@ const FISCHE = [
           {k:"Vorfach", v:"Fluorocarbon 0,30–0,35 mm · 60–80 cm"},
           {k:"Haken", v:"Einzelhaken Gr. 1–1/0 · toter Köderfisch 8–12 cm"}
         ],
-        tipp:"Setup 6 (Ansitzangeln – Black Widow + Freilaufrolle + Bissanzeiger) ist hier das richtige Setup. Zur Not geht auch Setup 1, aber ohne Freilaufrolle ungemütlich."
+        tipp:"Die Black Widow XT Carp (Freilaufrolle + Bissanzeiger) ist hier das richtige Setup. Zur Not geht auch die Prorex, aber ohne Freilaufrolle ungemütlich."
       }
     ]
   },
@@ -358,7 +378,7 @@ const FISCHE = [
           {k:"Dropshot-Blei", v:"See 3–6 g · Strömung 7–12 g (unten angeknotet)"},
           {k:"Haken", v:"Dropshot-Haken Gr. 6–4 · Gummiköder 5–8 cm"}
         ],
-        tipp:"Setup 2 (Presso) ist perfekt fein dafür. Köder auf der Stelle zittern lassen – Barsch mag das Reizen."
+        tipp:"Die Presso ist perfekt fein dafür. Köder auf der Stelle zittern lassen – Barsch mag das Reizen."
       },
       {
         methode:"Spinnfischen – kleiner Gummifisch/Spinner", status:"machbar", setup:"setup1",
@@ -368,7 +388,7 @@ const FISCHE = [
           {k:"Vorfach", v:"Fluorocarbon 0,22–0,26 mm · 60–80 cm"},
           {k:"Köder", v:"Gummifisch 7–10 cm am Jigkopf 5–12 g · oder Spinner Gr. 2–3"}
         ],
-        tipp:"Für große Barsche (>35 cm) die kräftigere Setup 1 nehmen – da ist oft auch der Zander nicht weit."
+        tipp:"Für große Barsche (>35 cm) die kräftigere Prorex nehmen – da ist oft auch der Zander nicht weit."
       },
       {
         methode:"Light Game – kleiner Gummifisch/Spinner (aktiv)", status:"machbar", setup:"setup4",
@@ -378,7 +398,7 @@ const FISCHE = [
           {k:"Vorfach", v:"Fluorocarbon 0,20–0,25 mm · 60–100 cm"},
           {k:"Köder", v:"Mini-Gummifisch 5–8 cm am Jigkopf 3–10 g · oder kleiner Spinner"}
         ],
-        tipp:"Genau der Einsatzzweck von Setup 4 – aktiv laufen, an Kanten und Strukturen jiggen, viele Fühlungskontakte spüren."
+        tipp:"Genau der Einsatzzweck der Savage Gear Revenge – aktiv laufen, an Kanten und Strukturen jiggen, viele Fühlungskontakte spüren."
       }
     ]
   },
@@ -430,7 +450,7 @@ const FISCHE = [
           {k:"Vorfach", v:"Fluorocarbon ca. 60–80 cm"},
           {k:"Haken", v:"Gamakatsu Gr. 6 · Berkley PowerBait (auftreibend), sodass der Köder knapp über Grund schwebt"}
         ],
-        tipp:"Ideal als passive Zweitangel neben einer aktiv geführten Rute (z. B. Setup 2 mit Spoons): Rute in den Rutenhalter, Pose beobachten – zieht sie unter oder treibt weg, ist das der Biss. Wichtig: Viele Forellenseen erlauben eine Zweitrute nur gegen Aufpreis oder gar nicht – auf der Tageskarte/Anlagenordnung vorher prüfen."
+        tipp:"Ideal als passive Zweitangel neben einer aktiv geführten Rute (z. B. die Presso mit Spoons): Rute in den Rutenhalter, Pose beobachten – zieht sie unter oder treibt weg, ist das der Biss. Wichtig: Viele Forellenseen erlauben eine Zweitrute nur gegen Aufpreis oder gar nicht – auf der Tageskarte/Anlagenordnung vorher prüfen."
       }
     ]
   },
@@ -484,7 +504,7 @@ const FISCHE = [
           {k:"Vorfach", v:"Mono/FC 0,30 mm · 40–60 cm"},
           {k:"Haken", v:"Aalhaken (langer Schenkel) Gr. 4–1 · Tauwurm"}
         ],
-        tipp:"Setup 6 (Ansitzangeln) ist hier optimal – die Freilaufrolle lässt dem Aal Zeit, den Köder zu nehmen. Zur Not geht Setup 1 + Glöckchen."
+        tipp:"Die Black Widow XT Carp ist hier optimal – die Freilaufrolle lässt dem Aal Zeit, den Köder zu nehmen. Zur Not geht die Prorex + Glöckchen."
       }
     ]
   },
@@ -504,7 +524,7 @@ const FISCHE = [
           {k:"Vorfach", v:"Mono 0,30 mm · 40 cm"},
           {k:"Haken", v:"Gr. 1–1/0 · Tauwurmbündel oder Fischfetzen"}
         ],
-        tipp:"Kalte, dunkle Nächte (Nov–Feb) sind die Zeit. Köder direkt am Grund, Setup 6 (Ansitzangeln) mit Bissanzeiger ist komfortabler als Setup 1."
+        tipp:"Kalte, dunkle Nächte (Nov–Feb) sind die Zeit. Köder direkt am Grund, die Black Widow XT Carp mit Bissanzeiger ist komfortabler als die Prorex."
       }
     ]
   },
@@ -523,18 +543,18 @@ const FISCHE = [
           {k:"Haken", v:"Karpfenhaken Gr. 4–8"},
           {k:"Vorfach", v:"FC 0,298 mm · 30–50 cm"}
         ],
-        tipp:"Genau der Einsatzzweck von Setup 6 (Black Widow + Baitrunner). Rute ins Rutenhalter, Baitrunner öffnen – Karpfen laufen beim Biss, Schnur läuft frei. Erst beim Anhieb Baitrunner schließen."
+        tipp:"Genau der Einsatzzweck der Black Widow XT Carp (Baitrunner). Rute ins Rutenhalter, Baitrunner öffnen – Karpfen laufen beim Biss, Schnur läuft frei. Erst beim Anhieb Baitrunner schließen."
       },
       {
         methode:"Feederangeln – Futterkorb/Method-Feeder", status:"machbar", setup:"setup5",
         gewaesser:["see","nok","eider"],
         montage:[
-          {k:"Hauptschnur", v:"J-Braid 0,12 mm (Setup 5) + Mono/FC-Vorfach"},
+          {k:"Hauptschnur", v:"J-Braid 0,12 mm (Ninja X Feeder) + Mono/FC-Vorfach"},
           {k:"Method-Feeder", v:"30–60 g · Pellet/Groundbait pressen"},
           {k:"Vorfach", v:"FC 0,298 mm · 20–30 cm (kurz – Selbsthak-Effekt)"},
           {k:"Haken", v:"Karpfenhaken Gr. 8–12 · Mais, Pellet, Tigernuss"}
         ],
-        tipp:"Setup 5 (Ninja Feeder) für mittlere Distanzen – Quivertip auf feine Bisse beobachten, Karpfen haken sich am Method-Feeder oft selbst."
+        tipp:"Der Ninja X Feeder für mittlere Distanzen – Quivertip auf feine Bisse beobachten, Karpfen haken sich am Method-Feeder oft selbst."
       }
     ]
   },
@@ -552,13 +572,13 @@ const FISCHE = [
           {k:"Schrotblei", v:"aufgeteilt, fein ausgebleit"},
           {k:"Haken", v:"Gr. 8–12 · Wurm/Mais/Made"}
         ],
-        tipp:"Genau der Einsatzzweck von Setup 9 (Stippe) – maximale Feinfühligkeit direkt an der Krautkante, aufsteigende Blasen verraten die Fressstelle. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen (Bäume/Steg)? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
+        tipp:"Genau der Einsatzzweck der Hyperloop-Stippe – maximale Feinfühligkeit direkt an der Krautkante, aufsteigende Blasen verraten die Fressstelle. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen (Bäume/Steg)? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
       },
       {
         methode:"Feederangeln – Method-Feeder", status:"machbar", setup:"setup5",
         gewaesser:["see","nok"],
         montage:[
-          {k:"Hauptschnur", v:"J-Braid 0,12 mm (Setup 5) + Mono/FC-Vorfach"},
+          {k:"Hauptschnur", v:"J-Braid 0,12 mm (Ninja X Feeder) + Mono/FC-Vorfach"},
           {k:"Method-Feeder", v:"20–40 g · Pellet/Futterbrei pressen"},
           {k:"Vorfach", v:"FC 0,180–0,200 mm · 20–30 cm"},
           {k:"Haken", v:"Gr. 10–14 · Mais, Wurm, Pellet"}
@@ -593,18 +613,18 @@ const FISCHE = [
           {k:"Schrotblei", v:"fein ausgebleit, ein Fühlerblei am Grund"},
           {k:"Haken", v:"Gr. 14–18 · Made/Mais/Teig"}
         ],
-        tipp:"Klassischer Fall für Setup 9 (Stippe) – entspanntes Posenangeln mit maximaler Feinfühligkeit. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
+        tipp:"Klassischer Fall für die Hyperloop-Stippe – entspanntes Posenangeln mit maximaler Feinfühligkeit. Fisch landen: Rute in einem Bogen zu dir heranschwingen (nicht senkrecht hochziehen!), dabei kommt die Spitze samt Montage in deine Reichweite. Wenig Platz zum Schwingen? Dann die Segmente einschieben, bis die Spitze erreichbar ist."
       },
       {
         methode:"Grund-/Feederangeln (weitere Distanz)", status:"machbar", setup:"setup5",
         gewaesser:["eider","nok","see","elbe"],
         montage:[
-          {k:"Hauptschnur", v:"J-Braid 0,12 mm (Setup 5) + Mono/FC-Vorfach 0,20–0,25 mm"},
+          {k:"Hauptschnur", v:"J-Braid 0,12 mm (Ninja X Feeder) + Mono/FC-Vorfach 0,20–0,25 mm"},
           {k:"Futterkorb/Grundblei", v:"20–40 g"},
           {k:"Vorfach", v:"0,14–0,16 mm · ca. 40–60 cm"},
           {k:"Haken", v:"Gr. 14–18 · Made/Mais/Teig"}
         ],
-        tipp:"Wenn's weiter raus oder mit Futterkorb gehen soll statt Stippe – Setup 5 deckt größere Distanzen ab."
+        tipp:"Wenn's weiter raus oder mit Futterkorb gehen soll statt Stippe – der Ninja X Feeder deckt größere Distanzen ab."
       }
     ]
   },
@@ -657,7 +677,7 @@ const FISCHE = [
           {k:"Paternoster", v:"fertiges System mit 5–7 Haken (Lametta)"},
           {k:"Abschlussblei", v:"30–60 g je nach Wurfweite/Strömung"}
         ],
-        tipp:"Genau hier reicht dein Setup 1 (Prorex + Freams) laut deiner eigenen Liste völlig aus – nur ein fertiges Paternoster (5–10 €) dazu."
+        tipp:"Genau hier reicht deine Prorex (+ Freams) laut deiner eigenen Liste völlig aus – nur ein fertiges Paternoster (5–10 €) dazu."
       }
     ]
   },
@@ -674,7 +694,7 @@ const FISCHE = [
           {k:"Vorfach", v:"Fluorocarbon 0,30–0,35 mm · 1 m"},
           {k:"Köder", v:"Gummifisch/Wobbler/Blinker 10–20 g"}
         ],
-        tipp:"Aktiv gespinnt geht der Wolfsbarsch mit Setup 1. Fürs klassische Grundangeln an der Brandung brauchst du das Brandungs-Setup.",
+        tipp:"Aktiv gespinnt geht der Wolfsbarsch mit der Prorex. Fürs klassische Grundangeln an der Brandung brauchst du das Brandungs-Setup.",
         gezeiten:"An der Nordsee/Eider (echter Tidenhub): am produktivsten ca. 1–2 h vor bis nach Niedrigwasser – die Strömung konzentriert Kleinfisch, den der Wolfsbarsch jagt. An der Ostsee sind Gezeiten minimal (~20 cm) – hier zählt Wind/Wellengang mehr als die Tide."
       }
     ]
@@ -711,7 +731,7 @@ const FISCHE = [
           {k:"Vorfach", v:"Fluorocarbon 0,28–0,35 mm · ca. 1–1,5 m"},
           {k:"Köder", v:"Küstenblinker/-wobbler 12–28 g (weit werfen)"}
         ],
-        tipp:"Zum Reinschnuppern geht Setup 1 – aber 2,70 m sind kurz und die Rolle nicht salzwasserfest. Fürs ernsthafte Küstenspinnen ist die Küstenrute (Empfehlung) der richtige Weg. Wurfweite & Wathose sind hier Gold wert.",
+        tipp:"Zum Reinschnuppern geht die Prorex – aber 2,70 m sind kurz und die Rolle nicht salzwasserfest. Fürs ernsthafte Küstenspinnen ist die Küstenrute (Empfehlung) der richtige Weg. Wurfweite & Wathose sind hier Gold wert.",
         gezeiten:"Ostsee: kaum Tideneinfluss (~20 cm) – wichtiger ist bewegtes Wasser durch Wind/Strömung. Eider (Brackwasser): hier gibt's echten Tidenhub – am besten 2 h vor bis 2 h nach Niedrigwasser, wenn die Forellen in der ablaufenden Strömung jagen."
       }
     ]
@@ -750,7 +770,7 @@ const KNOTEN_REGELN = [
 const KNOTEN = [
   {
     id:"palomar", name:"Palomar-Knoten", niveau:"Anfänger", sterne:1,
-    wofuer:"Schnur an ein Öhr binden: Wirbel, Snap/Karabiner, Haken, Jigkopf. DEIN Standardknoten für die geflochtene J-Braid (Setup 1 & 2).",
+    wofuer:"Schnur an ein Öhr binden: Wirbel, Snap/Karabiner, Haken, Jigkopf. DEIN Standardknoten für die geflochtene J-Braid (Prorex & Presso).",
     warum:"Der stärkste wirklich einfache Knoten – perfekt für Geflecht, kaum Kraftverlust, schwer falsch zu machen.",
     schritte:[
       "Lege die Schnur zu einer Schlaufe und stecke die DOPPELTE Schnur durch das Öhr (bei sehr kleinen Öhren ggf. zweimal durchführen).",
@@ -770,7 +790,7 @@ const KNOTEN = [
   },
   {
     id:"clinch", name:"Verbesserter Clinch-Knoten", niveau:"Anfänger", sterne:1,
-    wofuer:"Schnur an ein Öhr binden – ideal für monofile & Fluorocarbon-Schnur (deine Vorfächer und Setup 3).",
+    wofuer:"Schnur an ein Öhr binden – ideal für monofile & Fluorocarbon-Schnur (deine Vorfächer und den Sbiro).",
     warum:"Der Klassiker für Mono/FC. „Verbessert“ heißt: das Ende läuft am Schluss noch durch die große Schlaufe – das macht ihn rutschfest.",
     schritte:[
       "Schnur durch das Öhr stecken, ca. 15 cm Ende überstehen lassen.",
@@ -876,7 +896,7 @@ const EMPFEHLUNG = {
     { name:"Wathose / Watstiefel", warum:"Erweitert erreichbare Stellen enorm: Eider-Ufer, Küste, Brandung, Meerforelle.", preis:"ca. 60–150 €" },
     { name:"Kleinteile-Grundsortiment", warum:"Haken, Blei, Wirbel/Snaps, Perlen, Posen, Vorfachmaterial (Mono + FC) – Basis für jede Montage.", preis:"ca. 40–70 €" },
     { name:"Ersatzspule + Ersatzschnur (je Rolle)", warum:"Ein Schnurbruch am Wasser beendet sonst den Angeltag.", preis:"ca. 15–30 € je" },
-    { name:"Banksticks/Rutenhalter + Glöckchen/Bissanzeiger", warum:"Schon fürs improvisierte Aal-/Zanderansitzen mit Setup 1 (steht in der App als 🟡).", preis:"ca. 20–50 €" },
+    { name:"Banksticks/Rutenhalter + Glöckchen/Bissanzeiger", warum:"Schon fürs improvisierte Aal-/Zanderansitzen mit der Prorex (steht in der App als 🟡).", preis:"ca. 20–50 €" },
     { name:"Sitzmöglichkeit / Schirm", warum:"Für längere Ansitze – Komfort hält dich länger konzentriert am Wasser.", preis:"ca. 30–80 €" }
   ],
   aufschieben: [
@@ -940,7 +960,7 @@ const ZUBEHOER_CHECK = [
       { name:"Wathose / Watstiefel", stufe:"nice", warum:"Mehr erreichbare Stellen: Eider-Ufer, Küste, Brandung, Meerforelle.", match:["wathose","watstiefel"] },
       { name:"Regenkleidung / Angeljacke", stufe:"wichtig", warum:"Trocken & warm bleiben – hält dich länger konzentriert am Wasser.", match:["regenkleidung","angeljacke","regenjacke"] },
       { name:"Sitzmöglichkeit / Schirm", stufe:"nice", warum:"Komfort bei längeren Ansitzen.", match:["stuhl","sitz","schirm"] },
-      { name:"Rutenhalter / Banksticks + Bissanzeiger", stufe:"wichtig", warum:"Rute sicher ablegen + Biss erkennen (auch improvisiert mit Setup 1).", match:["rutenhalter","bankstick","bissanzeiger","glöckchen"] },
+      { name:"Rutenhalter / Banksticks + Bissanzeiger", stufe:"wichtig", warum:"Rute sicher ablegen + Biss erkennen (auch improvisiert mit der Prorex).", match:["rutenhalter","bankstick","bissanzeiger","glöckchen"] },
       { name:"Insektenschutz", stufe:"nice", warum:"Mücken am Wasser können den schönsten Ansitz ruinieren.", match:["insektenschutz","mückenschutz"] },
       { name:"Handtuch / Lappen", stufe:"nice", warum:"Hände säubern (Schleim, Köder) – hygienischer & angenehmer.", match:["handtuch","lappen"] },
       { name:"Müllbeutel (Schnurreste!)", stufe:"wichtig", warum:"Schnurreste NIE liegen lassen – tödlich für Vögel. Alles mitnehmen.", match:["müllbeutel"] }

@@ -344,11 +344,19 @@ function statusLabel(s){
        : "❌ Nicht mit aktuellem Gerät";
 }
 
+/* Setup-Bezeichnung ausserhalb des Inventars: dort fehlt die Gruppen-Ueberschrift,
+   also die Kategorie voranstellen ("Raubfisch · Daiwa Prorex S Spin · 2,70 m"). */
+function setupLabel(s){
+  if(!s) return "";
+  const kat = SETUP_KATEGORIEN.find(k => k.key === s.kategorie);
+  return kat ? `${kat.titel} · ${s.name}` : s.name;
+}
+
 function setupLineHTML(setup){
   const s = AKTUELL[setup];
   if(!s) return "";
   return `<div class="setup-line">
-    <span><span class="lbl">Setup</span><b>${s.name}</b></span>
+    <span><span class="lbl">Setup</span><b>${setupLabel(s)}</b></span>
     <span><span class="lbl">Rute</span>${s.rute}</span>
     <span><span class="lbl">Rolle</span>${s.rolle}</span>
     <span><span class="lbl">Schnur</span>${s.schnur}</span>
@@ -661,7 +669,7 @@ function packlisteHTML(fisch, ansatz){
   if(!ansatz.setup || !AKTUELL[ansatz.setup]) return ""; // nur packen, was du wirklich besitzt
   const prefix = fisch.id + "__" + ansatz.methode;
   const s = AKTUELL[ansatz.setup];
-  const items = [{ key: prefix + "::setup", label: `${s.name} (Rute + Rolle)` }];
+  const items = [{ key: prefix + "::setup", label: `${setupLabel(s)} (Rute + Rolle)` }];
   (ansatz.montage || []).forEach(m => items.push({ key: prefix + "::" + m.k, label: `${m.k}: ${m.v}` }));
 
   const done = items.filter(it => PACKLISTE[it.key]).length;
@@ -1013,21 +1021,16 @@ function inventarKarteHTML(s){
 function renderInventar(){
   const el = $("#inventar");
   const alleSetups = Object.values(AKTUELL);
-  const stippen = alleSetups.filter(s => s.kategorie === "stippe");
-  const crivit  = alleSetups.filter(s => s.kategorie === "crivit");
-  const mitRolle = alleSetups.filter(s => s.kategorie !== "stippe" && s.kategorie !== "crivit");
 
   let html = `<h2>🎒 Mein aktuelles Equipment</h2>`;
-  html += `<h3 class="inv-gruppe-titel">🎣 Ruten mit Rolle <span class="inv-gruppe-count">${mitRolle.length}</span></h3>`;
-  html += `<div class="inv-grid">` + mitRolle.map(inventarKarteHTML).join("") + `</div>`;
-  if(crivit.length > 0){
-    html += `<h3 class="inv-gruppe-titel">🏷️ Crivit-Setups (Backup) <span class="inv-gruppe-count">${crivit.length}</span></h3>`;
-    html += `<div class="inv-grid">` + crivit.map(inventarKarteHTML).join("") + `</div>`;
-  }
-  if(stippen.length > 0){
-    html += `<h3 class="inv-gruppe-titel">🪁 Stippruten (ohne Rolle) <span class="inv-gruppe-count">${stippen.length}</span></h3>`;
-    html += `<div class="inv-grid">` + stippen.map(inventarKarteHTML).join("") + `</div>`;
-  }
+  SETUP_KATEGORIEN.forEach(kat => {
+    const setups = alleSetups.filter(s => s.kategorie === kat.key);
+    if(setups.length === 0) return;
+    html += `<h3 class="inv-gruppe-titel">${kat.icon} ${kat.titel}
+        <span class="inv-gruppe-count">${setups.length}</span>
+        <span class="inv-gruppe-hinweis">${kat.hinweis}</span></h3>`;
+    html += `<div class="inv-grid">` + setups.map(inventarKarteHTML).join("") + `</div>`;
+  });
   html += `<div class="inv-grid">`;
   // eigene Setups
   ZUSATZ.setups.forEach((s,i) => {
@@ -1047,7 +1050,7 @@ function renderInventar(){
   html += `<details class="add-setup">
     <summary>➕ Eigenes Setup hinzufügen (Rute/Rolle/…)</summary>
     <div class="add-grid">
-      <input id="su-name" placeholder="Name (z. B. Setup 4 – Küste)">
+      <input id="su-name" placeholder="Name (z. B. Daiwa Windcast Surf · 4,20 m)">
       <input id="su-rute" placeholder="Rute (z. B. Sportex Air Spin Seatrout 3,05 m)">
       <input id="su-rolle" placeholder="Rolle (z. B. Daiwa Fuego LT 4000-C)">
       <input id="su-schnur" placeholder="Schnur (z. B. J-Braid 0,10 mm)">
@@ -3751,7 +3754,7 @@ function renderAnsitzAngeln(){
 
   el.innerHTML = `
     <div class="k-intro card">
-      <h2>⚓ Ansitzangeln – Setup 6</h2>
+      <h2>⚓ Ansitzangeln</h2>
       <p>Ruhiges Angeln mit Köder am Grund – Karpfen, Aal, Schleie. Das Setup liegt im Rutenhalter,
       der Baitrunner gibt Schnur frei, wenn der Fisch den Köder nimmt. Erst beim Anhieb die Bremse schließen.</p>
     </div>
@@ -3783,7 +3786,7 @@ function renderAnsitzAngeln(){
       ["Feeder", "Method-Feeder 30–60 g · Pellet/Groundbait fest pressen"],
       ["Vorfach", "FC 0,298 mm · 20–30 cm (kurz = Selbsthak-Effekt)"],
       ["Haken", "Gr. 8–12 · Mais, Pellet, Tigernuss"]
-    ], "Quivertip von Setup 5 (Ninja Feeder) für mittlere Distanzen – oder auch Setup 6 ohne Quivertip mit Bissanzeiger.")}
+    ], "Quivertip vom Ninja X Feeder für mittlere Distanzen – oder die Black Widow XT Carp ohne Quivertip mit Bissanzeiger.")}
 
     <div class="k-intro card" style="margin-top:20px;margin-bottom:8px">
       <h2>🐍 Aal</h2>
@@ -3853,7 +3856,7 @@ function renderEinkauf(){
   el.innerHTML = `<div class="ek-wrap">
     <div class="ek-header">
       <div class="ek-title">🛒 Kleinkram-Einkaufsliste</div>
-      <div class="ek-sub">Wirbel, Snaps & Karabiner – abgestimmt auf deine Setups S1–S9</div>
+      <div class="ek-sub">Wirbel, Snaps & Karabiner – abgestimmt auf dein Equipment</div>
     </div>
     <div class="ek-filter">
       <button class="ek-chip active" data-f="alle">Alle <span class="ek-cnt">${alle.length}</span></button>
@@ -3966,7 +3969,7 @@ function renderHeuteDabeiUI(){
   if(alleSetups.length === 0){ wrap.innerHTML = ""; return; }
   const pills = Object.entries(AKTUELL).map(([key, s]) => {
     const on = HEUTE_DABEI.has(key);
-    return `<button class="setup-pill${on ? " on" : ""}" data-hd="${key}" title="${s.name}">${s.name.replace(/^Setup \d+ – /,"")}</button>`;
+    return `<button class="setup-pill${on ? " on" : ""}" data-hd="${key}" title="${setupLabel(s)}">${s.name}</button>`;
   }).join("");
   const hatAuswahl = HEUTE_DABEI.size > 0;
   const hintText = hatAuswahl
@@ -5543,7 +5546,7 @@ function tbDetailHTML(e){
       </div>
       ${e.methode ? `<div class="tb-detail-item"><div class="tb-detail-item-label">Methode</div><div class="tb-detail-item-value">${e.methode}</div></div>` : ""}
       ${e.koeder ? `<div class="tb-detail-item"><div class="tb-detail-item-label">Köder</div><div class="tb-detail-item-value">${e.koeder}</div></div>` : ""}
-      ${e.setup && AKTUELL[e.setup] ? `<div class="tb-detail-item"><div class="tb-detail-item-label">Setup</div><div class="tb-detail-item-value">${AKTUELL[e.setup].name.replace(/^Setup \d+ – /,"")}</div></div>` : ""}
+      ${e.setup && AKTUELL[e.setup] ? `<div class="tb-detail-item"><div class="tb-detail-item-label">Setup</div><div class="tb-detail-item-value">${setupLabel(AKTUELL[e.setup])}</div></div>` : ""}
     </div>
     <div class="tb-detail-section">
       <h4>Fänge</h4>
@@ -5607,7 +5610,13 @@ function tbFormHTML(){
       <div class="full"><label class="tb-label">Setup (optional)</label>
         <select class="tb-select" id="tb-f-setup">
           <option value="">– kein / nicht relevant –</option>
-          ${Object.entries(AKTUELL).map(([k,s])=>`<option value="${k}"${(e.setup||"")===k?" selected":""}>${s.name.replace(/^Setup \d+ – /,"")}</option>`).join("")}
+          ${SETUP_KATEGORIEN.map(kat=>{
+            const opts = Object.entries(AKTUELL).filter(([,s])=>s.kategorie===kat.key);
+            if(opts.length===0) return "";
+            return `<optgroup label="${kat.icon} ${kat.titel}">`
+              + opts.map(([k,s])=>`<option value="${k}"${(e.setup||"")===k?" selected":""}>${s.name}</option>`).join("")
+              + `</optgroup>`;
+          }).join("")}
         </select>
       </div>
     </div>
