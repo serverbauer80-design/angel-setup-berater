@@ -205,7 +205,9 @@ const ZUBEHOER = [
   "Spoon (Einzelköder)", "Micro-Köder-Set",
   "F. Dick Filetiermesser 21 cm Blue (blaue Scheide, flexibel)", "Zwilling Wetzstahl 26 cm (Diamant, fein)",
   "Kopflampe", "Bissanzeiger + Glöckchen", "Angelstuhl / Sitzmöglichkeit", "Angelschirm",
-  "Kleinteile-Grundsortiment (Haken, Blei, Wirbel/Snaps, Perlen, Posen)"
+  "Kleinteile-Grundsortiment (Haken, Blei, Wirbel/Snaps, Perlen, Posen)",
+  "Maßband / Messlatte", "Polbrille (Polarisationsbrille)", "Kühltasche für den Fang",
+  "Müllbeutel für Schnurreste"
 ];
 
 /* ---------- 2) KLEINKRAM-EINKAUFSLISTE ---------- */
@@ -884,8 +886,7 @@ const EMPFEHLUNG = {
   reihenfolge: [
     "Deine <b>Rutenseite ist durch</b>: Raubfisch, Forelle, Ansitz, Feeder und Stippe sind alle abgedeckt. Eine weitere Rute schließt keine Lücke mehr – der Zuwachs kommt jetzt aus Technik und Zubehör.",
     "<b>Der Aryas Nr. 3 fehlt Rolle und Schnur</b> – das ist der einzige offene Punkt an vorhandenem Gerät und die günstigste echte Verbesserung (siehe Tipp auf der Setup-Karte).",
-    "<b>Pflicht-Lücke zuerst:</b> Maßband/Messlatte. Mindestmaß am Wasser prüfen zu können ist rechtlich relevant, kostet aber fast nichts.",
-    "<b>Sicherheit &amp; Komfort</b> als Nächstes: Polbrille (Augenschutz!), Regenkleidung, Kühltasche für den Fang. Das verlängert die Zeit am Wasser mehr als jedes neue Gerät.",
+    "<b>Beim Zubehör bist du praktisch durch</b> – ausrüstungsseitig ist alles Pflichtmaterial vorhanden. Offen bleibt nur die Ersatzspule für die häufig gefischten Rollen; Regenkleidung und Rutentasche sind Komfort. (Der Erlaubnisschein steht dauerhaft als Pflicht in der Checkliste – der gilt gewässerbezogen und ist vor jeder Tour neu zu prüfen, nicht einmalig abzuhaken.)",
     "<b>Küstenspinnen</b> auf Meerforelle/Hornhecht – die einzige wirklich neue Spielart, die dein Gerät noch nicht abdeckt (SH-Küste vor der Tür).",
     "<b>Brandung &amp; Pilk</b> erst kurz vor dem tatsächlichen Küsten-/Kuttertermin kaufen (Kutter vermieten oft Gerät).",
     "<b>Reise-Steckrute &amp; Großwels</b>: Fernziele – ganz nach hinten."
@@ -908,13 +909,10 @@ const EMPFEHLUNG = {
     }
   },
   zubehoer: [
-    { name:"Maßband / Messlatte", warum:"Die einzige offene Pflicht-Position: Mindestmaß muss am Wasser prüfbar sein, untermaßige Fische sofort zurück. Kostet fast nichts und schützt dich rechtlich.", preis:"ca. 5–15 €" },
-    { name:"Polarisationsbrille (Polbrille)", warum:"Doppelter Nutzen: du siehst Fisch und Struktur im Wasser – und sie schützt die Augen vor Ködern, die beim Wurf zurückkommen. Bei 15 Ruten im Bestand die günstigste Sicherheitsinvestition.", preis:"ca. 25–80 €" },
-    { name:"Kühltasche für den Fang", warum:"Ab Frühsommer entscheidet sie über die Qualität des Fisches auf dem Teller – gerade bei längeren Ansitzen und der Fahrt nach Hause.", preis:"ca. 20–40 €" },
+    { name:"Ersatzspule + Ersatzschnur", warum:"Die letzte offene Position mit Stufe „wichtig“. Bei den Ruten, die du wirklich oft fischst (Prorex, Presso, die Aryas): ein Schnurbruch beendet sonst den Tag. Nicht für jede Rolle nötig.", preis:"ca. 15–30 € je" },
     { name:"Regenkleidung / Angeljacke", warum:"Du hast Ansitz- und Tremarella-Gerät für lange Sessions – nass und ausgekühlt brichst du trotzdem früher ab.", preis:"ca. 60–150 €" },
-    { name:"Ersatzspule + Ersatzschnur", warum:"Bei den Ruten, die du wirklich oft fischst (Prorex, Presso, die Aryas): ein Schnurbruch beendet sonst den Tag. Nicht für jede Rolle nötig.", preis:"ca. 15–30 € je" },
-    { name:"Müllbeutel für Schnurreste", warum:"Geflochtene und FC-Reste sind für Vögel tödlich. Kostet nichts, gehört in jede Tasche.", preis:"ca. 0 €" },
-    { name:"Wathose / Watstiefel", warum:"Erweitert erreichbare Stellen enorm: Eider-Ufer, Küste, Brandung, Meerforelle. Wird relevant, sobald das Küstenspinnen dazukommt.", preis:"ca. 60–150 €" }
+    { name:"Wathose / Watstiefel", warum:"Erweitert erreichbare Stellen enorm: Eider-Ufer, Küste, Brandung, Meerforelle. Wird erst relevant, wenn das Küstenspinnen dazukommt – dann aber zusammen mit der Rute kaufen.", preis:"ca. 60–150 €" },
+    { name:"Rutentasche / Futteral", warum:"Bei 15 Ruten die Position mit dem meisten Alltagsnutzen: Transportschutz und schneller Zugriff, gerade für die 7-teilige Aryas und die 7-m-Stippe.", preis:"ca. 30–80 €" }
   ],
   aufschieben: [
     "<b>Reise-Steckrute</b> aufschieben, solange du deine Heimatgewässer lernst – schön, aber Luxus.",
