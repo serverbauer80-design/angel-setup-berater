@@ -4468,6 +4468,170 @@ function eiRenderKoeder(){
   </div>`;
 }
 
+/* ===== STARTHILFE – Hakenkunde ===== */
+const HAKEN_TYPEN = [
+  { name:"Teighaken", tag:"Rundbogen · Kurzschenkel",
+    text:"Kurzer Schenkel, weiter Bogen, oft mit kleiner Spirale am Schenkel, die die Paste hält. Meist rot/silber, feindrahtig.",
+    fuer:"Forellenpaste, Bienenmaden" },
+  { name:"Wurmhaken", tag:"Langschenkel · Aberdeen",
+    text:"Langer Schenkel zum Auffädeln von Wurm/Made, gut zu greifen beim Lösen. Häufig als fertig gebundenes Vorfach.",
+    fuer:"Tauwurm, Dendrobaena, Made, Mais" },
+  { name:"Circle Hook", tag:"Einwärts gebogene Spitze",
+    text:"Hakt sich beim Abziehen selbst im Maulwinkel – kein Anhieb nötig, hoher Anteil sauber gehakter Fische.",
+    fuer:"Wels, Köderfisch-Ansitz, C&amp;R" },
+  { name:"Drilling (Treble)", tag:"Drei Schenkel",
+    text:"Der Kunstköder-Haken schlechthin. An Wobbler, Blinker, Spoon. Die Größe folgt dem Köder, nicht dem Fisch.",
+    fuer:"Hecht, Barsch, Spoon (dort oft Einzelhaken!)" },
+  { name:"Jig- &amp; Offsethaken", tag:"Bleikopf / Offset",
+    text:"Für Gummiköder: Jighaken mit Bleikopf für Grundkontakt, Offset-/Wormhaken für krautfreies Führen.",
+    fuer:"Zander, Barsch, Hecht auf Gummi" },
+  { name:"Öhr vs. Plättchen", tag:"Das Schenkel-Ende",
+    text:"Öhrhaken zum Selbstbinden (flexibel), Plättchenhaken für fertige, sehr feine Vorfächer.",
+    fuer:"Wahl je nach Knoten &amp; Feinheit" }
+];
+
+const HAKEN_ZIELFISCH = [
+  { fisch:"🐠 Forelle (Put &amp; Take)", eigen:"Dein Kernrevier",
+    intro:"Feindraht, kleine Größen, oft widerhakenlos vorgeschrieben. Beim Spoon zählt der Haken am Köder – viele Seen verbieten Drillinge, dann Einzelhaken montieren.",
+    zeilen:[
+      { was:"Forellenteig", typ:"Teighaken, feindraht, fertig gebunden", gr:"6 – 10" },
+      { was:"Teig, selbst gebunden", typ:"Öhr-Teighaken silber", gr:"4 – 8" },
+      { was:"Paste am Spiralhaken", typ:"Spiral-Teighaken (hält die Paste)", gr:"6 – 8" },
+      { was:"Wurm / Bienenmade / Mais", typ:"Wurmhaken, langschenklig, gebunden", gr:"6 – 8" },
+      { was:"Spoon / Blinker (UL)", typ:"Einzelhaken widerhakenlos am Köder", gr:"4 – 8" },
+      { was:"Tremarella (Camole)", typ:"Feiner Einzelhaken am langen FC-Vorfach", gr:"8 – 12" },
+      { was:"Sbirolino + Knödel", typ:"Langer, fein gebundener Vorfachhaken", gr:"6 – 10" }
+    ],
+    bezug:"Passt zu deinen drei FTM Black Aryas 2 und der SPRO Tactical Lake Sbiro." },
+  { fisch:"🐊 Hecht", eigen:"",
+    intro:"Immer am Stahl- oder Titanvorfach – Hechtzähne schneiden alles andere. Beim Kunstköder folgt die Drillingsgröße dem Köder; beim Köderfisch nimmst du ein 2-Drilling-System (Stinger).",
+    zeilen:[
+      { was:"Wobbler / Blinker (mittel)", typ:"Drilling, scharf &amp; stabil", gr:"1 – 4" },
+      { was:"Große Wobbler / Jerkbaits", typ:"Starker Drilling, ggf. mit Sprengring", gr:"1/0 – 2/0" },
+      { was:"Gummifisch (groß)", typ:"Jigkopf / großer Wormhaken", gr:"2/0 – 5/0" },
+      { was:"Köderfisch-Ansitz", typ:"2-Drilling-System am Stahlvorfach", gr:"2 – 1/0" }
+    ],
+    bezug:"Deine Daiwa Prorex S (15–50 g) ist die Rute dafür – Stahlvorfächer Perca hast du bereits." },
+  { fisch:"🎣 Zander &amp; Barsch", eigen:"",
+    intro:"Gummiköder dominieren. Zander verlangt einen weit öffnenden, drahtstarken Haken und oft einen kleinen Stinger, weil er zaghaft nachfasst. Barsch: alles eine Nummer kleiner und feiner.",
+    zeilen:[
+      { was:"Zander · Gummi am Jigkopf", typ:"Jighaken, weiter Bogen", gr:"1/0 – 4/0" },
+      { was:"Zander · Köderfisch am Grund", typ:"Einzel-/Circle-Haken", gr:"1 – 2/0" },
+      { was:"Barsch · kleine Gummis", typ:"Jigkopf / Dropshot-Einzelhaken", gr:"4 – 8" },
+      { was:"Barsch · kleine Wobbler", typ:"Feiner Drilling", gr:"8 – 12" }
+    ],
+    bezug:"Savage Gear Revenge für Barsch, Prorex für große Zander." },
+  { fisch:"🎏 Friedfisch &amp; Ansitz", eigen:"",
+    intro:"Klein, fein, unauffällig – Friedfische inspizieren den Köder, bevor sie ihn nehmen.",
+    zeilen:[
+      { was:"Karpfen · Boilie am Haar", typ:"Curved-Shank / Wide-Gape, Öhr", gr:"2 – 8" },
+      { was:"Brasse / Rotauge · Made, Mais", typ:"Feindraht-Vorfachhaken", gr:"10 – 16" },
+      { was:"Aal · Tauwurm, Fetzen", typ:"Kräftiger Wurmhaken, Öhr", gr:"2 – 6" },
+      { was:"Schleie · Wurm, Mais", typ:"Kurzschenkliger Haken", gr:"8 – 12" }
+    ],
+    bezug:"Für Black Widow XT Carp/Bait, Ninja X Feeder und die Stippen." },
+  { fisch:"🐋 Wels / Waller", eigen:"Perspektivziel",
+    intro:"Hier zählt nur eins: massive, drahtstarke Haken, die sich unter Dauerdruck nicht öffnen. Circle Hooks sind Standard, weil sie sich selbst im Maulwinkel setzen.",
+    zeilen:[
+      { was:"Tauwurmbündel / Calamari", typ:"Starker Einzelhaken, kurzschenklig", gr:"4/0 – 8/0" },
+      { was:"Köderfisch / Boje / U-Pose", typ:"Circle Hook, sehr stark", gr:"6/0 – 12/0" }
+    ],
+    bezug:"Noch kein passendes Gerät im Bestand – steht auf der Wunschliste." }
+];
+
+function eiRenderHaken(){
+  const skala = [
+    {gr:"18", h:16}, {gr:"12", h:24}, {gr:"8", h:33}, {gr:"4", h:44},
+    {gr:"1", h:55}, {gr:"1/0", h:66}, {gr:"4/0", h:80}, {gr:"8/0", h:94}
+  ];
+
+  return `<div class="ei-wrap">
+    <div class="ei-best-intro">Welcher Hakentyp, welche Größe – geordnet nach Köder und Zielfisch. Größenangaben sind Praxis-Richtwerte und variieren je nach Ködergröße, Gewässerordnung und Marke.</div>
+
+    <div class="ei-card">
+      <div class="ei-card-header"><span class="ei-card-icon">🎯</span><div>
+        <div class="ei-card-titel">Nicht der Fisch bestimmt den Haken – der Köder</div>
+        <div class="ei-card-sub">Warum „Fischart → Haken" zu grob gedacht ist</div>
+      </div></div>
+      <div class="ei-info-block"><div class="ei-gwtext">
+        <p>Dieselbe Forelle fängst du am Forellensee mit einem <b>Teighaken</b> (kurzer Schenkel, damit die Paste rund sitzt), mit einem <b>Wurmhaken</b> (langer Schenkel) oder – beim Spoon – mit dem <b>Einzelhaken am Köder selbst</b>. Drei völlig verschiedene Haken, ein Fisch.</p>
+        <p>Beim Hecht auf Köderfisch redest du nicht über „einen Haken", sondern über ein <b>Drillings-System</b> am Stahlvorfach. Deshalb ist unten alles nach <b>Köder und Methode</b> sortiert – das ist die Reihenfolge, in der du auch tatsächlich entscheidest.</p>
+      </div></div>
+      <div class="ei-info-block"><div class="ei-info-titel">⚖️ Zweite Stellschraube: Waidgerechtigkeit</div>
+        <p class="ei-gwtext" style="margin:0">Am Forellensee sind vielerorts <b>widerhakenlose Einzelhaken</b> vorgeschrieben. Prüf die Gewässerordnung – das entscheidet oft mehr als die Marke.</p>
+      </div>
+    </div>
+
+    <div class="ei-card">
+      <div class="ei-card-header"><span class="ei-card-icon">🔢</span><div>
+        <div class="ei-card-titel">Hakengrößen lesen</div>
+        <div class="ei-card-sub">Die Zahl läuft gegenläufig – der häufigste Anfängerfehler</div>
+      </div></div>
+      <p class="ei-gwtext">Bei den einfachen Zahlen gilt <b>je höher, desto kleiner</b> (Gr. 20 ist winzig, Gr. 1 schon ordentlich). Ab <b>1/0</b> („eins-null") kippt es: dann wird der Haken <b>je höher, desto größer</b> – 2/0, 4/0 bis 12/0 für Wels.</p>
+      <div class="hk-scale">
+        <div class="hk-bar" aria-hidden="true">
+          ${skala.map(s=>`<div class="hk-tick"><div class="hk-hook" style="height:${s.h}px"></div><small>${s.gr}</small></div>`).join("")}
+        </div>
+        <div class="hk-ends"><span>klein &amp; fein (Maden, kleine Spoons)</span><span>groß &amp; stark (Wels, große Köfi)</span></div>
+      </div>
+      <div class="ei-koeder-tipp">💡 Merksatz: einfache Zahl = „mit Null runter" (kleiner), <b>/0</b> = „mit Null rauf" (größer). Die Größen sind zwischen Marken <b>nicht</b> exakt genormt – ein Gamakatsu Gr. 6 fällt minimal anders aus als ein Owner Gr. 6.</div>
+    </div>
+
+    <div class="ei-card">
+      <div class="ei-card-header"><span class="ei-card-icon">🪝</span><div>
+        <div class="ei-card-titel">Die Bauformen</div>
+        <div class="ei-card-sub">Schenkellänge, Bogen und Spitzenstellung sind kein Zufall</div>
+      </div></div>
+      <div class="hk-types">
+        ${HAKEN_TYPEN.map(t=>`
+        <div class="hk-type">
+          <div class="hk-type-tag">${t.tag}</div>
+          <div class="hk-type-name">${t.name}</div>
+          <p>${t.text}</p>
+          <div class="hk-type-fuer"><b>Für:</b> ${t.fuer}</div>
+        </div>`).join("")}
+      </div>
+    </div>
+
+    ${HAKEN_ZIELFISCH.map(z=>`
+    <div class="ei-card">
+      <div class="ei-card-header"><span class="ei-card-icon">${z.fisch.split(" ")[0]}</span><div>
+        <div class="ei-card-titel">${z.fisch.replace(/^\S+\s/,"")}${z.eigen?` <span class="hk-eigen">${z.eigen}</span>`:""}</div>
+        <div class="ei-card-sub">${z.intro}</div>
+      </div></div>
+      <div class="hk-tblwrap">
+        <table class="hk-tbl">
+          <thead><tr><th>Köder / Methode</th><th>Hakentyp</th><th>Größe</th></tr></thead>
+          <tbody>
+            ${z.zeilen.map(r=>`<tr>
+              <td class="hk-was">${r.was}</td>
+              <td class="hk-typ">${r.typ}</td>
+              <td><span class="hk-gr">${r.gr}</span></td>
+            </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>
+      ${z.bezug?`<div class="ei-koeder-tipp">🎣 ${z.bezug}</div>`:""}
+    </div>`).join("")}
+
+    <div class="ei-card">
+      <div class="ei-card-header"><span class="ei-card-icon">🛒</span><div>
+        <div class="ei-card-titel">Wenn du nur wenig mitnimmst</div>
+        <div class="ei-card-sub">Zwei Boxen decken fast alles ab</div>
+      </div></div>
+      <div class="ei-info-block"><div class="ei-info-titel">🐠 Forellensee-Box</div>
+        <p class="ei-gwtext" style="margin:0">Gebundene Teigvorfächer Gr. 6–8, ein Päckchen Einzelhaken Gr. 6 (widerhakenlos für Spoons), gebundene Wurmhaken Gr. 8, feine Einzelhaken Gr. 8–12 fürs Tremarella.</p>
+      </div>
+      <div class="ei-info-block"><div class="ei-info-titel">🐊 Raubfisch-Box</div>
+        <p class="ei-gwtext" style="margin:0">Drillinge Gr. 1–4 als Ersatz für Wobbler und Blinker, ein Satz Gr. 2/0 für die großen Köder, dazu Jighaken passend zu deinen Gummis. Stahlvorfächer nicht vergessen.</p>
+      </div>
+      <div class="ei-info-block"><div class="ei-info-titel">💡 Faustregel Marke</div>
+        <p class="ei-gwtext" style="margin:0">Owner und Gamakatsu sind Referenz bei Schärfe und Drahtqualität – den Aufpreis merkst du bei zaghaften Bissen (Zander) und im Drill (Hecht, Wels). Bei Verschleißteilen wie Spoon-Drillingen tut's auch günstiger.</p>
+      </div>
+    </div>
+  </div>`;
+}
+
 /* ===== STARTHILFE – Knoten-Trainer ===== */
 const EI_KNOTEN = [
   { name:"Improved Clinch Knot", emoji:"🪢",
@@ -5118,6 +5282,7 @@ function renderEinsteiger(){
     {k:"filetieren", icon:"🔪", label:"Filetieren"},
     {k:"rezepte", icon:"🍳", label:"Rezepte"},
     {k:"koeder",  icon:"🪱", label:"Köder"},
+    {k:"haken",   icon:"🪝", label:"Haken"},
     {k:"knoten",  icon:"🪢", label:"Knoten"},
     {k:"putak",   icon:"🐠", label:"Put & Take"},
   ];
@@ -5194,6 +5359,7 @@ function renderEinsteiger(){
   else if(EI_SUBVIEW==="filetieren") contentHTML = eiRenderFiletieren();
   else if(EI_SUBVIEW==="rezepte")    contentHTML = eiRenderRezepte();
   else if(EI_SUBVIEW==="koeder")     contentHTML = eiRenderKoeder();
+  else if(EI_SUBVIEW==="haken")      contentHTML = eiRenderHaken();
   else if(EI_SUBVIEW==="knoten")     contentHTML = eiRenderKnoten();
   else if(EI_SUBVIEW==="putak")      contentHTML = eiRenderPutAndTake();
 

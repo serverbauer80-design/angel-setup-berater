@@ -900,3 +900,67 @@ select:focus{outline:none;border-color:var(--accent)}
 .naechster-spot-label{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px}
 .naechster-spot-name{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
 .naechster-spot-meta{font-size:13px;color:var(--muted)}
+
+/* ---------- Starthilfe: Hakenkunde ---------- */
+.hk-scale{
+  background:var(--bg2);border:1px solid var(--line);border-radius:12px;
+  padding:16px 14px 12px;margin:14px 0 4px;
+}
+.hk-bar{
+  display:flex;align-items:flex-end;gap:0;height:96px;
+  border-bottom:2px solid var(--line);
+}
+.hk-tick{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px}
+.hk-hook{
+  width:100%;max-width:30px;border-radius:0 0 40% 40%;
+  border:2px solid var(--accent);border-top:none;
+  background:rgba(51,195,166,.14);
+}
+.hk-tick small{font-size:11px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.hk-ends{
+  display:flex;justify-content:space-between;gap:10px;
+  font-size:12px;color:var(--muted);margin-top:10px;font-weight:600;
+}
+.hk-ends span:first-child::before{content:"◄ ";color:var(--accent)}
+.hk-ends span:last-child{text-align:right}
+.hk-ends span:last-child::after{content:" ►";color:var(--accent)}
+
+.hk-types{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px}
+.hk-type{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px}
+.hk-type-tag{
+  font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--accent2);margin-bottom:4px;
+}
+.hk-type-name{font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px}
+.hk-type p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.5}
+.hk-type-fuer{
+  margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);
+  font-size:12.5px;color:var(--muted);
+}
+.hk-type-fuer b{color:var(--text)}
+
+.hk-tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-top:12px}
+.hk-tbl{border-collapse:collapse;width:100%;min-width:520px;font-size:14px}
+.hk-tbl thead th{
+  text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--muted);background:var(--card2);padding:10px 13px;
+  border-bottom:1px solid var(--line);white-space:nowrap;
+}
+.hk-tbl tbody td{padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+.hk-tbl tbody tr:last-child td{border-bottom:none}
+.hk-was{font-weight:700;color:var(--text)}
+.hk-typ{color:var(--muted)}
+.hk-gr{
+  display:inline-block;font-weight:800;font-size:12.5px;font-variant-numeric:tabular-nums;
+  white-space:nowrap;color:var(--bg);background:var(--accent);
+  padding:2px 9px;border-radius:6px;
+}
+.hk-eigen{
+  display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--accent);border:1px solid var(--accent);border-radius:999px;
+  padding:1px 8px;margin-left:6px;vertical-align:2px;
+}
+@media(max-width:640px){
+  .hk-bar{height:76px}
+  .hk-ends{font-size:11px}
+}
