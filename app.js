@@ -4471,23 +4471,29 @@ function eiRenderKoeder(){
 /* ===== STARTHILFE – Hakenkunde ===== */
 const HAKEN_TYPEN = [
   { name:"Teighaken", tag:"Rundbogen · Kurzschenkel",
-    text:"Kurzer Schenkel, weiter Bogen, oft mit kleiner Spirale am Schenkel, die die Paste hält. Meist rot/silber, feindrahtig.",
-    fuer:"Forellenpaste, Bienenmaden" },
+    text:"Kurzer Schenkel, weiter runder Bogen. Die Spirale am Schenkel (grün) hält die Paste an Ort und Stelle. Meist rot oder silber, feindrahtig.",
+    fuer:"Forellenpaste, Bienenmaden",
+    svg:`<svg class="hk-svg" viewBox="0 0 100 160" role="img" aria-label="Teighaken"> <circle class="wire" cx="58" cy="17" r="7"/> <path class="wire" d="M58,24 V88"/> <path class="hi" d="M49,40 L67,47 M49,50 L67,57 M49,60 L67,67"/> <path class="wire" d="M58,88 C58,133 14,131 17,96"/> <path class="wire" d="M17,96 L25,58"/> <path class="wire" d="M23,68 L14,77"/> <path class="tip" d="M25,58 l6.5,10 l-11.5,2 z"/> </svg>` },
   { name:"Wurmhaken", tag:"Langschenkel · Aberdeen",
-    text:"Langer Schenkel zum Auffädeln von Wurm/Made, gut zu greifen beim Lösen. Häufig als fertig gebundenes Vorfach.",
-    fuer:"Tauwurm, Dendrobaena, Made, Mais" },
+    text:"Langer Schenkel zum Auffädeln und gut zu greifen beim Lösen. Kleine Widerhaken am Schenkel (grün) verhindern, dass der Wurm herunterrutscht.",
+    fuer:"Tauwurm, Dendrobaena, Made, Mais",
+    svg:`<svg class="hk-svg" viewBox="0 0 100 160" role="img" aria-label="Wurmhaken"> <circle class="wire" cx="58" cy="17" r="7"/> <path class="wire" d="M58,24 V112"/> <path class="hi" d="M58,52 l-9,7 M58,70 l-9,7 M58,88 l-9,7"/> <path class="wire" d="M58,112 C58,146 26,145 29,116"/> <path class="wire" d="M29,116 L36,78"/> <path class="wire" d="M34,88 L26,96"/> <path class="tip" d="M36,78 l6.5,10 l-11.5,2 z"/> </svg>` },
   { name:"Circle Hook", tag:"Einwärts gebogene Spitze",
-    text:"Hakt sich beim Abziehen selbst im Maulwinkel – kein Anhieb nötig, hoher Anteil sauber gehakter Fische.",
-    fuer:"Wels, Köderfisch-Ansitz, C&amp;R" },
+    text:"Die Spitze (grün) dreht zurück zum Schenkel statt nach oben. Dadurch hakt er sich beim Abziehen von selbst im Maulwinkel – kein Anhieb nötig.",
+    fuer:"Wels, Köderfisch-Ansitz, C&amp;R",
+    svg:`<svg class="hk-svg" viewBox="0 0 100 160" role="img" aria-label="Circle Hook"> <circle class="wire" cx="60" cy="17" r="7"/> <path class="wire" d="M60,24 V92"/> <path class="wire" d="M60,92 C60,136 14,132 16,98"/> <path class="hi" d="M16,98 C17,72 33,62 45,72"/> <path class="tiphi" d="M45,66 l0,12 l12,-6 z"/> </svg>` },
   { name:"Drilling (Treble)", tag:"Drei Schenkel",
-    text:"Der Kunstköder-Haken schlechthin. An Wobbler, Blinker, Spoon. Die Größe folgt dem Köder, nicht dem Fisch.",
-    fuer:"Hecht, Barsch, Spoon (dort oft Einzelhaken!)" },
+    text:"Drei Bögen an einem Schenkel, 120° zueinander versetzt. Der Kunstköder-Haken schlechthin – die Größe folgt dem Köder, nicht dem Fisch.",
+    fuer:"Hecht, Barsch, Spoon (dort oft Einzelhaken!)",
+    svg:`<svg class="hk-svg" viewBox="0 0 100 160" role="img" aria-label="Drilling"> <circle class="wire" cx="50" cy="17" r="7"/> <path class="wire" d="M50,24 V84"/> <path class="wire" d="M50,84 C50,124 12,120 15,90"/> <path class="wire" d="M15,90 L22,56"/> <path class="tip" d="M22,56 l6.5,10 l-11.5,2 z"/> <path class="wire" d="M50,84 C50,124 88,120 85,90"/> <path class="wire" d="M85,90 L78,56"/> <path class="tip" d="M78,56 l-6.5,10 l11.5,2 z"/> <path class="wire" d="M50,84 C50,126 38,128 41,110"/> <path class="wire" d="M41,110 L45,92"/> <path class="tip" d="M45,92 l6,9 l-11,2 z"/> </svg>` },
   { name:"Jig- &amp; Offsethaken", tag:"Bleikopf / Offset",
-    text:"Für Gummiköder: Jighaken mit Bleikopf für Grundkontakt, Offset-/Wormhaken für krautfreies Führen.",
-    fuer:"Zander, Barsch, Hecht auf Gummi" },
+    text:"Jighaken mit angegossenem Bleikopf für Grundkontakt. Der Offsethaken hat einen Z-Versatz am Schenkel (grün), in dem der Gummikopf sitzt – die Spitze liegt versteckt im Köder.",
+    fuer:"Zander, Barsch, Hecht auf Gummi",
+    svg:`<svg class="hk-svg" viewBox="0 0 100 160" role="img" aria-label="Jighaken mit Bleikopf und Offsethaken"> <circle class="wire" cx="16" cy="14" r="6" stroke-width="4"/> <path class="wire" d="M17,20 L23,32" stroke-width="4"/> <ellipse class="lead" cx="28" cy="44" rx="15" ry="12"/> <path class="wire" d="M32,55 V92" stroke-width="4"/> <path class="wire" d="M32,92 C32,122 8,120 10,98" stroke-width="4"/> <path class="wire" d="M10,98 L15,72" stroke-width="4"/> <path class="tip" d="M15,72 l5,9 l-10,1.5 z"/> <text class="lbl" x="25" y="150">Jig</text> <circle class="wire" cx="75" cy="14" r="6" stroke-width="4"/> <path class="hi" d="M75,20 V28 L66,35 L66,43 L75,50" stroke-width="4"/> <path class="wire" d="M75,50 V92" stroke-width="4"/> <path class="wire" d="M75,92 C75,122 51,120 53,98" stroke-width="4"/> <path class="wire" d="M53,98 L58,72" stroke-width="4"/> <path class="tip" d="M58,72 l5,9 l-10,1.5 z"/> <text class="lbl" x="70" y="150">Offset</text> </svg>` },
   { name:"Öhr vs. Plättchen", tag:"Das Schenkel-Ende",
-    text:"Öhrhaken zum Selbstbinden (flexibel), Plättchenhaken für fertige, sehr feine Vorfächer.",
-    fuer:"Wahl je nach Knoten &amp; Feinheit" }
+    text:"Öhrhaken haben einen Ring zum Selbstbinden – flexibel bei der Knotenwahl. Plättchenhaken enden in einem abgeflachten Blatt (grün) und kommen fertig gebunden.",
+    fuer:"Wahl je nach Knoten &amp; Feinheit",
+    svg:`<svg class="hk-svg" viewBox="0 0 100 160" role="img" aria-label="Öhr und Plättchen"> <circle class="hi" cx="27" cy="22" r="8"/> <path class="wire" d="M27,30 V92"/> <path class="wire" d="M27,92 C27,122 6,120 8,98"/> <path class="wire" d="M8,98 L13,74"/> <path class="tip" d="M13,74 l5,8 l-9.5,1.5 z"/> <text class="lbl" x="24" y="152">Öhr</text> <path class="hi" style="fill:var(--accent);stroke:none" d="M68.5,13 L77.5,13 L76,30 L70,30 z"/> <path class="wire" d="M73,30 V92"/> <path class="wire" d="M73,92 C73,122 52,120 54,98"/> <path class="wire" d="M54,98 L59,74"/> <path class="tip" d="M59,74 l5,8 l-9.5,1.5 z"/> <text class="lbl" x="74" y="152">Plättchen</text> </svg>` }
 ];
 
 const HAKEN_ZIELFISCH = [
@@ -4580,11 +4586,12 @@ function eiRenderHaken(){
     <div class="ei-card">
       <div class="ei-card-header"><span class="ei-card-icon">🪝</span><div>
         <div class="ei-card-titel">Die Bauformen</div>
-        <div class="ei-card-sub">Schenkellänge, Bogen und Spitzenstellung sind kein Zufall</div>
+        <div class="ei-card-sub">Schenkellänge, Bogen und Spitzenstellung sind kein Zufall – grün markiert ist jeweils das Merkmal, an dem du die Bauform erkennst</div>
       </div></div>
       <div class="hk-types">
         ${HAKEN_TYPEN.map(t=>`
         <div class="hk-type">
+          <div class="hk-fig">${t.svg}</div>
           <div class="hk-type-tag">${t.tag}</div>
           <div class="hk-type-name">${t.name}</div>
           <p>${t.text}</p>
