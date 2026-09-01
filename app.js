@@ -4558,7 +4558,7 @@ function eiRenderHaken(){
         <p>Beim Hecht auf Köderfisch redest du nicht über „einen Haken", sondern über ein <b>Drillings-System</b> am Stahlvorfach. Deshalb ist unten alles nach <b>Köder und Methode</b> sortiert – das ist die Reihenfolge, in der du auch tatsächlich entscheidest.</p>
       </div></div>
       <div class="ei-info-block"><div class="ei-info-titel">⚖️ Zweite Stellschraube: Waidgerechtigkeit</div>
-        <p class="ei-gwtext" style="margin:0">Am Forellensee sind vielerorts <b>widerhakenlose Einzelhaken</b> vorgeschrieben. Prüf die Gewässerordnung – das entscheidet oft mehr als die Marke.</p>
+        <div class="ei-gwtext"><p>Am Forellensee sind vielerorts <b>widerhakenlose Einzelhaken</b> vorgeschrieben. Prüf die Gewässerordnung – das entscheidet oft mehr als die Marke.</p></div>
       </div>
     </div>
 
@@ -4567,7 +4567,7 @@ function eiRenderHaken(){
         <div class="ei-card-titel">Hakengrößen lesen</div>
         <div class="ei-card-sub">Die Zahl läuft gegenläufig – der häufigste Anfängerfehler</div>
       </div></div>
-      <p class="ei-gwtext">Bei den einfachen Zahlen gilt <b>je höher, desto kleiner</b> (Gr. 20 ist winzig, Gr. 1 schon ordentlich). Ab <b>1/0</b> („eins-null") kippt es: dann wird der Haken <b>je höher, desto größer</b> – 2/0, 4/0 bis 12/0 für Wels.</p>
+      <div class="ei-gwtext" style="margin-top:10px"><p>Bei den einfachen Zahlen gilt <b>je höher, desto kleiner</b> (Gr. 20 ist winzig, Gr. 1 schon ordentlich). Ab <b>1/0</b> („eins-null") kippt es: dann wird der Haken <b>je höher, desto größer</b> – 2/0, 4/0 bis 12/0 für Wels.</p></div>
       <div class="hk-scale">
         <div class="hk-bar" aria-hidden="true">
           ${skala.map(s=>`<div class="hk-tick"><div class="hk-hook" style="height:${s.h}px"></div><small>${s.gr}</small></div>`).join("")}
@@ -4620,13 +4620,13 @@ function eiRenderHaken(){
         <div class="ei-card-sub">Zwei Boxen decken fast alles ab</div>
       </div></div>
       <div class="ei-info-block"><div class="ei-info-titel">🐠 Forellensee-Box</div>
-        <p class="ei-gwtext" style="margin:0">Gebundene Teigvorfächer Gr. 6–8, ein Päckchen Einzelhaken Gr. 6 (widerhakenlos für Spoons), gebundene Wurmhaken Gr. 8, feine Einzelhaken Gr. 8–12 fürs Tremarella.</p>
+        <div class="ei-gwtext"><p>Gebundene Teigvorfächer Gr. 6–8, ein Päckchen Einzelhaken Gr. 6 (widerhakenlos für Spoons), gebundene Wurmhaken Gr. 8, feine Einzelhaken Gr. 8–12 fürs Tremarella.</p></div>
       </div>
       <div class="ei-info-block"><div class="ei-info-titel">🐊 Raubfisch-Box</div>
-        <p class="ei-gwtext" style="margin:0">Drillinge Gr. 1–4 als Ersatz für Wobbler und Blinker, ein Satz Gr. 2/0 für die großen Köder, dazu Jighaken passend zu deinen Gummis. Stahlvorfächer nicht vergessen.</p>
+        <div class="ei-gwtext"><p>Drillinge Gr. 1–4 als Ersatz für Wobbler und Blinker, ein Satz Gr. 2/0 für die großen Köder, dazu Jighaken passend zu deinen Gummis. Stahlvorfächer nicht vergessen.</p></div>
       </div>
       <div class="ei-info-block"><div class="ei-info-titel">💡 Faustregel Marke</div>
-        <p class="ei-gwtext" style="margin:0">Owner und Gamakatsu sind Referenz bei Schärfe und Drahtqualität – den Aufpreis merkst du bei zaghaften Bissen (Zander) und im Drill (Hecht, Wels). Bei Verschleißteilen wie Spoon-Drillingen tut's auch günstiger.</p>
+        <div class="ei-gwtext"><p>Owner und Gamakatsu sind Referenz bei Schärfe und Drahtqualität – den Aufpreis merkst du bei zaghaften Bissen (Zander) und im Drill (Hecht, Wels). Bei Verschleißteilen wie Spoon-Drillingen tut's auch günstiger.</p></div>
       </div>
     </div>
   </div>`;
@@ -5118,7 +5118,7 @@ function eiRenderPutAndTake(){
       </div></div>
       <div class="ei-info-block" style="margin-bottom:0">
         <div class="ei-info-titel">🔑 Grundregel: erstmal Gold-Spoon oder Tauwurm</div>
-        <p class="ei-gwtext" style="margin:0">Wenn du nicht weißt was die Fische wollen → Gold-Spoon 3 g oder Tauwurm auf Pose. Beides funktioniert immer als Ausgangspunkt. Dann variieren.</p>
+        <div class="ei-gwtext"><p>Wenn du nicht weißt was die Fische wollen → Gold-Spoon 3 g oder Tauwurm auf Pose. Beides funktioniert immer als Ausgangspunkt. Dann variieren.</p></div>
       </div>
       ${PT_KOEDER.map(g=>`
       <div class="ei-info-block">
@@ -5200,7 +5200,7 @@ function eiRenderPutAndTake(){
       </div></div>
       <div class="ei-info-block ei-rot" style="background:rgba(220,50,50,.08);border-left:4px solid #dc3232">
         <div class="ei-info-titel" style="color:#dc3232">⚠️ Häufigster Fehler: Schockregel zu straff</div>
-        <p class="ei-gwtext" style="margin:0">Geflochtene Schnur hat <b>null Dehnung</b> – jeder Ruck geht direkt auf das FC-Vorfach. Wenn der Drag zu fest ist, reißt das Vorfach beim ersten Sprung oder panischen Sprint. Schockregel = 1/3 der FC-Bruchlast. FC 0,298 mm (5,83 kg) → Drag auf ca. 1,9 kg.</p>
+        <div class="ei-gwtext"><p>Geflochtene Schnur hat <b>null Dehnung</b> – jeder Ruck geht direkt auf das FC-Vorfach. Wenn der Drag zu fest ist, reißt das Vorfach beim ersten Sprung oder panischen Sprint. Schockregel = 1/3 der FC-Bruchlast. FC 0,298 mm (5,83 kg) → Drag auf ca. 1,9 kg.</p></div>
       </div>
       <div class="ei-steps">
         ${PT_GROSSFORELLE.map((s,i)=>`<div class="ei-step">
@@ -5332,7 +5332,7 @@ function renderEinsteiger(){
         <p><b>Alster/Elbe</b> – nur mit HAV-Erlaubnis oder Tageskarte. Nicht einfach ranstellen!</p>
       </div></div>
       <div class="ei-info-block"><div class="ei-info-titel">💡 Goldene Regel</div>
-        <p class="ei-gwtext" style="margin:0">Immer <b>vorher</b> Erlaubnisschein kaufen und lesen. Ohne Erlaubnis: Bußgeld bis 5.000 €.</p>
+        <div class="ei-gwtext"><p>Immer <b>vorher</b> Erlaubnisschein kaufen und lesen. Ohne Erlaubnis: Bußgeld bis 5.000 €.</p></div>
       </div>
     </div>
     <div class="ei-card">
