@@ -3093,9 +3093,11 @@ function renderKnoten(){
    fest hinterlegt – bleibt so automatisch aktuell, wenn neue Setups
    dazukommen (z. B. Setup 6/7 in dieser Session). ---------- */
 function methodeStatus(methode){
-  const setupMachbar = (methode.passendeSetups || []).find(k => AKTUELL[k]);
+  // Setups ohne Rolle/Schnur (unvollstaendig) zaehlen noch nicht als einsatzbereit
+  const bereit = k => AKTUELL[k] && !AKTUELL[k].unvollstaendig;
+  const setupMachbar = (methode.passendeSetups || []).find(bereit);
   if(setupMachbar) return { status:"machbar", setup:setupMachbar };
-  const setupBedingt = (methode.bedingtSetups || []).find(k => AKTUELL[k]);
+  const setupBedingt = (methode.bedingtSetups || []).find(bereit);
   if(setupBedingt) return { status:"bedingt", setup:setupBedingt };
   return { status:"wunsch", setup:null };
 }

@@ -28,6 +28,19 @@ const AKTUELL = {
     extra: "Spoon-Tasche Zite Fishing, Trout Attack Set",
     einsatz: "Ultraleichtes Spinnen mit Spoons/Mini-Ködern auf Forelle und Barsch."
   },
+  setup17: {
+    key: "setup17",
+    kategorie: "forelle",
+    unvollstaendig: true,
+    name: "Westin W2 Light Softlure UL · 1,83 m (ohne Rolle)",
+    rute: "Westin W2 Light Softlure UL · 1,83 m · WG 1–4 g",
+    rolle: "⚠️ noch keine Rolle vorhanden – Empfehlung siehe Tipp",
+    schnur: "⚠️ noch nicht bespult",
+    vorfach: "Fluorocarbon 0,16–0,20 mm · ca. 40–80 cm",
+    extra: "Micro-Gummiköder 3–5 cm, Jigköpfe 0,5–2 g, Mini-Spoons 1–3 g, Micro Snap ohne Wirbel",
+    einsatz: "Zweite UL-Rute für den Forellensee neben der Presso – kurz und straff, gebaut für kleine Gummiköder am leichten Jigkopf. Wo die Presso mit Spoons läuft, führst du hier Micro-Gummis: langsam über Grund, an Kanten und Einläufen. Gleiches Wurfgewicht, andere Köderklasse – deshalb lohnt sich die zweite Rute, statt ständig umzurüsten.",
+    tippKompakt: "Empfehlung: Rolle Größe 1000, leicht (170–190 g) – an 1,83 m macht schon eine 2000er die Kombo kopflastig, ganz anders als bei der 3,90 m Aryas. Geflochtene 0,06–0,08 mm für direkten Kontakt beim Jiggen mit Micro-Gummis, dazu FC-Vorfach 0,16–0,20 mm. Sparvariante: Die Iprimi LT 1000 S-P von der Presso passt hier genauso – dann aber jeweils umstecken, was am Wasser lästig ist, wenn du beide UL-Ruten parallel fischen willst."
+  },
   setup3: {
     key: "setup3",
     kategorie: "forelle",
@@ -60,6 +73,17 @@ const AKTUELL = {
     vorfach: "Daiwa J-Fluoro Carbon 0,178 mm oder 0,200 mm (Rotauge/Brasse fein) · 0,218 mm (Standard) · 0,298 mm für Karpfen",
     extra: "Futterkorb / Method-Feeder, Haken Gr. 10–14, Schrotblei, Made/Mais/Pellet",
     einsatz: "Feeder- und Grundangeln auf Friedfische (Brasse, Schleie, Rotauge, Karpfen) – ruhiger Ansitz mit Futterkorb an See, Kanal oder ruhigem Fluss. Deutlich kräftiger als die Crivit-Kombo: 3,90 m Wurfweite, Quivertip-Bisserkennung, Frontbremse."
+  },
+  setup16: {
+    key: "setup16",
+    kategorie: "pose",
+    name: "Berkley Flex · 3,90 m",
+    rute: "Berkley Flex · 3,90 m · WG 10–30 g",
+    rolle: "Daiwa Ninja LT 4000-C · Frontbremse",
+    schnur: "Stroft GTM Monofil 0,22 mm",
+    vorfach: "Fluorocarbon 0,18–0,22 mm (Weißfisch/Forelle) · 0,25–0,30 mm (Schleie/Karpfen) · ca. 40–80 cm",
+    extra: "Laufposen 3–15 g, Posenstopper + Gummiperlen (vorhanden), Schrotblei-Set, Haken Gr. 8–14",
+    einsatz: "Allround-Posenrute: Laufpose auf Weißfisch, Schleie und Karpfen an See und Kanal auf mittlere Distanz – schließt die Lücke zwischen den Stippen (nur Ufernähe) und dem Feeder (Grundmontage ohne Pose). Am Forellensee die passive Zweitrute im Rutenhalter, während du mit der Aryas aktiv fischst."
   },
   setup10: {
     key: "setup10",
@@ -183,6 +207,7 @@ const SETUP_KATEGORIEN = [
   { key:"forelle",   icon:"🐟", titel:"Forelle",    hinweis:"Forellensee – Tremarella, Spoon, Sbirolino" },
   { key:"ansitz",    icon:"⚓", titel:"Ansitz",     hinweis:"Karpfen, Aal, Schleie – Freilaufrolle & Bissanzeiger" },
   { key:"feeder",    icon:"🌾", titel:"Feeder",     hinweis:"Friedfisch am Futterkorb" },
+  { key:"pose",      icon:"🎈", titel:"Pose",       hinweis:"Laufpose mit Rolle – Weißfisch, Schleie, Karpfen; passiv am Forellensee" },
   { key:"stippe",    icon:"🪁", titel:"Stippe",     hinweis:"Ohne Rolle – Schnur fest an der Spitze" },
   { key:"backup",    icon:"🏷️", titel:"Backup",     hinweis:"Crivit-Sets zum Verleihen oder als Ersatz" }
 ];
@@ -260,16 +285,7 @@ const WUNSCH = {
     schnur: "Monofil 0,14–0,18 mm",
     preis: "ca. 250–400 € gehoben (Einsteiger ca. 60–100 €)",
     dazu: "Posen-Sortiment 2–8 g, feine Haken Gr. 14–18, Made/Wurm",
-    hinweis: "Deutlich weniger dringend als früher: die Hyperloop (7,00 m) deckt das feine Stippen ab, die FTM Black Aryas 2 (3,90 m) das lange Posenfischen im leichten Bereich. Was wirklich fehlt, ist nur noch die Kombination aus großer Länge UND Rolle – also Pose im Fließwasser ablaufen lassen und dabei Schnur nachgeben können. Erst kaufen, wenn du merkst, dass dir genau das am Fluss fehlt."
-  },
-  posenrute: {
-    key: "posenrute", name: "Allround-Posenrute (Forellensee + Ansitz)",
-    rute: "Daiwa Aqualite Tele Fl. 3,90 m · WG 10–35 g · teleskopierbar (4 Teile)",
-    rolle: "Shimano Baitrunner ST 4000 (Freilauf) – oder kompaktere 2500er, falls Gewicht/Balance wichtiger ist",
-    schnur: "Monofil 0,20–0,25 mm",
-    preis: "ca. 176 € (Rute 86 € + Rolle ~90 €)",
-    dazu: "Rutenhalter (vorhanden), Laufpose 3–15 g je nach Einsatz",
-    hinweis: "Vielseitiger als eine reine Forellensee-Zweitangel: klassische Posenrute (kein Feeder/Quivertip nötig, da die Montage über eine schwimmende Pose läuft) – nutzbar als passive Zweitangel am Forellensee, aktiv am Forellensee (Sbirolino/Pose), UND als Laufpose auf Weißfisch/Schleie/Karpfen an See/Kanal auf mittlere Distanz. Schließt die Lücke zwischen der Stippe (Hyperloop, nur Ufernähe) und dem Feeder (Ninja X, Grundmontage ohne Pose). Sbiro und Crivit-Spin funktionieren übergangsweise auch passiv, sind aber nicht dafür optimiert. Achtung Überschneidung: Die FTM Black Aryas 2 (3,90 m) hat dieselbe Länge – nur eben 1–4 g statt 10–35 g. Für leichte Posenmontagen brauchst du diese Rute also nicht mehr, der Mehrwert liegt allein im schwereren Wurfgewicht (Laufpose auf Karpfen/Schleie, mehr Blei, Wind)."
+    hinweis: "Weitgehend abgedeckt: die Hyperloop (7,00 m) übernimmt das feine Stippen, die Berkley Flex (3,90 m, 10–30 g) das Posenfischen mit Rolle. Was fehlt, ist nur noch die Kombination aus großer Länge (6–7 m) UND Rolle – die Pose im Fließwasser weit ablaufen lassen und dabei Schnur nachgeben können. Erst kaufen, wenn du merkst, dass dir genau das am Fluss fehlt."
   },
   pilk: {
     key: "pilk", name: "Hochsee-/Kutter-Setup (Pilken)",
@@ -884,8 +900,8 @@ const KNOTEN_KURZ = {
 ------------------------------------------------------------ */
 const EMPFEHLUNG = {
   reihenfolge: [
-    "Deine <b>Rutenseite ist durch</b>: Raubfisch, Forelle, Ansitz, Feeder und Stippe sind alle abgedeckt. Eine weitere Rute schließt keine Lücke mehr – der Zuwachs kommt jetzt aus Technik und Zubehör.",
-    "<b>Der Aryas Nr. 3 fehlt Rolle und Schnur</b> – das ist der einzige offene Punkt an vorhandenem Gerät und die günstigste echte Verbesserung (siehe Tipp auf der Setup-Karte).",
+    "Deine <b>Rutenseite ist durch</b>: Raubfisch, Forelle, Ansitz, Feeder, Pose und Stippe sind alle abgedeckt. Eine weitere Rute schließt keine Lücke mehr – der Zuwachs kommt jetzt aus Technik und Zubehör.",
+    "<b>Zwei Ruten warten auf Rolle und Schnur</b>: die dritte Aryas (Tremarella, Mono 0,16) und die Westin UL (Micro-Gummis, Geflochtene 0,06–0,08). Das sind die einzigen offenen Punkte an vorhandenem Gerät und die günstigsten echten Verbesserungen – Empfehlungen stehen jeweils auf der Setup-Karte.",
     "<b>Beim Zubehör bist du praktisch durch</b> – ausrüstungsseitig ist alles Pflichtmaterial vorhanden. Offen bleibt nur die Ersatzspule für die häufig gefischten Rollen; Regenkleidung und Rutentasche sind Komfort. (Der Erlaubnisschein steht dauerhaft als Pflicht in der Checkliste – der gilt gewässerbezogen und ist vor jeder Tour neu zu prüfen, nicht einmalig abzuhaken.)",
     "<b>Küstenspinnen</b> auf Meerforelle/Hornhecht – die einzige wirklich neue Spielart, die dein Gerät noch nicht abdeckt (SH-Küste vor der Tür).",
     "<b>Brandung &amp; Pilk</b> erst kurz vor dem tatsächlichen Küsten-/Kuttertermin kaufen (Kutter vermieten oft Gerät).",
@@ -1313,7 +1329,7 @@ const ANGELMETHODEN = [
   {
     id:"spinnfischen", name:"Spinnfischen", emoji:"🎣",
     beschreibung:"Aktives Werfen und kontinuierliches Einholen von Kunstködern (Gummifisch, Wobbler, Blinker, Spoon) – der Köder imitiert flüchtenden Beutefisch. Die vielseitigste Methode auf Raubfisch wie Hecht, Zander, Barsch, Forelle.",
-    passendeSetups:["setup1","setup2","setup4","setup6"]
+    passendeSetups:["setup1","setup2","setup17","setup4","setup6"]
   },
   {
     id:"dropshot", name:"Dropshot-Angeln", emoji:"🎣",
@@ -1321,15 +1337,20 @@ const ANGELMETHODEN = [
     passendeSetups:["setup2","setup4"]
   },
   {
+    id:"tremarella", name:"Tremarella", emoji:"🐠",
+    beschreibung:"Italienische Forellensee-Technik: eine lange, parabolische Rute wird beim sehr langsamen Einholen dauerhaft in Vibration gehalten, die Larve am langen Fluorocarbon-Vorfach zittert verführerisch. Tiefe über Bleigewicht und Absinkzeit steuern – mehrere gleiche Ruten mit verschiedenem Blei vorrüsten und wechseln statt umbauen.",
+    passendeSetups:["setup12","setup15"],
+    bedingtSetups:["setup13"]
+  },
+  {
     id:"posenangeln", name:"Posenangeln / Stippen", emoji:"🎣",
     beschreibung:"Klassisches Angeln mit schwimmender Pose, die Bisse sichtbar anzeigt. Stippen (feste Rute ohne Rolle) für Ufernähe, Laufpose mit Rolle für mehr Distanz. Grundtechnik für Weißfisch, Schleie, Forelle.",
-    passendeSetups:["setup7"],
-    wunschKey:"posenrute"
+    passendeSetups:["setup16","setup7","setup8","setup9"]
   },
   {
     id:"grundfeedern", name:"Grund-/Feederangeln", emoji:"🎣",
     beschreibung:"Köder liegt am Grund, oft mit Futterkorb (Feeder) zum gezielten Anfüttern der Stelle. Ruhiger Ansitz mit Rutenhalter, Bissanzeige über Rutenspitze oder elektronischen Bissanzeiger. Standard für Karpfen, Brasse, Aal.",
-    passendeSetups:["setup5"]
+    passendeSetups:["setup5","setup11"]
   },
   {
     id:"sbirolino", name:"Sbirolino-Angeln", emoji:"🎣",
@@ -1339,8 +1360,8 @@ const ANGELMETHODEN = [
   {
     id:"ansitzangeln", name:"Ansitzangeln (passiv, mit Freilauf)", emoji:"🎣",
     beschreibung:"Rute liegt in der Halterung, ein Freilauf-System lässt den Fisch die Schnur abziehen, ohne die Rute von der Halterung zu reißen. Klassisch für Karpfen, Aal, Wels, Quappe über längere Wartezeiten.",
-    bedingtSetups:["setup1"],
-    wunschKey:"ansitz"
+    passendeSetups:["setup10","setup14"],
+    bedingtSetups:["setup1"]
   },
   {
     id:"kuestenspinnen", name:"Küstenspinnen (Salzwasser)", emoji:"🌊",
