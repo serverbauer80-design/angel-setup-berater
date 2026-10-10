@@ -122,7 +122,7 @@ const AKTUELL = {
     kategorie: "forelle",
     name: "FTM Black Aryas 2 · 3,90 m (Geflochten)",
     rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
-    rolle: "Abu Garcia Cardinal X · Spinrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
+    rolle: "Abu Garcia Cardinal X 2000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
     schnur: "Geflochten 0,06 mm",
     vorfach: "Fluorocarbon 0,14–0,18 mm · 1,5–2,5 m – bei Geflochtener eher länger, sie federt nichts ab",
     extra: "Spoons 1,5–4 g, Micro Snap ohne Wirbel",
