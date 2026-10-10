@@ -31,15 +31,14 @@ const AKTUELL = {
   setup17: {
     key: "setup17",
     kategorie: "forelle",
-    unvollstaendig: true,
-    name: "Westin W2 Light Softlure UL · 1,83 m (ohne Rolle)",
+    name: "Westin W2 Light Softlure UL · 1,83 m",
     rute: "Westin W2 Light Softlure UL · 1,83 m · WG 1–4 g",
-    rolle: "⚠️ noch keine Rolle vorhanden – Empfehlung siehe Tipp",
-    schnur: "⚠️ noch nicht bespult",
-    vorfach: "Fluorocarbon 0,16–0,20 mm · ca. 40–80 cm",
-    extra: "Micro-Gummiköder 3–5 cm, Jigköpfe 0,5–2 g, Mini-Spoons 1–3 g, Micro Snap ohne Wirbel",
-    einsatz: "Zweite UL-Rute für den Forellensee neben der Presso – kurz und straff, gebaut für kleine Gummiköder am leichten Jigkopf. Wo die Presso mit Spoons läuft, führst du hier Micro-Gummis: langsam über Grund, an Kanten und Einläufen. Gleiches Wurfgewicht, andere Köderklasse – deshalb lohnt sich die zweite Rute, statt ständig umzurüsten.",
-    tippKompakt: "Empfehlung: Rolle Größe 1000, leicht (170–190 g) – an 1,83 m macht schon eine 2000er die Kombo kopflastig, ganz anders als bei der 3,90 m Aryas. Geflochtene 0,06–0,08 mm für direkten Kontakt beim Jiggen mit Micro-Gummis, dazu FC-Vorfach 0,16–0,20 mm. Sparvariante: Die Iprimi LT 1000 S-P von der Presso passt hier genauso – dann aber jeweils umstecken, was am Wasser lästig ist, wenn du beide UL-Ruten parallel fischen willst."
+    rolle: "Abu Garcia Cardinal X 1000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
+    schnur: "Akashi Fluorocarbon 0,16 mm – reines FC durchgehend als Hauptschnur (vom Händler aufgespult)",
+    vorfach: "Bewusst keins – Micro Snap direkt ins FC geknotet, Köderwechsel ohne Neuknoten. Das FC ist Hauptschnur und Vorfach in einem.",
+    extra: "Micro Snap ohne Wirbel (Gr. 00–0), Micro-Gummiköder 3–5 cm, Jigköpfe 0,5–2 g, Mini-Spoons 1–3 g",
+    einsatz: "Test-Setup für vorfachloses Angeln am Forellensee: durchgehendes Fluorocarbon, Micro Snap direkt eingeknotet, daran wahlweise kleiner Gummi am Jigkopf oder Mini-Spoon. Keine Knotenverbindung zwischen Haupt- und Vorfachschnur – die klassische Schwachstelle fällt weg, und das sinkende FC bringt leichte Köder ohne Mehrgewicht nach unten. Ergänzt die Presso (geflochten 0,06, Spoons) um die gegenteilige Schnurphilosophie.",
+    tippKompakt: "Zum Vorfachlos-Test – drei Dinge entscheiden, ob es aufgeht. 1) Snap nur OHNE Wirbel: ein Wirbel am Ende tötet das Spiel des Spoons. Dafür geht Drall direkt in die Hauptschnur – bei Spoons unkritisch, weil ein sauber eingestellter Spoon taumelt statt rotiert, und bei Gummi am Jigkopf entsteht gar keiner. Nur bei Spinnern mit rotierendem Blatt brauchst du zwingend einen Wirbel, sonst verdrallt das FC. 2) FC dehnt weniger als Mono – mit der kurzen, straffen Rute wird der Anhieb hart. Bremse leicht einstellen und beim Biss nur die Rute anheben, nicht durchziehen, sonst schlitzt der Haken aus dem weichen Forellenmaul. 3) FC hat Memory, die 1000er Spule macht enge Windungen: Spule nicht bis zur Kante füllen und die Schnur vor dem ersten Wurf einmal über 20–30 m unter Spannung abziehen und wieder aufspulen. Letzten halben Meter regelmäßig zwischen den Fingern auf Rauheit prüfen und bei Bedarf neu knoten – ohne Vorfach ist jede Scheuerstelle direkt an der Hauptschnur. Knoten immer anfeuchten."
   },
   setup3: {
     key: "setup3",
@@ -901,7 +900,7 @@ const KNOTEN_KURZ = {
 const EMPFEHLUNG = {
   reihenfolge: [
     "Deine <b>Rutenseite ist durch</b>: Raubfisch, Forelle, Ansitz, Feeder, Pose und Stippe sind alle abgedeckt. Eine weitere Rute schließt keine Lücke mehr – der Zuwachs kommt jetzt aus Technik und Zubehör.",
-    "<b>Zwei Ruten warten auf Rolle und Schnur</b>: die dritte Aryas (Tremarella, Mono 0,16) und die Westin UL (Micro-Gummis, Geflochtene 0,06–0,08). Das sind die einzigen offenen Punkte an vorhandenem Gerät und die günstigsten echten Verbesserungen – Empfehlungen stehen jeweils auf der Setup-Karte.",
+    "<b>Der dritten Aryas fehlen noch Rolle und Schnur</b> – der einzige offene Punkt an vorhandenem Gerät und die günstigste echte Verbesserung. Empfehlung steht auf der Setup-Karte: Rolle Größe 2000 mit feiner Bremse, dazu weiches Monofil 0,16 mm.",
     "<b>Beim Zubehör bist du praktisch durch</b> – ausrüstungsseitig ist alles Pflichtmaterial vorhanden. Offen bleibt nur die Ersatzspule für die häufig gefischten Rollen; Regenkleidung und Rutentasche sind Komfort. (Der Erlaubnisschein steht dauerhaft als Pflicht in der Checkliste – der gilt gewässerbezogen und ist vor jeder Tour neu zu prüfen, nicht einmalig abzuhaken.)",
     "<b>Küstenspinnen</b> auf Meerforelle/Hornhecht – die einzige wirklich neue Spielart, die dein Gerät noch nicht abdeckt (SH-Küste vor der Tür).",
     "<b>Brandung &amp; Pilk</b> erst kurz vor dem tatsächlichen Küsten-/Kuttertermin kaufen (Kutter vermieten oft Gerät).",
