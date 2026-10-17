@@ -40,6 +40,17 @@ const AKTUELL = {
     einsatz: "Test-Setup für vorfachloses Angeln am Forellensee: durchgehendes Fluorocarbon, Micro Snap direkt eingeknotet, daran wahlweise kleiner Gummi am Jigkopf oder Mini-Spoon. Keine Knotenverbindung zwischen Haupt- und Vorfachschnur – die klassische Schwachstelle fällt weg, und das sinkende FC bringt leichte Köder ohne Mehrgewicht nach unten. Ergänzt die Presso (geflochten 0,06, Spoons) um die gegenteilige Schnurphilosophie.",
     tippKompakt: "Zum Vorfachlos-Test – drei Dinge entscheiden, ob es aufgeht. 1) Snap nur OHNE Wirbel: ein Wirbel am Ende tötet das Spiel des Spoons. Dafür geht Drall direkt in die Hauptschnur – bei Spoons unkritisch, weil ein sauber eingestellter Spoon taumelt statt rotiert, und bei Gummi am Jigkopf entsteht gar keiner. Nur bei Spinnern mit rotierendem Blatt brauchst du zwingend einen Wirbel, sonst verdrallt das FC. 2) FC dehnt weniger als Mono – mit der kurzen, straffen Rute wird der Anhieb hart. Bremse leicht einstellen und beim Biss nur die Rute anheben, nicht durchziehen, sonst schlitzt der Haken aus dem weichen Forellenmaul. 3) FC hat Memory, die 1000er Spule macht enge Windungen: Spule nicht bis zur Kante füllen und die Schnur vor dem ersten Wurf einmal über 20–30 m unter Spannung abziehen und wieder aufspulen. Letzten halben Meter regelmäßig zwischen den Fingern auf Rauheit prüfen und bei Bedarf neu knoten – ohne Vorfach ist jede Scheuerstelle direkt an der Hauptschnur. Knoten immer anfeuchten."
   },
+  setup18: {
+    key: "setup18",
+    kategorie: "forelle",
+    name: "Berkley Flex Trout Spinning · 2,40 m",
+    rute: "Berkley Flex Trout Spinning 240 · 2,40 m · WG 2–12 g · 2-teilig · 112 g · Transportlänge 125 cm · moderat-parabolische Aktion",
+    rolle: "Abu Garcia Revo 3 SX 2000S · Spinnrolle · flache Spule",
+    schnur: "Daiwa J-Braid X8 0,06 mm (geflochten)",
+    vorfach: "Fluorocarbon 0,16–0,20 mm · ca. 60–100 cm",
+    extra: "Spoons 2–5 g, kleine Wobbler, Micro-Gummis am Jigkopf, Micro Snap ohne Wirbel",
+    einsatz: "Schließt die Lücke zwischen den UL-Ruten (Presso 0,5–6 g, Westin 1–4 g) und dem Sbiro (3–25 g): genug Rückgrat für schwerere Spoons, Wind und größere Besatzforellen, ohne die Feinfühligkeit zu verlieren. Die moderat-parabolische Aktion federt dabei ab, was die geflochtene 0,06 mm nicht abfedert – Blank und Schnur ergänzen sich hier bewusst."
+  },
   setup3: {
     key: "setup3",
     kategorie: "forelle",
@@ -76,13 +87,26 @@ const AKTUELL = {
   setup16: {
     key: "setup16",
     kategorie: "pose",
-    name: "Berkley Flex · 3,90 m",
+    name: "Berkley Flex · 3,90 m (Mono 0,22)",
     rute: "Berkley Flex · 3,90 m · WG 10–30 g",
     rolle: "Daiwa Ninja LT 4000-C · Frontbremse",
     schnur: "Stroft GTM Monofil 0,22 mm",
     vorfach: "Fluorocarbon 0,18–0,22 mm (Weißfisch/Forelle) · 0,25–0,30 mm (Schleie/Karpfen) · ca. 40–80 cm",
     extra: "Laufposen 3–15 g, Posenstopper + Gummiperlen (vorhanden), Schrotblei-Set, Haken Gr. 8–14",
     einsatz: "Allround-Posenrute: Laufpose auf Weißfisch, Schleie und Karpfen an See und Kanal auf mittlere Distanz – schließt die Lücke zwischen den Stippen (nur Ufernähe) und dem Feeder (Grundmontage ohne Pose). Am Forellensee die passive Zweitrute im Rutenhalter, während du mit der Aryas aktiv fischst."
+  },
+  setup19: {
+    key: "setup19",
+    kategorie: "pose",
+    unvollstaendig: true,
+    name: "Berkley Flex · 3,90 m (ohne Rolle)",
+    rute: "Berkley Flex · 3,90 m · WG 10–30 g",
+    rolle: "⚠️ noch keine Rolle vorhanden – Empfehlung siehe Tipp",
+    schnur: "⚠️ noch nicht bespult",
+    vorfach: "Fluorocarbon 0,18–0,22 mm (Weißfisch/Forelle) · 0,25–0,30 mm (Schleie/Karpfen) · ca. 40–80 cm",
+    extra: "Laufposen 3–15 g, Posenstopper + Gummiperlen, Schrotblei-Set, Haken Gr. 8–14",
+    einsatz: "Zweite Berkley Flex, baugleich zur ersten – Rute vorhanden, Rolle und Schnur fehlen noch. Gedacht für zwei Posenruten parallel im Rutenhalter: unterschiedliche Tiefe und Posengewicht vorgerüstet, am Wasser nur die Rute wechseln statt die Montage umzubauen.",
+    tippKompakt: "Empfehlung: Eine Freilaufrolle (Baitrunner) Größe 3000–4000 ist hier sinnvoller als eine zweite Frontbremsrolle. Genau dafür ist die Rute im Rutenhalter da – der Freilauf lässt den Fisch die Pose wegziehen, ohne dass die Rute vom Halter gerissen wird. Du kennst das System schon von den beiden Black Widow BR LT 4000-C am Ansitz. Dazu Monofil 0,25 mm – eine Stufe über der 0,22 der ersten Flex, damit die beiden Ruten sich sinnvoll ergänzen statt sich zu doppeln: die feinere für Weißfisch und Forelle, diese für Schleie und Karpfen. Günstige Alternative, wenn kein Freilauf nötig ist: nochmal eine Ninja LT 4000-C, dann sind beide Kombos identisch zu bedienen."
   },
   setup10: {
     key: "setup10",
@@ -900,7 +924,7 @@ const KNOTEN_KURZ = {
 const EMPFEHLUNG = {
   reihenfolge: [
     "Deine <b>Rutenseite ist durch</b>: Raubfisch, Forelle, Ansitz, Feeder, Pose und Stippe sind alle abgedeckt. Eine weitere Rute schließt keine Lücke mehr – der Zuwachs kommt jetzt aus Technik und Zubehör.",
-    "<b>Der dritten Aryas fehlen noch Rolle und Schnur</b> – der einzige offene Punkt an vorhandenem Gerät und die günstigste echte Verbesserung. Empfehlung steht auf der Setup-Karte: Rolle Größe 2000 mit feiner Bremse, dazu weiches Monofil 0,16 mm.",
+    "<b>Zwei Ruten warten auf Rolle und Schnur</b>: die dritte Aryas (Tremarella – Rolle Gr. 2000, weiches Monofil 0,16 mm) und die zweite Berkley Flex (Posenrute – am besten eine Freilaufrolle Gr. 3000–4000, Monofil 0,25 mm). Das sind die einzigen offenen Punkte an vorhandenem Gerät; Empfehlungen stehen jeweils auf der Setup-Karte.",
     "<b>Beim Zubehör bist du praktisch durch</b> – ausrüstungsseitig ist alles Pflichtmaterial vorhanden. Offen bleibt nur die Ersatzspule für die häufig gefischten Rollen; Regenkleidung und Rutentasche sind Komfort. (Der Erlaubnisschein steht dauerhaft als Pflicht in der Checkliste – der gilt gewässerbezogen und ist vor jeder Tour neu zu prüfen, nicht einmalig abzuhaken.)",
     "<b>Küstenspinnen</b> auf Meerforelle/Hornhecht – die einzige wirklich neue Spielart, die dein Gerät noch nicht abdeckt (SH-Küste vor der Tür).",
     "<b>Brandung &amp; Pilk</b> erst kurz vor dem tatsächlichen Küsten-/Kuttertermin kaufen (Kutter vermieten oft Gerät).",
@@ -1328,7 +1352,7 @@ const ANGELMETHODEN = [
   {
     id:"spinnfischen", name:"Spinnfischen", emoji:"🎣",
     beschreibung:"Aktives Werfen und kontinuierliches Einholen von Kunstködern (Gummifisch, Wobbler, Blinker, Spoon) – der Köder imitiert flüchtenden Beutefisch. Die vielseitigste Methode auf Raubfisch wie Hecht, Zander, Barsch, Forelle.",
-    passendeSetups:["setup1","setup2","setup17","setup4","setup6"]
+    passendeSetups:["setup1","setup2","setup17","setup18","setup4","setup6"]
   },
   {
     id:"dropshot", name:"Dropshot-Angeln", emoji:"🎣",
@@ -1344,7 +1368,7 @@ const ANGELMETHODEN = [
   {
     id:"posenangeln", name:"Posenangeln / Stippen", emoji:"🎣",
     beschreibung:"Klassisches Angeln mit schwimmender Pose, die Bisse sichtbar anzeigt. Stippen (feste Rute ohne Rolle) für Ufernähe, Laufpose mit Rolle für mehr Distanz. Grundtechnik für Weißfisch, Schleie, Forelle.",
-    passendeSetups:["setup16","setup7","setup8","setup9"]
+    passendeSetups:["setup16","setup19","setup7","setup8","setup9"]
   },
   {
     id:"grundfeedern", name:"Grund-/Feederangeln", emoji:"🎣",
