@@ -31,15 +31,14 @@ const AKTUELL = {
   setup17: {
     key: "setup17",
     kategorie: "forelle",
-    unvollstaendig: true,
-    name: "Westin W2 Light Softlure UL · 1,83 m (noch ohne Schnur)",
+    name: "Westin W2 Light Softlure UL · 1,83 m",
     rute: "Westin W2 Light Softlure UL · 1,83 m · WG 1–4 g",
     rolle: "Shimano Vanford FA C2000 S · Spinnrolle · kompakter Body, flache Spule",
-    schnur: "⚠️ noch nicht bespult – die Akashi-FC ist mit der Cardinal X zur Flex Trout 240 gewandert",
-    vorfach: "Bewusst keins – Micro Snap direkt ins FC geknotet, Köderwechsel ohne Neuknoten. Das FC ist Hauptschnur und Vorfach in einem.",
+    schnur: "J-Braid X8 Expedition 0,06 mm (geflochten)",
+    vorfach: "Fluorocarbon 0,16–0,18 mm · 60–100 cm · per FG- oder Albright-Knoten an die Geflochtene",
     extra: "Micro Snap ohne Wirbel (Gr. 00–0), Micro-Gummiköder 3–5 cm, Jigköpfe 0,5–2 g, Mini-Spoons 1–3 g",
-    einsatz: "Test-Setup für vorfachloses Angeln am Forellensee: durchgehendes Fluorocarbon, Micro Snap direkt eingeknotet, daran wahlweise kleiner Gummi am Jigkopf oder Mini-Spoon. Keine Knotenverbindung zwischen Haupt- und Vorfachschnur – die klassische Schwachstelle fällt weg, und das sinkende FC bringt leichte Köder ohne Mehrgewicht nach unten. Ergänzt die Presso (geflochten 0,06, Spoons) um die gegenteilige Schnurphilosophie.",
-    tippKompakt: "Zum Vorfachlos-Test – drei Dinge entscheiden, ob es aufgeht. 1) Snap nur OHNE Wirbel: ein Wirbel am Ende tötet das Spiel des Spoons. Dafür geht Drall direkt in die Hauptschnur – bei Spoons unkritisch, weil ein sauber eingestellter Spoon taumelt statt rotiert, und bei Gummi am Jigkopf entsteht gar keiner. Nur bei Spinnern mit rotierendem Blatt brauchst du zwingend einen Wirbel, sonst verdrallt das FC. 2) FC dehnt weniger als Mono – mit der kurzen, straffen Rute wird der Anhieb hart. Bremse leicht einstellen und beim Biss nur die Rute anheben, nicht durchziehen, sonst schlitzt der Haken aus dem weichen Forellenmaul. 3) FC hat Memory, die 1000er Spule macht enge Windungen: Spule nicht bis zur Kante füllen und die Schnur vor dem ersten Wurf einmal über 20–30 m unter Spannung abziehen und wieder aufspulen. Letzten halben Meter regelmäßig zwischen den Fingern auf Rauheit prüfen und bei Bedarf neu knoten – ohne Vorfach ist jede Scheuerstelle direkt an der Hauptschnur. Knoten immer anfeuchten."
+    einsatz: "Gummiköder-Rute für den Forellensee: Micro-Gummis am leichten Jigkopf, langsam über Grund, an Kanten und Einläufen. Die geflochtene 0,06 überträgt den zaghaften Biss direkt – Forellen stoppen den Köder oft nur, statt ihn wegzuziehen. Gegenstück zur Flex Trout 240, die mit durchgehendem Fluorocarbon ohne Vorfach läuft: zwei Schnurphilosophien an zwei ähnlich eingesetzten Ruten, direkt vergleichbar.",
+    tippKompakt: "Die Geflochtene ist an dieser Rute erst durch die Vanford vertretbar: 1,83 m Blank plus dehnungsfreie Schnur federn fast nichts ab, die feine Bremse fängt genau das auf. Deshalb Bremse von Anfang an leicht einstellen und beim Biss nur die Rute anheben statt durchzuziehen – sonst schlitzt der Haken aus dem weichen Forellenmaul. Vorfach eher am langen Ende (80–100 cm), es ersetzt die fehlende Schnurdehnung. Die flache Spule braucht kein Unterfüttern, 100–150 m reichen. Snap ohne Wirbel: bei Gummi am Jigkopf entsteht ohnehin kein Drall, und beim Spoon würde ein Wirbel das Spiel töten."
   },
   setup18: {
     key: "setup18",
@@ -925,7 +924,7 @@ const KNOTEN_KURZ = {
 const EMPFEHLUNG = {
   reihenfolge: [
     "Deine <b>Rutenseite ist durch</b>: Raubfisch, Forelle, Ansitz, Feeder, Pose und Stippe sind alle abgedeckt. Eine weitere Rute schließt keine Lücke mehr – der Zuwachs kommt jetzt aus Technik und Zubehör.",
-    "<b>Eine Rute ist noch offen</b>: die dritte Aryas wartet weiter auf Rolle und Schnur – sie ist aber bewusst zurückgestellt. Aktuell fehlt nur die Schnur für die Westin, damit sie fischfertig ist.",
+    "<b>Eine Rute ist noch offen</b>: die dritte Aryas wartet auf Rolle und Schnur – bewusst zurückgestellt, du brauchst sie vorerst nicht. Alle anderen Ruten sind fischfertig.",
     "<b>Beim Zubehör bist du praktisch durch</b> – ausrüstungsseitig ist alles Pflichtmaterial vorhanden. Offen bleibt nur die Ersatzspule für die häufig gefischten Rollen; Regenkleidung und Rutentasche sind Komfort. (Der Erlaubnisschein steht dauerhaft als Pflicht in der Checkliste – der gilt gewässerbezogen und ist vor jeder Tour neu zu prüfen, nicht einmalig abzuhaken.)",
     "<b>Küstenspinnen</b> auf Meerforelle/Hornhecht – die einzige wirklich neue Spielart, die dein Gerät noch nicht abdeckt (SH-Küste vor der Tür).",
     "<b>Brandung &amp; Pilk</b> erst kurz vor dem tatsächlichen Küsten-/Kuttertermin kaufen (Kutter vermieten oft Gerät).",
