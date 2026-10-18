@@ -31,10 +31,11 @@ const AKTUELL = {
   setup17: {
     key: "setup17",
     kategorie: "forelle",
-    name: "Westin W2 Light Softlure UL · 1,83 m",
+    unvollstaendig: true,
+    name: "Westin W2 Light Softlure UL · 1,83 m (noch ohne Schnur)",
     rute: "Westin W2 Light Softlure UL · 1,83 m · WG 1–4 g",
-    rolle: "Abu Garcia Cardinal X 1000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
-    schnur: "Akashi Fluorocarbon 0,16 mm – reines FC durchgehend als Hauptschnur (vom Händler aufgespult)",
+    rolle: "Shimano Vanford FA C2000 S · Spinnrolle · kompakter Body, flache Spule",
+    schnur: "⚠️ noch nicht bespult – die Akashi-FC ist mit der Cardinal X zur Flex Trout 240 gewandert",
     vorfach: "Bewusst keins – Micro Snap direkt ins FC geknotet, Köderwechsel ohne Neuknoten. Das FC ist Hauptschnur und Vorfach in einem.",
     extra: "Micro Snap ohne Wirbel (Gr. 00–0), Micro-Gummiköder 3–5 cm, Jigköpfe 0,5–2 g, Mini-Spoons 1–3 g",
     einsatz: "Test-Setup für vorfachloses Angeln am Forellensee: durchgehendes Fluorocarbon, Micro Snap direkt eingeknotet, daran wahlweise kleiner Gummi am Jigkopf oder Mini-Spoon. Keine Knotenverbindung zwischen Haupt- und Vorfachschnur – die klassische Schwachstelle fällt weg, und das sinkende FC bringt leichte Köder ohne Mehrgewicht nach unten. Ergänzt die Presso (geflochten 0,06, Spoons) um die gegenteilige Schnurphilosophie.",
@@ -43,14 +44,14 @@ const AKTUELL = {
   setup18: {
     key: "setup18",
     kategorie: "forelle",
-    unvollstaendig: true,
-    name: "Berkley Flex Trout Spinning · 2,40 m (ohne Rolle)",
+    name: "Berkley Flex Trout Spinning · 2,40 m",
     rute: "Berkley Flex Trout Spinning 240 · 2,40 m · WG 2–12 g · 2-teilig · 112 g · Transportlänge 125 cm · moderat-parabolische Aktion",
-    rolle: "⚠️ noch keine Rolle montiert",
-    schnur: "⚠️ noch nicht bespult",
-    vorfach: "Fluorocarbon 0,16–0,20 mm · ca. 60–100 cm",
+    rolle: "Abu Garcia Cardinal X 1000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
+    schnur: "Akashi Fluorocarbon 0,16 mm – reines FC durchgehend als Hauptschnur",
+    vorfach: "Entfällt bei FC-Hauptschnur: Micro Snap direkt einknoten. Bei Bedarf 40–60 cm FC 0,18–0,20 mm als Opfer-Vorfach.",
     extra: "Spoons 2–5 g, kleine Wobbler, Micro-Gummis am Jigkopf, Micro Snap ohne Wirbel",
-    einsatz: "Schließt die Lücke zwischen den UL-Ruten (Presso 0,5–6 g, Westin 1–4 g) und dem Sbiro (3–25 g): genug Rückgrat für schwerere Spoons, Wind und größere Besatzforellen, ohne die Feinfühligkeit zu verlieren. Rute vorhanden, Rolle und Schnur noch offen."
+    einsatz: "Schließt die Lücke zwischen den UL-Ruten (Presso 0,5–6 g, Westin 1–4 g) und dem Sbiro (3–25 g): genug Rückgrat für schwerere Spoons, Wind und größere Besatzforellen, ohne die Feinfühligkeit zu verlieren. Rolle und FC-Schnur sind von der Westin herübergewandert.",
+    tippKompakt: "Achtung beim Wurfgewicht: Die 0,16er FC trägt rund 2,5 kg. Für Köder bis etwa 6 g ist das völlig in Ordnung, am oberen Ende der Rute (10–12 g) wird es knapp – beim harten Wurf kann die Schnur reißen und der Köder wegfliegen. Wenn du hier regelmäßig schwerere Köder fischen willst, auf Geflochtene 0,10 mm oder FC 0,20–0,22 mm wechseln. Mit leichten Spoons kannst du die FC bedenkenlos weiterfischen."
   },
   setup3: {
     key: "setup3",
@@ -99,15 +100,14 @@ const AKTUELL = {
   setup19: {
     key: "setup19",
     kategorie: "pose",
-    unvollstaendig: true,
-    name: "Berkley Flex · 3,90 m (ohne Rolle)",
+    name: "Berkley Flex · 3,90 m (Geflochten 0,06)",
     rute: "Berkley Flex · 3,90 m · WG 10–30 g",
-    rolle: "⚠️ noch keine Rolle vorhanden – Empfehlung siehe Tipp",
-    schnur: "⚠️ noch nicht bespult",
-    vorfach: "Fluorocarbon 0,18–0,22 mm (Weißfisch/Forelle) · 0,25–0,30 mm (Schleie/Karpfen) · ca. 40–80 cm",
+    rolle: "Abu Garcia Revo 3 SX 2000S · Spinnrolle · flache Spule",
+    schnur: "Daiwa J-Braid X8 0,06 mm (geflochten)",
+    vorfach: "Fluorocarbon 0,18–0,22 mm (Weißfisch/Forelle) · 0,25 mm (Schleie) · ca. 60–100 cm – bei Geflochtener eher länger, sie federt nichts ab",
     extra: "Laufposen 3–15 g, Posenstopper + Gummiperlen, Schrotblei-Set, Haken Gr. 8–14",
-    einsatz: "Zweite Berkley Flex, baugleich zur ersten – Rute vorhanden, Rolle und Schnur fehlen noch. Gedacht für zwei Posenruten parallel im Rutenhalter: unterschiedliche Tiefe und Posengewicht vorgerüstet, am Wasser nur die Rute wechseln statt die Montage umzubauen.",
-    tippKompakt: "Empfehlung: Eine Freilaufrolle (Baitrunner) Größe 3000–4000 ist hier sinnvoller als eine zweite Frontbremsrolle. Genau dafür ist die Rute im Rutenhalter da – der Freilauf lässt den Fisch die Pose wegziehen, ohne dass die Rute vom Halter gerissen wird. Du kennst das System schon von den beiden Black Widow BR LT 4000-C am Ansitz. Dazu Monofil 0,25 mm – eine Stufe über der 0,22 der ersten Flex, damit die beiden Ruten sich sinnvoll ergänzen statt sich zu doppeln: die feinere für Weißfisch und Forelle, diese für Schleie und Karpfen. Günstige Alternative, wenn kein Freilauf nötig ist: nochmal eine Ninja LT 4000-C, dann sind beide Kombos identisch zu bedienen."
+    einsatz: "Die leichtere der beiden Posenruten: Weißfisch und Schleie auf mittlere Distanz. Die geflochtene Schnur zeigt zaghafte Bisse direkt an und wirft bei gleichem Durchmesser weiter – dafür federt sie nichts ab, deshalb längeres Vorfach und leichte Bremse. Die schwerere Arbeit auf Karpfen macht die Schwesterrute mit der Ninja 4000 und 0,22er Mono.",
+    tippKompakt: "Die flache 2000S-Spule ist der begrenzende Faktor: Geflochtene 0,06 passt reichlich drauf, Monofil 0,25 dagegen nur etwa 70–80 m. Deshalb ist diese Kombo als leichtere Posenrute gedacht – für Weißfisch und Schleie völlig ausreichend. Zieht dir ein größerer Karpfen 40 m weg, wird es dünn; dafür ist die Schwesterrute mit der 4000er da. Ohne Freilauf gilt außerdem: Rute nie unbeaufsichtigt mit geschlossenem Bügel ablegen – entweder Bügel auf oder Schnurclip nutzen."
   },
   setup10: {
     key: "setup10",
@@ -256,9 +256,7 @@ const ZUBEHOER = [
   "Kopflampe", "Bissanzeiger + Glöckchen", "Angelstuhl / Sitzmöglichkeit", "Angelschirm",
   "Kleinteile-Grundsortiment (Haken, Blei, Wirbel/Snaps, Perlen, Posen)",
   "Maßband / Messlatte", "Polbrille (Polarisationsbrille)", "Kühltasche für den Fang",
-  "Müllbeutel für Schnurreste",
-  "Shimano Vanford FA C2000 S (Spinnrolle, bestellt – noch keiner Rute zugeordnet)",
-  "Abu Garcia Revo 3 SX 2000S (Spinnrolle, mit J-Braid X8 0,06 mm bespult – noch keiner Rute zugeordnet)"
+  "Müllbeutel für Schnurreste"
 ];
 
 /* ---------- 2) KLEINKRAM-EINKAUFSLISTE ---------- */
@@ -927,7 +925,7 @@ const KNOTEN_KURZ = {
 const EMPFEHLUNG = {
   reihenfolge: [
     "Deine <b>Rutenseite ist durch</b>: Raubfisch, Forelle, Ansitz, Feeder, Pose und Stippe sind alle abgedeckt. Eine weitere Rute schließt keine Lücke mehr – der Zuwachs kommt jetzt aus Technik und Zubehör.",
-    "<b>Drei Ruten warten auf eine Rolle</b>: die dritte Aryas (Tremarella – Gr. 2000, weiches Monofil 0,16 mm), die Berkley Flex Trout 240 und die zweite Berkley Flex 390 (Posenrute – am besten eine Freilaufrolle Gr. 3000–4000, Monofil 0,25 mm). Zwei Rollen liegen dafür schon bereit: die Shimano Vanford FA C2000 S (bestellt) und die Abu Garcia Revo 3 SX 2000S mit J-Braid 0,06.",
+    "<b>Eine Rute ist noch offen</b>: die dritte Aryas wartet weiter auf Rolle und Schnur – sie ist aber bewusst zurückgestellt. Aktuell fehlt nur die Schnur für die Westin, damit sie fischfertig ist.",
     "<b>Beim Zubehör bist du praktisch durch</b> – ausrüstungsseitig ist alles Pflichtmaterial vorhanden. Offen bleibt nur die Ersatzspule für die häufig gefischten Rollen; Regenkleidung und Rutentasche sind Komfort. (Der Erlaubnisschein steht dauerhaft als Pflicht in der Checkliste – der gilt gewässerbezogen und ist vor jeder Tour neu zu prüfen, nicht einmalig abzuhaken.)",
     "<b>Küstenspinnen</b> auf Meerforelle/Hornhecht – die einzige wirklich neue Spielart, die dein Gerät noch nicht abdeckt (SH-Küste vor der Tür).",
     "<b>Brandung &amp; Pilk</b> erst kurz vor dem tatsächlichen Küsten-/Kuttertermin kaufen (Kutter vermieten oft Gerät).",
