@@ -43,13 +43,14 @@ const AKTUELL = {
   setup18: {
     key: "setup18",
     kategorie: "forelle",
-    name: "Berkley Flex Trout Spinning · 2,40 m",
+    unvollstaendig: true,
+    name: "Berkley Flex Trout Spinning · 2,40 m (ohne Rolle)",
     rute: "Berkley Flex Trout Spinning 240 · 2,40 m · WG 2–12 g · 2-teilig · 112 g · Transportlänge 125 cm · moderat-parabolische Aktion",
-    rolle: "Abu Garcia Revo 3 SX 2000S · Spinnrolle · flache Spule",
-    schnur: "Daiwa J-Braid X8 0,06 mm (geflochten)",
+    rolle: "⚠️ noch keine Rolle montiert",
+    schnur: "⚠️ noch nicht bespult",
     vorfach: "Fluorocarbon 0,16–0,20 mm · ca. 60–100 cm",
     extra: "Spoons 2–5 g, kleine Wobbler, Micro-Gummis am Jigkopf, Micro Snap ohne Wirbel",
-    einsatz: "Schließt die Lücke zwischen den UL-Ruten (Presso 0,5–6 g, Westin 1–4 g) und dem Sbiro (3–25 g): genug Rückgrat für schwerere Spoons, Wind und größere Besatzforellen, ohne die Feinfühligkeit zu verlieren. Die moderat-parabolische Aktion federt dabei ab, was die geflochtene 0,06 mm nicht abfedert – Blank und Schnur ergänzen sich hier bewusst."
+    einsatz: "Schließt die Lücke zwischen den UL-Ruten (Presso 0,5–6 g, Westin 1–4 g) und dem Sbiro (3–25 g): genug Rückgrat für schwerere Spoons, Wind und größere Besatzforellen, ohne die Feinfühligkeit zu verlieren. Rute vorhanden, Rolle und Schnur noch offen."
   },
   setup3: {
     key: "setup3",
@@ -256,7 +257,8 @@ const ZUBEHOER = [
   "Kleinteile-Grundsortiment (Haken, Blei, Wirbel/Snaps, Perlen, Posen)",
   "Maßband / Messlatte", "Polbrille (Polarisationsbrille)", "Kühltasche für den Fang",
   "Müllbeutel für Schnurreste",
-  "Shimano Vanford FA C2000 S (Spinnrolle, bestellt – noch keiner Rute zugeordnet)"
+  "Shimano Vanford FA C2000 S (Spinnrolle, bestellt – noch keiner Rute zugeordnet)",
+  "Abu Garcia Revo 3 SX 2000S (Spinnrolle, mit J-Braid X8 0,06 mm bespult – noch keiner Rute zugeordnet)"
 ];
 
 /* ---------- 2) KLEINKRAM-EINKAUFSLISTE ---------- */
@@ -925,7 +927,7 @@ const KNOTEN_KURZ = {
 const EMPFEHLUNG = {
   reihenfolge: [
     "Deine <b>Rutenseite ist durch</b>: Raubfisch, Forelle, Ansitz, Feeder, Pose und Stippe sind alle abgedeckt. Eine weitere Rute schließt keine Lücke mehr – der Zuwachs kommt jetzt aus Technik und Zubehör.",
-    "<b>Zwei Ruten warten auf Rolle und Schnur</b>: die dritte Aryas (Tremarella – Rolle Gr. 2000, weiches Monofil 0,16 mm) und die zweite Berkley Flex (Posenrute – am besten eine Freilaufrolle Gr. 3000–4000, Monofil 0,25 mm). Details stehen jeweils auf der Setup-Karte.",
+    "<b>Drei Ruten warten auf eine Rolle</b>: die dritte Aryas (Tremarella – Gr. 2000, weiches Monofil 0,16 mm), die Berkley Flex Trout 240 und die zweite Berkley Flex 390 (Posenrute – am besten eine Freilaufrolle Gr. 3000–4000, Monofil 0,25 mm). Zwei Rollen liegen dafür schon bereit: die Shimano Vanford FA C2000 S (bestellt) und die Abu Garcia Revo 3 SX 2000S mit J-Braid 0,06.",
     "<b>Beim Zubehör bist du praktisch durch</b> – ausrüstungsseitig ist alles Pflichtmaterial vorhanden. Offen bleibt nur die Ersatzspule für die häufig gefischten Rollen; Regenkleidung und Rutentasche sind Komfort. (Der Erlaubnisschein steht dauerhaft als Pflicht in der Checkliste – der gilt gewässerbezogen und ist vor jeder Tour neu zu prüfen, nicht einmalig abzuhaken.)",
     "<b>Küstenspinnen</b> auf Meerforelle/Hornhecht – die einzige wirklich neue Spielart, die dein Gerät noch nicht abdeckt (SH-Küste vor der Tür).",
     "<b>Brandung &amp; Pilk</b> erst kurz vor dem tatsächlichen Küsten-/Kuttertermin kaufen (Kutter vermieten oft Gerät).",
