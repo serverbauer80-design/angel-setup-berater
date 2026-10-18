@@ -156,14 +156,14 @@ const AKTUELL = {
     key: "setup15",
     kategorie: "forelle",
     unvollstaendig: true,
-    name: "FTM Black Aryas 2 · 3,90 m (ohne Rolle)",
+    name: "FTM Black Aryas 2 · 3,90 m (noch ohne Schnur)",
     rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
-    rolle: "⚠️ noch keine Rolle vorhanden – Empfehlung siehe Tipp",
-    schnur: "⚠️ noch nicht bespult",
+    rolle: "Shimano Vanford FA C2000 S · Spinnrolle · kompakter Body, flache Spule",
+    schnur: "⚠️ noch nicht bespult – geplant: weiches Monofil 0,16 mm, ca. 100–150 m",
     vorfach: "Fluorocarbon 0,12–0,16 mm · 1,5–3 m – Länge je nach Zieltiefe wählen",
     extra: "Camole (echt oder Kunstköder-Larven), Piombini/Olivette 0,5–3 g, Micro Snap ohne Wirbel",
-    einsatz: "Dritte FTM Black Aryas 2 – Rute liegt bereit, Rolle und Schnur fehlen noch. Gedacht als zweite Tremarella-Kombo: mit anderem Bleigewicht und anderer Vorfachlänge vorgerüstet, damit du am Wasser zwischen zwei Tiefenzonen wechseln kannst, ohne die Montage umzubauen.",
-    tippKompakt: "Empfehlung fürs Tremarella: weiches Monofil 0,16 mm als Hauptschnur – bewusst kein Fluorocarbon. FC ist steifer und speichert Windungen; beim dauerhaften Vibrieren und sehr langsamen Einholen stört das die Köderführung. Die Dehnung der Mono ist hier gewollt: sie puffert zusammen mit dem parabolischen Blank den zaghaften Biss ab, damit der Haken nicht aus dem weichen Forellenmaul reißt. 0,16 mm statt der 0,14 auf der Tubertini gibt Reserve für größere Fische, mehr Blei und Wind. Rolle: Größe 2000 mit feiner, ruckfreier Frontbremse und sauberer Schnurverlegung – noch eine Tubertini 2000 hält Balance und Bremsgefühl identisch zur bestehenden Kombo, was beim Rutenwechsel während der Technik mehr wert ist als Markenvielfalt. Alternative: Shimano/Daiwa 2000–2500, dann mit Ersatzspule für den Wechsel zwischen 0,14 und 0,16 mm."
+    einsatz: "Dritte FTM Black Aryas 2 – Rolle montiert, Schnur fehlt noch. Gedacht als zweite Tremarella-Kombo: mit anderem Bleigewicht und anderer Vorfachlänge vorgerüstet, damit du am Wasser zwischen zwei Tiefenzonen wechseln kannst, ohne die Montage umzubauen.",
+    tippKompakt: "Schnur: weiches Monofil 0,16 mm – bewusst kein Fluorocarbon. FC ist steifer und speichert Windungen; beim dauerhaften Vibrieren und sehr langsamen Einholen stört das die Köderführung. Die Dehnung der Mono ist hier gewollt: sie puffert zusammen mit dem parabolischen Blank den zaghaften Biss ab, damit der Haken nicht aus dem weichen Forellenmaul reißt. 0,16 mm statt der 0,14 auf der Tubertini gibt Reserve für größere Fische, mehr Blei und Wind. Die flache S-Spule der Vanford nimmt das ohne Unterfüttern auf. Zur Balance: Die Vanford ist deutlich leichter als die Tubertini und die Cardinal X auf den Schwesterruten – die Gesamtkombo wird angenehmer bei stundenlangem Vibrieren, sitzt dafür etwas kopflastiger. Falls dich das beim Rutenwechsel stört, gleicht ein kleines Gegengewicht in der Endkappe das aus."
   },
   setup6: {
     key: "setup6",
@@ -924,7 +924,7 @@ const KNOTEN_KURZ = {
 const EMPFEHLUNG = {
   reihenfolge: [
     "Deine <b>Rutenseite ist durch</b>: Raubfisch, Forelle, Ansitz, Feeder, Pose und Stippe sind alle abgedeckt. Eine weitere Rute schließt keine Lücke mehr – der Zuwachs kommt jetzt aus Technik und Zubehör.",
-    "<b>Zwei Ruten warten auf Rolle und Schnur</b>: die dritte Aryas (Tremarella – Rolle Gr. 2000, weiches Monofil 0,16 mm) und die zweite Berkley Flex (Posenrute – am besten eine Freilaufrolle Gr. 3000–4000, Monofil 0,25 mm). Das sind die einzigen offenen Punkte an vorhandenem Gerät; Empfehlungen stehen jeweils auf der Setup-Karte.",
+    "<b>Zwei Ruten sind noch nicht fischfertig</b>: die dritte Aryas hat mit der Shimano Vanford ihre Rolle, braucht aber noch Schnur (weiches Monofil 0,16 mm). Der zweiten Berkley Flex fehlt die Rolle – am besten eine Freilaufrolle Gr. 3000–4000 mit Monofil 0,25 mm. Details stehen jeweils auf der Setup-Karte.",
     "<b>Beim Zubehör bist du praktisch durch</b> – ausrüstungsseitig ist alles Pflichtmaterial vorhanden. Offen bleibt nur die Ersatzspule für die häufig gefischten Rollen; Regenkleidung und Rutentasche sind Komfort. (Der Erlaubnisschein steht dauerhaft als Pflicht in der Checkliste – der gilt gewässerbezogen und ist vor jeder Tour neu zu prüfen, nicht einmalig abzuhaken.)",
     "<b>Küstenspinnen</b> auf Meerforelle/Hornhecht – die einzige wirklich neue Spielart, die dein Gerät noch nicht abdeckt (SH-Küste vor der Tür).",
     "<b>Brandung &amp; Pilk</b> erst kurz vor dem tatsächlichen Küsten-/Kuttertermin kaufen (Kutter vermieten oft Gerät).",
