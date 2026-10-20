@@ -3956,7 +3956,8 @@ renderLavGewaesser();
 renderWochenende();
 renderAnsitzAngeln();
 renderUnterlagen();
-renderTagebuch();
+// erst nach dem Skript-Durchlauf: die TB_*-States stehen weiter unten (let → TDZ)
+queueMicrotask(renderTagebuch);
 renderEinkauf();
 let EI_SUBVIEW = "start"; // Starthilfe sub-tab
 renderEinsteiger();
