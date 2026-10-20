@@ -336,7 +336,131 @@ const WUNSCH = {
     schnur: "Geflochten 0,50–0,60 mm (Tragkraft 60 kg+)",
     preis: "ca. 600–1000 € + Boot/Guide",
     dazu: "⚠️ Eigene Geräteklasse – nur mit Erfahrung & Sicherung (Boot, Abspann/Boje, Guide)"
+  },
+  baitcast: {
+    key: "baitcast", name: "Baitcast-Twitchkombo (Hecht/Zander)",
+    rute: "Casting-Rute 1,90–2,10 m, WG ca. 15–50 g (MH), schnelle Spitze, kurzer Griff",
+    rolle: "Low-Profile-Baitcaster Größe 100–150, Linkshand, Übersetzung ~7:1 (HG), Bremse ≥ 5 kg",
+    schnur: "Geflochten 0,15–0,19 mm (8-fach) · 100–120 m",
+    preis: "ca. 150–250 € Einstieg · 250–450 € Mittelklasse · 600 €+ gehoben",
+    dazu: "Stahl-/Titanvorfach 30–40 cm (Hecht!), starke Snaps, Jerkbaits/Suspender-Wobbler 15–40 g, Übungsgewicht",
+    hinweis: "In Planung – alle Details, Preisklassen und Einstell-Tipps im Reiter „Mein Zeug → 🎯 Baitcast“."
   }
+};
+
+/* ---------- 3b) BAITCAST – Planung der ersten Kombo ----------
+   Wird im Reiter „Mein Zeug → 🎯 Baitcast“ angezeigt.
+   status pro Kauf-Punkt: "offen" | "ausgewaehlt" | "gekauft" – hier pflegen. */
+const BAITCAST = {
+  kombo: {
+    titel: "Meine erste Baitcast-Kombo: Twitchen auf Hecht & Zander",
+    status: "Planung",
+    profil: [
+      { k:"Zielfisch",  v:"Hecht, Zander (Barsch als Beifang)" },
+      { k:"Köder",      v:"Jerkbaits, Twitch-/Suspender-Wobbler, Gummifisch am Jigkopf – 15–40 g" },
+      { k:"Kurbel",     v:"Links kurbeln → Rolle in Linkshand-Ausführung (L / LH / ungerade Shimano-Nummer, z. B. 151)" },
+      { k:"Rute",       v:"Casting 1,90–2,10 m · WG ca. 15–50 g · Power MH · Fast/Extra-Fast · Triggergriff, kurzer Griff" },
+      { k:"Rolle",      v:"Low-Profile Größe 100–150 · Übersetzung ~7:1 (HG) · Bremskraft ≥ 5 kg · gut einstellbare Wurfbremse" },
+      { k:"Schnur",     v:"Geflochten 0,15–0,19 mm (PE 1,5–2), 8-fach, 100–120 m – Unterfüttern mit Mono" },
+      { k:"Vorfach",    v:"Hecht: Stahl 7×7 oder Titan, 10–15 kg, 30–40 cm · nur Zander: FC 0,35–0,40 mm" },
+      { k:"Abgrenzung", v:"Ergänzt die Prorex (Spinnen 15–50 g, Stationär) – nicht ersetzen. Die Baitcast ist fürs stundenlange Twitchen und präzise Würfe an Kanten, Schilf und Seerosen." }
+    ],
+    kauf: [
+      { id:"rolle",   was:"Rolle (Linkshand)",                  status:"offen", hinweis:"Das wichtigste Teil – hier lieber etwas mehr ausgeben, siehe Preisklassen." },
+      { id:"rute",    was:"Casting-Rute 1,90–2,10 m, 15–50 g",  status:"offen", hinweis:"Rolle zur Probe montieren: Kombo soll etwa am Vorgriff balancieren." },
+      { id:"schnur",  was:"Geflochtene 0,15–0,19 mm, 150 m",    status:"offen", hinweis:"z. B. Daiwa J-Braid X8 0,16 – die kennst du schon von der Prorex." },
+      { id:"unterf",  was:"Mono zum Unterfüttern",              status:"offen", hinweis:"Ein paar Wicklungen Mono unter die Geflochtene, sonst rutscht sie auf der Spule durch." },
+      { id:"vorfach", was:"Stahl-/Titanvorfächer 30–40 cm",     status:"offen", hinweis:"Perca-Stahlvorfächer hast du – auf Länge und Tragkraft prüfen." },
+      { id:"snaps",   was:"Starke Snaps (ohne Wirbel)",         status:"offen", hinweis:"Beim Twitchen keinen Wirbel nötig – der Köder dreht nicht." },
+      { id:"koeder",  was:"2–3 Jerkbaits/Suspender 15–40 g",    status:"offen", hinweis:"Erst wenige, dafür gute Köder: ein flach laufender, ein Suspender, ein Gummi-Jerk." },
+      { id:"uebung",  was:"Übungsgewicht 20–30 g",              status:"offen", hinweis:"Für die ersten Würfe auf der Wiese – ohne Haken." }
+    ]
+  },
+
+  rute: [
+    { t:"Länge 1,90–2,10 m", x:"Beim Twitchen zeigt die Spitze nach unten zum Wasser. Längere Ruten schlagen dabei ins Wasser oder an den Körper und ermüden schneller. Vom Boot eher 1,90 m, vom Ufer mit Schilfkante eher 2,10 m." },
+    { t:"Wurfgewicht ca. 15–50 g / Power MH", x:"Deine Köder liegen bei 15–40 g. Das Optimum einer Rute liegt meist in der Mitte ihres WG – also nicht eine 10–30 g kaufen und dauerhaft 35 g werfen. Wenn mehr große Jerks (60 g+) geplant sind, eine eigene Jerkrute in Heavy überlegen." },
+    { t:"Aktion Fast bis Extra-Fast", x:"Eine straffe, schnell zurückfedernde Spitze setzt jeden Schlag in Köderbewegung um. Zu weiche Ruten 'schlucken' den Twitch, zu brettharte reißen den Köder aus dem Wasser und schlitzen Zanderbisse aus." },
+    { t:"Kurzer Griff, Triggergriff", x:"Der Griff darf beim Twitchen nicht am Unterarm oder an der Jacke hängenbleiben. Split-Grip oder kurzer Kork/EVA. Der Trigger unter dem Rollenhalter gibt Halt für den Zeigefinger." },
+    { t:"Gewicht & Balance", x:"Du twitchst stundenlang – jedes Gramm zählt. Zum Kauf die Rolle mitnehmen: Die Kombo sollte etwa am Vorgriff im Gleichgewicht liegen, dann bleibt das Handgelenk entspannt." },
+    { t:"Wichtig: Casting-Rute!", x:"Baitcast braucht eine Casting-Rute mit kleinen Ringen oben auf dem Blank. Eine Spinnrute (Ringe unten, große Startringe) passt nicht." }
+  ],
+
+  rolle: [
+    { t:"Linkshand richtig kaufen", x:"Shimano: ungerade Nummer = links (z. B. 151 statt 150). Daiwa: 'L' im Namen (z. B. …HL / …XHL). Abu Garcia: 'L' oder 'LH'. Im Shop immer explizit 'Left Hand' prüfen – das ist der häufigste Fehlkauf." },
+    { t:"Größe 100–150", x:"Low-Profile-Rollen der Größe 100–150 passen in die Hand, fassen 100–120 m Geflochtene 0,16 und reichen für Hecht und Zander. Größere (200–300) sind fürs Twitchen unnötig schwer." },
+    { t:"Übersetzung ~7:1 (HG)", x:"Beim Twitchen entsteht nach jedem Schlag Schlaffschnur, die schnell wieder eingeholt werden muss. ~7:1 (HG) ist der Allround-Sweetspot. 6:1 ist eher für tief laufende Crankbaits, 8:1 (XG) für sehr schnelles Einholen." },
+    { t:"Wurfbremse – das Herzstück", x:"Sie verhindert, dass die Spule schneller dreht als der Köder fliegt (sonst: Perücke). Magnetbremse: einfach und stufenlos am Rad einzustellen, gut für Einsteiger. Zentrifugalbremse (Shimano SVS): sehr gleichmäßig, Einstellung unter dem Seitendeckel. Digitalbremse (Shimano DC): regelt elektronisch selbst nach – am fehlerverzeihendsten, besonders bei Wind." },
+    { t:"Bremskraft ≥ 5 kg", x:"Für Hecht reicht das gut. Wichtiger als die Maximalkraft ist, dass die Bremse ruckfrei anläuft – beim Biss in der Twitch-Pause." },
+    { t:"Leichte Spule", x:"Je leichter die Spule, desto früher läuft sie bei leichten Ködern an und desto weniger überdreht sie. Bei 15 g ist das spürbar, bei 40 g kaum." }
+  ],
+
+  schnur: [
+    { t:"Hauptschnur: Geflochtene 0,15–0,19 mm", x:"Geflochtene hat keine Dehnung – jeder Twitch kommt direkt am Köder an, Bisse auch. 8-fach geflochten läuft runder und leiser durch die Ringe. 100–120 m reichen völlig." },
+    { t:"Unterfüttern", x:"Unter die Geflochtene ein paar Meter Mono oder ein Streifen Isolierband auf die Spule, sonst rutscht die Schnur unter Last auf der Spule durch." },
+    { t:"Hecht = bissfestes Vorfach", x:"Wo Hechte vorkommen, immer Stahl (7×7, flexibel) oder Titan, 10–15 kg, 30–40 cm. Fluorocarbon allein ist nicht bissfest – auch Zander-Gewässer haben fast immer Hechte." },
+    { t:"Snap statt Wirbel", x:"Jerkbaits drehen sich nicht – ein Wirbel ist unnötig und macht die Spitze schwerer. Ein starker Snap am Vorfach reicht für schnellen Köderwechsel." }
+  ],
+
+  preisklassen: [
+    {
+      stufe:"Einstieg", preis:"ca. 150–250 € (Rute + Rolle)",
+      rolle:"z. B. Shimano SLX 151 HG, Daiwa Tatula/Fuego (Linkshand), Abu Garcia Revo SX/Pro Max (LH)",
+      rute:"z. B. Daiwa Prorex X, Savage Gear SG4, Westin W3 – jeweils die Casting-Version, ca. 2,00 m, 15–50 g",
+      bekommst:"Funktioniert sauber, Magnet- oder Zentrifugalbremse, ordentliche Blanks. Damit lernst du das Werfen vollständig.",
+      grenzen:"Bremse braucht mehr Feingefühl beim Einstellen, mehr Perücken bei Wind und leichten Ködern. Ruten etwas schwerer, Blank weniger sensibel."
+    },
+    {
+      stufe:"Mittelklasse", preis:"ca. 250–450 €",
+      rolle:"z. B. Shimano SLX DC 151 HG oder Curado DC 151 HG (Digitalbremse), Daiwa Tatula SV TW (L), Shimano Curado (K)",
+      rute:"z. B. Shimano Zodias, Daiwa Tatula, Westin W4 – Casting, 15–50 g",
+      bekommst:"Deutlich feinere Bremse → weniger Perücken, besonders mit DC (Digitalbremse) fast idiotensicher. Leichtere Kombo → stundenlanges Twitchen ermüdet weniger. Sensiblere Rute → Zanderbisse in der Pause besser spürbar.",
+      grenzen:"Kostet mehr, aber hier ist der größte Sprung pro Euro – vor allem bei der Rolle."
+    },
+    {
+      stufe:"Gehoben", preis:"ca. 600 € und mehr",
+      rolle:"z. B. Shimano Metanium/Antares, Daiwa Steez/Zillion",
+      rute:"z. B. Shimano Expride, Daiwa Steez, Westin W6",
+      bekommst:"Extrem leichte Spulen und Kombos, feinste Bremsabstimmung, Top-Materialien und lange Haltbarkeit.",
+      grenzen:"Für die erste Baitcast kaum spürbar besser als Mittelklasse – das Plus merkst du erst mit Erfahrung. Fehler beim Lernen (Perücken, Steinkontakt) tun hier mehr weh."
+    }
+  ],
+
+  mehrAusgeben: [
+    "Das Geld zuerst in die ROLLE stecken: Die Bremse entscheidet, ob Baitcast Spaß macht oder ob du ständig Perücken entwirrst. Eine gute Rolle an einer mittleren Rute ist besser als umgekehrt.",
+    "Der größte Sprung liegt zwischen Einstieg und Mittelklasse – vor allem durch Digitalbremsen (Shimano DC), die Fehler beim Werfen selbst ausgleichen.",
+    "Mehr Geld bei der Rute bringt vor allem weniger Gewicht und mehr Gefühl – beim Twitchen über Stunden ein echter Unterschied, aber kein Muss für den Start.",
+    "Ab der gehobenen Klasse zahlst du für die letzten Prozent. Erst sinnvoll, wenn du weißt, was dich an der ersten Kombo stört.",
+    "Gebraucht kaufen lohnt sich bei Baitcastern: Viele steigen wieder aus – gute Mittelklasse-Rollen gibt es oft deutlich günstiger. Linkshand-Ausführung prüfen!"
+  ],
+
+  start: [
+    { t:"Spulenspannung (Tension Knob)", x:"Köder einhängen, Rute waagerecht halten, Freilauf drücken. Den Knopf neben der Kurbel so einstellen, dass der Köder langsam und gleichmäßig sinkt und die Spule beim Aufsetzen sofort stoppt. Bei jedem deutlich anderen Ködergewicht neu einstellen." },
+    { t:"Wurfbremse anfangs hoch", x:"Magnet- oder Zentrifugalbremse zu Beginn auf etwa 70–80 % stellen. Mit jedem Erfolg eine Stufe zurück. Weite kommt später – erst Kontrolle." },
+    { t:"Daumen ist die eigentliche Bremse", x:"Der Daumen liegt leicht auf der Spule. Beim Wurf locker lassen, gegen Ende des Fluges leicht auflegen und beim Aufschlag des Köders sofort stoppen. Genau hier entstehen die meisten Perücken." },
+    { t:"Erst auf der Wiese üben", x:"Mit Übungsgewicht 20–30 g, ohne Haken. Kurze, ruhige Würfe – nicht mit voller Kraft. Seitlich oder über Kopf, aber gleichmäßig beschleunigen statt reißen." },
+    { t:"Nicht gegen den Wind werfen", x:"Gegenwind bremst den Köder ab, die Spule läuft weiter → Perücke. Anfangs Rücken- oder Seitenwind wählen, bei Gegenwind Bremse hochdrehen." },
+    { t:"Perücke lösen", x:"Daumen fest auf die Spule, ein paar Meter Schnur mit der Hand abziehen, dann Daumen drauf und ein paar Kurbelumdrehungen – oft löst sich die Schlinge. Nicht an Schlaufen reißen." },
+    { t:"Spule 'markieren'", x:"Trick zum Üben: ca. 20 m Schnur abziehen und ein Stück Klebeband auf die verbliebene Schnur auf der Spule kleben, dann wieder aufkurbeln. Eine Perücke kann dann nie tiefer als bis zum Klebeband gehen." }
+  ],
+
+  twitchen: [
+    { t:"Haltung", x:"Rutenspitze zeigt nach unten Richtung Wasser. Die Twitches kommen aus dem Handgelenk, nicht aus dem ganzen Arm." },
+    { t:"Schlag auf Schlaffschnur", x:"Kurze, harte Schläge in leicht durchhängende Schnur – der Köder bricht seitlich aus. Bei straffer Schnur zieht er nur geradeaus. Nach jedem Schlag Schlaffschnur aufkurbeln." },
+    { t:"Rhythmus variieren", x:"z. B. Twitch-Twitch-Pause, oder Twitch-Twitch-Twitch-lange Pause. Im kalten Wasser deutlich längere Pausen (bis mehrere Sekunden)." },
+    { t:"Der Biss kommt in der Pause", x:"Suspender bleiben in der Pause stehen – genau dann greifen Hecht und Zander meist zu. Schnur beobachten, beim Ruck sofort anschlagen." },
+    { t:"Anschlag", x:"Mit Geflochtener kurz und kräftig zur Seite oder nach oben, Schnur dabei straff. Bremse vorher richtig eingestellt (ca. 1/3 der Schnurtragkraft)." },
+    { t:"Wo und wann", x:"Flache Buchten, Schilfkanten, Seerosenfelder, Krautkanten. Beste Zeit Frühjahr nach der Schonzeit und Herbst. Schonzeiten Hecht/Zander in SH beachten!" }
+  ],
+
+  fehler: [
+    "Rechtshand-Rolle gekauft – vor dem Kauf 'Left Hand' prüfen.",
+    "Spinnrute statt Casting-Rute – Ringe müssen oben auf dem Blank sitzen.",
+    "Zu leichte Köder für den Anfang – unter 15 g wird Baitcast schwierig. 20–30 g lernen sich am leichtesten.",
+    "Mit voller Kraft werfen – Rhythmus statt Kraft.",
+    "Wurfbremse zu früh ganz runter – Weite kommt mit der Übung.",
+    "Ohne Stahlvorfach auf Hecht – Fluorocarbon wird durchgebissen."
+  ]
 };
 
 /* ---------- 3) GEWÄSSER ---------- */

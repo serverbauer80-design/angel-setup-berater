@@ -3886,7 +3886,7 @@ const NAV_GROUPS = {
   planen:   [{view:"berater",label:"Berater"},{view:"tagescheck",label:"Lohnt sich heute?"},{view:"wochenende",label:"🎒 Planung"},{view:"saison",label:"Saisonkalender"}],
   spots:    [{view:"lav",label:"💳 LAV-Gewässer"},{view:"faenge",label:"Fänge & Spots"}],
   methoden: [{view:"methoden",label:"🎣 Angelmethoden"},{view:"ansitz",label:"⚓ Ansitzangeln"},{view:"knoten",label:"Knotenkunde"}],
-  zeug:     [{view:"inventar",label:"Mein Equipment"},{view:"checkliste",label:"Zubehör-Check"},{view:"einkauf",label:"🛒 Einkaufsliste"},{view:"tagebuch",label:"📔 Tagebuch"},{view:"unterlagen",label:"📄 Unterlagen"},{view:"einsteiger",label:"🎓 Starthilfe"}],
+  zeug:     [{view:"inventar",label:"Mein Equipment"},{view:"checkliste",label:"Zubehör-Check"},{view:"einkauf",label:"🛒 Einkaufsliste"},{view:"baitcast",label:"🎯 Baitcast"},{view:"tagebuch",label:"📔 Tagebuch"},{view:"unterlagen",label:"📄 Unterlagen"},{view:"einsteiger",label:"🎓 Starthilfe"}],
 };
 
 function renderSubTabs(group){
@@ -3919,6 +3919,7 @@ function switchView(viewName){
   if(viewName === "lav") lavOnTabShown();
   if(viewName === "tagebuch"){ TB_VIEW = "list"; TB_DETAIL = null; renderTagebuch(); }
   if(viewName === "einsteiger") renderEinsteiger();
+  if(viewName === "baitcast") renderBaitcast();
 }
 
 document.querySelectorAll(".group-tab").forEach(t => {
@@ -5279,6 +5280,105 @@ function eiBehaltenCheck(fischId, laenge){
     <div class="ei-result-text">Keine Schonzeit im ${heute.toLocaleDateString("de-DE",{month:"long"})}. Mindestmaß: ${r.mindestmass}.</div>
     ${hinweisBox}
   </div>`;
+}
+
+/* ---------- Baitcast (Mein Zeug → 🎯 Baitcast) ---------- */
+let BC_SUBVIEW = "planung";
+const BC_STATUS_KEY = "angel_baitcast_status_v1";
+const BC_STATUS = [
+  {k:"offen",       icon:"⬜", label:"offen"},
+  {k:"ausgewaehlt", icon:"🟡", label:"ausgewählt"},
+  {k:"gekauft",     icon:"✅", label:"gekauft"}
+];
+function ladeBcStatus(){
+  try { return JSON.parse(localStorage.getItem(BC_STATUS_KEY)) || {}; } catch(e){ return {}; }
+}
+function speichereBcStatus(s){ try { localStorage.setItem(BC_STATUS_KEY, JSON.stringify(s)); } catch(e){} }
+
+function renderBaitcast(){
+  const wrap = document.getElementById("baitcast-main");
+  if(!wrap || typeof BAITCAST === "undefined") return;
+  const B = BAITCAST;
+
+  const tabs = [
+    {k:"planung", icon:"📝", label:"Meine Kombo"},
+    {k:"rute",    icon:"🎣", label:"Rute"},
+    {k:"rolle",   icon:"⚙️", label:"Rolle"},
+    {k:"schnur",  icon:"🧵", label:"Schnur & Vorfach"},
+    {k:"preis",   icon:"💶", label:"Preisklassen"},
+    {k:"start",   icon:"🪢", label:"Erste Würfe"},
+    {k:"twitch",  icon:"🐊", label:"Twitchen"},
+  ];
+  const subTabsHTML = tabs.map(t =>
+    `<button class="tb-subtab${BC_SUBVIEW===t.k?" active":""}" data-bcsv="${t.k}">${t.icon} ${t.label}</button>`
+  ).join("");
+
+  const steps = list => `<div class="ei-steps">${list.map((p,i) =>
+    `<div class="ei-step"><div class="ei-step-num">${i+1}</div><div class="ei-step-body">
+      <div class="ei-step-titel">${p.t}</div><div class="ei-step-text">${p.x}</div></div></div>`).join("")}</div>`;
+  const card = (icon, titel, sub, body) => `<div class="ei-card">
+    <div class="ei-card-header"><span class="ei-card-icon">${icon}</span><div>
+      <div class="ei-card-titel">${titel}</div>${sub ? `<div class="ei-card-sub">${sub}</div>` : ""}
+    </div></div>${body}</div>`;
+
+  let body = "";
+  if(BC_SUBVIEW === "planung"){
+    const st = ladeBcStatus();
+    const kauf = B.kombo.kauf.map(p => {
+      const s = BC_STATUS.find(x => x.k === (st[p.id] || p.status)) || BC_STATUS[0];
+      return `<div class="bc-kauf-row">
+        <button type="button" class="bc-status bc-${s.k}" data-bcid="${p.id}" title="Status wechseln">${s.icon} ${s.label}</button>
+        <div><div class="ei-step-titel">${p.was}</div><div class="ei-step-text">${p.hinweis}</div></div>
+      </div>`;
+    }).join("");
+    const done = B.kombo.kauf.filter(p => (st[p.id] || p.status) === "gekauft").length;
+    body = card("🎯", B.kombo.titel, `Status: ${B.kombo.status}`,
+      `<div class="bc-profil">${B.kombo.profil.map(r =>
+        `<div class="row"><span class="k">${r.k}</span><span>${r.v}</span></div>`).join("")}</div>`)
+      + card("🛒", "Einkaufsplan", `${done} von ${B.kombo.kauf.length} gekauft · Status antippen zum Wechseln`,
+      `<div class="bc-kauf">${kauf}</div>`)
+      + card("⚠️", "Typische Fehler beim Einstieg", "",
+      `<div class="ei-check-items">${B.fehler.map(f => `<div class="ei-check-item">❌ <span>${f}</span></div>`).join("")}</div>`);
+  } else if(BC_SUBVIEW === "rute"){
+    body = card("🎣", "Worauf du bei der Rute achtest", "Casting-Rute fürs Twitchen mit 15–40 g", steps(B.rute));
+  } else if(BC_SUBVIEW === "rolle"){
+    body = card("⚙️", "Worauf du bei der Rolle achtest", "Low-Profile-Baitcaster, links kurbeln", steps(B.rolle));
+  } else if(BC_SUBVIEW === "schnur"){
+    body = card("🧵", "Schnur & Vorfach", "Geflochtene + bissfestes Vorfach", steps(B.schnur));
+  } else if(BC_SUBVIEW === "preis"){
+    body = B.preisklassen.map((p,i) => card(["🥉","🥈","🥇"][i] || "💶", p.stufe, p.preis,
+      `<div class="bc-profil">
+        <div class="row"><span class="k">Rolle</span><span>${p.rolle}</span></div>
+        <div class="row"><span class="k">Rute</span><span>${p.rute}</span></div>
+      </div>
+      <div class="ei-info-block"><div class="ei-info-titel">👍 Was du bekommst</div><div class="ei-gwtext">${p.bekommst}</div></div>
+      <div class="ei-info-block"><div class="ei-info-titel">👎 Grenzen</div><div class="ei-gwtext">${p.grenzen}</div></div>`
+    )).join("")
+      + card("💡", "Lohnt es sich, mehr auszugeben?", "",
+      `<div class="ei-check-items">${B.mehrAusgeben.map(t => `<div class="ei-check-item">➜ <span>${t}</span></div>`).join("")}</div>
+      <div class="ei-disclaimer">Modelle sind Beispiele, Preise Richtwerte – vor dem Kauf Wurfgewicht, Linkshand-Ausführung und aktuellen Preis prüfen.</div>`);
+  } else if(BC_SUBVIEW === "start"){
+    body = card("🪢", "Erste Würfe ohne Perücke", "Einstellen und üben – in dieser Reihenfolge", steps(B.start));
+  } else if(BC_SUBVIEW === "twitch"){
+    body = card("🐊", "Twitchen auf Hecht & Zander", "Technik mit Jerkbait und Suspender", steps(B.twitchen));
+  }
+
+  wrap.innerHTML = `<div class="ei-wrap">
+    <div class="tb-subtabs bc-subtabs">${subTabsHTML}</div>
+    ${body}
+  </div>`;
+
+  wrap.querySelectorAll("[data-bcsv]").forEach(b => b.addEventListener("click", () => {
+    BC_SUBVIEW = b.dataset.bcsv; renderBaitcast();
+  }));
+  wrap.querySelectorAll(".bc-status").forEach(b => b.addEventListener("click", () => {
+    const st = ladeBcStatus();
+    const item = B.kombo.kauf.find(p => p.id === b.dataset.bcid);
+    const cur = st[b.dataset.bcid] || item.status;
+    const idx = BC_STATUS.findIndex(x => x.k === cur);
+    st[b.dataset.bcid] = BC_STATUS[(idx + 1) % BC_STATUS.length].k;
+    speichereBcStatus(st); renderBaitcast();
+  }));
 }
 
 function renderEinsteiger(){

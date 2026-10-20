@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0e1b24">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=20260722-52">
+  <link rel="stylesheet" href="style.css?v=20260722-53">
 </head>
 <body>
   <header class="topbar">
@@ -264,6 +264,11 @@
     <section id="einsteiger-main"></section>
   </main>
 
+  <!-- ============ BAITCAST ============ -->
+  <main id="view-baitcast" class="view">
+    <section id="baitcast-main"></section>
+  </main>
+
   <!-- ============ EINKAUFSLISTE ============ -->
   <main id="view-einkauf" class="view">
     <section id="einkauf-main"></section>
@@ -295,8 +300,8 @@
     firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {});
   </script>
 
-  <script src="data.js?v=20260722-52"></script>
-  <script src="app.js?v=20260722-52"></script>
+  <script src="data.js?v=20260722-53"></script>
+  <script src="app.js?v=20260722-53"></script>
   <script>
     if("serviceWorker" in navigator){
       navigator.serviceWorker.register("sw.js").catch(()=>{});
