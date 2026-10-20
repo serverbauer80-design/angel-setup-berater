@@ -149,6 +149,15 @@ function ladePackliste(){
 function speicherePackliste(){ try { localStorage.setItem(PACKLISTE_KEY, JSON.stringify(PACKLISTE)); } catch(e){} fsSyncPushDebounced(); }
 let PACKLISTE = ladePackliste();
 
+/* ---------- Baitcast-Einkaufsplan: Status je Punkt (offen/ausgewaehlt/gekauft) ---------- */
+const BC_STATUS_KEY = "angel_baitcast_status_v1";
+function ladeBcStatus(){
+  try { return JSON.parse(localStorage.getItem(BC_STATUS_KEY)) || {}; }
+  catch(e){ return {}; }
+}
+function speichereBcStatus(){ try { localStorage.setItem(BC_STATUS_KEY, JSON.stringify(BC_STAND)); } catch(e){} fsSyncPushDebounced(); }
+let BC_STAND = ladeBcStatus();
+
 /* ---------- Geräte-Synchronisation (Firebase, optional) ----------
    Alle "speichere*"-Funktionen rufen fsSyncPushDebounced() auf, sobald sich
    etwas ändert. Ohne Login passiert das einfach nichts (fsSyncDocRef ist
@@ -164,7 +173,7 @@ function fsSyncCollectState(){
     return rest;
   }) };
   return {
-    zusatz: ZUSATZ, faenge: faengeOhneFotos, manuell: MANUELL, wartung: WARTUNG, schnur: SCHNUR, packliste: PACKLISTE,
+    zusatz: ZUSATZ, faenge: faengeOhneFotos, manuell: MANUELL, wartung: WARTUNG, schnur: SCHNUR, packliste: PACKLISTE, baitcast: BC_STAND,
     osmCache: typeof OSM_CACHE !== "undefined" ? OSM_CACHE : [],
     flussCache: typeof FLUSS_CACHE !== "undefined" ? FLUSS_CACHE : [],
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -186,6 +195,7 @@ function fsSyncApplyState(data){
   if(data.wartung){ WARTUNG = data.wartung; try{localStorage.setItem(WARTUNG_KEY, JSON.stringify(WARTUNG));}catch(e){} }
   if(data.schnur){ SCHNUR = data.schnur; try{localStorage.setItem(SCHNUR_KEY, JSON.stringify(SCHNUR));}catch(e){} }
   if(data.packliste){ PACKLISTE = data.packliste; try{localStorage.setItem(PACKLISTE_KEY, JSON.stringify(PACKLISTE));}catch(e){} }
+  if(data.baitcast){ BC_STAND = data.baitcast; try{localStorage.setItem(BC_STATUS_KEY, JSON.stringify(BC_STAND));}catch(e){} }
   if(data.osmCache){ OSM_CACHE = data.osmCache; try{localStorage.setItem(OSM_CACHE_KEY, JSON.stringify(OSM_CACHE));}catch(e){} }
   if(data.flussCache){ FLUSS_CACHE = data.flussCache; try{localStorage.setItem(FLUSS_CACHE_KEY, JSON.stringify(FLUSS_CACHE));}catch(e){} }
 
@@ -195,6 +205,7 @@ function fsSyncApplyState(data){
   if(typeof renderFaengeTop === "function" && document.getElementById("faenge-top")) renderFaengeTop();
   if(document.getElementById("ergebnis") && fischSel.value) berechne();
   if(document.getElementById("wochenende") && typeof renderWochenende === "function") renderWochenende();
+  if(typeof renderBaitcast === "function") renderBaitcast();
   if(typeof fsMap !== "undefined" && fsMap){
     fsRenderMarkers();
     if(typeof fsRenderOsmMarkers === "function") fsRenderOsmMarkers();
@@ -5285,17 +5296,11 @@ function eiBehaltenCheck(fischId, laenge){
 
 /* ---------- Baitcast (Mein Zeug → 🎯 Baitcast) ---------- */
 let BC_SUBVIEW = "planung";
-const BC_STATUS_KEY = "angel_baitcast_status_v1";
 const BC_STATUS = [
   {k:"offen",       icon:"⬜", label:"offen"},
   {k:"ausgewaehlt", icon:"🟡", label:"ausgewählt"},
   {k:"gekauft",     icon:"✅", label:"gekauft"}
 ];
-function ladeBcStatus(){
-  try { return JSON.parse(localStorage.getItem(BC_STATUS_KEY)) || {}; } catch(e){ return {}; }
-}
-function speichereBcStatus(s){ try { localStorage.setItem(BC_STATUS_KEY, JSON.stringify(s)); } catch(e){} }
-
 function renderBaitcast(){
   const wrap = document.getElementById("baitcast-main");
   if(!wrap || typeof BAITCAST === "undefined") return;
@@ -5324,7 +5329,7 @@ function renderBaitcast(){
 
   let body = "";
   if(BC_SUBVIEW === "planung"){
-    const st = ladeBcStatus();
+    const st = BC_STAND;
     const kauf = B.kombo.kauf.map(p => {
       const s = BC_STATUS.find(x => x.k === (st[p.id] || p.status)) || BC_STATUS[0];
       return `<div class="bc-kauf-row">
@@ -5373,12 +5378,12 @@ function renderBaitcast(){
     BC_SUBVIEW = b.dataset.bcsv; renderBaitcast();
   }));
   wrap.querySelectorAll(".bc-status").forEach(b => b.addEventListener("click", () => {
-    const st = ladeBcStatus();
+    const st = BC_STAND;
     const item = B.kombo.kauf.find(p => p.id === b.dataset.bcid);
     const cur = st[b.dataset.bcid] || item.status;
     const idx = BC_STATUS.findIndex(x => x.k === cur);
     st[b.dataset.bcid] = BC_STATUS[(idx + 1) % BC_STATUS.length].k;
-    speichereBcStatus(st); renderBaitcast();
+    speichereBcStatus(); renderBaitcast();
   }));
 }
 
