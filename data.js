@@ -87,25 +87,25 @@ const AKTUELL = {
   },
   setup16: {
     key: "setup16",
-    kategorie: "pose",
+    kategorie: "forelle",
     name: "Berkley Flex · 3,90 m (Mono 0,22)",
     rute: "Berkley Flex · 3,90 m · WG 10–30 g",
     rolle: "Daiwa Ninja LT 4000-C · Frontbremse",
     schnur: "Stroft GTM Monofil 0,22 mm",
     vorfach: "Fluorocarbon 0,18–0,22 mm (Weißfisch/Forelle) · 0,25–0,30 mm (Schleie/Karpfen) · ca. 40–80 cm",
     extra: "Laufposen 3–15 g, Posenstopper + Gummiperlen (vorhanden), Schrotblei-Set, Haken Gr. 8–14",
-    einsatz: "Allround-Posenrute: Laufpose auf Weißfisch, Schleie und Karpfen an See und Kanal auf mittlere Distanz – schließt die Lücke zwischen den Stippen (nur Ufernähe) und dem Feeder (Grundmontage ohne Pose). Am Forellensee die passive Zweitrute im Rutenhalter, während du mit der Aryas aktiv fischst."
+    einsatz: "Posen- und Schlepprute am Forellensee: Laufpose oder Sbirolino weit auswerfen und langsam schleppen (Teig, Bienenmade, Spirolino-Fliege) – oder als passive Zweitrute im Rutenhalter, während du mit der Aryas aktiv fischst. Die kräftigere der beiden Berkley: die 0,22er Mono und die 4000er Rolle geben Reserve für große Besatzforellen. Außerhalb des Forellensees auch Allround-Posenrute auf Schleie und Karpfen an See und Kanal."
   },
   setup19: {
     key: "setup19",
-    kategorie: "pose",
+    kategorie: "forelle",
     name: "Berkley Flex · 3,90 m (Geflochten 0,06)",
     rute: "Berkley Flex · 3,90 m · WG 10–30 g",
     rolle: "Abu Garcia Revo 3 SX 2000S · Spinnrolle · flache Spule",
     schnur: "Daiwa J-Braid X8 0,06 mm (geflochten)",
     vorfach: "Fluorocarbon 0,18–0,22 mm (Weißfisch/Forelle) · 0,25 mm (Schleie) · ca. 60–100 cm – bei Geflochtener eher länger, sie federt nichts ab",
     extra: "Laufposen 3–15 g, Posenstopper + Gummiperlen, Schrotblei-Set, Haken Gr. 8–14",
-    einsatz: "Die leichtere der beiden Posenruten: Weißfisch und Schleie auf mittlere Distanz. Die geflochtene Schnur zeigt zaghafte Bisse direkt an und wirft bei gleichem Durchmesser weiter – dafür federt sie nichts ab, deshalb längeres Vorfach und leichte Bremse. Die schwerere Arbeit auf Karpfen macht die Schwesterrute mit der Ninja 4000 und 0,22er Mono.",
+    einsatz: "Die leichtere der beiden Posen-/Schlepp-Ruten am Forellensee: Laufpose oder Sbirolino weit raus und langsam schleppen. Die geflochtene 0,06 wirft weiter und zeigt auch beim Schleppen den zaghaften Zupfer direkt an – dafür federt sie nichts ab, deshalb längeres Vorfach und leichte Bremse. Auch für Weißfisch und Schleie auf mittlere Distanz geeignet; die schwerere Arbeit macht die Schwesterrute mit der Ninja 4000 und 0,22er Mono.",
     tippKompakt: "Die flache 2000S-Spule ist der begrenzende Faktor: Geflochtene 0,06 passt reichlich drauf, Monofil 0,25 dagegen nur etwa 70–80 m. Deshalb ist diese Kombo als leichtere Posenrute gedacht – für Weißfisch und Schleie völlig ausreichend. Zieht dir ein größerer Karpfen 40 m weg, wird es dünn; dafür ist die Schwesterrute mit der 4000er da. Ohne Freilauf gilt außerdem: Rute nie unbeaufsichtigt mit geschlossenem Bügel ablegen – entweder Bügel auf oder Schnurclip nutzen."
   },
   setup10: {
@@ -227,10 +227,9 @@ const AKTUELL = {
    Jedes Setup in AKTUELL trägt genau eine dieser Kategorien. */
 const SETUP_KATEGORIEN = [
   { key:"raubfisch", icon:"🎣", titel:"Raubfisch",  hinweis:"Aktives Spinnfischen auf Hecht, Zander, Barsch, Döbel" },
-  { key:"forelle",   icon:"🐟", titel:"Forelle",    hinweis:"Forellensee – Tremarella, Spoon, Sbirolino" },
+  { key:"forelle",   icon:"🐟", titel:"Forelle",    hinweis:"Forellensee – Tremarella, Spoon, Sbirolino, Pose & Schleppen" },
   { key:"ansitz",    icon:"⚓", titel:"Ansitz",     hinweis:"Karpfen, Aal, Schleie – Freilaufrolle & Bissanzeiger" },
   { key:"feeder",    icon:"🌾", titel:"Feeder",     hinweis:"Friedfisch am Futterkorb" },
-  { key:"pose",      icon:"🎈", titel:"Pose",       hinweis:"Laufpose mit Rolle – Weißfisch, Schleie, Karpfen; passiv am Forellensee" },
   { key:"stippe",    icon:"🪁", titel:"Stippe",     hinweis:"Ohne Rolle – Schnur fest an der Spitze" },
   { key:"backup",    icon:"🏷️", titel:"Backup",     hinweis:"Crivit-Sets zum Verleihen oder als Ersatz" }
 ];
