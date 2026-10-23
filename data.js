@@ -9,46 +9,46 @@
    Jede Rute ist ein eigenes Ding mit eigener ID. Drei FTM Black Aryas 2
    heissen gleich, sind aber drei Ruten - deshalb ID statt Name. */
 const RUTEN = [
-  { id:"r_daiwa_prorex_s_spin", name:"Daiwa Prorex S Spin", text:"Daiwa Prorex S Spin · 2,70 m · WG 15-50 g" },
-  { id:"r_daiwa_presso_imprimi_st", name:"Daiwa Presso Imprimi ST", text:"Daiwa Presso Imprimi ST · 2,15 m · WG 0,5-6 g" },
-  { id:"r_westin_w2_light_softlure_ul", name:"Westin W2 Light Softlure UL", text:"Westin W2 Light Softlure UL · 1,83 m · WG 1–4 g" },
-  { id:"r_berkley_flex_trout_spinning_", name:"Berkley Flex Trout Spinning 240", text:"Berkley Flex Trout Spinning 240 · 2,40 m · WG 2–12 g · 2-teilig · 112 g · Transportlänge 125 cm · moderat-parabolische Aktion" },
-  { id:"r_spro_tactical_lake_sbiro", name:"SPRO Tactical Lake Sbiro", text:"SPRO Tactical Lake Sbiro · 3,9 m · WG 3-25 g" },
-  { id:"r_savage_gear_revenge_sg2_ligh", name:"Savage Gear Revenge SG2 Light Game", text:"Savage Gear Revenge SG2 Light Game · 2,21 m · WG 5-18 g · 9 Ringe · 121 g · 2-teilig" },
-  { id:"r_daiwa_ninja_x_feeder", name:"Daiwa Ninja X Feeder", text:"Daiwa Ninja X Feeder · 3,90 m · WG bis 120 g · 3-teilig · inkl. Wechselspitzen (Quivertips)" },
-  { id:"r_berkley_flex", name:"Berkley Flex", text:"Berkley Flex · 3,90 m · WG 10–30 g" },
-  { id:"r_berkley_flex_2", name:"Berkley Flex", text:"Berkley Flex · 3,90 m · WG 10–30 g" },
-  { id:"r_daiwa_black_widow_xt_carp", name:"Daiwa Black Widow XT Carp", text:"Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig" },
-  { id:"r_daiwa_black_widow_xt_bait", name:"Daiwa Black Widow XT Bait", text:"Daiwa Black Widow XT Bait · 3,60 m · WG 20–60 g" },
-  { id:"r_ftm_black_aryas_2", name:"FTM Black Aryas 2", text:"FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm" },
-  { id:"r_ftm_black_aryas_2_2", name:"FTM Black Aryas 2", text:"FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm" },
-  { id:"r_ftm_black_aryas_2_3", name:"FTM Black Aryas 2", text:"FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm" },
-  { id:"r_crivit_spinnangel_set_210_5", name:"Crivit Spinnangel-Set 210-5", text:"Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil" },
-  { id:"r_crivit_multi_x_feeder_300_5", name:"Crivit Multi-X Feeder 300-5", text:"Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil" },
-  { id:"r_shimano_hyperloop_7_00_m", name:"Shimano Hyperloop 7,00 m", text:"Shimano Hyperloop 7,00 m · 7 Segmente" },
-  { id:"r_rod_rodman_s_focus_stipp", name:"Rod Rodman's Focus Stipp", text:"Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert" },
-  { id:"r_rod_rodman_axxa_stipp_combo", name:"Rod Rodman AXXA Stipp Combo", text:"Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk" }
+  { id:"r_daiwa_prorex_s_spin", name:"Daiwa Prorex S Spin", kategorie:"raubfisch", wg:[15,50], laenge:2.7, text:"Daiwa Prorex S Spin · 2,70 m · WG 15-50 g" },
+  { id:"r_daiwa_presso_imprimi_st", name:"Daiwa Presso Imprimi ST", kategorie:"forelle", wg:[0.5,6], laenge:2.15, text:"Daiwa Presso Imprimi ST · 2,15 m · WG 0,5-6 g" },
+  { id:"r_westin_w2_light_softlure_ul", name:"Westin W2 Light Softlure UL", kategorie:"forelle", wg:[1,4], laenge:1.83, text:"Westin W2 Light Softlure UL · 1,83 m · WG 1–4 g" },
+  { id:"r_berkley_flex_trout_spinning_", name:"Berkley Flex Trout Spinning 240", kategorie:"forelle", wg:[2,12], laenge:2.4, text:"Berkley Flex Trout Spinning 240 · 2,40 m · WG 2–12 g · 2-teilig · 112 g · Transportlänge 125 cm · moderat-parabolische Aktion" },
+  { id:"r_spro_tactical_lake_sbiro", name:"SPRO Tactical Lake Sbiro", kategorie:"forelle", wg:[3,25], laenge:3.9, text:"SPRO Tactical Lake Sbiro · 3,9 m · WG 3-25 g" },
+  { id:"r_savage_gear_revenge_sg2_ligh", name:"Savage Gear Revenge SG2 Light Game", kategorie:"raubfisch", wg:[5,18], laenge:2.21, text:"Savage Gear Revenge SG2 Light Game · 2,21 m · WG 5-18 g · 9 Ringe · 121 g · 2-teilig" },
+  { id:"r_daiwa_ninja_x_feeder", name:"Daiwa Ninja X Feeder", kategorie:"feeder", wg:[40,120], laenge:3.9, text:"Daiwa Ninja X Feeder · 3,90 m · WG bis 120 g · 3-teilig · inkl. Wechselspitzen (Quivertips)" },
+  { id:"r_berkley_flex", name:"Berkley Flex", kategorie:"forelle", wg:[10,30], laenge:3.9, text:"Berkley Flex · 3,90 m · WG 10–30 g" },
+  { id:"r_berkley_flex_2", name:"Berkley Flex", kategorie:"forelle", wg:[10,30], laenge:3.9, text:"Berkley Flex · 3,90 m · WG 10–30 g" },
+  { id:"r_daiwa_black_widow_xt_carp", name:"Daiwa Black Widow XT Carp", kategorie:"ansitz", wg:[60,150], laenge:3.6, text:"Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig" },
+  { id:"r_daiwa_black_widow_xt_bait", name:"Daiwa Black Widow XT Bait", kategorie:"ansitz", wg:[20,60], laenge:3.6, text:"Daiwa Black Widow XT Bait · 3,60 m · WG 20–60 g" },
+  { id:"r_ftm_black_aryas_2", name:"FTM Black Aryas 2", kategorie:"forelle", wg:[1,4], laenge:3.9, text:"FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm" },
+  { id:"r_ftm_black_aryas_2_2", name:"FTM Black Aryas 2", kategorie:"forelle", wg:[1,4], laenge:3.9, text:"FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm" },
+  { id:"r_ftm_black_aryas_2_3", name:"FTM Black Aryas 2", kategorie:"forelle", wg:[1,4], laenge:3.9, text:"FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm" },
+  { id:"r_crivit_spinnangel_set_210_5", name:"Crivit Spinnangel-Set 210-5", kategorie:"backup", wg:[10,40], laenge:2.1, text:"Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil" },
+  { id:"r_crivit_multi_x_feeder_300_5", name:"Crivit Multi-X Feeder 300-5", kategorie:"backup", wg:[30,100], laenge:3, text:"Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil" },
+  { id:"r_shimano_hyperloop_7_00_m", name:"Shimano Hyperloop 7,00 m", kategorie:"stippe", laenge:7, text:"Shimano Hyperloop 7,00 m · 7 Segmente" },
+  { id:"r_rod_rodman_s_focus_stipp", name:"Rod Rodman's Focus Stipp", kategorie:"stippe", laenge:4, text:"Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert" },
+  { id:"r_rod_rodman_axxa_stipp_combo", name:"Rod Rodman AXXA Stipp Combo", kategorie:"stippe", laenge:2.8, text:"Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk" }
 ];
 
 /* ---------- 1b) ROLLEN ----------
    Die Schnur haengt an der Rolle, nicht an der Rute: nimmst du die Rolle
    ab, wandert die Schnur mit. */
 const ROLLEN = [
-  { id:"ro_freams_lt4000_p", name:"Freams LT4000-P", text:"Freams LT4000-P", schnur:"J-Braid X8 Expedition 0,16 mm (geflochten) · 150 m" },
-  { id:"ro_daiwa_iprimi_lt_1000_s_p", name:"Daiwa Iprimi LT 1000 S-P", text:"Daiwa Iprimi LT 1000 S-P", schnur:"J-Braid X8 Expedition 0,06 mm (geflochten)" },
-  { id:"ro_shimano_vanford_fa_c2000_s", name:"Shimano Vanford FA C2000 S", text:"Shimano Vanford FA C2000 S · Spinnrolle · kompakter Body, flache Spule", schnur:"J-Braid X8 Expedition 0,06 mm (geflochten)" },
-  { id:"ro_abu_garcia_cardinal_x_1000", name:"Abu Garcia Cardinal X 1000", text:"Abu Garcia Cardinal X 1000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous", schnur:"Akashi Fluorocarbon 0,16 mm – reines FC durchgehend als Hauptschnur" },
-  { id:"ro_spro_trout_master_tt3", name:"SPRO Trout Master TT3", text:"SPRO Trout Master TT3 · Übersetzung 5:1 · 6 Kugellager · 301 g", schnur:"Monofil 0,25 mm · 170 m Fassung" },
-  { id:"ro_daiwa_23_ninja_lt2500", name:"Daiwa 23 Ninja LT2500", text:"Daiwa 23 Ninja LT2500 · 4 Kugellager · Übersetzung 5,3:1 · 230 g · Frontbremse", schnur:"J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen der 0,06 mm (Presso) und 0,16 mm (Prorex)" },
-  { id:"ro_daiwa_23_ninja_match_feeder_", name:"Daiwa 23 Ninja Match&Feeder LT4000-C", text:"Daiwa 23 Ninja Match&Feeder LT4000-C · Frontbremse", schnur:"J-Braid X8 0,12 mm (geflochten) – Vorfach Mono/FC 0,20–0,25 mm, ca. 50–80 cm" },
-  { id:"ro_daiwa_ninja_lt_4000_c", name:"Daiwa Ninja LT 4000-C", text:"Daiwa Ninja LT 4000-C · Frontbremse", schnur:"Stroft GTM Monofil 0,22 mm" },
-  { id:"ro_abu_garcia_revo_3_sx_2000s", name:"Abu Garcia Revo 3 SX 2000S", text:"Abu Garcia Revo 3 SX 2000S · Spinnrolle · flache Spule", schnur:"Daiwa J-Braid X8 0,06 mm (geflochten)" },
-  { id:"ro_daiwa_black_widow_br_lt_4000", name:"Daiwa Black Widow BR LT 4000-C", text:"Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse", schnur:"Daiwa Monofil 0,35 mm (durchgehend)" },
-  { id:"ro_daiwa_black_widow_br_lt_4000_2", name:"Daiwa Black Widow BR LT 4000-C", text:"Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse", schnur:"Daiwa Monofil 0,35 mm (durchgehend)" },
-  { id:"ro_tubertini_aryas_2000_spoonro", name:"Tubertini Aryas 2000 Spoonrolle", text:"Tubertini Aryas 2000 Spoonrolle · Spinrolle", schnur:"Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult" },
-  { id:"ro_abu_garcia_cardinal_x_2000", name:"Abu Garcia Cardinal X 2000", text:"Abu Garcia Cardinal X 2000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous", schnur:"Geflochten 0,06 mm" },
-  { id:"ro_crivit_stationaerrolle_gr_30", name:"Crivit Stationärrolle Gr. 30", text:"Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult", schnur:"vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen" },
-  { id:"ro_crivit_stationaerrolle_gr_50", name:"Crivit Stationärrolle Gr. 50", text:"Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult", schnur:"vorbespult ab Werk" }
+  { id:"ro_freams_lt4000_p", name:"Freams LT4000-P", groesse:4000, freilauf:false, text:"Freams LT4000-P", schnur:"J-Braid X8 Expedition 0,16 mm (geflochten) · 150 m" },
+  { id:"ro_daiwa_iprimi_lt_1000_s_p", name:"Daiwa Iprimi LT 1000 S-P", groesse:1000, freilauf:false, text:"Daiwa Iprimi LT 1000 S-P", schnur:"J-Braid X8 Expedition 0,06 mm (geflochten)" },
+  { id:"ro_shimano_vanford_fa_c2000_s", name:"Shimano Vanford FA C2000 S", groesse:2000, freilauf:false, text:"Shimano Vanford FA C2000 S · Spinnrolle · kompakter Body, flache Spule", schnur:"J-Braid X8 Expedition 0,06 mm (geflochten)" },
+  { id:"ro_abu_garcia_cardinal_x_1000", name:"Abu Garcia Cardinal X 1000", groesse:1000, freilauf:false, text:"Abu Garcia Cardinal X 1000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous", schnur:"Akashi Fluorocarbon 0,16 mm – reines FC durchgehend als Hauptschnur" },
+  { id:"ro_spro_trout_master_tt3", name:"SPRO Trout Master TT3", groesse:3000, freilauf:false, text:"SPRO Trout Master TT3 · Übersetzung 5:1 · 6 Kugellager · 301 g", schnur:"Monofil 0,25 mm · 170 m Fassung" },
+  { id:"ro_daiwa_23_ninja_lt2500", name:"Daiwa 23 Ninja LT2500", groesse:2500, freilauf:false, text:"Daiwa 23 Ninja LT2500 · 4 Kugellager · Übersetzung 5,3:1 · 230 g · Frontbremse", schnur:"J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen der 0,06 mm (Presso) und 0,16 mm (Prorex)" },
+  { id:"ro_daiwa_23_ninja_match_feeder_", name:"Daiwa 23 Ninja Match&Feeder LT4000-C", groesse:4000, freilauf:false, text:"Daiwa 23 Ninja Match&Feeder LT4000-C · Frontbremse", schnur:"J-Braid X8 0,12 mm (geflochten) – Vorfach Mono/FC 0,20–0,25 mm, ca. 50–80 cm" },
+  { id:"ro_daiwa_ninja_lt_4000_c", name:"Daiwa Ninja LT 4000-C", groesse:4000, freilauf:false, text:"Daiwa Ninja LT 4000-C · Frontbremse", schnur:"Stroft GTM Monofil 0,22 mm" },
+  { id:"ro_abu_garcia_revo_3_sx_2000s", name:"Abu Garcia Revo 3 SX 2000S", groesse:2000, freilauf:false, text:"Abu Garcia Revo 3 SX 2000S · Spinnrolle · flache Spule", schnur:"Daiwa J-Braid X8 0,06 mm (geflochten)" },
+  { id:"ro_daiwa_black_widow_br_lt_4000", name:"Daiwa Black Widow BR LT 4000-C", groesse:4000, freilauf:true, text:"Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse", schnur:"Daiwa Monofil 0,35 mm (durchgehend)" },
+  { id:"ro_daiwa_black_widow_br_lt_4000_2", name:"Daiwa Black Widow BR LT 4000-C", groesse:4000, freilauf:true, text:"Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse", schnur:"Daiwa Monofil 0,35 mm (durchgehend)" },
+  { id:"ro_tubertini_aryas_2000_spoonro", name:"Tubertini Aryas 2000 Spoonrolle", groesse:2000, freilauf:false, text:"Tubertini Aryas 2000 Spoonrolle · Spinrolle", schnur:"Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult" },
+  { id:"ro_abu_garcia_cardinal_x_2000", name:"Abu Garcia Cardinal X 2000", groesse:2000, freilauf:false, text:"Abu Garcia Cardinal X 2000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous", schnur:"Geflochten 0,06 mm" },
+  { id:"ro_crivit_stationaerrolle_gr_30", name:"Crivit Stationärrolle Gr. 30", groesse:3000, freilauf:false, text:"Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult", schnur:"vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen" },
+  { id:"ro_crivit_stationaerrolle_gr_50", name:"Crivit Stationärrolle Gr. 50", groesse:5000, freilauf:false, text:"Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult", schnur:"vorbespult ab Werk" }
 ];
 
 /* ---------- 1c) SETUPS ----------

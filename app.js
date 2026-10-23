@@ -5483,6 +5483,62 @@ const WERKSTATT_KEY = "werkstatt_v1";
 const WERKSTATT_FREI_KEY = "werkstatt_frei_v1";
 const WERKSTATT_MODUS_KEY = "werkstatt_modus_v1";
 
+/* ---------- Bewertung einer Rute-Rolle-Kombination ----------
+   Zwei Faustregeln aus der Praxis:
+   1. Die Rollengroesse folgt dem Wurfgewicht der Rute.
+   2. Lange Ruten brauchen eine schwerere Rolle als Gegengewicht,
+      kurze eine leichte – sonst wird die Kombo kopflastig.
+   Dazu der Freilauf: der gehoert an die Ansitz-/Posenrute, an einer
+   aktiv gefuehrten Spinnrute ist er nur Ballast. */
+function wgZuGroesse(wgMax){
+  if(wgMax <= 6)   return [1000, 2500];
+  if(wgMax <= 12)  return [1000, 3000];
+  if(wgMax <= 25)  return [2000, 3500];
+  if(wgMax <= 50)  return [2500, 4000];
+  if(wgMax <= 80)  return [3000, 5000];
+  return [3500, 6000];
+}
+
+function bewerteKombo(rute, rolle){
+  if(!rute || !rolle || !rute.wg || !rolle.groesse) return null;
+  const gruende = [];
+  let stufe = 0;   // 0 passt, 1 geht, 2 passt nicht
+
+  let [min, max] = wgZuGroesse(rute.wg[1]);
+  if(rute.laenge >= 3.6){ min += 500; max += 500; gruende.push("lange Rute braucht Gegengewicht"); }
+  else if(rute.laenge <= 2.0){ min = Math.max(500, min - 500); max -= 500; gruende.push("kurze Rute will eine leichte Rolle"); }
+
+  const g = rolle.groesse;
+  if(g < min){
+    const weit = min - g;
+    stufe = weit > 1000 ? 2 : 1;
+    gruende.unshift(`Rolle ${weit > 1000 ? "deutlich " : ""}zu klein für ${rute.wg[0]}–${rute.wg[1]} g (passend wären ${min}–${max})`);
+  } else if(g > max){
+    const weit = g - max;
+    stufe = weit > 1000 ? 2 : 1;
+    gruende.unshift(`Rolle ${weit > 1000 ? "deutlich " : ""}zu groß für ${rute.wg[0]}–${rute.wg[1]} g (passend wären ${min}–${max})`);
+  } else {
+    gruende.unshift(`Größe passt zum Wurfgewicht ${rute.wg[0]}–${rute.wg[1]} g`);
+  }
+
+  // Freilauf
+  const passiv = rute.kategorie === "ansitz" || rute.kategorie === "pose";
+  if(rolle.freilauf && passiv){
+    gruende.push("Freilauf passt zur Rute im Rutenhalter");
+  } else if(rolle.freilauf && !passiv){
+    stufe = Math.min(2, stufe + 1);
+    gruende.push("Freilauf bringt beim aktiven Führen nichts und wiegt nur");
+  } else if(!rolle.freilauf && passiv){
+    gruende.push("ohne Freilauf: Bügel offen lassen oder Schnurclip nutzen");
+  }
+
+  return {
+    stufe,
+    urteil: ["passt", "geht", "passt nicht"][stufe],
+    gruende
+  };
+}
+
 /* Nur die ersten Segmente eines " · "-Textes – die Karten sollen auf dem
    Handy nicht ueber vier Zeilen laufen. */
 function wkKurz(t, n = 2){
@@ -5619,10 +5675,15 @@ function renderWerkstatt(){
     const s = setupZuRute[r.id];
     // Im freien Modus nichts hervorheben – dort weicht naturgemäß fast alles ab
     const abweichend = !frei && (WERKSTATT[r.id] || null) !== (echt[r.id] || null);
+    const b = bewerteKombo(r, ro);
     html += `<div class="wk-kombo${abweichend ? " geaendert" : ""}">
       <div class="wk-kombo-txt">
         <div class="wk-rute">${wkKurz(r.text)}</div>
         <div class="wk-rolle">🎣 ${ro.name}<span class="wk-schnur">${wkKurz(ro.schnur, 3)}</span></div>
+        ${b ? `<div class="wk-urteil s${b.stufe}">
+          <span class="wk-urteil-marke">${["✓","!","✕"][b.stufe]} ${b.urteil}</span>
+          <span class="wk-urteil-grund">${b.gruende.join(" · ")}</span>
+        </div>` : ""}
       </div>
       <button type="button" class="fs-chip" data-wk-loesen="${r.id}">Lösen</button>
     </div>`;
@@ -5640,11 +5701,15 @@ function renderWerkstatt(){
 
   // ---- Freie Rollen ----
   html += `<h3 class="wk-titel">Rollen ohne Rute <span class="inv-gruppe-count">${freieRollen.length}</span></h3>`;
-  html += freieRollen.length ? `<div class="wk-pool">` + freieRollen.map(r =>
-      `<button type="button" class="wk-teil rolle" data-wk-rolle="${r.id}">
-        <span class="wk-teil-name">${r.name}</span>
-        <span class="wk-teil-detail">${wkKurz(r.schnur, 2)}</span>
-      </button>`).join("") + `</div>`
+  const gewaehlteRute = WERKSTATT_AUSWAHL ? rById[WERKSTATT_AUSWAHL] : null;
+  html += freieRollen.length ? `<div class="wk-pool">` + freieRollen.map(r => {
+      // Sobald eine Rute gewählt ist: direkt zeigen, welche Rolle dazu passt
+      const b = gewaehlteRute ? bewerteKombo(gewaehlteRute, r) : null;
+      return `<button type="button" class="wk-teil rolle${b ? " b"+b.stufe : ""}" data-wk-rolle="${r.id}">
+        <span class="wk-teil-name">${r.name}${b ? `<span class="wk-mini s${b.stufe}">${["✓","!","✕"][b.stufe]}</span>` : ""}</span>
+        <span class="wk-teil-detail">${b ? b.gruende[0] : wkKurz(r.schnur, 2)}</span>
+      </button>`;
+    }).join("") + `</div>`
     : `<p class="k-hint">Alle Rollen sind montiert.</p>`;
 
   html += `<p class="k-hint" style="margin-top:18px">Die Stippruten tauchen hier nicht auf –
