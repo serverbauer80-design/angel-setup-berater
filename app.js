@@ -5475,7 +5475,13 @@ const BC_STATUS = [
    Spielwiese zum Zusammenstecken von Ruten und Rollen. Startet mit der
    echten Bestueckung; was du hier umbaust, bleibt ein Entwurf, bis du
    ihn uebernimmst. Die Schnur wandert immer mit der Rolle. */
+/* Zwei getrennte Spielstaende:
+   "echt" startet mit deiner tatsaechlichen Bestueckung und kann sie aendern.
+   "frei" startet mit allen Teilen lose und ist reines Planspiel – es kann
+   nichts uebernehmen und fasst den echten Stand nie an. */
 const WERKSTATT_KEY = "werkstatt_v1";
+const WERKSTATT_FREI_KEY = "werkstatt_frei_v1";
+const WERKSTATT_MODUS_KEY = "werkstatt_modus_v1";
 
 /* Nur die ersten Segmente eines " · "-Textes – die Karten sollen auf dem
    Handy nicht ueber vier Zeilen laufen. */
@@ -5494,18 +5500,41 @@ function werkstattEcht(){
   });
   return plan;
 }
+/* Alle Teile lose: jede rollenfaehige Rute ohne Rolle. */
+function werkstattLeer(){
+  const plan = {};
+  Object.keys(werkstattEcht()).forEach(id => { plan[id] = null; });
+  return plan;
+}
+
+function wkSchluessel(){ return WK_MODUS === "frei" ? WERKSTATT_FREI_KEY : WERKSTATT_KEY; }
+
 function ladeWerkstatt(){
   try {
-    const p = JSON.parse(localStorage.getItem(WERKSTATT_KEY));
+    const p = JSON.parse(localStorage.getItem(wkSchluessel()));
     if(p && typeof p === "object") return p;
   } catch(e){}
-  return werkstattEcht();
+  return WK_MODUS === "frei" ? werkstattLeer() : werkstattEcht();
 }
 function speichereWerkstatt(){
-  try { localStorage.setItem(WERKSTATT_KEY, JSON.stringify(WERKSTATT)); } catch(e){}
+  try { localStorage.setItem(wkSchluessel(), JSON.stringify(WERKSTATT)); } catch(e){}
 }
+function ladeModus(){
+  try { return localStorage.getItem(WERKSTATT_MODUS_KEY) === "frei" ? "frei" : "echt"; }
+  catch(e){ return "echt"; }
+}
+let WK_MODUS = ladeModus();
 let WERKSTATT = null;
 let WERKSTATT_AUSWAHL = null;  // angetippte Rute, wartet auf eine Rolle
+
+function wkModusWechseln(neu){
+  if(neu === WK_MODUS) return;
+  WK_MODUS = neu;
+  try { localStorage.setItem(WERKSTATT_MODUS_KEY, neu); } catch(e){}
+  WERKSTATT = ladeWerkstatt();
+  WERKSTATT_AUSWAHL = null;
+  renderWerkstatt();
+}
 
 function renderWerkstatt(){
   const el = $("#werkstatt");
@@ -5525,10 +5554,17 @@ function renderWerkstatt(){
   const setupZuRute = {};
   Object.values(AKTUELL).forEach(s => { setupZuRute[s.ruteId] = s; });
 
+  const frei = WK_MODUS === "frei";
+
   let html = `<h2>🔧 Kombo-Werkstatt</h2>
-    <p class="k-hint">Tippe eine Rute an, dann eine Rolle – fertig. Beide verschwinden aus den
-    freien Listen. <b>Die Schnur gehört zur Rolle</b> und wandert mit: Ziehst du eine Rolle ab,
-    nimmt sie ihre Schnur mit zur neuen Rute.</p>`;
+    <div class="wk-modus">
+      <button type="button" class="wk-modus-btn${frei?"":" aktiv"}" data-wk-modus="echt">🔗 Echter Stand</button>
+      <button type="button" class="wk-modus-btn${frei?" aktiv":""}" data-wk-modus="frei">🧩 Alles lose</button>
+    </div>
+    <p class="k-hint">${frei
+      ? `Alle Teile liegen einzeln vor dir – bau frei zusammen und schau, was am Ende übrig bleibt. <b>Dieser Modus ändert nichts an deinem echten Stand</b> und hat einen eigenen Spielstand.`
+      : `Startet mit deiner tatsächlichen Bestückung. Änderungen bleiben Entwurf, bis du sie übernimmst.`}
+    Tippe eine Rute an, dann eine Rolle. <b>Die Schnur gehört zur Rolle</b> und wandert mit.</p>`;
 
   // ---- Werkbank: angetippte Rute wartet auf Rolle ----
   if(WERKSTATT_AUSWAHL){
@@ -5540,8 +5576,27 @@ function renderWerkstatt(){
     </div>`;
   }
 
-  // ---- Geänderte Kombos ----
-  if(geaendert.length){
+  // ---- Freier Modus: Rest-Übersicht statt Diff ----
+  if(frei){
+    const bestueckt = ruten.length - freieRuten.length;
+    html += `<div class="wk-rest">
+      <div class="wk-rest-zahlen">
+        <div class="wk-rest-box"><b>${bestueckt}</b><span>Kombos gebaut</span></div>
+        <div class="wk-rest-box${freieRuten.length?" offen":""}"><b>${freieRuten.length}</b><span>Ruten übrig</span></div>
+        <div class="wk-rest-box${freieRollen.length?" offen":""}"><b>${freieRollen.length}</b><span>Rollen übrig</span></div>
+      </div>
+      ${(!freieRuten.length && !freieRollen.length)
+        ? `<div class="wk-rest-fertig">✅ Alles verbaut – keine Teile übrig.</div>`
+        : `<div class="wk-rest-hinweis">Es bleiben ${freieRuten.length} Rute${freieRuten.length===1?"":"n"} und ${freieRollen.length} Rolle${freieRollen.length===1?"":"n"} ohne Partner.</div>`}
+      <div class="wk-diff-aktionen">
+        <button type="button" class="fs-chip" id="wk-frei-echt">Mit echtem Stand starten</button>
+        <button type="button" class="del-btn-wide" id="wk-frei-leer">Alles wieder lösen</button>
+      </div>
+    </div>`;
+  }
+
+  // ---- Geänderte Kombos (nur im echten Modus) ----
+  if(!frei && geaendert.length){
     html += `<div class="wk-diff">
       <div class="wk-diff-kopf">✏️ ${geaendert.length} Änderung${geaendert.length>1?"en":""} gegenüber deiner echten Bestückung</div>`;
     geaendert.forEach(r => {
@@ -5562,7 +5617,8 @@ function renderWerkstatt(){
   ruten.filter(r => WERKSTATT[r.id]).forEach(r => {
     const ro = roById[WERKSTATT[r.id]];
     const s = setupZuRute[r.id];
-    const abweichend = (WERKSTATT[r.id] || null) !== (echt[r.id] || null);
+    // Im freien Modus nichts hervorheben – dort weicht naturgemäß fast alles ab
+    const abweichend = !frei && (WERKSTATT[r.id] || null) !== (echt[r.id] || null);
     html += `<div class="wk-kombo${abweichend ? " geaendert" : ""}">
       <div class="wk-kombo-txt">
         <div class="wk-rute">${wkKurz(r.text)}</div>
@@ -5597,6 +5653,28 @@ function renderWerkstatt(){
   el.innerHTML = html;
 
   // ---------- Handler ----------
+  el.querySelectorAll("[data-wk-modus]").forEach(b => b.addEventListener("click", () => {
+    wkModusWechseln(b.dataset.wkModus);
+  }));
+
+  const freiEcht = el.querySelector("#wk-frei-echt");
+  if(freiEcht) freiEcht.addEventListener("click", () => {
+    if(!confirm("Spielstand mit deiner echten Bestückung überschreiben?")) return;
+    WERKSTATT = werkstattEcht();
+    WERKSTATT_AUSWAHL = null;
+    speichereWerkstatt();
+    renderWerkstatt();
+  });
+
+  const freiLeer = el.querySelector("#wk-frei-leer");
+  if(freiLeer) freiLeer.addEventListener("click", () => {
+    if(!confirm("Alle Rollen abnehmen und von vorn anfangen?")) return;
+    WERKSTATT = werkstattLeer();
+    WERKSTATT_AUSWAHL = null;
+    speichereWerkstatt();
+    renderWerkstatt();
+  });
+
   el.querySelectorAll("[data-wk-rute]").forEach(b => b.addEventListener("click", () => {
     WERKSTATT_AUSWAHL = WERKSTATT_AUSWAHL === b.dataset.wkRute ? null : b.dataset.wkRute;
     renderWerkstatt();
@@ -5642,6 +5720,7 @@ function renderWerkstatt(){
 /* Entwurf in die Setups schreiben. Nur rolleId wird angefasst – alles
    andere (Vorfach, Einsatz, Tipps) bleibt, wie es ist. */
 function werkstattUebernehmen(){
+  if(WK_MODUS === "frei") return;   // Planspiel fasst den echten Stand nie an
   const roById = Object.fromEntries(ROLLEN.map(r => [r.id, r]));
   Object.values(AKTUELL).forEach(s => {
     if(!(s.ruteId in WERKSTATT)) return;
