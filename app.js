@@ -1001,6 +1001,21 @@ function renderNaechstenSpot(){
 }
 
 /* ---------- Inventar-Ansicht ---------- */
+/* Welche Karten sind aufgeklappt. Bleibt ueber einen Neu-Render hinweg
+   erhalten, damit ein Klick auf "Heute gewartet" die Karte nicht zuklappt. */
+let INV_OFFEN = new Set();
+
+/* Erste Zeile der zugeklappten Karte: was man zum Wiedererkennen braucht.
+   Lange Beschreibungen hinter dem ersten " – " oder "(" abschneiden. */
+function invKurz(t){
+  if(!t) return "–";
+  return String(t)
+    .replace(/^⚠️\s*/, "")
+    .split(" – ")[0]
+    .split(" (")[0]
+    .trim();
+}
+
 function inventarKarteHTML(s){
   const letzteWartung = WARTUNG[s.key];
   const tage = letzteWartung ? tageSeit(letzteWartung) : null;
@@ -1009,23 +1024,35 @@ function inventarKarteHTML(s){
   const schnurTage = letzteSchnur ? tageSeit(letzteSchnur) : null;
   const schnurMonate = schnurTage !== null ? (schnurTage / 30).toFixed(1) : null;
   const schnurFaellig = schnurTage === null || schnurTage > 120;
-  return `<div class="inv-card${s.unvollstaendig ? " unvollstaendig" : ""}">
-      <h3>${s.name}${s.unvollstaendig ? ` <span class="unvoll-tag">unvollständig</span>` : ""}</h3>
-      <div class="row"><span class="k">Rute</span><span>${s.rute}</span></div>
-      <div class="row"><span class="k">Rolle</span><span>${s.rolle}</span></div>
-      <div class="row"><span class="k">Schnur</span><span>${s.schnur}</span></div>
-      <div class="row"><span class="k">Vorfach</span><span>${s.vorfach}</span></div>
-      <div class="row"><span class="k">Extra</span><span>${s.extra}</span></div>
-      ${s.einsatz ? `<div class="row"><span class="k">Einsatz</span><span>${s.einsatz}</span></div>` : ""}
-      ${s.tippKompakt ? `<div class="tipp"><h4>💡 Tipp</h4><p>${s.tippKompakt}</p></div>` : ""}
-      <div class="wartung-box${faellig ? " faellig" : ""}">
-        <span>🔧 ${letzteWartung ? `Zuletzt gewartet: ${letzteWartung} (vor ${tage} Tagen)` : "Noch keine Wartung eingetragen"}</span>
-        <button type="button" class="fs-chip" data-wartung="${s.key}">Heute gewartet</button>
+  const offen = INV_OFFEN.has(s.key);
+  const wartungFaellig = faellig || (!s.unvollstaendig && schnurFaellig);
+
+  return `<div class="inv-card${s.unvollstaendig ? " unvollstaendig" : ""}${offen ? " offen" : ""}">
+      <button type="button" class="inv-head" data-karte="${s.key}" aria-expanded="${offen}">
+        <span class="inv-head-txt">
+          <span class="inv-name">${s.name}${s.unvollstaendig ? ` <span class="unvoll-tag">unvollständig</span>` : ""}</span>
+          <span class="inv-kurz">${invKurz(s.rolle)} · ${invKurz(s.schnur)}</span>
+        </span>
+        ${wartungFaellig ? `<span class="inv-punkt" title="Wartung oder Schnurwechsel fällig"></span>` : ""}
+        <span class="inv-chevron" aria-hidden="true">▾</span>
+      </button>
+      <div class="inv-body"${offen ? "" : " hidden"}>
+        <div class="row"><span class="k">Rute</span><span>${s.rute}</span></div>
+        <div class="row"><span class="k">Rolle</span><span>${s.rolle}</span></div>
+        <div class="row"><span class="k">Schnur</span><span>${s.schnur}</span></div>
+        <div class="row"><span class="k">Vorfach</span><span>${s.vorfach}</span></div>
+        <div class="row"><span class="k">Extra</span><span>${s.extra}</span></div>
+        ${s.einsatz ? `<div class="row"><span class="k">Einsatz</span><span>${s.einsatz}</span></div>` : ""}
+        ${s.tippKompakt ? `<div class="tipp"><h4>💡 Tipp</h4><p>${s.tippKompakt}</p></div>` : ""}
+        <div class="wartung-box${faellig ? " faellig" : ""}">
+          <span>🔧 ${letzteWartung ? `Zuletzt gewartet: ${letzteWartung} (vor ${tage} Tagen)` : "Noch keine Wartung eingetragen"}</span>
+          <button type="button" class="fs-chip" data-wartung="${s.key}">Heute gewartet</button>
+        </div>
+        ${s.unvollstaendig ? "" : `<div class="wartung-box schnur-box${schnurFaellig ? " faellig" : ""}">
+          <span>🧵 ${letzteSchnur ? `Schnur gewechselt: ${letzteSchnur} (vor ${schnurMonate} Monaten)` : "Kein Schnurwechsel eingetragen"}</span>
+          <button type="button" class="fs-chip" data-schnur="${s.key}">Heute gewechselt</button>
+        </div>`}
       </div>
-      ${s.unvollstaendig ? "" : `<div class="wartung-box schnur-box${schnurFaellig ? " faellig" : ""}">
-        <span>🧵 ${letzteSchnur ? `Schnur gewechselt: ${letzteSchnur} (vor ${schnurMonate} Monaten)` : "Kein Schnurwechsel eingetragen"}</span>
-        <button type="button" class="fs-chip" data-schnur="${s.key}">Heute gewechselt</button>
-      </div>`}
     </div>`;
 }
 
@@ -1034,13 +1061,31 @@ function renderInventar(){
   const alleSetups = Object.values(AKTUELL);
 
   let html = `<h2>🎒 Mein aktuelles Equipment</h2>`;
+
+  // Filterleiste: ein Tipp zeigt nur die gewuenschte Kategorie statt aller Karten
+  const offeneGesamt = alleSetups.filter(s => s.unvollstaendig).length;
+  html += `<div class="inv-filter" id="inv-filter">
+    <button type="button" class="inv-chip active" data-kat="alle">Alle <span class="inv-chip-cnt">${alleSetups.length}</span></button>
+    ${SETUP_KATEGORIEN.filter(k => alleSetups.some(s => s.kategorie === k.key)).map(k =>
+      `<button type="button" class="inv-chip" data-kat="${k.key}">${k.icon} ${k.titel} <span class="inv-chip-cnt">${alleSetups.filter(s => s.kategorie === k.key).length}</span></button>`
+    ).join("")}
+    ${offeneGesamt ? `<button type="button" class="inv-chip warn" data-kat="offen">⚠ Unvollständig <span class="inv-chip-cnt">${offeneGesamt}</span></button>` : ""}
+  </div>
+  <div class="inv-werkzeuge">
+    <input id="inv-suche" type="search" placeholder="Rute, Rolle oder Schnur suchen …" autocomplete="off">
+    <button type="button" class="fs-chip" id="inv-alle-auf">Alle aufklappen</button>
+  </div>
+  <p class="inv-treffer" id="inv-treffer" hidden></p>`;
+
   SETUP_KATEGORIEN.forEach(kat => {
     const setups = alleSetups.filter(s => s.kategorie === kat.key);
     if(setups.length === 0) return;
-    html += `<h3 class="inv-gruppe-titel">${kat.icon} ${kat.titel}
+    html += `<div class="inv-gruppe" data-kat="${kat.key}">
+      <h3 class="inv-gruppe-titel">${kat.icon} ${kat.titel}
         <span class="inv-gruppe-count">${setups.length}</span>
-        <span class="inv-gruppe-hinweis">${kat.hinweis}</span></h3>`;
-    html += `<div class="inv-grid">` + setups.map(inventarKarteHTML).join("") + `</div>`;
+        <span class="inv-gruppe-hinweis">${kat.hinweis}</span></h3>
+      <div class="inv-grid">` + setups.map(inventarKarteHTML).join("") + `</div>
+    </div>`;
   });
   html += `<div class="inv-grid">`;
   // eigene Setups
@@ -1154,6 +1199,83 @@ function renderInventar(){
       renderInventar();
     });
   });
+
+  // ----- Handler: Karte auf-/zuklappen -----
+  el.querySelectorAll("[data-karte]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.karte;
+      const karte = btn.closest(".inv-card");
+      const body = karte.querySelector(".inv-body");
+      const offen = !INV_OFFEN.has(key);
+      if(offen) INV_OFFEN.add(key); else INV_OFFEN.delete(key);
+      body.hidden = !offen;
+      karte.classList.toggle("offen", offen);
+      btn.setAttribute("aria-expanded", String(offen));
+    });
+  });
+
+  // ----- Handler: alle auf-/zuklappen -----
+  const alleBtn = el.querySelector("#inv-alle-auf");
+  if(alleBtn){
+    alleBtn.addEventListener("click", () => {
+      const sichtbar = [...el.querySelectorAll(".inv-card:not([hidden]) [data-karte]")]
+        .filter(b => b.closest(".inv-gruppe:not([hidden])"));
+      const alleOffen = sichtbar.every(b => INV_OFFEN.has(b.dataset.karte));
+      sichtbar.forEach(b => {
+        const key = b.dataset.karte;
+        if(alleOffen) INV_OFFEN.delete(key); else INV_OFFEN.add(key);
+        const karte = b.closest(".inv-card");
+        karte.querySelector(".inv-body").hidden = alleOffen;
+        karte.classList.toggle("offen", !alleOffen);
+        b.setAttribute("aria-expanded", String(!alleOffen));
+      });
+      alleBtn.textContent = alleOffen ? "Alle aufklappen" : "Alle zuklappen";
+    });
+  }
+
+  // ----- Handler: Kategorie-Filter + Suche -----
+  const sucheEl = el.querySelector("#inv-suche");
+  const trefferEl = el.querySelector("#inv-treffer");
+  let aktiveKat = "alle";
+
+  function anwenden(){
+    const q = (sucheEl?.value || "").trim().toLowerCase();
+    let sichtbar = 0;
+    el.querySelectorAll(".inv-gruppe").forEach(gruppe => {
+      let inGruppe = 0;
+      gruppe.querySelectorAll(".inv-card").forEach(karte => {
+        const key = karte.querySelector("[data-karte]")?.dataset.karte;
+        const s = AKTUELL[key];
+        if(!s) return;
+        const katOk = aktiveKat === "alle"
+          || (aktiveKat === "offen" ? !!s.unvollstaendig : s.kategorie === aktiveKat);
+        const txt = [s.name, s.rute, s.rolle, s.schnur, s.vorfach, s.extra].join(" ").toLowerCase();
+        const sucheOk = !q || txt.includes(q);
+        const zeigen = katOk && sucheOk;
+        karte.hidden = !zeigen;
+        if(zeigen) inGruppe++;
+      });
+      gruppe.hidden = inGruppe === 0;
+      sichtbar += inGruppe;
+    });
+    if(trefferEl){
+      const gefiltert = aktiveKat !== "alle" || q;
+      trefferEl.hidden = !gefiltert;
+      trefferEl.textContent = gefiltert
+        ? `${sichtbar} von ${Object.keys(AKTUELL).length} Setups`
+        : "";
+    }
+  }
+
+  el.querySelectorAll(".inv-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      el.querySelectorAll(".inv-chip").forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      aktiveKat = chip.dataset.kat;
+      anwenden();
+    });
+  });
+  if(sucheEl) sucheEl.addEventListener("input", anwenden);
 }
 
 function empfehlungHTML(){
@@ -3893,11 +4015,14 @@ function renderEinkauf(){
 }
 
 /* ---------- Zwei-Ebenen-Navigation ---------- */
+/* Hoechstens 5 Eintraege je Gruppe – darueber verschwinden sie auf dem
+   Handy hinter dem horizontalen Scrollen. "Mein Zeug" hatte 7, davon
+   waren nur 2 sichtbar; Tagebuch und Starthilfe sind deshalb umgezogen. */
 const NAV_GROUPS = {
   planen:   [{view:"berater",label:"Berater"},{view:"tagescheck",label:"Lohnt sich heute?"},{view:"wochenende",label:"🎒 Planung"},{view:"saison",label:"Saisonkalender"}],
-  spots:    [{view:"lav",label:"💳 LAV-Gewässer"},{view:"faenge",label:"Fänge & Spots"}],
-  methoden: [{view:"methoden",label:"🎣 Angelmethoden"},{view:"ansitz",label:"⚓ Ansitzangeln"},{view:"knoten",label:"Knotenkunde"}],
-  zeug:     [{view:"inventar",label:"Mein Equipment"},{view:"checkliste",label:"Zubehör-Check"},{view:"einkauf",label:"🛒 Einkaufsliste"},{view:"baitcast",label:"🎯 Baitcast"},{view:"tagebuch",label:"📔 Tagebuch"},{view:"unterlagen",label:"📄 Unterlagen"},{view:"einsteiger",label:"🎓 Starthilfe"}],
+  spots:    [{view:"lav",label:"💳 LAV-Gewässer"},{view:"faenge",label:"Fänge & Spots"},{view:"tagebuch",label:"📔 Tagebuch"}],
+  wissen:   [{view:"methoden",label:"🎣 Angelmethoden"},{view:"ansitz",label:"⚓ Ansitzangeln"},{view:"knoten",label:"Knotenkunde"},{view:"einsteiger",label:"🎓 Starthilfe"}],
+  zeug:     [{view:"inventar",label:"Mein Equipment"},{view:"checkliste",label:"Zubehör-Check"},{view:"einkauf",label:"🛒 Einkaufsliste"},{view:"baitcast",label:"🎯 Baitcast"},{view:"unterlagen",label:"📄 Unterlagen"}],
 };
 
 function renderSubTabs(group){
@@ -3956,6 +4081,38 @@ if(fabBtn) fabBtn.addEventListener("click", () => {
 
 initFischDropdown();
 renderNaechstenSpot();
+
+/* ---------- Kopf beim Herunterscrollen ausblenden ----------
+   Der sticky Kopf belegte auf dem Handy dauerhaft Platz. Beim Scrollen
+   nach unten faehrt er weg, beim Hochscrollen sofort wieder herein. */
+(function(){
+  const kopf = document.querySelector(".topbar");
+  if(!kopf) return;
+  let letzteY = 0, tickt = false;
+
+  function pruefe(){
+    const y = window.scrollY;
+    const kopfHoehe = kopf.offsetHeight;
+    if(y <= kopfHoehe + 10){
+      kopf.classList.remove("weg");           // oben immer sichtbar
+    } else if(y > letzteY + 6){
+      kopf.classList.add("weg");              // runter -> ausblenden
+    } else if(y < letzteY - 6){
+      kopf.classList.remove("weg");           // hoch -> einblenden
+    }
+    letzteY = y;
+    tickt = false;
+  }
+
+  window.addEventListener("scroll", () => {
+    if(!tickt){ tickt = true; requestAnimationFrame(pruefe); }
+  }, { passive:true });
+
+  // Beim Ansichtswechsel nach oben und Kopf zeigen
+  document.addEventListener("click", e => {
+    if(e.target.closest(".group-tab, .sub-tab")) kopf.classList.remove("weg");
+  }, true);
+})();
 renderInventar();
 renderKnoten();
 renderAngelmethoden();

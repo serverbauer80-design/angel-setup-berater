@@ -51,25 +51,30 @@ body{
 .group-tab{
   flex-shrink:0;background:none;border:none;
   border-bottom:3px solid transparent;
-  color:var(--muted);padding:10px 18px 9px;
+  color:var(--muted);padding:12px 18px 11px;min-height:46px;
   cursor:pointer;font-size:14px;font-weight:600;
   transition:color .15s,border-color .15s;white-space:nowrap;
 }
 .group-tab:hover{color:var(--text)}
 .group-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 
-/* Sub-Navigation (Ebene 2) — Pill-Stil */
+/* Sub-Navigation (Ebene 2) — Pill-Stil.
+   Verlaufsmaske am rechten Rand: sonst ist nicht erkennbar, dass rechts
+   noch Reiter liegen. */
 .nav-subs{
   display:flex;gap:6px;padding:7px 20px;
   background:var(--card);border-bottom:1px solid var(--line);
   overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
-  min-height:42px;align-items:center;
+  min-height:52px;align-items:center;
+  mask-image:linear-gradient(to right,black calc(100% - 26px),transparent);
+  -webkit-mask-image:linear-gradient(to right,black calc(100% - 26px),transparent);
 }
 .nav-subs::-webkit-scrollbar{display:none}
 .sub-tab{
   flex-shrink:0;background:transparent;
   border:1px solid transparent;
-  color:var(--muted);padding:5px 14px;border-radius:999px;
+  color:var(--muted);padding:10px 14px;border-radius:999px;
+  min-height:44px;display:inline-flex;align-items:center;
   cursor:pointer;font-size:13px;font-weight:500;
   transition:.15s;white-space:nowrap;
 }
@@ -1001,4 +1006,63 @@ select:focus{outline:none;border-color:var(--accent)}
 @media (max-width:480px){
   .bc-profil .row{flex-direction:column;gap:2px}
   .bc-kauf-row{flex-direction:column;gap:6px}
+}
+
+/* ---------- Inventar: einklappbare Karten, Filter, Suche ---------- */
+.inv-filter{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0 10px}
+.inv-chip{
+  background:var(--bg2);border:1px solid var(--line);color:var(--muted);
+  padding:9px 13px;border-radius:999px;cursor:pointer;
+  font-size:12.5px;font-weight:600;min-height:44px;
+  display:inline-flex;align-items:center;gap:7px;transition:.15s;
+}
+.inv-chip:hover{border-color:var(--accent);color:var(--text)}
+.inv-chip.active{background:var(--accent);border-color:var(--accent);color:#062018}
+.inv-chip.warn{border-color:var(--warn);color:var(--warn)}
+.inv-chip.warn.active{background:var(--warn);border-color:var(--warn);color:#2a1d04}
+.inv-chip-cnt{
+  font-size:11px;font-weight:700;opacity:.75;
+  font-variant-numeric:tabular-nums;
+}
+.inv-werkzeuge{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+#inv-suche{
+  flex:1;min-width:180px;background:var(--bg2);border:1px solid var(--line);
+  color:var(--text);border-radius:10px;padding:11px 13px;font-size:14px;min-height:44px;
+}
+#inv-suche:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.inv-treffer{font-size:12.5px;color:var(--muted);margin:0 0 10px}
+.inv-gruppe[hidden]{display:none}
+
+.inv-card{padding:0;overflow:hidden}
+.inv-head{
+  width:100%;display:flex;align-items:center;gap:10px;
+  background:none;border:none;color:inherit;text-align:left;
+  padding:14px 16px;cursor:pointer;min-height:56px;font:inherit;
+}
+.inv-head:hover{background:var(--card2)}
+.inv-head-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.inv-name{font-size:15px;font-weight:800;color:var(--text);line-height:1.3}
+.inv-kurz{
+  font-size:12px;color:var(--muted);line-height:1.35;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.inv-punkt{
+  flex:0 0 auto;width:8px;height:8px;border-radius:50%;
+  background:var(--warn);box-shadow:0 0 0 3px rgba(242,178,58,.16);
+}
+.inv-chevron{
+  flex:0 0 auto;color:var(--muted);font-size:13px;
+  transition:transform .18s;
+}
+.inv-card.offen .inv-chevron{transform:rotate(180deg)}
+.inv-body{padding:0 16px 14px;border-top:1px solid var(--line)}
+.inv-body .row:first-child{padding-top:10px}
+.inv-card.eigen{padding:16px}
+
+/* ---------- Kopf beim Herunterscrollen ausblenden ---------- */
+.topbar{transition:transform .22s ease}
+.topbar.weg{transform:translateY(-100%)}
+@media (prefers-reduced-motion:reduce){
+  .topbar{transition:none}
+  .topbar.weg{transform:none}
 }
