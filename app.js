@@ -4034,7 +4034,7 @@ const NAV_GROUPS = {
   planen:   [{view:"berater",label:"Berater"},{view:"tagescheck",label:"Lohnt sich heute?"},{view:"wochenende",label:"🎒 Planung"},{view:"saison",label:"Saisonkalender"}],
   spots:    [{view:"lav",label:"💳 LAV-Gewässer"},{view:"faenge",label:"Fänge & Spots"},{view:"tagebuch",label:"📔 Tagebuch"}],
   wissen:   [{view:"methoden",label:"🎣 Angelmethoden"},{view:"ansitz",label:"⚓ Ansitzangeln"},{view:"knoten",label:"Knotenkunde"},{view:"einsteiger",label:"🎓 Starthilfe"}],
-  zeug:     [{view:"inventar",label:"Mein Equipment"},{view:"checkliste",label:"Zubehör-Check"},{view:"einkauf",label:"🛒 Einkaufsliste"},{view:"baitcast",label:"🎯 Baitcast"},{view:"unterlagen",label:"📄 Unterlagen"}],
+  zeug:     [{view:"inventar",label:"Mein Equipment"},{view:"werkstatt",label:"🔧 Werkstatt"},{view:"checkliste",label:"Zubehör-Check"},{view:"einkauf",label:"🛒 Einkaufsliste"},{view:"baitcast",label:"🎯 Baitcast"},{view:"unterlagen",label:"📄 Unterlagen"}],
 };
 
 function renderSubTabs(group){
@@ -4068,6 +4068,7 @@ function switchView(viewName){
   if(viewName === "tagebuch"){ TB_VIEW = "list"; TB_DETAIL = null; renderTagebuch(); }
   if(viewName === "einsteiger") renderEinsteiger();
   if(viewName === "baitcast") renderBaitcast();
+  if(viewName === "werkstatt") renderWerkstatt();
 }
 
 document.querySelectorAll(".group-tab").forEach(t => {
@@ -5470,6 +5471,196 @@ const BC_STATUS = [
   {k:"ausgewaehlt", icon:"🟡", label:"ausgewählt"},
   {k:"gekauft",     icon:"✅", label:"gekauft"}
 ];
+/* ===================== KOMBO-WERKSTATT =====================
+   Spielwiese zum Zusammenstecken von Ruten und Rollen. Startet mit der
+   echten Bestueckung; was du hier umbaust, bleibt ein Entwurf, bis du
+   ihn uebernimmst. Die Schnur wandert immer mit der Rolle. */
+const WERKSTATT_KEY = "werkstatt_v1";
+
+/* Entwurf: { ruteId: rolleId|null, ... } – nur Ruten, die eine Rolle
+   tragen koennen (Stippen bleiben aussen vor). */
+function werkstattEcht(){
+  const plan = {};
+  Object.values(AKTUELL).forEach(s => {
+    if(s.rolleText && /keine Rolle nötig/i.test(s.rolleText)) return; // Stippe
+    plan[s.ruteId] = s.rolleId || null;
+  });
+  return plan;
+}
+function ladeWerkstatt(){
+  try {
+    const p = JSON.parse(localStorage.getItem(WERKSTATT_KEY));
+    if(p && typeof p === "object") return p;
+  } catch(e){}
+  return werkstattEcht();
+}
+function speichereWerkstatt(){
+  try { localStorage.setItem(WERKSTATT_KEY, JSON.stringify(WERKSTATT)); } catch(e){}
+}
+let WERKSTATT = null;
+let WERKSTATT_AUSWAHL = null;  // angetippte Rute, wartet auf eine Rolle
+
+function renderWerkstatt(){
+  const el = $("#werkstatt");
+  if(!el) return;
+  if(!WERKSTATT) WERKSTATT = ladeWerkstatt();
+
+  const rById  = Object.fromEntries(RUTEN.map(r => [r.id, r]));
+  const roById = Object.fromEntries(ROLLEN.map(r => [r.id, r]));
+  const echt   = werkstattEcht();
+
+  const ruten   = RUTEN.filter(r => r.id in WERKSTATT);
+  const belegte = new Set(Object.values(WERKSTATT).filter(Boolean));
+  const freieRollen = ROLLEN.filter(r => !belegte.has(r.id));
+  const freieRuten  = ruten.filter(r => !WERKSTATT[r.id]);
+  const geaendert   = ruten.filter(r => (WERKSTATT[r.id] || null) !== (echt[r.id] || null));
+
+  const setupZuRute = {};
+  Object.values(AKTUELL).forEach(s => { setupZuRute[s.ruteId] = s; });
+
+  let html = `<h2>🔧 Kombo-Werkstatt</h2>
+    <p class="k-hint">Tippe eine Rute an, dann eine Rolle – fertig. Beide verschwinden aus den
+    freien Listen. <b>Die Schnur gehört zur Rolle</b> und wandert mit: Ziehst du eine Rolle ab,
+    nimmt sie ihre Schnur mit zur neuen Rute.</p>`;
+
+  // ---- Werkbank: angetippte Rute wartet auf Rolle ----
+  if(WERKSTATT_AUSWAHL){
+    const r = rById[WERKSTATT_AUSWAHL];
+    html += `<div class="wk-bank">
+      <div class="wk-bank-kopf">Rolle wählen für</div>
+      <div class="wk-bank-rute">${r.text}</div>
+      <button type="button" class="fs-chip" data-wk-abbruch="1">Abbrechen</button>
+    </div>`;
+  }
+
+  // ---- Geänderte Kombos ----
+  if(geaendert.length){
+    html += `<div class="wk-diff">
+      <div class="wk-diff-kopf">✏️ ${geaendert.length} Änderung${geaendert.length>1?"en":""} gegenüber deiner echten Bestückung</div>`;
+    geaendert.forEach(r => {
+      const jetzt = WERKSTATT[r.id] ? roById[WERKSTATT[r.id]].name : "keine Rolle";
+      const vorher = echt[r.id] ? roById[echt[r.id]].name : "keine Rolle";
+      html += `<div class="wk-diff-zeile"><b>${r.name}</b>
+        <span class="wk-alt">${vorher}</span> → <span class="wk-neu">${jetzt}</span></div>`;
+    });
+    html += `<div class="wk-diff-aktionen">
+      <button type="button" class="add-btn" id="wk-uebernehmen">In die Setups übernehmen</button>
+      <button type="button" class="del-btn-wide" id="wk-zuruecksetzen">Auf echten Stand zurück</button>
+    </div></div>`;
+  }
+
+  // ---- Montierte Kombos ----
+  html += `<h3 class="wk-titel">Montiert <span class="inv-gruppe-count">${ruten.length - freieRuten.length}</span></h3>
+    <div class="wk-liste">`;
+  ruten.filter(r => WERKSTATT[r.id]).forEach(r => {
+    const ro = roById[WERKSTATT[r.id]];
+    const s = setupZuRute[r.id];
+    const abweichend = (WERKSTATT[r.id] || null) !== (echt[r.id] || null);
+    html += `<div class="wk-kombo${abweichend ? " geaendert" : ""}">
+      <div class="wk-kombo-txt">
+        <div class="wk-rute">${r.text}</div>
+        <div class="wk-rolle">🎣 ${ro.name}<span class="wk-schnur">${ro.schnur}</span></div>
+        ${s ? `<div class="wk-zweck">${s.name}</div>` : ""}
+      </div>
+      <button type="button" class="fs-chip" data-wk-loesen="${r.id}">Lösen</button>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // ---- Freie Ruten ----
+  html += `<h3 class="wk-titel">Ruten ohne Rolle <span class="inv-gruppe-count">${freieRuten.length}</span></h3>`;
+  html += freieRuten.length ? `<div class="wk-pool">` + freieRuten.map(r =>
+      `<button type="button" class="wk-teil${WERKSTATT_AUSWAHL===r.id?" aktiv":""}" data-wk-rute="${r.id}">
+        <span class="wk-teil-name">${r.name}</span>
+        <span class="wk-teil-detail">${r.text.split(" · ").slice(1).join(" · ")}</span>
+      </button>`).join("") + `</div>`
+    : `<p class="k-hint">Alle Ruten sind bestückt.</p>`;
+
+  // ---- Freie Rollen ----
+  html += `<h3 class="wk-titel">Rollen ohne Rute <span class="inv-gruppe-count">${freieRollen.length}</span></h3>`;
+  html += freieRollen.length ? `<div class="wk-pool">` + freieRollen.map(r =>
+      `<button type="button" class="wk-teil rolle" data-wk-rolle="${r.id}">
+        <span class="wk-teil-name">${r.name}</span>
+        <span class="wk-teil-detail">${r.schnur}</span>
+      </button>`).join("") + `</div>`
+    : `<p class="k-hint">Alle Rollen sind montiert.</p>`;
+
+  html += `<p class="k-hint" style="margin-top:18px">Die Stippruten tauchen hier nicht auf –
+    sie werden ohne Rolle gefischt.</p>`;
+
+  el.innerHTML = html;
+
+  // ---------- Handler ----------
+  el.querySelectorAll("[data-wk-rute]").forEach(b => b.addEventListener("click", () => {
+    WERKSTATT_AUSWAHL = WERKSTATT_AUSWAHL === b.dataset.wkRute ? null : b.dataset.wkRute;
+    renderWerkstatt();
+  }));
+
+  el.querySelectorAll("[data-wk-rolle]").forEach(b => b.addEventListener("click", () => {
+    if(!WERKSTATT_AUSWAHL){
+      alert("Tippe zuerst eine Rute an, auf die diese Rolle soll.");
+      return;
+    }
+    WERKSTATT[WERKSTATT_AUSWAHL] = b.dataset.wkRolle;
+    WERKSTATT_AUSWAHL = null;
+    speichereWerkstatt();
+    renderWerkstatt();
+  }));
+
+  el.querySelectorAll("[data-wk-loesen]").forEach(b => b.addEventListener("click", () => {
+    WERKSTATT[b.dataset.wkLoesen] = null;
+    speichereWerkstatt();
+    renderWerkstatt();
+  }));
+
+  const abbruch = el.querySelector("[data-wk-abbruch]");
+  if(abbruch) abbruch.addEventListener("click", () => { WERKSTATT_AUSWAHL = null; renderWerkstatt(); });
+
+  const zurueck = el.querySelector("#wk-zuruecksetzen");
+  if(zurueck) zurueck.addEventListener("click", () => {
+    if(!confirm("Entwurf verwerfen und auf deine echte Bestückung zurücksetzen?")) return;
+    WERKSTATT = werkstattEcht();
+    WERKSTATT_AUSWAHL = null;
+    speichereWerkstatt();
+    renderWerkstatt();
+  });
+
+  const uebernehmen = el.querySelector("#wk-uebernehmen");
+  if(uebernehmen) uebernehmen.addEventListener("click", () => {
+    const n = geaendert.length;
+    if(!confirm(`${n} Änderung${n>1?"en":""} in deine Setups übernehmen?\n\nDie Schnur wandert dabei mit der jeweiligen Rolle.`)) return;
+    werkstattUebernehmen();
+  });
+}
+
+/* Entwurf in die Setups schreiben. Nur rolleId wird angefasst – alles
+   andere (Vorfach, Einsatz, Tipps) bleibt, wie es ist. */
+function werkstattUebernehmen(){
+  const roById = Object.fromEntries(ROLLEN.map(r => [r.id, r]));
+  Object.values(AKTUELL).forEach(s => {
+    if(!(s.ruteId in WERKSTATT)) return;
+    const neu = WERKSTATT[s.ruteId] || null;
+    if((s.rolleId || null) === neu) return;
+    s.rolleId = neu;
+    if(neu){
+      s.rolle  = roById[neu].text;
+      s.schnur = roById[neu].schnur;
+      delete s.rolleText; delete s.schnurText;
+      s.unvollstaendig = false;
+    } else {
+      s.rolleText  = "⚠️ noch keine Rolle montiert";
+      s.schnurText = "⚠️ noch nicht bespult";
+      s.rolle = s.rolleText; s.schnur = s.schnurText;
+      s.unvollstaendig = true;
+    }
+  });
+  try { localStorage.removeItem(WERKSTATT_KEY); } catch(e){}
+  WERKSTATT = werkstattEcht();
+  renderWerkstatt();
+  renderInventar();
+  alert("Übernommen. Hinweis: Die Änderung gilt für diese Sitzung – dauerhaft wird sie erst, wenn ich sie in data.js eintrage.");
+}
+
 function renderBaitcast(){
   const wrap = document.getElementById("baitcast-main");
   if(!wrap || typeof BAITCAST === "undefined") return;

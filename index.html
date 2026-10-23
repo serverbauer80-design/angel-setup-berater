@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0e1b24">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=20260722-61">
+  <link rel="stylesheet" href="style.css?v=20260722-62">
 </head>
 <body>
   <header class="topbar">
@@ -262,6 +262,11 @@
   </main>
 
   <!-- ============ BAITCAST ============ -->
+  <!-- ============ KOMBO-WERKSTATT ============ -->
+  <main id="view-werkstatt" class="view">
+    <section id="werkstatt"></section>
+  </main>
+
   <main id="view-baitcast" class="view">
     <section id="baitcast-main"></section>
   </main>
@@ -297,8 +302,8 @@
     firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {});
   </script>
 
-  <script src="data.js?v=20260722-61"></script>
-  <script src="app.js?v=20260722-61"></script>
+  <script src="data.js?v=20260722-62"></script>
+  <script src="app.js?v=20260722-62"></script>
   <script>
     if("serviceWorker" in navigator){
       navigator.serviceWorker.register("sw.js").catch(()=>{});
