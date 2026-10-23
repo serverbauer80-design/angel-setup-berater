@@ -7,17 +7,14 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0e1b24">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=20260722-55">
+  <link rel="stylesheet" href="style.css?v=20260722-56">
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-brand">
       <div class="brand">
         <span class="brand-emoji">🎣</span>
-        <div>
-          <h1>Angel-Setup-Berater</h1>
-          <p class="sub">Welcher Fisch, welches Gewässer – welches Setup &amp; welche Montage?</p>
-        </div>
+        <h1>Angel-Setup-Berater</h1>
       </div>
       <button id="sync-status-btn" type="button" class="sync-status" title="Synchronisation">☁️ Nicht angemeldet</button>
     </div>
@@ -300,8 +297,8 @@
     firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {});
   </script>
 
-  <script src="data.js?v=20260722-55"></script>
-  <script src="app.js?v=20260722-55"></script>
+  <script src="data.js?v=20260722-56"></script>
+  <script src="app.js?v=20260722-56"></script>
   <script>
     if("serviceWorker" in navigator){
       navigator.serviceWorker.register("sw.js").catch(()=>{});
