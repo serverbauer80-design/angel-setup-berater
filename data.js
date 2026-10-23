@@ -5,14 +5,62 @@
    ============================================================ */
 
 /* ---------- 1) DEIN AKTUELLES EQUIPMENT ---------- */
+/* ---------- 1a) RUTEN ----------
+   Jede Rute ist ein eigenes Ding mit eigener ID. Drei FTM Black Aryas 2
+   heissen gleich, sind aber drei Ruten - deshalb ID statt Name. */
+const RUTEN = [
+  { id:"r_daiwa_prorex_s_spin", name:"Daiwa Prorex S Spin", text:"Daiwa Prorex S Spin · 2,70 m · WG 15-50 g" },
+  { id:"r_daiwa_presso_imprimi_st", name:"Daiwa Presso Imprimi ST", text:"Daiwa Presso Imprimi ST · 2,15 m · WG 0,5-6 g" },
+  { id:"r_westin_w2_light_softlure_ul", name:"Westin W2 Light Softlure UL", text:"Westin W2 Light Softlure UL · 1,83 m · WG 1–4 g" },
+  { id:"r_berkley_flex_trout_spinning_", name:"Berkley Flex Trout Spinning 240", text:"Berkley Flex Trout Spinning 240 · 2,40 m · WG 2–12 g · 2-teilig · 112 g · Transportlänge 125 cm · moderat-parabolische Aktion" },
+  { id:"r_spro_tactical_lake_sbiro", name:"SPRO Tactical Lake Sbiro", text:"SPRO Tactical Lake Sbiro · 3,9 m · WG 3-25 g" },
+  { id:"r_savage_gear_revenge_sg2_ligh", name:"Savage Gear Revenge SG2 Light Game", text:"Savage Gear Revenge SG2 Light Game · 2,21 m · WG 5-18 g · 9 Ringe · 121 g · 2-teilig" },
+  { id:"r_daiwa_ninja_x_feeder", name:"Daiwa Ninja X Feeder", text:"Daiwa Ninja X Feeder · 3,90 m · WG bis 120 g · 3-teilig · inkl. Wechselspitzen (Quivertips)" },
+  { id:"r_berkley_flex", name:"Berkley Flex", text:"Berkley Flex · 3,90 m · WG 10–30 g" },
+  { id:"r_berkley_flex_2", name:"Berkley Flex", text:"Berkley Flex · 3,90 m · WG 10–30 g" },
+  { id:"r_daiwa_black_widow_xt_carp", name:"Daiwa Black Widow XT Carp", text:"Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig" },
+  { id:"r_daiwa_black_widow_xt_bait", name:"Daiwa Black Widow XT Bait", text:"Daiwa Black Widow XT Bait · 3,60 m · WG 20–60 g" },
+  { id:"r_ftm_black_aryas_2", name:"FTM Black Aryas 2", text:"FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm" },
+  { id:"r_ftm_black_aryas_2_2", name:"FTM Black Aryas 2", text:"FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm" },
+  { id:"r_ftm_black_aryas_2_3", name:"FTM Black Aryas 2", text:"FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm" },
+  { id:"r_crivit_spinnangel_set_210_5", name:"Crivit Spinnangel-Set 210-5", text:"Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil" },
+  { id:"r_crivit_multi_x_feeder_300_5", name:"Crivit Multi-X Feeder 300-5", text:"Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil" },
+  { id:"r_shimano_hyperloop_7_00_m", name:"Shimano Hyperloop 7,00 m", text:"Shimano Hyperloop 7,00 m · 7 Segmente" },
+  { id:"r_rod_rodman_s_focus_stipp", name:"Rod Rodman's Focus Stipp", text:"Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert" },
+  { id:"r_rod_rodman_axxa_stipp_combo", name:"Rod Rodman AXXA Stipp Combo", text:"Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk" }
+];
+
+/* ---------- 1b) ROLLEN ----------
+   Die Schnur haengt an der Rolle, nicht an der Rute: nimmst du die Rolle
+   ab, wandert die Schnur mit. */
+const ROLLEN = [
+  { id:"ro_freams_lt4000_p", name:"Freams LT4000-P", text:"Freams LT4000-P", schnur:"J-Braid X8 Expedition 0,16 mm (geflochten) · 150 m" },
+  { id:"ro_daiwa_iprimi_lt_1000_s_p", name:"Daiwa Iprimi LT 1000 S-P", text:"Daiwa Iprimi LT 1000 S-P", schnur:"J-Braid X8 Expedition 0,06 mm (geflochten)" },
+  { id:"ro_shimano_vanford_fa_c2000_s", name:"Shimano Vanford FA C2000 S", text:"Shimano Vanford FA C2000 S · Spinnrolle · kompakter Body, flache Spule", schnur:"J-Braid X8 Expedition 0,06 mm (geflochten)" },
+  { id:"ro_abu_garcia_cardinal_x_1000", name:"Abu Garcia Cardinal X 1000", text:"Abu Garcia Cardinal X 1000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous", schnur:"Akashi Fluorocarbon 0,16 mm – reines FC durchgehend als Hauptschnur" },
+  { id:"ro_spro_trout_master_tt3", name:"SPRO Trout Master TT3", text:"SPRO Trout Master TT3 · Übersetzung 5:1 · 6 Kugellager · 301 g", schnur:"Monofil 0,25 mm · 170 m Fassung" },
+  { id:"ro_daiwa_23_ninja_lt2500", name:"Daiwa 23 Ninja LT2500", text:"Daiwa 23 Ninja LT2500 · 4 Kugellager · Übersetzung 5,3:1 · 230 g · Frontbremse", schnur:"J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen der 0,06 mm (Presso) und 0,16 mm (Prorex)" },
+  { id:"ro_daiwa_23_ninja_match_feeder_", name:"Daiwa 23 Ninja Match&Feeder LT4000-C", text:"Daiwa 23 Ninja Match&Feeder LT4000-C · Frontbremse", schnur:"J-Braid X8 0,12 mm (geflochten) – Vorfach Mono/FC 0,20–0,25 mm, ca. 50–80 cm" },
+  { id:"ro_daiwa_ninja_lt_4000_c", name:"Daiwa Ninja LT 4000-C", text:"Daiwa Ninja LT 4000-C · Frontbremse", schnur:"Stroft GTM Monofil 0,22 mm" },
+  { id:"ro_abu_garcia_revo_3_sx_2000s", name:"Abu Garcia Revo 3 SX 2000S", text:"Abu Garcia Revo 3 SX 2000S · Spinnrolle · flache Spule", schnur:"Daiwa J-Braid X8 0,06 mm (geflochten)" },
+  { id:"ro_daiwa_black_widow_br_lt_4000", name:"Daiwa Black Widow BR LT 4000-C", text:"Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse", schnur:"Daiwa Monofil 0,35 mm (durchgehend)" },
+  { id:"ro_daiwa_black_widow_br_lt_4000_2", name:"Daiwa Black Widow BR LT 4000-C", text:"Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse", schnur:"Daiwa Monofil 0,35 mm (durchgehend)" },
+  { id:"ro_tubertini_aryas_2000_spoonro", name:"Tubertini Aryas 2000 Spoonrolle", text:"Tubertini Aryas 2000 Spoonrolle · Spinrolle", schnur:"Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult" },
+  { id:"ro_abu_garcia_cardinal_x_2000", name:"Abu Garcia Cardinal X 2000", text:"Abu Garcia Cardinal X 2000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous", schnur:"Geflochten 0,06 mm" },
+  { id:"ro_crivit_stationaerrolle_gr_30", name:"Crivit Stationärrolle Gr. 30", text:"Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult", schnur:"vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen" },
+  { id:"ro_crivit_stationaerrolle_gr_50", name:"Crivit Stationärrolle Gr. 50", text:"Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult", schnur:"vorbespult ab Werk" }
+];
+
+/* ---------- 1c) SETUPS ----------
+   Ein Setup verbindet Rute und Rolle. rolleId null = keine Rolle montiert;
+   dann greifen rolleText und schnurText. */
 const AKTUELL = {
   setup1: {
     key: "setup1",
     kategorie: "raubfisch",
     name: "Daiwa Prorex S Spin · 2,70 m",
-    rute: "Daiwa Prorex S Spin · 2,70 m · WG 15-50 g",
-    rolle: "Freams LT4000-P",
-    schnur: "J-Braid X8 Expedition 0,16 mm (geflochten) · 150 m",
+    ruteId: "r_daiwa_prorex_s_spin",
+    rolleId: "ro_freams_lt4000_p",
     vorfach: "Daiwa J-Fluoro Carbon 0,298 mm (Standard) oder 0,352 mm (großer Hecht/Zander) · für Hecht: + Stahlvorfach davor",
     extra: "Stahlvorfach Perca (72 St.), Motor Snap Wirbel 18 kg, Easy Shiner 5\"",
     einsatz: "Aktives Spinnfischen auf Hecht, Zander, Barsch, Rapfen – auch Grund-/Posenansitz auf Raubfisch."
@@ -21,9 +69,8 @@ const AKTUELL = {
     key: "setup2",
     kategorie: "forelle",
     name: "Daiwa Presso Imprimi ST · 2,15 m",
-    rute: "Daiwa Presso Imprimi ST · 2,15 m · WG 0,5-6 g",
-    rolle: "Daiwa Iprimi LT 1000 S-P",
-    schnur: "J-Braid X8 Expedition 0,06 mm (geflochten)",
+    ruteId: "r_daiwa_presso_imprimi_st",
+    rolleId: "ro_daiwa_iprimi_lt_1000_s_p",
     vorfach: "Daiwa J-Fluoro Carbon 0,178 mm (sehr fein) · 0,200 mm (Standard) · 0,218 mm (robust) · Großforelle/Put&Take: 0,298 mm",
     extra: "Spoon-Tasche Zite Fishing, Trout Attack Set",
     einsatz: "Ultraleichtes Spinnen mit Spoons/Mini-Ködern auf Forelle und Barsch."
@@ -32,9 +79,8 @@ const AKTUELL = {
     key: "setup17",
     kategorie: "forelle",
     name: "Westin W2 Light Softlure UL · 1,83 m",
-    rute: "Westin W2 Light Softlure UL · 1,83 m · WG 1–4 g",
-    rolle: "Shimano Vanford FA C2000 S · Spinnrolle · kompakter Body, flache Spule",
-    schnur: "J-Braid X8 Expedition 0,06 mm (geflochten)",
+    ruteId: "r_westin_w2_light_softlure_ul",
+    rolleId: "ro_shimano_vanford_fa_c2000_s",
     vorfach: "Fluorocarbon 0,16–0,18 mm · 60–100 cm · per FG- oder Albright-Knoten an die Geflochtene",
     extra: "Micro Snap ohne Wirbel (Gr. 00–0), Micro-Gummiköder 3–5 cm, Jigköpfe 0,5–2 g, Mini-Spoons 1–3 g",
     einsatz: "Gummiköder-Rute für den Forellensee: Micro-Gummis am leichten Jigkopf, langsam über Grund, an Kanten und Einläufen. Die geflochtene 0,06 überträgt den zaghaften Biss direkt – Forellen stoppen den Köder oft nur, statt ihn wegzuziehen. Gegenstück zur Flex Trout 240, die mit durchgehendem Fluorocarbon ohne Vorfach läuft: zwei Schnurphilosophien an zwei ähnlich eingesetzten Ruten, direkt vergleichbar.",
@@ -44,9 +90,8 @@ const AKTUELL = {
     key: "setup18",
     kategorie: "forelle",
     name: "Berkley Flex Trout Spinning · 2,40 m",
-    rute: "Berkley Flex Trout Spinning 240 · 2,40 m · WG 2–12 g · 2-teilig · 112 g · Transportlänge 125 cm · moderat-parabolische Aktion",
-    rolle: "Abu Garcia Cardinal X 1000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
-    schnur: "Akashi Fluorocarbon 0,16 mm – reines FC durchgehend als Hauptschnur",
+    ruteId: "r_berkley_flex_trout_spinning_",
+    rolleId: "ro_abu_garcia_cardinal_x_1000",
     vorfach: "Entfällt bei FC-Hauptschnur: Micro Snap direkt einknoten. Bei Bedarf 40–60 cm FC 0,18–0,20 mm als Opfer-Vorfach.",
     extra: "Spoons 2–5 g, kleine Wobbler, Micro-Gummis am Jigkopf, Micro Snap ohne Wirbel",
     einsatz: "Schließt die Lücke zwischen den UL-Ruten (Presso 0,5–6 g, Westin 1–4 g) und dem Sbiro (3–25 g): genug Rückgrat für schwerere Spoons, Wind und größere Besatzforellen, ohne die Feinfühligkeit zu verlieren. Rolle und FC-Schnur sind von der Westin herübergewandert.",
@@ -56,9 +101,8 @@ const AKTUELL = {
     key: "setup3",
     kategorie: "forelle",
     name: "SPRO Tactical Lake Sbiro · 3,90 m",
-    rute: "SPRO Tactical Lake Sbiro · 3,9 m · WG 3-25 g",
-    rolle: "SPRO Trout Master TT3 · Übersetzung 5:1 · 6 Kugellager · 301 g",
-    schnur: "Monofil 0,25 mm · 170 m Fassung",
+    ruteId: "r_spro_tactical_lake_sbiro",
+    rolleId: "ro_spro_trout_master_tt3",
     vorfach: "Daiwa J-Fluoro Carbon 0,178 mm oder 0,200 mm (feiner Köder) · 0,218 mm (Standard) · ca. 1,5–2,5 m Länge",
     extra: "Sbirolinos Paladin, Posen Troutmaster Pilot, Schrotblei, Haken Gamakatsu Gr. 6, Berkley PowerBait",
     einsatz: "Weit auswerfen am Forellensee, Köder langsam absinken lassen (Sbirolino oder Pose)."
@@ -67,9 +111,8 @@ const AKTUELL = {
     key: "setup4",
     kategorie: "raubfisch",
     name: "Savage Gear Revenge SG2 · 2,21 m",
-    rute: "Savage Gear Revenge SG2 Light Game · 2,21 m · WG 5-18 g · 9 Ringe · 121 g · 2-teilig",
-    rolle: "Daiwa 23 Ninja LT2500 · 4 Kugellager · Übersetzung 5,3:1 · 230 g · Frontbremse",
-    schnur: "J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen der 0,06 mm (Presso) und 0,16 mm (Prorex)",
+    ruteId: "r_savage_gear_revenge_sg2_ligh",
+    rolleId: "ro_daiwa_23_ninja_lt2500",
     vorfach: "Daiwa J-Fluoro Carbon 0,178 mm oder 0,200 mm (Barsch/fein) · 0,218 mm (Standard) · ca. 40–80 cm",
     extra: "",
     einsatz: "Leichtes, aktives Spinnfischen mit kleinen Gummifischen/Spinnern/Wobblern auf Barsch, Döbel, kleinen Zander – auch gut für Hornhecht/Meerforelle zum Reinschnuppern."
@@ -78,9 +121,8 @@ const AKTUELL = {
     key: "setup5",
     kategorie: "feeder",
     name: "Daiwa Ninja X Feeder · 3,90 m",
-    rute: "Daiwa Ninja X Feeder · 3,90 m · WG bis 120 g · 3-teilig · inkl. Wechselspitzen (Quivertips)",
-    rolle: "Daiwa 23 Ninja Match&Feeder LT4000-C · Frontbremse",
-    schnur: "J-Braid X8 0,12 mm (geflochten) – Vorfach Mono/FC 0,20–0,25 mm, ca. 50–80 cm",
+    ruteId: "r_daiwa_ninja_x_feeder",
+    rolleId: "ro_daiwa_23_ninja_match_feeder_",
     vorfach: "Daiwa J-Fluoro Carbon 0,178 mm oder 0,200 mm (Rotauge/Brasse fein) · 0,218 mm (Standard) · 0,298 mm für Karpfen",
     extra: "Futterkorb / Method-Feeder, Haken Gr. 10–14, Schrotblei, Made/Mais/Pellet",
     einsatz: "Feeder- und Grundangeln auf Friedfische (Brasse, Schleie, Rotauge, Karpfen) – ruhiger Ansitz mit Futterkorb an See, Kanal oder ruhigem Fluss. Deutlich kräftiger als die Crivit-Kombo: 3,90 m Wurfweite, Quivertip-Bisserkennung, Frontbremse."
@@ -89,9 +131,8 @@ const AKTUELL = {
     key: "setup16",
     kategorie: "forelle",
     name: "Berkley Flex · 3,90 m (Mono 0,22)",
-    rute: "Berkley Flex · 3,90 m · WG 10–30 g",
-    rolle: "Daiwa Ninja LT 4000-C · Frontbremse",
-    schnur: "Stroft GTM Monofil 0,22 mm",
+    ruteId: "r_berkley_flex",
+    rolleId: "ro_daiwa_ninja_lt_4000_c",
     vorfach: "Fluorocarbon 0,18–0,22 mm (Weißfisch/Forelle) · 0,25–0,30 mm (Schleie/Karpfen) · ca. 40–80 cm",
     extra: "Laufposen 3–15 g, Posenstopper + Gummiperlen (vorhanden), Schrotblei-Set, Haken Gr. 8–14",
     einsatz: "Posen- und Schlepprute am Forellensee: Laufpose oder Sbirolino weit auswerfen und langsam schleppen (Teig, Bienenmade, Spirolino-Fliege) – oder als passive Zweitrute im Rutenhalter, während du mit der Aryas aktiv fischst. Die kräftigere der beiden Berkley: die 0,22er Mono und die 4000er Rolle geben Reserve für große Besatzforellen. Außerhalb des Forellensees auch Allround-Posenrute auf Schleie und Karpfen an See und Kanal."
@@ -100,9 +141,8 @@ const AKTUELL = {
     key: "setup19",
     kategorie: "forelle",
     name: "Berkley Flex · 3,90 m (Geflochten 0,06)",
-    rute: "Berkley Flex · 3,90 m · WG 10–30 g",
-    rolle: "Abu Garcia Revo 3 SX 2000S · Spinnrolle · flache Spule",
-    schnur: "Daiwa J-Braid X8 0,06 mm (geflochten)",
+    ruteId: "r_berkley_flex_2",
+    rolleId: "ro_abu_garcia_revo_3_sx_2000s",
     vorfach: "Fluorocarbon 0,18–0,22 mm (Weißfisch/Forelle) · 0,25 mm (Schleie) · ca. 60–100 cm – bei Geflochtener eher länger, sie federt nichts ab",
     extra: "Laufposen 3–15 g, Posenstopper + Gummiperlen, Schrotblei-Set, Haken Gr. 8–14",
     einsatz: "Die leichtere der beiden Posen-/Schlepp-Ruten am Forellensee: Laufpose oder Sbirolino weit raus und langsam schleppen. Die geflochtene 0,06 wirft weiter und zeigt auch beim Schleppen den zaghaften Zupfer direkt an – dafür federt sie nichts ab, deshalb längeres Vorfach und leichte Bremse. Auch für Weißfisch und Schleie auf mittlere Distanz geeignet; die schwerere Arbeit macht die Schwesterrute mit der Ninja 4000 und 0,22er Mono.",
@@ -112,9 +152,8 @@ const AKTUELL = {
     key: "setup10",
     kategorie: "ansitz",
     name: "Daiwa Black Widow XT Carp · 3,60 m",
-    rute: "Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig",
-    rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
-    schnur: "Daiwa Monofil 0,35 mm (durchgehend)",
+    ruteId: "r_daiwa_black_widow_xt_carp",
+    rolleId: "ro_daiwa_black_widow_br_lt_4000",
     vorfach: "Daiwa J-Fluoro Carbon 0,298 mm (Karpfen/Aal) oder 0,352 mm für große Karpfen",
     extra: "Rutenhalter (Leeko vorhanden), Bissanzeiger, Boilies/Pellets/Mais/Tauwurm, Selbsthak-Montage / Method-Feeder",
     einsatz: "Ruhiger Ansitz auf Karpfen, Aal, Schleie, Quappe – an See, NOK, Eider oder ruhigem Fluss. Der Baitrunner (Freilauf) gibt Schnur frei, wenn der Fisch den Köder nimmt, ohne Widerstand zu spüren – Bremse wird erst beim Anhieb zugedreht."
@@ -123,9 +162,8 @@ const AKTUELL = {
     key: "setup14",
     kategorie: "ansitz",
     name: "Daiwa Black Widow XT Bait · 3,60 m",
-    rute: "Daiwa Black Widow XT Bait · 3,60 m · WG 20–60 g",
-    rolle: "Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse",
-    schnur: "Daiwa Monofil 0,35 mm (durchgehend)",
+    ruteId: "r_daiwa_black_widow_xt_bait",
+    rolleId: "ro_daiwa_black_widow_br_lt_4000_2",
     vorfach: "Daiwa J-Fluoro Carbon 0,298 mm (Karpfen/Aal) oder 0,352 mm für große Karpfen",
     extra: "Bissanzeiger, Boilies/Pellets/Mais/Tauwurm, Selbsthak-Montage / Method-Feeder",
     einsatz: "Ansitz-Kombo mit schwererer Bait-Rute (bis 60 g WG) – gleiche Freilaufrolle wie die Carp. Ideal, um zwei Ruten gleichzeitig am Karpfen-/Aalansitz zu fischen."
@@ -134,9 +172,8 @@ const AKTUELL = {
     key: "setup12",
     kategorie: "forelle",
     name: "FTM Black Aryas 2 · 3,90 m (Mono)",
-    rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
-    rolle: "Tubertini Aryas 2000 Spoonrolle · Spinrolle",
-    schnur: "Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult",
+    ruteId: "r_ftm_black_aryas_2",
+    rolleId: "ro_tubertini_aryas_2000_spoonro",
     vorfach: "Fluorocarbon 0,12–0,16 mm · 1,5–3 m – beim Tremarella bewusst lang",
     extra: "Camole (echt oder Kunstköder-Larven), Piombini/Olivette 0,5–3 g, Micro Snap ohne Wirbel; Spoons 1,5–4 g als Alternative",
     einsatz: "Tremarella am Forellensee: Rute beim sehr langsamen Einholen dauerhaft in Vibration halten, die Larve zittert verführerisch. Die Stroft GTM Mono überträgt das weich und ihre Dehnung puffert zusammen mit dem parabolischen Blank den zaghaften Biss ab – klassische Tremarella-Kombo. Leichte Spoons gehen auch."
@@ -145,9 +182,8 @@ const AKTUELL = {
     key: "setup13",
     kategorie: "forelle",
     name: "FTM Black Aryas 2 · 3,90 m (Geflochten)",
-    rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
-    rolle: "Abu Garcia Cardinal X 2000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous",
-    schnur: "Geflochten 0,06 mm",
+    ruteId: "r_ftm_black_aryas_2_2",
+    rolleId: "ro_abu_garcia_cardinal_x_2000",
     vorfach: "Fluorocarbon 0,14–0,18 mm · 1,5–2,5 m – bei Geflochtener eher länger, sie federt nichts ab",
     extra: "Spoons 1,5–4 g, Micro Snap ohne Wirbel",
     einsatz: "Direkter-Kontakt-Variante: die geflochtene 0,06 mm überträgt jede Bewegung ohne Dehnung. Fürs Tremarella eher untypisch – ohne Dehnung reißt der Haken bei weichmäuligen Forellen schneller aus. Stärke liegt bei Spoons, tieferem Fischen und wenn du den Köderkontakt genau spüren willst."
@@ -157,9 +193,10 @@ const AKTUELL = {
     kategorie: "forelle",
     unvollstaendig: true,
     name: "FTM Black Aryas 2 · 3,90 m (ohne Rolle)",
-    rute: "FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm",
-    rolle: "⚠️ noch keine Rolle vorhanden – Empfehlung siehe Tipp",
-    schnur: "⚠️ noch nicht bespult",
+    ruteId: "r_ftm_black_aryas_2_3",
+    rolleId: null,
+    rolleText: "⚠️ noch keine Rolle vorhanden – Empfehlung siehe Tipp",
+    schnurText: "⚠️ noch nicht bespult",
     vorfach: "Fluorocarbon 0,12–0,16 mm · 1,5–3 m – Länge je nach Zieltiefe wählen",
     extra: "Camole (echt oder Kunstköder-Larven), Piombini/Olivette 0,5–3 g, Micro Snap ohne Wirbel",
     einsatz: "Dritte FTM Black Aryas 2 – Rute liegt bereit, Rolle und Schnur fehlen noch. Gedacht als zweite Tremarella-Kombo: mit anderem Bleigewicht und anderer Vorfachlänge vorgerüstet, damit du am Wasser zwischen zwei Tiefenzonen wechseln kannst, ohne die Montage umzubauen.",
@@ -169,9 +206,8 @@ const AKTUELL = {
     key: "setup6",
     kategorie: "backup",
     name: "Crivit Spinnangel-Set 210-5 · 2,10 m",
-    rute: "Crivit Spinnangel-Set 210-5 · 2,10 m Teleskoprute (HMGF-Glasfaser) · WG bis 40 g · Kork-Handteil",
-    rolle: "Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult",
-    schnur: "vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen",
+    ruteId: "r_crivit_spinnangel_set_210_5",
+    rolleId: "ro_crivit_stationaerrolle_gr_30",
     vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg · 100 m · ca. 40–80 cm",
     extra: "Inkl. Tragetasche und abgestimmtem Zielfisch-Zubehör (Köder, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
     einsatz: "Backup-Spinnangel auf Forelle und Barsch – als Leih- oder Zweitrute. WG bis 40 g deckt auch etwas größere Spinner/Wobbler/Blinker ab."
@@ -180,9 +216,8 @@ const AKTUELL = {
     key: "setup11",
     kategorie: "backup",
     name: "Crivit Multi-X Feeder 300-5 · 3,00 m",
-    rute: "Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil",
-    rolle: "Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult",
-    schnur: "vorbespult ab Werk",
+    ruteId: "r_crivit_multi_x_feeder_300_5",
+    rolleId: "ro_crivit_stationaerrolle_gr_50",
     vorfach: "Daiwa J-Fluoro Carbon 0,218 mm · 3,41 kg",
     extra: "Inkl. Tragetasche und Zielfisch-Zubehör (Köderbox, Haken, Bleie) – Geschenk-Set, komplett angelfertig",
     einsatz: "Backup- und Leih-Kombo für Grund- und Feederangeln – komplett ausgerüstete Tasche, sofort einsatzbereit. Ideal als Zweitrute am Ansitz oder zum Verleihen."
@@ -191,9 +226,10 @@ const AKTUELL = {
     key: "setup7",
     kategorie: "stippe",
     name: "Shimano Hyperloop · 7,00 m",
-    rute: "Shimano Hyperloop 7,00 m · 7 Segmente",
-    rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
-    schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1,5–2 m (deutlich kürzer als die 7 m Rute – zum Reinschwingen des Fischs)",
+    ruteId: "r_shimano_hyperloop_7_00_m",
+    rolleId: null,
+    rolleText: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
+    schnurText: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1,5–2 m (deutlich kürzer als die 7 m Rute – zum Reinschwingen des Fischs)",
     vorfach: "optional: kleine Wirbel (Gr. 16–18) falls gewünscht",
     extra: "Posen 1–3 g, Haken Gr. 16–18, Schrotblei gemischt, Made/Wurm",
     einsatz: "Feines Stippen auf Rotauge, Schleie, Brasse an Eider, NOK, See – sehr entspannt, maximale Feinfühligkeit. Fisch landen: Rute im Bogen zu dir heranschwingen, bei wenig Platz stattdessen Segmente einschieben.",
@@ -203,9 +239,10 @@ const AKTUELL = {
     key: "setup8",
     kategorie: "stippe",
     name: "Rod Rodman Focus · 4,00 m",
-    rute: "Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert",
-    rolle: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
-    schnur: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1–1,5 m (kürzer als die 4 m Rute – zum Reinschwingen des Fischs)",
+    ruteId: "r_rod_rodman_s_focus_stipp",
+    rolleId: null,
+    rolleText: "keine Rolle nötig – Schnur fest an der Rutenspitze über Gummizug",
+    schnurText: "Feste Vorfachschnur 0,10–0,14 mm, am Gummizug geknotet, Länge ca. 1–1,5 m (kürzer als die 4 m Rute – zum Reinschwingen des Fischs)",
     vorfach: "optional: kleine Wirbel (Gr. 16–18) falls gewünscht",
     extra: "",
     einsatz: "Kompakte Alternative zur 7-m-Stippe für sehr enge Angelplätze (Bäume, schmaler Steg, dichte Ufervegetation) – kein Schwingen/Einschieben nötig, die Spitze bleibt fast immer in Reichweite. Feines Posenfischen auf Rotauge, Schleie & Co."
@@ -214,14 +251,29 @@ const AKTUELL = {
     key: "setup9",
     kategorie: "stippe",
     name: "Rod Rodman AXXA · 2,80 m",
-    rute: "Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk",
-    rolle: "keine Rolle nötig",
-    schnur: "Fertige Montage (Schnur, Pose, Haken) ab Werk auf Wickelbrett – sofort einsatzbereit",
+    ruteId: "r_rod_rodman_axxa_stipp_combo",
+    rolleId: null,
+    rolleText: "keine Rolle nötig",
+    schnurText: "Fertige Montage (Schnur, Pose, Haken) ab Werk auf Wickelbrett – sofort einsatzbereit",
     vorfach: "bereits in der Fertigmontage enthalten",
     extra: "Komplett vormontiert, kein Aufbau nötig",
     einsatz: "Schnelle, unkomplizierte Stippe für Köderfischfang oder als Einsteiger-/Zweitrute – kürzer und einfacher als die anderen Stippen, dafür ohne jede Vorbereitung sofort startklar."
   }
 };
+
+/* Rute, Rolle und Schnur als fertige Texte an die Setups haengen, damit
+   der gesamte uebrige Code unveraendert damit arbeiten kann. */
+(function verknuepfe(){
+  const rById  = Object.fromEntries(RUTEN.map(r => [r.id, r]));
+  const roById = Object.fromEntries(ROLLEN.map(r => [r.id, r]));
+  Object.values(AKTUELL).forEach(s => {
+    const rute  = rById[s.ruteId];
+    const rolle = s.rolleId ? roById[s.rolleId] : null;
+    s.rute   = rute  ? rute.text  : "";
+    s.rolle  = rolle ? rolle.text : (s.rolleText  || "");
+    s.schnur = rolle ? rolle.schnur : (s.schnurText || "");
+  });
+})();
 
 /* Reihenfolge & Beschriftung der Setup-Gruppen im Inventar.
    Jedes Setup in AKTUELL trägt genau eine dieser Kategorien. */
