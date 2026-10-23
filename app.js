@@ -5477,6 +5477,13 @@ const BC_STATUS = [
    ihn uebernimmst. Die Schnur wandert immer mit der Rolle. */
 const WERKSTATT_KEY = "werkstatt_v1";
 
+/* Nur die ersten Segmente eines " · "-Textes – die Karten sollen auf dem
+   Handy nicht ueber vier Zeilen laufen. */
+function wkKurz(t, n = 2){
+  if(!t) return "";
+  return String(t).replace(/^⚠️\s*/, "").split(" · ").slice(0, n).join(" · ");
+}
+
 /* Entwurf: { ruteId: rolleId|null, ... } – nur Ruten, die eine Rolle
    tragen koennen (Stippen bleiben aussen vor). */
 function werkstattEcht(){
@@ -5558,9 +5565,8 @@ function renderWerkstatt(){
     const abweichend = (WERKSTATT[r.id] || null) !== (echt[r.id] || null);
     html += `<div class="wk-kombo${abweichend ? " geaendert" : ""}">
       <div class="wk-kombo-txt">
-        <div class="wk-rute">${r.text}</div>
-        <div class="wk-rolle">🎣 ${ro.name}<span class="wk-schnur">${ro.schnur}</span></div>
-        ${s ? `<div class="wk-zweck">${s.name}</div>` : ""}
+        <div class="wk-rute">${wkKurz(r.text)}</div>
+        <div class="wk-rolle">🎣 ${ro.name}<span class="wk-schnur">${wkKurz(ro.schnur, 3)}</span></div>
       </div>
       <button type="button" class="fs-chip" data-wk-loesen="${r.id}">Lösen</button>
     </div>`;
@@ -5572,7 +5578,7 @@ function renderWerkstatt(){
   html += freieRuten.length ? `<div class="wk-pool">` + freieRuten.map(r =>
       `<button type="button" class="wk-teil${WERKSTATT_AUSWAHL===r.id?" aktiv":""}" data-wk-rute="${r.id}">
         <span class="wk-teil-name">${r.name}</span>
-        <span class="wk-teil-detail">${r.text.split(" · ").slice(1).join(" · ")}</span>
+        <span class="wk-teil-detail">${wkKurz(r.text.split(" · ").slice(1).join(" · "), 2)}</span>
       </button>`).join("") + `</div>`
     : `<p class="k-hint">Alle Ruten sind bestückt.</p>`;
 
@@ -5581,7 +5587,7 @@ function renderWerkstatt(){
   html += freieRollen.length ? `<div class="wk-pool">` + freieRollen.map(r =>
       `<button type="button" class="wk-teil rolle" data-wk-rolle="${r.id}">
         <span class="wk-teil-name">${r.name}</span>
-        <span class="wk-teil-detail">${r.schnur}</span>
+        <span class="wk-teil-detail">${wkKurz(r.schnur, 2)}</span>
       </button>`).join("") + `</div>`
     : `<p class="k-hint">Alle Rollen sind montiert.</p>`;
 
