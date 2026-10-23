@@ -1116,19 +1116,28 @@ function renderInventar(){
     <button id="su-add" class="add-btn">Setup speichern</button>
   </details>`;
 
-  html += `<h2>🧰 Zubehör &amp; Kleinteile</h2><div class="chips">`;
+  /* Zubehoer, Wunschliste und Empfehlung sind Nachschlage-Inhalte und
+     machten zusammen rund 5000 px aus. Zugeklappt, damit oben nur der
+     eigene Bestand steht. */
+  const zubAnzahl = ZUBEHOER.length + ZUSATZ.zubehoer.length;
+  html += `<details class="inv-abschnitt">
+    <summary>🧰 Zubehör &amp; Kleinteile <span class="inv-abschnitt-cnt">${zubAnzahl}</span></summary>
+    <div class="chips">`;
   html += ZUBEHOER.map(z => `<span class="chip">${z}</span>`).join("");
   ZUSATZ.zubehoer.forEach((z,i) => {
     html += `<span class="chip eigen">${z}<button class="del-btn-mini" data-del="zub" data-idx="${i}" title="Entfernen">✕</button></span>`;
   });
-  html += `</div>`;
-  html += `<div class="add-box">
-    <input id="zub-input" placeholder="Neues Zubehör – z. B. Polbrille, Kopflampe …">
-    <button id="zub-add" class="add-btn">➕ Hinzufügen</button>
-  </div>
-  <p class="k-hint">Neu hinzugefügtes Zubehör hakt sich automatisch in der <b>Zubehör-Checkliste</b> ab. Deine Ergänzungen werden im Browser gespeichert.</p>`;
+  html += `</div>
+    <div class="add-box">
+      <input id="zub-input" placeholder="Neues Zubehör – z. B. Polbrille, Kopflampe …">
+      <button id="zub-add" class="add-btn">➕ Hinzufügen</button>
+    </div>
+    <p class="k-hint">Neu hinzugefügtes Zubehör hakt sich automatisch in der <b>Zubehör-Checkliste</b> ab. Deine Ergänzungen werden im Browser gespeichert.</p>
+  </details>`;
 
-  html += `<h2>🛒 Wunschliste – geplante Setups</h2><div class="inv-grid">`;
+  html += `<details class="inv-abschnitt">
+    <summary>🛒 Wunschliste – geplante Setups <span class="inv-abschnitt-cnt">${Object.keys(WUNSCH).length}</span></summary>
+    <div class="inv-grid">`;
   Object.values(WUNSCH).forEach(w => {
     html += `<div class="inv-card wunsch">
       <h3>${w.name}</h3>
@@ -1141,9 +1150,12 @@ function renderInventar(){
       ${w.hinweis ? `<div class="need-hinweis">${w.hinweis}</div>` : ""}
     </div>`;
   });
-  html += `</div>`;
+  html += `</div></details>`;
 
-  html += empfehlungHTML();
+  html += `<details class="inv-abschnitt">
+    <summary>💡 Meine Empfehlung <span class="inv-abschnitt-cnt">optional</span></summary>
+    ${empfehlungHTML()}
+  </details>`;
   el.innerHTML = html;
 
   // ----- Handler: Zubehör hinzufügen -----
