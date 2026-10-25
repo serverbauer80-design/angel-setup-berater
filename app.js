@@ -1004,8 +1004,109 @@ function mitnehmenHTML(fisch, ansaetze, gw, gwKey){
 }
 
 /* "Heute dabei" gewaehlt, aber das Setup passt nicht zu Fisch/Gewaesser: trotzdem
-   auflisten und erklaeren, warum nicht – statt es still auszublenden. */
-function nichtPassendHTML(fisch, gw, alleAnsaetze){
+   auflisten und begruenden. Jede Aussage ist ein reiner Vergleich von Zahlen, die
+   in RUTEN/ROLLEN/AKTUELL und in der hinterlegten Montage stehen (Wurfgewicht gegen
+   Jigkopf-/Bleigewicht, Hauptschnur gegen hinterlegte Hauptschnur). Was sich
+   daraus nicht belegen laesst (Aktion, Gelaende, Koeder), wird nicht behauptet. */
+const NP_GEW = /(\d+(?:[,.]\d+)?)(?:\s*[–-]\s*(\d+(?:[,.]\d+)?))?\s*g\b/;
+function npZahl(t){ return parseFloat(String(t).replace(",", ".")); }
+
+/* Gewicht (g) aus der hinterlegten Montage, auf das Gewaesser gekuerzt */
+function npMontageGewicht(a, gwKey){
+  const m = (a.montage || []).find(x => /Jigkopf|Laufblei|Blei|Pose/i.test(x.k) && NP_GEW.test(gwWert(x.v, gwKey)));
+  if(!m) return null;
+  const v = gwWert(m.v, gwKey);
+  const r = v.match(NP_GEW);
+  const lo = npZahl(r[1]), hi = r[2] ? npZahl(r[2]) : lo;
+  return { lo, hi, bez: m.k };
+}
+
+function npDurchmesser(t){
+  const r = String(t || "").match(/0[,.](\d{2,3})\s*mm/);
+  return r ? npZahl("0." + r[1]) : null;
+}
+
+const npDe = (n) => String(n).replace(".", ",");
+
+/* Ein Gewicht gegen das Wurfgewicht der Rute: nur Zahlenvergleich.
+   ok = im Bereich, nah = knapp ausserhalb, weit = weit ausserhalb. */
+function npWgUrteil(g, wg){
+  const [wMin, wMax] = wg;
+  if(g.lo > wMax) return { stufe: g.lo > wMax * 2 ? "weit" : "nah", text: `liegt über dem maximalen Wurfgewicht der Rute (${npDe(wMax)} g)` };
+  if(g.hi < wMin) return { stufe: wMin > g.hi * 2 ? "weit" : "nah", text: `liegt unter dem Mindest-Wurfgewicht der Rute (${npDe(wMin)} g)` };
+  if(g.hi > wMax) return { stufe: "nah", text: `reicht teils über das maximale Wurfgewicht der Rute (${npDe(wMax)} g)` };
+  return { stufe: "ok", text: "liegt im Wurfgewicht der Rute" };
+}
+const NP_ICON = { ok: "✅", nah: "⚠️", weit: "❌" };
+
+function npPruefe(key, alleAnsaetze, gwKey){
+  const st = AKTUELL[key];
+  const rute = RUTEN.find(r => r.id === st.ruteId);
+  const rolle = ROLLEN.find(r => r.id === st.rolleId);
+  const zeilen = [];
+  const stufen = [];
+
+  if(!rute || !rute.wg){
+    return { verdikt: st.kategorie === "stippe" ? "passt nicht" : "offen", zeilen };
+  }
+  zeilen.push(`<b>Rute</b>: ${rute.name}, Wurfgewicht ${npDe(rute.wg[0])}–${npDe(rute.wg[1])} g, ${npDe(rute.laenge)} m.`);
+  if(!rolle) zeilen.push(`Auf diesem Setup ist noch keine Rolle montiert.`);
+
+  const gesehen = new Set();
+  alleAnsaetze.filter(a => a.setup && AKTUELL[a.setup]).slice(0, 3).forEach(a => {
+    const kurz = a.methode.split(" – ")[0];
+    if(gesehen.has(kurz)) return;
+    gesehen.add(kurz);
+    const g = npMontageGewicht(a, gwKey);
+    if(g){
+      const u = npWgUrteil(g, rute.wg);
+      stufen.push(u.stufe);
+      const bereich = g.lo === g.hi ? `${npDe(g.lo)} g` : `${npDe(g.lo)}–${npDe(g.hi)} g`;
+      zeilen.push(`<b>${kurz}</b> (${g.bez} ${bereich}): ${NP_ICON[u.stufe]} ${u.text}.`);
+    }
+    // Hauptschnur: nur Zahlenvergleich, keine Bewertung der Folgen
+    const hs = (a.montage || []).find(x => /^Hauptschnur/i.test(x.k));
+    const dSoll = hs ? npDurchmesser(hs.v) : null;
+    const schnurIst = rolle ? rolle.schnur : st.schnurText;
+    const dIst = npDurchmesser(schnurIst);
+    if(dSoll && dIst && (dIst >= dSoll * 2 || dIst <= dSoll / 2)){
+      const art = (t) => /geflochten|braid/i.test(t) ? " geflochten" : (/fluoro|fc/i.test(t) ? " Fluorocarbon" : (/mono/i.test(t) ? " Monofil" : ""));
+      const z = `<b>Hauptschnur</b>: auf dem Setup ${npDe(dIst)} mm${art(schnurIst)}, hinterlegt sind ${npDe(dSoll)} mm${art(hs.v)}.`;
+      if(!zeilen.includes(z)) zeilen.push(z);
+    }
+  });
+
+  let verdikt = "offen";
+  if(stufen.length){
+    if(stufen.every(s => s === "weit")) verdikt = "passt nicht";
+    else if(stufen.includes("ok")) verdikt = "koennte gehen";
+    else verdikt = "eingeschraenkt";
+  }
+  return { verdikt, zeilen };
+}
+
+/* Gleicher Vergleich fuer die hinterlegte Empfehlung selbst – damit der Nutzer sieht,
+   dass die Richtwerte auch dort nicht immer exakt eingehalten sind. */
+function npVergleichEmpfehlung(alleAnsaetze, gwKey){
+  const a = alleAnsaetze.find(x => x.setup && AKTUELL[x.setup]);
+  if(!a) return "";
+  const rute = RUTEN.find(r => r.id === AKTUELL[a.setup].ruteId);
+  const g = npMontageGewicht(a, gwKey);
+  if(!rute || !rute.wg || !g) return "";
+  const u = npWgUrteil(g, rute.wg);
+  if(u.stufe === "ok") return "";
+  const bereich = g.lo === g.hi ? `${npDe(g.lo)} g` : `${npDe(g.lo)}–${npDe(g.hi)} g`;
+  return `<p class="k-hint">Zum Vergleich: Auch die hinterlegte Empfehlung (${rute.name}, Wurfgewicht ${npDe(rute.wg[0])}–${npDe(rute.wg[1])} g) ${NP_ICON[u.stufe]} ${u.text.replace(" der Rute", "")} bei ${g.bez} ${bereich}. Die Gewichte sind Richtwerte: ⚠️ heißt knapp außerhalb, ❌ weit außerhalb.</p>`;
+}
+
+const NP_BADGE = {
+  "passt nicht":    `<span class="badge wunsch">⚠️ Passt nicht</span>`,
+  "eingeschraenkt": `<span class="badge bedingt">🟡 Nur eingeschränkt</span>`,
+  "koennte gehen":  `<span class="badge bedingt">🟡 Nicht hinterlegt – könnte gehen</span>`,
+  "offen":          `<span class="badge bedingt">🟡 Nicht hinterlegt</span>`
+};
+
+function nichtPassendHTML(fisch, gw, alleAnsaetze, gwKey){
   const keys = [...HEUTE_DABEI].filter(k => AKTUELL[k] && !alleAnsaetze.some(a => a.setup === k));
   if(keys.length === 0) return "";
   const empfohlen = [...new Set(alleAnsaetze.filter(a => a.setup && AKTUELL[a.setup]).map(a => a.setup))]
@@ -1015,19 +1116,19 @@ function nichtPassendHTML(fisch, gw, alleAnsaetze){
     const st = AKTUELL[k];
     const kat = SETUP_KATEGORIEN.find(x => x.key === st.kategorie);
     const einsatz = (st.einsatz || "").split(/(?<=\.)\s/)[0];
-    const stamm = fisch.name.split(/[\s(\/]/)[0].toLowerCase();
-    const erwaehnt = stamm.length > 3 && (st.einsatz || "").toLowerCase().includes(stamm.slice(0, Math.max(4, stamm.length - 2)));
-    const gruende = [];
-    gruende.push(`Das ist ein <b>${kat ? kat.titel : "anderes"}-Setup</b>${einsatz ? ": " + einsatz : "."}`);
-    if(erwaehnt) gruende.push(`Es passt grundsätzlich zu ${fisch.name}, ist dafür aber nicht als Methode hinterlegt.`);
-    else gruende.push(`Für ${ziel} ist dieses Setup nicht vorgesehen.`);
-    if(empfohlen.length) gruende.push(`Hinterlegt ist hier: ${empfohlen.join(" · ")}.`);
+    const p = npPruefe(k, alleAnsaetze, gwKey);
+    const zeilen = [];
+    zeilen.push(`Das ist ein <b>${kat ? kat.titel : "anderes"}-Setup</b>${einsatz ? ": " + einsatz : "."}`);
+    if(st.kategorie === "stippe") zeilen.push(`Stippruten haben keine Rolle und eine feste Schnur an der Spitze – für die hinterlegten Methoden bei ${ziel} (Spinnen/Ansitz mit Rolle) gibt es dafür keinen Ansatz.`);
+    p.zeilen.forEach(z => zeilen.push(z));
+    if(p.verdikt === "offen" && st.kategorie !== "stippe") zeilen.push(`Das Wurfgewicht ließ sich nicht gegen die hinterlegte Montage prüfen.`);
+    if(empfohlen.length) zeilen.push(`Hinterlegt ist hier: ${empfohlen.join(" · ")}.`);
     return `<article class="ansatz nicht-passend">
-      <div class="ansatz-head"><span class="badge wunsch">⚠️ Passt nicht</span><span class="m-name">${setupLabel(st)}</span></div>
-      <div class="ansatz-body"><p>${gruende.join(" ")}</p></div>
+      <div class="ansatz-head">${NP_BADGE[p.verdikt]}<span class="m-name">${setupLabel(st)}</span></div>
+      <div class="ansatz-body"><ul class="np-liste">${zeilen.map(z => `<li>${z}</li>`).join("")}</ul></div>
     </article>`;
   }).join("");
-  return `<h3 class="nicht-passend-titel">🎒 Heute dabei, aber nicht passend für ${ziel}</h3>${karten}`;
+  return `<h3 class="nicht-passend-titel">🎒 Heute dabei, aber nicht als Methode für ${ziel} hinterlegt</h3>${npVergleichEmpfehlung(alleAnsaetze, gwKey)}${karten}`;
 }
 
 function berechne(){
@@ -1063,7 +1164,7 @@ function berechne(){
   if(ansaetze.length === 0 && alleAnsaetze.length > 0 && HEUTE_DABEI.size > 0){
     html += rechtHTML(fisch.id);
     html += `<div class="empty">Mit den Setups, die du heute dabei hast, geht für <b>${fisch.name}</b>${gw ? " am <b>" + gw.name + "</b>" : ""} nichts. Wähle bei „Heute dabei" andere Setups oder wähle alle ab.</div>`;
-    html += nichtPassendHTML(fisch, gw, alleAnsaetze);
+    html += nichtPassendHTML(fisch, gw, alleAnsaetze, gwKey);
   } else if(ansaetze.length === 0){
     html += rechtHTML(fisch.id);
     html += `<div class="empty">Für <b>${fisch.name}</b> ist am Gewässer <b>${gw ? gw.name : ""}</b> keine passende Methode hinterlegt.
@@ -1075,7 +1176,7 @@ function berechne(){
     html += mitnehmenHTML(fisch, ansaetze, gw, gwKey);
     html += rechtHTML(fisch.id);
     html += ansaetze.map((a, i) => ansatzHTML(a, fisch, i === 0 && !!(a.setup && AKTUELL[a.setup]))).join("");
-    html += nichtPassendHTML(fisch, gw, alleAnsaetze);
+    html += nichtPassendHTML(fisch, gw, alleAnsaetze, gwKey);
   }
 
   ergEl.innerHTML = html;

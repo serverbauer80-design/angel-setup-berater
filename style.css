@@ -1285,3 +1285,5 @@ select:focus{outline:none;border-color:var(--accent)}
 .nicht-passend-titel{font-size:15px;margin:18px 0 8px;color:var(--muted)}
 .ansatz.nicht-passend{opacity:.92;border-style:dashed}
 .ansatz.nicht-passend p{margin:0;font-size:14px;line-height:1.5}
+.np-liste{margin:0;padding-left:18px;font-size:14px;line-height:1.5}
+.np-liste li+li{margin-top:6px}
