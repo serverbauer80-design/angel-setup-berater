@@ -867,15 +867,16 @@ function knotenEmpfehlungHTML(a){
   </div>`;
 }
 
-function ansatzHTML(a, fisch){
+/* inKarte: Packliste und Tipp stehen schon in der Karte "Was nehme ich mit?" */
+function ansatzHTML(a, fisch, inKarte){
   let body = "";
   if(a.status === "machbar" || a.status === "bedingt"){
     body += setupLineHTML(a.setup);
   }
   body += montageHTML(a.montage);
-  body += packlisteHTML(fisch, a);
+  if(!inKarte) body += packlisteHTML(fisch, a);
   body += knotenEmpfehlungHTML(a);
-  if(a.tipp){
+  if(a.tipp && !inKarte){
     body += `<div class="tipp"><h4>💡 Tipp</h4><p>${a.tipp}</p></div>`;
   }
   if(a.gezeiten){
@@ -1041,7 +1042,7 @@ function berechne(){
     ansaetze = [...ansaetze].sort((a,b) => rang[a.status] - rang[b.status]);
     html += mitnehmenHTML(fisch, ansaetze, gw, gwKey);
     html += rechtHTML(fisch.id);
-    html += ansaetze.map(a => ansatzHTML(a, fisch)).join("");
+    html += ansaetze.map((a, i) => ansatzHTML(a, fisch, i === 0 && !!(a.setup && AKTUELL[a.setup]))).join("");
   }
 
   ergEl.innerHTML = html;
