@@ -753,16 +753,20 @@ function togglePack(el){
   if(PACKLISTE[key]) delete PACKLISTE[key]; else PACKLISTE[key] = true;
   speicherePackliste();
   const ok = !!PACKLISTE[key];
-  el.classList.toggle("have", ok);
-  el.classList.toggle("manuell", ok);
-  el.classList.toggle("miss", !ok);
-  el.querySelector(".chk-box").textContent = ok ? "✅" : "⬜";
-  const details = el.closest(".pack-details");
-  if(details){
-    const all = details.querySelectorAll(".pack-item");
-    const doneNow = details.querySelectorAll(".pack-item.have").length;
-    details.querySelector(".pack-count").textContent = `(${doneNow}/${all.length})`;
-  }
+  // derselbe Haken kann in "Was nehme ich mit?" und in der Packliste der Karte stehen
+  document.querySelectorAll(".pack-item").forEach(it => {
+    if(it.dataset.pack !== key) return;
+    it.classList.toggle("have", ok);
+    it.classList.toggle("manuell", ok);
+    it.classList.toggle("miss", !ok);
+    it.querySelector(".chk-box").textContent = ok ? "✅" : "⬜";
+  });
+  document.querySelectorAll(".pack-details, .mitnehmen").forEach(box => {
+    const all = box.querySelectorAll(".pack-item");
+    const zaehler = box.querySelector(".pack-count");
+    if(!all.length || !zaehler) return;
+    zaehler.textContent = `(${box.querySelectorAll(".pack-item.have").length}/${all.length})`;
+  });
 }
 document.addEventListener("click", (e) => {
   const item = e.target.closest(".pack-item.clickable");
@@ -943,6 +947,61 @@ document.addEventListener("click", (e) => {
   if(typeof renderFaengeTop === "function") renderFaengeTop();
 });
 
+/* "Was nehme ich mit?": Kurzfassung der besten Methode, damit man am Wasser
+   nicht erst durch alle Karten scrollen muss. Teilt sich die Haken-Schluessel
+   mit packlisteHTML (prefix::...), also bleibt beides synchron. */
+const GW_TOKENS = {
+  nok:   /(^|[\s\/(])(NOK|See)(?![a-zäöüß])/,
+  eider: /(^|[\s\/(])(Eider|Strömung)(?![a-zäöüß])/,
+  elbe:  /(^|[\s\/(])(Elbe|Strömung)(?![a-zäöüß])/,
+  see:   /(^|[\s\/(])See(?![a-zäöüß])/,
+};
+const GW_ALLE = /(^|[\s\/(])(NOK|See|Eider|Elbe|Strömung)(?![a-zäöüß])/;
+
+/* Werte wie "See/NOK 7–12 g · Eider 12–16 g" auf das gewaehlte Gewaesser kuerzen */
+function gwWert(v, gwKey){
+  const re = GW_TOKENS[gwKey];
+  if(!re) return v;
+  const teile = v.split(" · ");
+  if(teile.length < 2 || !teile.some(t => re.test(t))) return v;
+  return teile.filter(t => re.test(t) || !GW_ALLE.test(t)).join(" · ");
+}
+
+function mitnehmenHTML(fisch, ansaetze, gw, gwKey){
+  const a = ansaetze[0];
+  if(!a) return "";
+  const kopf = `<div class="mn-head">🎒 Was nehme ich mit?</div>
+    <div class="mn-sub">${fisch.name}${gw ? " · " + gw.name : ""}</div>`;
+  const nutzbar = a.setup && AKTUELL[a.setup];
+  if(!nutzbar){
+    const ref = a.braucht ? getSetupRef(a.braucht) : null;
+    return `<section class="mitnehmen card">${kopf}
+      <div class="mn-warn">❌ Mit deinem Zeug geht das gerade nicht.${ref ? ` Fehlt: <b>${ref.w.name}</b> (${ref.w.preis}).` : ""}</div>
+    </section>`;
+  }
+  const prefix = fisch.id + "__" + a.methode;
+  const items = [{ key: prefix + "::setup", k: "Rute &amp; Rolle", v: setupLabel(AKTUELL[a.setup]) }];
+  (a.montage || []).forEach(m => items.push({ key: prefix + "::" + m.k, k: m.k, v: gwWert(m.v, gwKey) }));
+  const done = items.filter(it => PACKLISTE[it.key]).length;
+  const rows = items.map(it => {
+    const ok = !!PACKLISTE[it.key];
+    return `<div class="pack-item ${ok ? "have manuell" : "miss"} clickable" data-pack="${escAttr(it.key)}" role="button" tabindex="0">
+      <span class="chk-box">${ok ? "✅" : "⬜"}</span>
+      <div class="chk-txt"><div class="chk-name"><span class="mn-k">${it.k}</span> ${it.v}</div></div>
+    </div>`;
+  }).join("");
+  const weitere = ansaetze.slice(1).map(x => x.methode.split(" – ")[0]).filter((m, i, arr) => arr.indexOf(m) === i);
+  return `<section class="mitnehmen card">${kopf}
+    <div class="mn-methode"><span class="badge ${a.status}">${statusLabel(a.status)}</span> ${a.methode}</div>
+    ${gw ? "" : `<p class="k-hint">Wähle ein Gewässer, dann zeige ich dir das passende Gewicht.</p>`}
+    <div class="mn-count">Gepackt: <span class="pack-count">(${done}/${items.length})</span></div>
+    <div class="chk-list pack-list mn-list">${rows}</div>
+    ${a.tipp ? `<div class="tipp"><h4>💡 Tipp</h4><p>${a.tipp}</p></div>` : ""}
+    <button class="reset-btn" type="button" data-pack-reset="${escAttr(prefix)}">↺ Haken zurücksetzen</button>
+    ${weitere.length ? `<p class="k-hint mn-weitere">Weitere Methoden weiter unten: ${weitere.join(", ")}</p>` : ""}
+  </section>`;
+}
+
 function berechne(){
   const fisch = FISCHE.find(f => f.id === fischSel.value);
   const gwKey = gwSel.value;
@@ -972,15 +1031,16 @@ function berechne(){
     </div>
   </div>`;
 
-  html += rechtHTML(fisch.id);
-
   if(ansaetze.length === 0){
+    html += rechtHTML(fisch.id);
     html += `<div class="empty">Für <b>${fisch.name}</b> ist am Gewässer <b>${gw ? gw.name : ""}</b> keine passende Methode hinterlegt.
       Wähle ein anderes Gewässer aus der Liste.</div>`;
   } else {
     // sortieren: machbar → bedingt → wunsch
     const rang = {machbar:0, bedingt:1, wunsch:2};
     ansaetze = [...ansaetze].sort((a,b) => rang[a.status] - rang[b.status]);
+    html += mitnehmenHTML(fisch, ansaetze, gw, gwKey);
+    html += rechtHTML(fisch.id);
     html += ansaetze.map(a => ansatzHTML(a, fisch)).join("");
   }
 

@@ -1234,3 +1234,14 @@ select:focus{outline:none;border-color:var(--accent)}
 .dkpt-marker.unklar{background:#fff;color:#33424d;border-color:var(--accent)}
 .dkpt-marker.neu{border-style:dashed}
 @media (max-width:560px){ #dkpt-map{height:340px} .dkpt-sub{white-space:normal} }
+
+/* Was nehme ich mit? (Berater) */
+.mitnehmen{margin:14px 0;border-color:rgba(58,208,122,.35)}
+.mn-head{font-size:17px;font-weight:800}
+.mn-sub{color:var(--muted);font-size:13.5px;margin:2px 0 10px}
+.mn-methode{font-size:14px;margin-bottom:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mn-count{font-size:13px;color:var(--muted);margin-bottom:4px}
+.mn-k{font-weight:700;display:block;font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.mn-warn{padding:10px 12px;border-radius:10px;background:rgba(224,86,86,.1);font-size:14px}
+.mn-weitere{margin-top:10px}
+.mitnehmen .tipp{margin-top:12px}
