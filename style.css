@@ -1262,3 +1262,16 @@ select:focus{outline:none;border-color:var(--accent)}
 .heute-kopf,.heute-box{padding:16px}
 .heute-kopf select{width:100%}
 .heute-box .row{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--line)}.heute-box .row:first-of-type{border-top:0}
+
+/* Schnell-Fang */
+.qf-box{max-height:92vh;overflow-y:auto;width:100%;max-width:460px;align-self:flex-end}
+.qf-chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
+.qf-chip{min-height:46px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font-size:15px;font-weight:600;cursor:pointer}
+.qf-chip.aktiv{border-color:var(--accent);background:rgba(58,208,122,.18);color:var(--accent)}
+.qf-zeile{display:flex;gap:8px;align-items:stretch;margin-bottom:10px}
+.qf-zeile input[type=number]{flex:1;min-width:0}
+.qf-foto-btn{display:flex;align-items:center;padding:0 16px;min-height:46px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);font-weight:700;cursor:pointer}
+.qf-preview{width:100%;max-height:180px;object-fit:cover;border-radius:12px;margin-bottom:10px}
+.qf-save{width:100%;min-height:52px;font-size:16px;margin:8px 0}
+.qf-save:disabled{opacity:.5}
+@media (max-width:700px){#qf-overlay{align-items:flex-end;padding:0}.qf-box{border-radius:18px 18px 0 0}}

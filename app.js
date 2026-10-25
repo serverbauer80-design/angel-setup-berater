@@ -2178,6 +2178,7 @@ const FS_TYPE_LABEL = { see:"See", fluss:"Fluss", kanal:"Kanal", kueste:"Küste/
 const FS_TYPE_COLOR = { see:"#16a085", fluss:"#2980b9", kanal:"#2c3e50", kueste:"#8e44ad", forellensee:"#e67e22", teich:"#27ae60" };
 const FS_REGION_LABEL = { sh:"Schleswig-Holstein", hh:"Hamburg", ni:"Niedersachsen", mv:"Mecklenburg-Vorpommern", dk:"Dänemark" };
 
+let fsRegionFilter = null; // null | "dk" | "de"
 let fsMap = null, fsMarkers = {}, fsMapTypeFilters = [], fsFilterAlle = true, fsAddingSpot = false, fsCurrentSpotId = null, fsRating = 0;
 let fsOsmLayer = null, fsOsmLoading = false, fsOsmVisible = true;
 
@@ -2720,6 +2721,8 @@ function fsRenderMarkers(){
   fsMarkers = {};
   FAENGE.spots.forEach(spot => {
     if(!fsFilterAlle && !fsMapTypeFilters.includes(spot.type)) return;
+    if(fsRegionFilter === "dk" && spot.region !== "dk") return;
+    if(fsRegionFilter === "de" && spot.region === "dk") return;
     const catchCount = FAENGE.catches.filter(c => c.spotId === spot.id).length;
     const stars = spot.rating ? "★".repeat(spot.rating) + "☆".repeat(5 - spot.rating) : "";
     const m = L.marker([spot.lat, spot.lng], { icon: fsMakeIcon(spot.type) })
@@ -2742,7 +2745,9 @@ document.addEventListener("click", (e) => {
 
 function fsRenderMapFilterBar(){
   const types = [...new Set(FAENGE.spots.map(s => s.type))].sort();
-  let html = `<button type="button" class="map-filter-chip${fsFilterAlle ? " active" : ""}" data-fs-alle="1">Alle</button>`;
+  let html = `<button type="button" class="map-filter-chip${fsFilterAlle && !fsRegionFilter ? " active" : ""}" data-fs-alle="1">Alle</button>`;
+  html += `<button type="button" class="map-filter-chip${fsRegionFilter === "dk" ? " active" : ""}" data-fs-region="dk">🇩🇰 Dänemark</button>`;
+  html += `<button type="button" class="map-filter-chip${fsRegionFilter === "de" ? " active" : ""}" data-fs-region="de">🇩🇪 Deutschland</button>`;
   html += types.map(t =>
     `<button type="button" class="map-filter-chip${(!fsFilterAlle && fsMapTypeFilters.includes(t)) ? " active" : ""}" data-fs-typefilter="${t}">${FS_TYPE_LABEL[t]||t}</button>`
   ).join("");
@@ -2751,7 +2756,18 @@ function fsRenderMapFilterBar(){
   $("#fs-map-filter [data-fs-alle]").addEventListener("click", () => {
     fsFilterAlle = true;
     fsMapTypeFilters = [];
+    fsRegionFilter = null;
     fsRenderMarkers();
+  });
+  $("#fs-map-filter").querySelectorAll("[data-fs-region]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const r = btn.dataset.fsRegion;
+      fsRegionFilter = fsRegionFilter === r ? null : r;
+      fsRenderMarkers();
+      // Karte auf die gefilterten Spots zoomen
+      const pts = Object.values(fsMarkers).map(m => m.getLatLng());
+      if(fsRegionFilter && pts.length) fsMap.fitBounds(L.latLngBounds(pts).pad(0.2), { maxZoom: 11 });
+    });
   });
   $("#fs-map-filter").querySelectorAll("[data-fs-typefilter]").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -4518,11 +4534,125 @@ $("#losButton").addEventListener("click", berechne);
 
 /* ---------- Init ---------- */
 // Schnell-Fang-Button (FAB)
+/* Schnell-Fang: Fisch antippen, speichern. Datum, Tageszeit und Spot (per GPS,
+   naechster gespeicherter Spot im Umkreis) kommen automatisch; Foto und Laenge
+   sind optional. Das ausfuehrliche Formular bleibt ueber "Mehr Details" erreichbar. */
+let qfFisch = null, qfFoto = null, qfPos = null, qfSpot = null;
+
+function qfZeitVonUhr(){
+  const h = new Date().getHours();
+  if(h >= 5 && h < 8) return "daemmerung_morgen";
+  if(h >= 8 && h < 11) return "vormittag";
+  if(h >= 11 && h < 14) return "mittag";
+  if(h >= 14 && h < 17) return "nachmittag";
+  if(h >= 17 && h < 21) return "daemmerung_abend";
+  return "nacht";
+}
+
+function qfNaechsterSpot(lat, lng, maxM){
+  let best = null, min = Infinity;
+  FAENGE.spots.forEach(s => {
+    if(typeof s.lat !== "number" || typeof s.lng !== "number") return;
+    const dLat = (s.lat - lat) * 111000;
+    const dLng = (s.lng - lng) * 111000 * Math.cos(lat * Math.PI / 180);
+    const dist = Math.sqrt(dLat * dLat + dLng * dLng);
+    if(dist < min){ min = dist; best = s; }
+  });
+  return best && min <= maxM ? { spot: best, dist: Math.round(min) } : null;
+}
+
+function qfSchliessen(){
+  const o = document.getElementById("qf-overlay");
+  if(o) o.remove();
+}
+
+function qfOeffnen(){
+  qfSchliessen();
+  qfFisch = null; qfFoto = null; qfPos = null; qfSpot = null;
+  const anzahl = {};
+  FAENGE.catches.forEach(c => { if(c.fischId) anzahl[c.fischId] = (anzahl[c.fischId] || 0) + 1; });
+  const fische = [...FISCHE].sort((a, b) => (anzahl[b.id] || 0) - (anzahl[a.id] || 0));
+  const o = document.createElement("div");
+  o.id = "qf-overlay";
+  o.className = "fs-modal-overlay";
+  o.innerHTML = `<div class="fs-modal-box card qf-box">
+    <div class="fs-modal-head"><h3>🎣 Fang eintragen</h3><button type="button" class="del-btn" data-qf-zu>✕</button></div>
+    <div class="qf-chips">${fische.map(f => `<button type="button" class="qf-chip" data-qf-fisch="${f.id}">${f.emoji} ${f.name}</button>`).join("")}</div>
+    <div class="qf-zeile">
+      <label class="qf-foto-btn" for="qf-foto">📷 Foto</label>
+      <input id="qf-foto" type="file" accept="image/*" capture="environment" hidden>
+      <input id="qf-laenge" type="number" inputmode="numeric" min="0" placeholder="Länge cm (optional)">
+    </div>
+    <img id="qf-preview" class="qf-preview" alt="" style="display:none">
+    <div id="qf-gps" class="k-hint">📡 Standort wird gesucht …</div>
+    <button type="button" id="qf-speichern" class="add-btn qf-save" disabled>Fisch wählen</button>
+    <button type="button" class="fs-chip" data-qf-mehr>Mehr Details …</button>
+  </div>`;
+  document.body.appendChild(o);
+
+  const gpsEl = o.querySelector("#qf-gps");
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos => {
+      qfPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      qfSpot = qfNaechsterSpot(qfPos.lat, qfPos.lng, 400);
+      gpsEl.textContent = qfSpot
+        ? `📍 ${qfSpot.spot.name} (${qfSpot.dist} m)`
+        : "📍 Standort gespeichert (kein bekannter Spot in der Nähe)";
+    }, () => { gpsEl.textContent = "📍 Kein Standort – Fang wird ohne Spot gespeichert."; },
+    { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
+  } else {
+    gpsEl.textContent = "";
+  }
+
+  o.addEventListener("click", (e) => {
+    if(e.target === o || e.target.closest("[data-qf-zu]")){ qfSchliessen(); return; }
+    const chip = e.target.closest("[data-qf-fisch]");
+    if(chip){
+      qfFisch = FISCHE.find(f => f.id === chip.dataset.qfFisch);
+      o.querySelectorAll(".qf-chip").forEach(c => c.classList.toggle("aktiv", c === chip));
+      const btn = o.querySelector("#qf-speichern");
+      btn.disabled = false;
+      btn.textContent = `${qfFisch.emoji} ${qfFisch.name} speichern`;
+      return;
+    }
+    if(e.target.closest("[data-qf-mehr]")){
+      qfSchliessen();
+      switchView("faenge");
+      requestAnimationFrame(() => fsOpenCatchModal(null, qfSpot ? qfSpot.spot.id : null));
+      return;
+    }
+    if(e.target.id === "qf-speichern") qfSpeichern();
+  });
+  o.querySelector("#qf-foto").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    fsResizeBild(file, 480, (dataUrl) => {
+      qfFoto = dataUrl;
+      const img = o.querySelector("#qf-preview");
+      img.src = dataUrl; img.style.display = "block";
+    });
+  });
+}
+
+function qfSpeichern(){
+  if(!qfFisch) return;
+  const laenge = (document.getElementById("qf-laenge").value || "").trim();
+  FAENGE.catches.push({
+    id: genId(), datum: heuteISO(), spotId: qfSpot ? qfSpot.spot.id : null,
+    fischId: qfFisch.id, fischName: qfFisch.name, methode: null, gewicht: null,
+    laenge: laenge || null, zeit: qfZeitVonUhr(), weather: null, cost: null, notiz: "",
+    foto: qfFoto || null, lat: qfPos ? qfPos.lat : null, lng: qfPos ? qfPos.lng : null
+  });
+  speichereFaenge();
+  fsRenderMarkers();
+  renderFaengeTop();
+  qfSchliessen();
+  fsToast(`${qfFisch.emoji} ${qfFisch.name} gespeichert`);
+  if(document.querySelector(".fs-tab.active")?.dataset.fsview === "liste" && document.getElementById("view-faenge").classList.contains("active")) fsRenderListe();
+}
+
 const fabBtn = document.getElementById("fab-fang");
-if(fabBtn) fabBtn.addEventListener("click", () => {
-  switchView("faenge");
-  requestAnimationFrame(() => fsOpenCatchModal(null, null));
-});
+if(fabBtn) fabBtn.addEventListener("click", qfOeffnen);
 
 initFischDropdown();
 renderNaechstenSpot();
