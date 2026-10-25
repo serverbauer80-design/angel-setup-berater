@@ -79,6 +79,28 @@ let FAENGE = ladeFaengeDaten();
   if(geaendert) speichereFaenge();
 })();
 
+/* Einmalige Aufräum-Migration: Die 30 früher als Seed angelegten dänischen
+   Put&Take-Seen (Näherungs-Koordinaten) werden durch den eigenen Reiter
+   "Dänemark Put & Take" mit 162 geprüften Adressen ersetzt. Sie sind auch aus
+   SPOTS_SEED entfernt (sonst legt die Seed-Migration sie wieder an). Behalten
+   werden alle, die der Nutzer angefasst hat: bewertet, besucht, mit Fang
+   verknüpft oder Notiz verändert (Seed-Notizen enden auf den Marker-Satz). */
+(function entferneAlteDkPutTakeSeeds(){
+  const FLAG = "dk_puttake_alt_entfernt_v1";
+  try { if(localStorage.getItem(FLAG)) return; } catch(e){ return; }
+  const ALT = new Set(["Arrild Fiskesø","Rødekro Fiskepark","Mjøls Lystfiskersø","Tinglev Sønderby Put & Take","Oxriver Put & Take","Uge Lystfiskeri & Camping","Rens Fiskesø","Terkelsbøl Lystfiskeri & Camping","Vrøgum Fiskesø","Storkesøen Ribe","Nebel Sø Put & Take","Foldingbro Camping und Fiskesø","Frueskov Lystfiskersø","Hygge Lake Put and Take","Bjerrely Fiskesø","Tusaagaard Put & Take","Blue Rock Fiskepark","Store Rosenbusk Put and Take","Lodbjerg Hede Ørredsø","Søndervig Put & Take","Stauning Havn Fiskesø (Put & Take)","Stauning Fiskesø","Vestjyllands Put and Take","Hemmet Fiskesø v/Bent Jeppesen","Nørre Nebel Fiskesø","Kløvergaardens Put And Take","Henne Put and Take","The Fishing Lake at Hebo","Grærup Fiskesø","Ho Fiskesø og Minigolf"]);
+  const vorher = FAENGE.spots.length;
+  FAENGE.spots = FAENGE.spots.filter(s => {
+    if(!ALT.has(s.name)) return true;
+    const angefasst = s.rating || s.visited
+      || FAENGE.catches.some(c => c.spotId === s.id)
+      || !String(s.notes || "").includes("Position ungefähr, vor Anfahrt prüfen");
+    return angefasst;
+  });
+  if(FAENGE.spots.length !== vorher) speichereFaenge();
+  try { localStorage.setItem(FLAG, "1"); } catch(e){}
+})();
+
 speichereFaenge();
 
 /* ---------- Wartungserinnerung (Setup-Pflege, im Browser gespeichert) ---------- */
@@ -149,6 +171,12 @@ function ladePackliste(){
 function speicherePackliste(){ try { localStorage.setItem(PACKLISTE_KEY, JSON.stringify(PACKLISTE)); } catch(e){} fsSyncPushDebounced(); }
 let PACKLISTE = ladePackliste();
 
+/* Eigene Preis-/Notizzeilen je Dänemark-Anlage (Quelle nennt keine Preise) */
+const DKPT_NOTIZ_KEY = "dk_puttake_notizen_v1";
+function ladeDkNotizen(){ try { return JSON.parse(localStorage.getItem(DKPT_NOTIZ_KEY)) || {}; } catch(e){ return {}; } }
+function speichereDkNotizen(){ try { localStorage.setItem(DKPT_NOTIZ_KEY, JSON.stringify(DK_NOTIZEN)); } catch(e){} fsSyncPushDebounced(); }
+let DK_NOTIZEN = ladeDkNotizen();
+
 /* ---------- Baitcast-Einkaufsplan: Status je Punkt (offen/ausgewaehlt/gekauft) ---------- */
 const BC_STATUS_KEY = "angel_baitcast_status_v1";
 function ladeBcStatus(){
@@ -173,7 +201,7 @@ function fsSyncCollectState(){
     return rest;
   }) };
   return {
-    zusatz: ZUSATZ, faenge: faengeOhneFotos, manuell: MANUELL, wartung: WARTUNG, schnur: SCHNUR, packliste: PACKLISTE, baitcast: BC_STAND,
+    zusatz: ZUSATZ, faenge: faengeOhneFotos, manuell: MANUELL, wartung: WARTUNG, schnur: SCHNUR, packliste: PACKLISTE, dkNotizen: DK_NOTIZEN, baitcast: BC_STAND,
     osmCache: typeof OSM_CACHE !== "undefined" ? OSM_CACHE : [],
     flussCache: typeof FLUSS_CACHE !== "undefined" ? FLUSS_CACHE : [],
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -195,6 +223,7 @@ function fsSyncApplyState(data){
   if(data.wartung){ WARTUNG = data.wartung; try{localStorage.setItem(WARTUNG_KEY, JSON.stringify(WARTUNG));}catch(e){} }
   if(data.schnur){ SCHNUR = data.schnur; try{localStorage.setItem(SCHNUR_KEY, JSON.stringify(SCHNUR));}catch(e){} }
   if(data.packliste){ PACKLISTE = data.packliste; try{localStorage.setItem(PACKLISTE_KEY, JSON.stringify(PACKLISTE));}catch(e){} }
+  if(data.dkNotizen){ DK_NOTIZEN = data.dkNotizen; try{localStorage.setItem(DKPT_NOTIZ_KEY, JSON.stringify(DK_NOTIZEN));}catch(e){} }
   if(data.baitcast){ BC_STAND = data.baitcast; try{localStorage.setItem(BC_STATUS_KEY, JSON.stringify(BC_STAND));}catch(e){} }
   if(data.osmCache){ OSM_CACHE = data.osmCache; try{localStorage.setItem(OSM_CACHE_KEY, JSON.stringify(OSM_CACHE));}catch(e){} }
   if(data.flussCache){ FLUSS_CACHE = data.flussCache; try{localStorage.setItem(FLUSS_CACHE_KEY, JSON.stringify(FLUSS_CACHE));}catch(e){} }
@@ -3371,6 +3400,184 @@ function lavEnsureMap(){
   }, 200);
 }
 
+/* ---------- Dänemark Put & Take (DK_PUTTAKE aus data.js, 162 Anlagen) ----------
+   Feste Referenzdaten, bewusst getrennt von den eigenen Spots (kein Sync-Ballast).
+   Einzelne Anlagen lassen sich per Button als eigener Spot übernehmen. ---------- */
+const DKPT_FLAG_LABEL = {
+  neu: "🆕 neu in der Liste",
+  unklar: "❓ Betrieb unklar – vorher anrufen",
+  ohneBeschr: "ℹ️ im Portal ohne Beschreibung",
+  webWeg: "🔗 Website im Portal gelöscht – vorher anrufen"
+};
+let dkptState = { gegend: "alle", suche: "", nurGanzj: false, ohneUnklar: false };
+let dkptMap = null, dkptLayer = null, dkptRendered = false, dkptPunkte = [], dkptMarkerNr = {};
+
+function dkptGefiltert(){
+  const q = dkptState.suche.trim().toLowerCase();
+  return DK_PUTTAKE.filter(d => {
+    if(dkptState.gegend !== "alle" && d.g !== dkptState.gegend) return false;
+    if(dkptState.nurGanzj && d.saison !== "ganzjährig") return false;
+    if(dkptState.ohneUnklar && d.flags.includes("unklar")) return false;
+    if(q && !(d.name + " " + d.adr).toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function dkptKarteHTML(d){
+  const reg = DK_PUTTAKE_REGIONEN.find(r => r.key === d.g);
+  const spotDa = FAENGE.spots.some(s => s.name === d.name);
+  const flags = d.flags.map(f => `<span class="dkpt-flag ${f}">${DKPT_FLAG_LABEL[f]}</span>`).join("");
+  const rows = [["Gewässer", d.gew], ["Saison", d.saison], ["Hund", d.hund]].filter(r => r[1])
+    .map(([k, v]) => `<div class="row"><span>${k}</span><span><b>${escAttr(v)}</b></span></div>`).join("");
+  const aus = d.aus.length ? `<div class="dkpt-tags">${d.aus.map(a => `<span class="dkpt-tag">${escAttr(a)}</span>`).join("")}</div>` : "";
+  const kontakt = [
+    d.tel ? `<a class="shop-link" href="tel:${d.tel.replace(/[^+\d]/g, "")}">📞 ${escAttr(d.tel)}</a>` : "",
+    ...d.links.map(([label, url]) => `<a class="shop-link" href="${escAttr(url)}" target="_blank" rel="noopener noreferrer">🔗 ${escAttr(label)}</a>`),
+    d.mail ? `<a class="shop-link" href="mailto:${escAttr(d.mail)}">✉️ ${escAttr(d.mail)}</a>` : ""
+  ].join("");
+  const maps = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(d.adr + ", Dänemark");
+  return `<details class="ansatz dkpt-card" id="dkpt-card-${d.nr}">
+    <summary class="ansatz-head">
+      <span class="lav-nr">${d.nr}</span>
+      <span class="dkpt-titel"><span class="m-name">${escAttr(d.name)}</span><span class="dkpt-sub">${reg ? reg.label : ""} · ${escAttr(d.adr)}</span></span>
+      <span class="dkpt-km">${d.km} km</span>
+    </summary>
+    <div class="ansatz-body">
+      ${flags}${rows}${aus}
+      <div class="dkpt-adr">📍 ${escAttr(d.adr)} · <a href="${maps}" target="_blank" rel="noopener noreferrer">in Google Maps öffnen</a></div>
+      ${d.p === "o" ? `<div class="need-hinweis">📍 Position nur auf PLZ-Ebene ermittelt – Adresse prüfen.</div>` : ""}
+      ${kontakt ? `<div class="shop-links">${kontakt}</div>` : ""}
+      <label class="dkpt-notiz-label">💶 Preis / Notiz (nur bei dir gespeichert)
+        <input class="dkpt-notiz" data-dknr="${d.nr}" placeholder="z. B. Tageskarte, Fischlimit …" value="${escAttr(DK_NOTIZEN[d.nr] || "")}">
+      </label>
+      <div class="dkpt-actions">
+        <button type="button" class="fs-chip" data-dkzeigen="${d.nr}">🗺️ Auf Karte zeigen</button>
+        <button type="button" class="fs-chip" data-dkspot="${d.nr}" ${spotDa ? "disabled" : ""}>${spotDa ? "✓ In deinen Spots" : "➕ Als Spot übernehmen"}</button>
+      </div>
+    </div>
+  </details>`;
+}
+
+function renderDkPuttake(){
+  const el = $("#dkpt");
+  if(!el) return;
+  const anzahl = k => k === "alle" ? DK_PUTTAKE.length : DK_PUTTAKE.filter(d => d.g === k).length;
+  const chips = [{ key: "alle", label: "Alle" }, ...DK_PUTTAKE_REGIONEN].map(r =>
+    `<button type="button" class="map-filter-chip" data-dkgegend="${r.key}">${r.label} <small>${anzahl(r.key)}</small></button>`).join("");
+  el.innerHTML = `<div class="k-intro card">
+      <h2>🇩🇰 Dänemark Put &amp; Take</h2>
+      <p><b>${DK_PUTTAKE.length} Forellenanlagen</b>, sortiert nach Gegend und Entfernung ab Fockbek. Die Nummern entsprechen deiner A3-Karte.
+      Für Put &amp; Take brauchst du keinen dänischen Angelschein.</p>
+      <p class="k-hint">Preise stehen in der Quelle nicht – trag sie je Anlage bei „Preis / Notiz" ein. Hohle Marker = Betrieb unklar (fehlt in der neuen Liste),
+      gestrichelter Rand = neu in der Liste. Positionen aus der Adresse berechnet (OpenStreetMap), vor der Anfahrt Adresse und Öffnung prüfen.
+      <i>Stand: Liste 10.2026, Version 2 vom 21.10.2026.</i></p>
+    </div>
+    <div class="dkpt-filter card">
+      <div class="dkpt-chips">${chips}</div>
+      <div class="dkpt-filterzeile">
+        <input id="dkpt-suche" type="search" placeholder="Name oder Ort suchen …" value="${escAttr(dkptState.suche)}">
+        <label><input type="checkbox" id="dkpt-ganzj" ${dkptState.nurGanzj ? "checked" : ""}> nur ganzjährig</label>
+        <label><input type="checkbox" id="dkpt-unklar" ${dkptState.ohneUnklar ? "checked" : ""}> ohne „Betrieb unklar"</label>
+      </div>
+      <div class="k-hint" id="dkpt-zaehler"></div>
+    </div>
+    <div id="dkpt-map"></div>
+    <div id="dkpt-liste"></div>`;
+  $("#dkpt-suche").addEventListener("input", e => { dkptState.suche = e.target.value; dkptAktualisieren(true); });
+  $("#dkpt-ganzj").addEventListener("change", e => { dkptState.nurGanzj = e.target.checked; dkptAktualisieren(true); });
+  $("#dkpt-unklar").addEventListener("change", e => { dkptState.ohneUnklar = e.target.checked; dkptAktualisieren(true); });
+  dkptAktualisieren(false);
+}
+
+function dkptAktualisieren(fit){
+  const liste = dkptGefiltert();
+  $("#dkpt-zaehler").textContent = `${liste.length} von ${DK_PUTTAKE.length} Anlagen`;
+  document.querySelectorAll("[data-dkgegend]").forEach(b => b.classList.toggle("active", b.dataset.dkgegend === dkptState.gegend));
+  $("#dkpt-liste").innerHTML = liste.length ? liste.map(dkptKarteHTML).join("") : `<div class="empty">Keine Anlage passt zu den Filtern.</div>`;
+  dkptMarkerNeu(liste, fit);
+}
+
+function dkptMarkerNeu(liste, fit){
+  if(!dkptMap || !dkptLayer) return;
+  dkptLayer.clearLayers();
+  dkptMarkerNr = {};
+  dkptPunkte = [];
+  liste.forEach(d => {
+    const klasse = "dkpt-marker" + (d.flags.includes("unklar") ? " unklar" : "") + (d.flags.includes("neu") ? " neu" : "");
+    const icon = L.divIcon({ className: "dkpt-marker-wrap", html: `<div class="${klasse}">${d.nr}</div>`, iconSize: [26, 26], iconAnchor: [13, 13] });
+    const m = L.marker([d.lat, d.lng], { icon }).addTo(dkptLayer);
+    m.bindPopup(`<b>${d.nr}. ${escAttr(d.name)}</b><br>${escAttr(d.adr)}<br>${d.km} km ab Fockbek<br><a href="#" data-dkgoto="${d.nr}">Details in der Liste ↓</a>`);
+    dkptMarkerNr[d.nr] = m;
+    dkptPunkte.push([d.lat, d.lng]);
+  });
+  if(fit) dkptFit();
+}
+function dkptFit(){
+  if(dkptMap && dkptPunkte.length) dkptMap.fitBounds(dkptPunkte, { padding: [24, 24], maxZoom: 11 });
+}
+
+function dkptEnsureMap(){
+  if(dkptMap){ dkptMap.invalidateSize(); return; }
+  if(!document.getElementById("dkpt-map")) return;
+  dkptMap = L.map("dkpt-map", { zoomControl: true, attributionControl: false }).setView([56.0, 9.5], 7);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap-Mitwirkende" }).addTo(dkptMap);
+  L.control.attribution({ position: "bottomleft", prefix: false }).addAttribution("© OpenStreetMap-Mitwirkende").addTo(dkptMap);
+  dkptLayer = L.layerGroup().addTo(dkptMap);
+  dkptMarkerNeu(dkptGefiltert(), true);
+  requestAnimationFrame(() => dkptMap && dkptMap.invalidateSize());
+  setTimeout(() => { if(dkptMap){ dkptMap.invalidateSize(); dkptFit(); } }, 200);
+}
+
+function dkptOnTabShown(){
+  if(!dkptRendered){ renderDkPuttake(); dkptRendered = true; }
+  dkptEnsureMap();
+}
+
+function dkptAlsSpot(nr){
+  const d = DK_PUTTAKE.find(x => x.nr === nr);
+  if(!d) return;
+  if(FAENGE.spots.some(s => s.name === d.name)){ fsToast("Ist schon in deinen Spots"); return; }
+  const teile = ["Put & Take · Dänemark", d.gew, d.saison, d.hund ? "Hund: " + d.hund : null, d.tel, d.adr,
+    d.p === "o" ? "Position ungefähr (nur PLZ)" : null].filter(Boolean);
+  FAENGE.spots.push({ id: genId(), name: d.name, type: "forellensee", region: "dk", lat: d.lat, lng: d.lng, price: 0,
+    notes: teile.join(" | "), rating: 0, visited: false, created: new Date().toISOString() });
+  speichereFaenge();
+  if(typeof fsMap !== "undefined" && fsMap && typeof fsRenderMarkers === "function") fsRenderMarkers();
+  if(typeof renderFaengeTop === "function") renderFaengeTop();
+  fsToast(d.name + " als Spot übernommen");
+  dkptAktualisieren(false);
+}
+
+document.addEventListener("click", (e) => {
+  const gegend = e.target.closest("[data-dkgegend]");
+  if(gegend){ dkptState.gegend = gegend.dataset.dkgegend; dkptAktualisieren(true); return; }
+  const zeigen = e.target.closest("[data-dkzeigen]");
+  if(zeigen){
+    const nr = parseInt(zeigen.dataset.dkzeigen, 10), m = dkptMarkerNr[nr];
+    if(m && dkptMap){
+      document.getElementById("dkpt-map").scrollIntoView({ behavior: "smooth", block: "center" });
+      dkptMap.setView(m.getLatLng(), Math.max(dkptMap.getZoom(), 12));
+      m.openPopup();
+    }
+    return;
+  }
+  const spot = e.target.closest("[data-dkspot]");
+  if(spot && !spot.disabled){ dkptAlsSpot(parseInt(spot.dataset.dkspot, 10)); return; }
+  const gehe = e.target.closest("[data-dkgoto]");
+  if(gehe){
+    e.preventDefault();
+    const card = document.getElementById("dkpt-card-" + gehe.dataset.dkgoto);
+    if(card){ card.open = true; card.scrollIntoView({ behavior: "smooth", block: "start" }); }
+  }
+});
+document.addEventListener("change", (e) => {
+  const inp = e.target.closest && e.target.closest(".dkpt-notiz");
+  if(!inp) return;
+  const nr = inp.dataset.dknr, v = inp.value.trim();
+  if(v) DK_NOTIZEN[nr] = v; else delete DK_NOTIZEN[nr];
+  speichereDkNotizen();
+});
+
 /* ---------- Wochenend-Planer ----------
    Zeigt vordefinierte Vorhaben (data.js: VORHABEN) – aufklappen zeigt Setup,
    Montage und eine abhakbare Packliste, aus denselben Ansätzen wie im Berater
@@ -4032,7 +4239,7 @@ function renderEinkauf(){
    waren nur 2 sichtbar; Tagebuch und Starthilfe sind deshalb umgezogen. */
 const NAV_GROUPS = {
   planen:   [{view:"berater",label:"Berater"},{view:"tagescheck",label:"Lohnt sich heute?"},{view:"wochenende",label:"🎒 Planung"},{view:"saison",label:"Saisonkalender"}],
-  spots:    [{view:"lav",label:"💳 LAV-Gewässer"},{view:"faenge",label:"Fänge & Spots"},{view:"tagebuch",label:"📔 Tagebuch"}],
+  spots:    [{view:"lav",label:"💳 LAV-Gewässer"},{view:"dkpt",label:"🇩🇰 Dänemark"},{view:"faenge",label:"Fänge & Spots"},{view:"tagebuch",label:"📔 Tagebuch"}],
   wissen:   [{view:"methoden",label:"🎣 Angelmethoden"},{view:"ansitz",label:"⚓ Ansitzangeln"},{view:"knoten",label:"Knotenkunde"},{view:"einsteiger",label:"🎓 Starthilfe"}],
   zeug:     [{view:"inventar",label:"Mein Equipment"},{view:"werkstatt",label:"🔧 Werkstatt"},{view:"checkliste",label:"Zubehör-Check"},{view:"einkauf",label:"🛒 Einkaufsliste"},{view:"baitcast",label:"🎯 Baitcast"},{view:"unterlagen",label:"📄 Unterlagen"}],
 };
@@ -4065,6 +4272,7 @@ function switchView(viewName){
   document.getElementById("view-" + viewName).classList.add("active");
   if(viewName === "faenge") fsOnTabShown();
   if(viewName === "lav") lavOnTabShown();
+  if(viewName === "dkpt") dkptOnTabShown();
   if(viewName === "tagebuch"){ TB_VIEW = "list"; TB_DETAIL = null; renderTagebuch(); }
   if(viewName === "einsteiger") renderEinsteiger();
   if(viewName === "baitcast") renderBaitcast();

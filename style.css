@@ -1201,3 +1201,36 @@ select:focus{outline:none;border-color:var(--accent)}
 .wk-mini.s0{background:var(--ok);color:#062018}
 .wk-mini.s1{background:var(--warn);color:#2a1d04}
 .wk-mini.s2{background:var(--bad);color:#2a0606}
+
+/* ---------- Dänemark Put & Take ---------- */
+#dkpt-map{width:100%;height:420px;border-radius:16px;border:1px solid var(--line);background:var(--bg2);overflow:hidden;margin:0 0 18px}
+.dkpt-filter{padding:14px 16px;margin-bottom:14px}
+.dkpt-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.dkpt-chips .map-filter-chip small{opacity:.7;margin-left:3px}
+.dkpt-filterzeile{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.dkpt-filterzeile input[type=search]{flex:1 1 220px;min-width:0;background:var(--bg2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 12px;font-size:14px}
+.dkpt-filterzeile label{font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer}
+.dkpt-card{margin-bottom:10px}
+.dkpt-card > summary{cursor:pointer;list-style:none}
+.dkpt-card > summary::-webkit-details-marker{display:none}
+.dkpt-card[open] > summary{border-bottom:1px solid var(--line)}
+.dkpt-card:not([open]) > summary{border-bottom:none}
+.dkpt-titel{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.dkpt-titel .m-name{font-size:16.5px;flex:none}
+.dkpt-sub{font-size:12.5px;color:var(--muted);font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dkpt-km{flex:none;font-size:12.5px;font-weight:700;color:var(--muted);background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+.dkpt-flag{display:inline-block;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:999px;margin:0 6px 6px 0;background:rgba(242,178,58,.14);border:1px solid rgba(242,178,58,.4);color:var(--warn)}
+.dkpt-flag.neu{background:rgba(51,195,166,.14);border-color:rgba(51,195,166,.4);color:var(--accent)}
+.dkpt-flag.ohneBeschr{background:rgba(157,182,196,.12);border-color:var(--line);color:var(--muted)}
+.dkpt-tags{display:flex;flex-wrap:wrap;gap:6px}
+.dkpt-tag{font-size:12.5px;padding:3px 10px;border-radius:999px;background:var(--card2);border:1px solid var(--line);color:var(--text)}
+.dkpt-adr{font-size:13.5px;color:var(--muted)}
+.dkpt-notiz-label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+.dkpt-notiz{background:var(--bg2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 12px;font-size:14px}
+.dkpt-actions{display:flex;flex-wrap:wrap;gap:8px}
+.dkpt-actions .fs-chip[disabled]{opacity:.55;cursor:default}
+.dkpt-marker-wrap{background:none;border:none}
+.dkpt-marker{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#062018;background:var(--accent);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.45)}
+.dkpt-marker.unklar{background:#fff;color:#33424d;border-color:var(--accent)}
+.dkpt-marker.neu{border-style:dashed}
+@media (max-width:560px){ #dkpt-map{height:340px} .dkpt-sub{white-space:normal} }
