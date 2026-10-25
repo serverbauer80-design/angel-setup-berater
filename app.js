@@ -1003,6 +1003,33 @@ function mitnehmenHTML(fisch, ansaetze, gw, gwKey){
   </section>`;
 }
 
+/* "Heute dabei" gewaehlt, aber das Setup passt nicht zu Fisch/Gewaesser: trotzdem
+   auflisten und erklaeren, warum nicht – statt es still auszublenden. */
+function nichtPassendHTML(fisch, gw, alleAnsaetze){
+  const keys = [...HEUTE_DABEI].filter(k => AKTUELL[k] && !alleAnsaetze.some(a => a.setup === k));
+  if(keys.length === 0) return "";
+  const empfohlen = [...new Set(alleAnsaetze.filter(a => a.setup && AKTUELL[a.setup]).map(a => a.setup))]
+    .map(k => setupLabel(AKTUELL[k]));
+  const ziel = `${fisch.name}${gw ? " am " + gw.name : ""}`;
+  const karten = keys.map(k => {
+    const st = AKTUELL[k];
+    const kat = SETUP_KATEGORIEN.find(x => x.key === st.kategorie);
+    const einsatz = (st.einsatz || "").split(/(?<=\.)\s/)[0];
+    const stamm = fisch.name.split(/[\s(\/]/)[0].toLowerCase();
+    const erwaehnt = stamm.length > 3 && (st.einsatz || "").toLowerCase().includes(stamm.slice(0, Math.max(4, stamm.length - 2)));
+    const gruende = [];
+    gruende.push(`Das ist ein <b>${kat ? kat.titel : "anderes"}-Setup</b>${einsatz ? ": " + einsatz : "."}`);
+    if(erwaehnt) gruende.push(`Es passt grundsätzlich zu ${fisch.name}, ist dafür aber nicht als Methode hinterlegt.`);
+    else gruende.push(`Für ${ziel} ist dieses Setup nicht vorgesehen.`);
+    if(empfohlen.length) gruende.push(`Hinterlegt ist hier: ${empfohlen.join(" · ")}.`);
+    return `<article class="ansatz nicht-passend">
+      <div class="ansatz-head"><span class="badge wunsch">⚠️ Passt nicht</span><span class="m-name">${setupLabel(st)}</span></div>
+      <div class="ansatz-body"><p>${gruende.join(" ")}</p></div>
+    </article>`;
+  }).join("");
+  return `<h3 class="nicht-passend-titel">🎒 Heute dabei, aber nicht passend für ${ziel}</h3>${karten}`;
+}
+
 function berechne(){
   const fisch = FISCHE.find(f => f.id === fischSel.value);
   const gwKey = gwSel.value;
@@ -1018,6 +1045,7 @@ function berechne(){
   // passende Ansätze für dieses Gewässer (oder alle, wenn kein Gewässer gewählt)
   let ansaetze = fisch.ansaetze;
   if(gwKey) ansaetze = ansaetze.filter(a => !a.gewaesser || a.gewaesser.includes(gwKey));
+  const alleAnsaetze = ansaetze;
   // "Heute dabei"-Filter: nur Setups zeigen, die du gerade dabei hast
   if(HEUTE_DABEI.size > 0) ansaetze = ansaetze.filter(a => !a.setup || HEUTE_DABEI.has(a.setup));
 
@@ -1032,7 +1060,11 @@ function berechne(){
     </div>
   </div>`;
 
-  if(ansaetze.length === 0){
+  if(ansaetze.length === 0 && alleAnsaetze.length > 0 && HEUTE_DABEI.size > 0){
+    html += rechtHTML(fisch.id);
+    html += `<div class="empty">Mit den Setups, die du heute dabei hast, geht für <b>${fisch.name}</b>${gw ? " am <b>" + gw.name + "</b>" : ""} nichts. Wähle bei „Heute dabei" andere Setups oder wähle alle ab.</div>`;
+    html += nichtPassendHTML(fisch, gw, alleAnsaetze);
+  } else if(ansaetze.length === 0){
     html += rechtHTML(fisch.id);
     html += `<div class="empty">Für <b>${fisch.name}</b> ist am Gewässer <b>${gw ? gw.name : ""}</b> keine passende Methode hinterlegt.
       Wähle ein anderes Gewässer aus der Liste.</div>`;
@@ -1043,6 +1075,7 @@ function berechne(){
     html += mitnehmenHTML(fisch, ansaetze, gw, gwKey);
     html += rechtHTML(fisch.id);
     html += ansaetze.map((a, i) => ansatzHTML(a, fisch, i === 0 && !!(a.setup && AKTUELL[a.setup]))).join("");
+    html += nichtPassendHTML(fisch, gw, alleAnsaetze);
   }
 
   ergEl.innerHTML = html;

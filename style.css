@@ -1282,3 +1282,6 @@ select:focus{outline:none;border-color:var(--accent)}
 .heute-dabei-wrap[open]>summary{margin-bottom:8px}
 .heute-dabei-wrap .heute-dabei-reset{display:block;margin-top:8px;font-size:12.5px}
 .heute-dabei-wrap>summary{justify-content:flex-start}
+.nicht-passend-titel{font-size:15px;margin:18px 0 8px;color:var(--muted)}
+.ansatz.nicht-passend{opacity:.92;border-style:dashed}
+.ansatz.nicht-passend p{margin:0;font-size:14px;line-height:1.5}
