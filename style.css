@@ -1245,3 +1245,20 @@ select:focus{outline:none;border-color:var(--accent)}
 .mn-warn{padding:10px 12px;border-radius:10px;background:rgba(224,86,86,.1);font-size:14px}
 .mn-weitere{margin-top:10px}
 .mitnehmen .tipp{margin-top:12px}
+
+/* Startseite Heute */
+.heute-kopf label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:8px 0 6px}
+.heute-datum{font-size:18px;font-weight:800}
+.heute-box{margin-top:12px}
+.heute-box h3{font-size:15.5px;margin:0 0 10px}
+.hw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hw-k{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.hw-k span{font-size:18px}.hw-k b{font-size:16px}.hw-k small{color:var(--muted);font-size:12.5px}
+.hw-sonne{margin:10px 0 6px;font-size:13.5px}
+.hw-strip{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px}
+.hw-h{flex:0 0 auto;min-width:68px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:3px;font-size:12.5px;text-align:center}
+.heute-fisch{display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:8px;padding:13px 14px;min-height:48px;border-radius:12px;border:1px solid rgba(58,208,122,.35);background:rgba(58,208,122,.07);color:var(--text);font-size:15px;font-weight:700;cursor:pointer;text-align:left}
+.heute-fisch .hf-go{font-size:12.5px;font-weight:600;color:var(--accent)}
+.heute-kopf,.heute-box{padding:16px}
+.heute-kopf select{width:100%}
+.heute-box .row{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--line)}.heute-box .row:first-of-type{border-top:0}

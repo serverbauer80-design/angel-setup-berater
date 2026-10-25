@@ -1899,6 +1899,167 @@ function tcErfahrungHTML(fischId, aktuelleZeit, aktuelleSaison){
   return html;
 }
 
+/* ---------- Startseite "Heute" ----------
+   Spot waehlen -> Wetter, Wind, Gezeiten, Schonzeit und die Fische, die jetzt
+   dort am besten gehen. Wetter via Open-Meteo, Gezeiten via worldtides (wie
+   im Tagescheck). Nutzt GEZEITEN_ORTE/ladeGezeiten, keine eigene Datenhaltung. */
+const HEUTE_ORTE = [
+  { id:"nok",      name:"Nord-Ostsee-Kanal (Rendsburg)", lat:54.30, lng:9.67, gw:"nok",   tides:false },
+  { id:"eider_rd", name:"Eider (Rendsburg/Fockbek)",     lat:54.30, lng:9.62, gw:"eider", tides:false },
+  { id:"eider",    name:"Eider-Mündung (Tönning)",       lat:54.31, lng:8.90, gw:"eider", tides:true },
+  { id:"elbe",     name:"Elbe (Brunsbüttel)",            lat:53.89, lng:9.14, gw:"elbe",  tides:true },
+  { id:"ostsee_sh",  name:"Ostsee SH (Kiel/Eckernförde)",  lat:54.47, lng:10.18, gw:"ostsee",  tides:false },
+  { id:"nordsee_sh", name:"Nordsee SH (St. Peter-Ording)", lat:54.30, lng:8.63,  gw:"nordsee", tides:true },
+  { id:"hvidesande", name:"Hvide Sande (Dänemark)",        lat:56.0011, lng:8.1281, gw:"nordsee", tides:true },
+  { id:"blaavand",   name:"Blåvand (Dänemark)",            lat:55.56, lng:8.12,  gw:"nordsee", tides:true },
+  { id:"soendervig", name:"Søndervig (Dänemark)",          lat:56.09, lng:8.15,  gw:"nordsee", tides:true },
+];
+const HEUTE_ORT_KEY = "heute_ort_v1";
+const heuteWetterCache = {};
+
+function heuteOrteListe(){
+  const eigene = (typeof FAENGE !== "undefined" && FAENGE.spots ? FAENGE.spots : [])
+    .filter(s => typeof s.lat === "number" && typeof s.lng === "number")
+    // nur Spots, die du selbst genutzt hast – die Seed-Liste hat >100 Eintraege
+    .filter(s => s.visited || s.rating > 0 || FAENGE.catches.some(c => c.spotId === s.id))
+    .map(s => ({ id:"spot_" + s.id, name:"📍 " + s.name, lat:s.lat, lng:s.lng, gw:null, tides:false }));
+  return HEUTE_ORTE.concat(eigene);
+}
+
+function windRichtung(grad){
+  const r = ["N","NO","O","SO","S","SW","W","NW"];
+  return r[Math.round(grad / 45) % 8];
+}
+
+function heuteFischeHTML(ort){
+  const monat = new Date().getMonth() + 1;
+  const saison = jahreszeitVonMonat(monat);
+  const gesperrt = [], gut = [];
+  FISCHE.forEach(f => {
+    const r = typeof RECHT_SH !== "undefined" ? RECHT_SH[f.id] : null;
+    const monate = r ? parseSchonzeitMonate(r.schonzeit) : null;
+    const inSchonzeit = !!(monate && monate.includes(monat));
+    if(ort.gw && !f.gewaesser.includes(ort.gw)) return;
+    if(inSchonzeit){ gesperrt.push(f); return; }
+    const hint = TAGESCHECK_HINT[f.id] || {};
+    const machbar = f.ansaetze.some(a => (!a.gewaesser || !ort.gw || a.gewaesser.includes(ort.gw)) && a.status !== "wunsch");
+    if(machbar && hint.topSaison && hint.topSaison.includes(saison)) gut.push(f);
+  });
+  const gutHTML = gut.length
+    ? gut.slice(0, 5).map(f => `<button type="button" class="heute-fisch" data-heute-fisch="${f.id}" data-heute-gw="${ort.gw || ""}">
+        <span class="hf-name">${f.emoji} ${f.name}</span><span class="hf-go">Was nehme ich mit? ›</span></button>`).join("")
+    : `<p class="k-hint">Für diesen Ort ist gerade keine Hauptsaison-Art hinterlegt. Im Berater findest du trotzdem alle Methoden.</p>`;
+  const sperrHTML = gesperrt.length
+    ? `<div class="schonzeit-warnung"><b>🔴 Schonzeit jetzt:</b> ${gesperrt.map(f => f.emoji + " " + f.name).join(", ")} – nicht entnehmen, schonend zurücksetzen.</div>`
+    : `<p class="k-hint">✅ Für die hinterlegten Arten gilt gerade keine Schonzeit. Mindestmaße trotzdem im Berater prüfen.</p>`;
+  return `<div class="card heute-box"><h3>🎯 Heute am besten (${saison})</h3>${gutHTML}</div>
+    <div class="card heute-box"><h3>⚖️ Schonzeit</h3>${sperrHTML}</div>`;
+}
+
+async function heuteLadeWetter(ort){
+  const box = document.getElementById("heute-wetter");
+  if(!box) return;
+  box.innerHTML = `<p class="k-hint">⏳ Lade Wetter …</p>`;
+  try {
+    let d = heuteWetterCache[ort.id];
+    if(!d || Date.now() - d.t > 15*60*1000){
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${ort.lat}&longitude=${ort.lng}&current=temperature_2m,wind_speed_10m,wind_gusts_10m,wind_direction_10m,cloud_cover,surface_pressure&hourly=surface_pressure,wind_speed_10m,precipitation_probability,temperature_2m&daily=sunrise,sunset&past_hours=6&forecast_days=1&timezone=Europe%2FBerlin`;
+      const res = await fetch(url);
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      d = { t: Date.now(), data: await res.json() };
+      heuteWetterCache[ort.id] = d;
+    }
+    const w = d.data;
+    const c = w.current, h = w.hourly;
+    const stundeJetzt = c.time.slice(0, 13) + ":00";
+    const idx = h.time.indexOf(stundeJetzt);
+    const delta = idx >= 6 ? c.surface_pressure - h.surface_pressure[idx - 6] : 0;
+    const trend = delta < -0.5 ? "fallend ↘" : (delta > 0.5 ? "steigend ↗" : "stabil →");
+    const sonne = (t) => t.slice(11, 16);
+    let streifen = "";
+    for(let i = idx + 3; i < h.time.length && h.time[i].slice(0, 10) === c.time.slice(0, 10); i += 3){
+      streifen += `<div class="hw-h"><b>${h.time[i].slice(11, 13)} Uhr</b><span>${Math.round(h.temperature_2m[i])}°</span>
+        <span>💨 ${Math.round(h.wind_speed_10m[i])}</span><span>🌧 ${h.precipitation_probability[i]}%</span></div>`;
+    }
+    const sturm = c.wind_gusts_10m > 50;
+    box.innerHTML = `
+      <div class="hw-grid">
+        <div class="hw-k"><span>🌡</span><b>${Math.round(c.temperature_2m)}°C</b><small>Temperatur</small></div>
+        <div class="hw-k"><span>💨</span><b>${Math.round(c.wind_speed_10m)} km/h ${windRichtung(c.wind_direction_10m)}</b><small>Böen ${Math.round(c.wind_gusts_10m)}</small></div>
+        <div class="hw-k"><span>☁️</span><b>${Math.round(c.cloud_cover)} %</b><small>Wolken</small></div>
+        <div class="hw-k"><span>📈</span><b>${Math.round(c.surface_pressure)} hPa</b><small>${trend}</small></div>
+      </div>
+      ${sturm ? `<div class="schonzeit-warnung"><b>⚠️ Starke Böen:</b> über 50 km/h – am Wasser Vorsicht.</div>` : ""}
+      <div class="hw-sonne">🌅 Sonnenaufgang ${sonne(w.daily.sunrise[0])} · 🌇 Sonnenuntergang ${sonne(w.daily.sunset[0])} <small>(Dämmerung = beste Zeit)</small></div>
+      ${streifen ? `<div class="hw-strip">${streifen}</div>` : ""}
+      <p class="k-hint">Open-Meteo · km/h · Stand ${c.time.slice(11, 16)} Uhr</p>`;
+  } catch(err){
+    box.innerHTML = `<p class="k-hint">⚠️ Wetter konnte nicht geladen werden (${escAttr(err.message)}). Kein Netz? Der Rest der App funktioniert weiter.</p>`;
+  }
+}
+
+async function heuteLadeGezeiten(ort){
+  const box = document.getElementById("heute-gezeiten");
+  if(!box) return;
+  if(!ort.tides){ box.innerHTML = ""; return; }
+  box.innerHTML = `<div class="card heute-box"><h3>🌊 Gezeiten</h3><p class="k-hint">⏳ Lade …</p></div>`;
+  try {
+    const extremes = await ladeGezeiten(ort, heuteISO());
+    const rows = (extremes || []).map(e => {
+      const zeit = new Date(e.date).toLocaleTimeString("de-DE", { hour:"2-digit", minute:"2-digit", timeZone:"Europe/Berlin" });
+      return `<div class="row"><span>${e.type === "High" ? "🔼 Hochwasser" : "🔽 Niedrigwasser"}</span><span>${zeit} Uhr</span></div>`;
+    }).join("");
+    box.innerHTML = `<div class="card heute-box"><h3>🌊 Gezeiten</h3>${rows || `<p class="k-hint">Keine Gezeitendaten gefunden.</p>`}</div>`;
+  } catch(err){
+    box.innerHTML = `<div class="card heute-box"><h3>🌊 Gezeiten</h3><p class="k-hint">⚠️ Nicht ladbar (${escAttr(err.message)}).</p></div>`;
+  }
+}
+
+function renderHeute(){
+  const el = document.getElementById("heute");
+  if(!el) return;
+  const orte = heuteOrteListe();
+  let gespeichert = null;
+  try { gespeichert = localStorage.getItem(HEUTE_ORT_KEY); } catch(e){}
+  const ort = orte.find(o => o.id === gespeichert) || orte[0];
+  const datum = new Date().toLocaleDateString("de-DE", { weekday:"long", day:"numeric", month:"long" });
+  el.innerHTML = `<div class="card heute-kopf">
+      <div class="heute-datum">${datum}</div>
+      <label for="heute-ort">Wo gehst du hin?</label>
+      <select id="heute-ort">${orte.map(o => `<option value="${escAttr(o.id)}"${o.id === ort.id ? " selected" : ""}>${o.name}</option>`).join("")}</select>
+    </div>
+    <div class="card heute-box"><h3>🌤 Wetter &amp; Wind</h3><div id="heute-wetter"></div></div>
+    <div id="heute-gezeiten"></div>
+    <div id="heute-fische"></div>
+    <p class="k-hint"><button type="button" class="fs-chip" data-heute-tagescheck>📅 Genauer: Tagescheck mit Bewertung</button></p>`;
+  const lade = (o) => {
+    document.getElementById("heute-fische").innerHTML = heuteFischeHTML(o);
+    heuteLadeWetter(o);
+    heuteLadeGezeiten(o);
+  };
+  document.getElementById("heute-ort").addEventListener("change", (e) => {
+    const neu = orte.find(o => o.id === e.target.value) || orte[0];
+    try { localStorage.setItem(HEUTE_ORT_KEY, neu.id); } catch(err){}
+    lade(neu);
+  });
+  lade(ort);
+}
+
+document.addEventListener("click", (e) => {
+  const fb = e.target.closest("[data-heute-fisch]");
+  if(fb){
+    fischSel.value = fb.dataset.heuteFisch;
+    fuelleGewaesser(fischSel.value);
+    const gw = fb.dataset.heuteGw;
+    if(gw && [...gwSel.options].some(o => o.value === gw)) gwSel.value = gw;
+    berechne();
+    switchView("berater");
+    window.scrollTo(0, 0);
+    return;
+  }
+  if(e.target.closest("[data-heute-tagescheck]")) switchView("tagescheck");
+});
+
 /* ---------- Saisonkalender ---------- */
 const MONATE_KURZ = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
 const MONAT_NAME_ZU_NR = {
@@ -4298,7 +4459,7 @@ function renderEinkauf(){
    Handy hinter dem horizontalen Scrollen. "Mein Zeug" hatte 7, davon
    waren nur 2 sichtbar; Tagebuch und Starthilfe sind deshalb umgezogen. */
 const NAV_GROUPS = {
-  planen:   [{view:"berater",label:"Berater"},{view:"tagescheck",label:"Lohnt sich heute?"},{view:"wochenende",label:"🎒 Planung"}],
+  planen:   [{view:"heute",label:"☀️ Heute"},{view:"berater",label:"Berater"},{view:"tagescheck",label:"Tagescheck"},{view:"wochenende",label:"🎒 Planung"}],
   spots:    [{view:"lav",label:"💳 LAV-Gewässer"},{view:"dkpt",label:"🇩🇰 Dänemark"},{view:"faenge",label:"Fänge & Spots"},{view:"tagebuch",label:"📔 Tagebuch"}],
   zeug:     [{view:"inventar",label:"Mein Equipment"},{view:"werkstatt",label:"🔧 Werkstatt"}],
   wissen:   [{view:"saison",label:"Saisonkalender"},{view:"methoden",label:"🎣 Angelmethoden"},{view:"ansitz",label:"⚓ Ansitzangeln"},{view:"knoten",label:"Knotenkunde"},{view:"einsteiger",label:"🎓 Starthilfe"}],
@@ -4331,6 +4492,7 @@ function switchView(viewName){
   document.querySelector(`.sub-tab[data-view="${viewName}"]`).classList.add("active");
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   document.getElementById("view-" + viewName).classList.add("active");
+  if(viewName === "heute") renderHeute();
   if(viewName === "faenge") fsOnTabShown();
   if(viewName === "lav") lavOnTabShown();
   if(viewName === "dkpt") dkptOnTabShown();
@@ -4346,7 +4508,8 @@ document.querySelectorAll(".group-tab").forEach(t => {
 
 /* Sub-Tabs für initiale Gruppe rendern und Berater als aktiv setzen */
 renderSubTabs("planen");
-document.querySelector('.sub-tab[data-view="berater"]').classList.add("active");
+document.querySelector('.sub-tab[data-view="heute"]').classList.add("active");
+renderHeute();
 
 /* ---------- Events ---------- */
 fischSel.addEventListener("change", () => { fuelleGewaesser(fischSel.value); berechne(); });
