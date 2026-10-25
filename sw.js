@@ -3,7 +3,7 @@
    Unkritisch, falls es mal vergessen wird: Navigationen laufen network-first
    und Assets tragen ihre Version in der ?v=-Query, ein alter Cache-Name
    haelt also nichts mehr fest – er wird nur nicht aufgeraeumt. */
-const VERSION = "20261025-67";
+const VERSION = "20261025-69";
 const CACHE = "angel-" + VERSION;
 
 /* Nur was ohne Versions-Query angefragt wird. style.css/app.js/data.js

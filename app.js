@@ -4238,10 +4238,11 @@ function renderEinkauf(){
    Handy hinter dem horizontalen Scrollen. "Mein Zeug" hatte 7, davon
    waren nur 2 sichtbar; Tagebuch und Starthilfe sind deshalb umgezogen. */
 const NAV_GROUPS = {
-  planen:   [{view:"berater",label:"Berater"},{view:"tagescheck",label:"Lohnt sich heute?"},{view:"wochenende",label:"🎒 Planung"},{view:"saison",label:"Saisonkalender"}],
+  planen:   [{view:"berater",label:"Berater"},{view:"tagescheck",label:"Lohnt sich heute?"},{view:"wochenende",label:"🎒 Planung"}],
   spots:    [{view:"lav",label:"💳 LAV-Gewässer"},{view:"dkpt",label:"🇩🇰 Dänemark"},{view:"faenge",label:"Fänge & Spots"},{view:"tagebuch",label:"📔 Tagebuch"}],
-  wissen:   [{view:"methoden",label:"🎣 Angelmethoden"},{view:"ansitz",label:"⚓ Ansitzangeln"},{view:"knoten",label:"Knotenkunde"},{view:"einsteiger",label:"🎓 Starthilfe"}],
-  zeug:     [{view:"inventar",label:"Mein Equipment"},{view:"werkstatt",label:"🔧 Werkstatt"},{view:"checkliste",label:"Zubehör-Check"},{view:"einkauf",label:"🛒 Einkaufsliste"},{view:"baitcast",label:"🎯 Baitcast"},{view:"unterlagen",label:"📄 Unterlagen"}],
+  zeug:     [{view:"inventar",label:"Mein Equipment"},{view:"werkstatt",label:"🔧 Werkstatt"}],
+  wissen:   [{view:"saison",label:"Saisonkalender"},{view:"methoden",label:"🎣 Angelmethoden"},{view:"ansitz",label:"⚓ Ansitzangeln"},{view:"knoten",label:"Knotenkunde"},{view:"einsteiger",label:"🎓 Starthilfe"}],
+  mehr:     [{view:"checkliste",label:"Zubehör-Check"},{view:"einkauf",label:"🛒 Einkaufsliste"},{view:"baitcast",label:"🎯 Baitcast"},{view:"unterlagen",label:"📄 Unterlagen"}],
 };
 
 function renderSubTabs(group){

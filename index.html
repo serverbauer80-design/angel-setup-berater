@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0e1b24">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=20261025-67">
+  <link rel="stylesheet" href="style.css?v=20261025-69">
 </head>
 <body>
   <header class="topbar">
@@ -21,8 +21,9 @@
     <nav class="nav-groups" id="nav-groups">
       <button class="group-tab active" data-group="planen">Planen</button>
       <button class="group-tab" data-group="spots">Spots</button>
-      <button class="group-tab" data-group="wissen">Wissen</button>
       <button class="group-tab" data-group="zeug">Mein Zeug</button>
+      <button class="group-tab" data-group="wissen">Wissen</button>
+      <button class="group-tab" data-group="mehr">Mehr</button>
     </nav>
     <nav class="nav-subs" id="nav-subs"></nav>
   </header>
@@ -307,8 +308,8 @@
     firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {});
   </script>
 
-  <script src="data.js?v=20261025-67"></script>
-  <script src="app.js?v=20261025-67"></script>
+  <script src="data.js?v=20261025-69"></script>
+  <script src="app.js?v=20261025-69"></script>
   <script>
     if("serviceWorker" in navigator){
       navigator.serviceWorker.register("sw.js").catch(()=>{});

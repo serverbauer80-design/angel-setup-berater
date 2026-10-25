@@ -696,8 +696,8 @@ select:focus{outline:none;border-color:var(--accent)}
     mask-image:none;-webkit-mask-image:none;
   }
   .sub-tab{padding:8px 12px;min-height:40px;font-size:12.5px}
-  .nav-groups{padding:0 14px}
-  .group-tab{padding:11px 14px 10px;font-size:13.5px}
+  .nav-groups{padding:0 8px;justify-content:space-between}
+  .group-tab{padding:11px 9px 10px;font-size:13.5px}
 
   /* Kompakter Kopf: der Markenblock nahm auf dem Handy 221 px ein, weil der
      Titel neben dem Sync-Button auf drei Zeilen umbrach. Einzeilig halten. */
