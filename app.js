@@ -4530,8 +4530,18 @@ renderHeute();
 
 /* ---------- Events ---------- */
 fischSel.addEventListener("change", () => { fuelleGewaesser(fischSel.value); berechne(); });
-gwSel.addEventListener("change", berechne);
-$("#losButton").addEventListener("click", berechne);
+/* Nach dem Berechnen zum Ergebnis scrollen – sonst sieht man auf dem Handy nicht, dass etwas passiert ist */
+function zumErgebnis(){
+  if(!fischSel.value) return;
+  requestAnimationFrame(() => {
+    const el = document.getElementById("ergebnis");
+    const kopf = document.querySelector(".topbar");
+    const y = el.getBoundingClientRect().top + window.scrollY - (kopf ? kopf.offsetHeight : 0) - 8;
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+  });
+}
+gwSel.addEventListener("change", () => { berechne(); zumErgebnis(); });
+$("#losButton").addEventListener("click", () => { berechne(); zumErgebnis(); });
 
 /* ---------- Init ---------- */
 // Schnell-Fang-Button (FAB)
@@ -4710,6 +4720,7 @@ renderEinsteiger();
 /* ---------- Heute-dabei-Filter (Berater) ---------- */
 let HEUTE_DABEI = new Set(); // leer = alle Setups verfügbar
 
+let hdOffen = false;
 function renderHeuteDabeiUI(){
   const wrap = document.getElementById("heute-dabei-wrap");
   if(!wrap) return;
@@ -4723,14 +4734,16 @@ function renderHeuteDabeiUI(){
   const hintText = hatAuswahl
     ? `${HEUTE_DABEI.size} Setup(s) ausgewählt · Ergebnisse gefiltert`
     : "Nichts ausgewählt → alle Methoden werden angezeigt";
-  wrap.innerHTML = `<div class="heute-dabei-wrap">
-    <div class="heute-dabei-label">
-      <span>🎒 Heute dabei</span>
-      ${hatAuswahl ? `<button class="heute-dabei-reset" id="hd-reset-btn">Alle abwählen</button>` : ""}
-    </div>
+  // eingeklappt: sonst schiebt der Kasten das Ergebnis unter den Bildschirmrand
+  wrap.innerHTML = `<details class="heute-dabei-wrap"${hdOffen ? " open" : ""}>
+    <summary class="heute-dabei-label">
+      <span>🎒 Heute dabei${hatAuswahl ? ` · ${HEUTE_DABEI.size} gewählt` : " (optional)"}</span>
+    </summary>
     <div class="heute-dabei-row">${pills}</div>
     <div class="heute-dabei-hint">${hintText}</div>
-  </div>`;
+    ${hatAuswahl ? `<button class="heute-dabei-reset" id="hd-reset-btn">Alle abwählen</button>` : ""}
+  </details>`;
+  wrap.querySelector("details").addEventListener("toggle", (e) => { hdOffen = e.target.open; });
   wrap.querySelectorAll(".setup-pill").forEach(btn => {
     btn.addEventListener("click", () => {
       const key = btn.dataset.hd;

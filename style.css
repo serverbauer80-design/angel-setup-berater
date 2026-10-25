@@ -1275,3 +1275,10 @@ select:focus{outline:none;border-color:var(--accent)}
 .qf-save{width:100%;min-height:52px;font-size:16px;margin:8px 0}
 .qf-save:disabled{opacity:.5}
 @media (max-width:700px){#qf-overlay{align-items:flex-end;padding:0}.qf-box{border-radius:18px 18px 0 0}}
+.heute-dabei-wrap>summary{cursor:pointer;list-style:none;margin-bottom:0}
+.heute-dabei-wrap>summary::-webkit-details-marker{display:none}
+.heute-dabei-wrap>summary::before{content:"▸ ";color:var(--muted);margin-right:6px}
+.heute-dabei-wrap[open]>summary::before{content:"▾ "}
+.heute-dabei-wrap[open]>summary{margin-bottom:8px}
+.heute-dabei-wrap .heute-dabei-reset{display:block;margin-top:8px;font-size:12.5px}
+.heute-dabei-wrap>summary{justify-content:flex-start}
