@@ -6303,6 +6303,20 @@ function migriereWerkstatt(p){
       if(p["r_westin_w3_powershad_2nd_m"] == null) p["r_westin_w3_powershad_2nd_m"] = echt["r_westin_w3_powershad_2nd_m"];
       try { localStorage.setItem(WK_UMBAU_FLAG, "1"); localStorage.setItem(WERKSTATT_KEY, JSON.stringify(p)); } catch(e){}
     }
+    // Westin: erst auf der Revo geplant, dann auf die Ninja 4000-C gelegt
+    let erledigt2 = false;
+    try { erledigt2 = localStorage.getItem(WK_UMBAU_FLAG + "_2") === "1"; } catch(e){}
+    if(!erledigt2){
+      if(p["r_westin_w3_powershad_2nd_m"] === "ro_abu_garcia_revo_3_sx_2000s") p["r_westin_w3_powershad_2nd_m"] = echt["r_westin_w3_powershad_2nd_m"];
+      try { localStorage.setItem(WK_UMBAU_FLAG + "_2", "1"); localStorage.setItem(WERKSTATT_KEY, JSON.stringify(p)); } catch(e){}
+    }
+    // Flex Trout Spinning 2,40 m: Revo 2000S statt Cardinal X 1000
+    let erledigt3 = false;
+    try { erledigt3 = localStorage.getItem(WK_UMBAU_FLAG + "_3") === "1"; } catch(e){}
+    if(!erledigt3){
+      if(p["r_berkley_flex_trout_spinning_"] === "ro_abu_garcia_cardinal_x_1000") p["r_berkley_flex_trout_spinning_"] = echt["r_berkley_flex_trout_spinning_"];
+      try { localStorage.setItem(WK_UMBAU_FLAG + "_3", "1"); localStorage.setItem(WERKSTATT_KEY, JSON.stringify(p)); } catch(e){}
+    }
   }
   return p;
 }

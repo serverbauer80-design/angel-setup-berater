@@ -63,6 +63,11 @@ const KOMBO_BEWUSST = [
     ruten:  ["r_berkley_flex", "r_berkley_flex_2"],
     rollen: ["ro_daiwa_black_widow_br_lt_2500", "ro_daiwa_black_widow_br_lt_2500_2"],
     text:   "Grundangeln am Forellenteich mit Freilauf, Rute im Halter – so wird sie geangelt."
+  },
+  {
+    ruten:  ["r_westin_w3_powershad_2nd_m"],
+    rollen: ["ro_daiwa_ninja_lt_4000_c"],
+    text:   "Westin W3 mit der 4000er Ninja, bewusst so gewählt – so wird sie geangelt."
   }
 ];
 
@@ -106,11 +111,11 @@ const AKTUELL = {
     kategorie: "forelle",
     name: "Berkley Flex Trout Spinning · 2,40 m",
     ruteId: "r_berkley_flex_trout_spinning_",
-    rolleId: "ro_abu_garcia_cardinal_x_1000",
-    vorfach: "Entfällt bei FC-Hauptschnur: Micro Snap direkt einknoten. Bei Bedarf 40–60 cm FC 0,18–0,20 mm als Opfer-Vorfach.",
+    rolleId: "ro_abu_garcia_revo_3_sx_2000s",
+    vorfach: "Fluorocarbon 0,16–0,20 mm · 60–100 cm – bei Geflochtener per FG- oder Albright-Knoten, eher länger, da sie nichts abfedert",
     extra: "Spoons 2–5 g, kleine Wobbler, Micro-Gummis am Jigkopf, Micro Snap ohne Wirbel",
-    einsatz: "Schließt die Lücke zwischen den UL-Ruten (Presso 0,5–6 g, Westin 1–4 g) und dem Sbiro (3–25 g): genug Rückgrat für schwerere Spoons, Wind und größere Besatzforellen, ohne die Feinfühligkeit zu verlieren. Rolle und FC-Schnur sind von der Westin herübergewandert.",
-    tippKompakt: "Achtung beim Wurfgewicht: Die 0,16er FC trägt rund 2,5 kg. Für Köder bis etwa 6 g ist das völlig in Ordnung, am oberen Ende der Rute (10–12 g) wird es knapp – beim harten Wurf kann die Schnur reißen und der Köder wegfliegen. Wenn du hier regelmäßig schwerere Köder fischen willst, auf Geflochtene 0,10 mm oder FC 0,20–0,22 mm wechseln. Mit leichten Spoons kannst du die FC bedenkenlos weiterfischen."
+    einsatz: "Schließt die Lücke zwischen den UL-Ruten (Presso 0,5–6 g, Westin 1–4 g) und dem Sbiro (3–25 g): genug Rückgrat für schwerere Spoons, Wind und größere Besatzforellen, ohne die Feinfühligkeit zu verlieren. Rolle: die Revo 3 SX 2000S mit der geflochtenen 0,06 mm.",
+    tippKompakt: "Die Revo bringt die geflochtene 0,06 mm mit. Geflochtene federt nichts ab: Vorfach nicht zu kurz halten und die Bremse eher leicht einstellen. Die Cardinal X 1000 mit Akashi-Fluorocarbon 0,16 mm, die vorher auf dieser Rute lag, ist jetzt eine freie Rolle."
   },
   setup3: {
     key: "setup3",
@@ -152,7 +157,7 @@ const AKTUELL = {
     vorfach: "Fluorocarbon 0,20–0,22 mm (Forelle) · bei großen Besatzforellen bis 0,30 mm · ca. 60–100 cm",
     extra: "Bodentaster, Rutenhalter, Haken Gr. 8–14 · für den Posen-Einsatz: Laufposen 3–15 g, Posenstopper + Gummiperlen, Schrotblei-Set",
     einsatz: "Grundangeln am größeren Forellenteich, meist mit Bodentaster, Rute im Rutenhalter. Der Baitrunner (Freilauf) gibt Schnur frei, wenn die Forelle den Köder nimmt. Zur Not auch Posen-/Schlepprute (Laufpose, Sbirolino) und außerhalb des Forellensees Allround-Rute auf Schleie und Karpfen an See und Kanal.",
-    tippKompakt: "Die Rolle ist noch nicht bespult. Empfehlung: Monofil 0,22 mm als Hauptschnur – die Stroft GTM 0,22 mm von der Ninja LT 4000-C kannst du umspulen (ob die 2500er die volle Länge fasst, steht auf der Spule bzw. im Datenblatt). Vorfach Fluorocarbon 0,20–0,22 mm, bei großen Besatzforellen bis 0,30 mm."
+    tippKompakt: "Die Rolle ist noch nicht bespult. Empfehlung: Monofil 0,22 mm als Hauptschnur (Fassungsvermögen der 2500er steht auf der Spule bzw. im Datenblatt). Vorfach Fluorocarbon 0,20–0,22 mm, bei großen Besatzforellen bis 0,30 mm."
   },
   setup19: {
     key: "setup19",
@@ -164,7 +169,7 @@ const AKTUELL = {
     vorfach: "Fluorocarbon 0,20–0,22 mm (Forelle) · bei großen Besatzforellen bis 0,30 mm · ca. 60–100 cm",
     extra: "Bodentaster, Rutenhalter, Haken Gr. 8–14 · für den Posen-Einsatz: Laufposen 3–15 g, Posenstopper + Gummiperlen, Schrotblei-Set",
     einsatz: "Zweite, baugleiche Grundrute für den größeren Forellenteich (Bodentaster, Rute im Rutenhalter, Freilauf). Mit zwei Ruten kannst du zwei Tiefen oder zwei Köder gleichzeitig anbieten. Auch als Posen-/Schlepprute einsetzbar.",
-    tippKompakt: "Die Rolle ist noch nicht bespult. Empfehlung wie bei der Schwesterrute: Monofil 0,22 mm als Hauptschnur, Vorfach Fluorocarbon 0,20–0,22 mm (große Besatzforellen bis 0,30 mm). Die geflochtene 0,06 mm ist mit der Revo 3 SX 2000S zur Westin gewandert."
+    tippKompakt: "Die Rolle ist noch nicht bespult. Empfehlung wie bei der Schwesterrute: Monofil 0,22 mm als Hauptschnur, Vorfach Fluorocarbon 0,20–0,22 mm (große Besatzforellen bis 0,30 mm). Die Revo 3 SX 2000S mit der geflochtenen 0,06 mm ist frei geworden."
   },
   setup10: {
     key: "setup10",
@@ -225,11 +230,12 @@ const AKTUELL = {
     kategorie: "raubfisch",
     name: "Westin W3 Powershad 2nd M · 2,70 m",
     ruteId: "r_westin_w3_powershad_2nd_m",
-    rolleId: "ro_abu_garcia_revo_3_sx_2000s",
-    vorfach: "Fluorocarbon 0,26–0,30 mm · ca. 80–100 cm (wie bei der Prorex) · für Hecht: + Stahlvorfach davor",
+    rolleId: "ro_daiwa_ninja_lt_4000_c",
+    bewusst: "Die 4000er ist für eine 2,70-m-Rute mit 25 g Wurfgewicht eine halbe Größe über der Faustregel (2000–3500). So wird die Westin gefischt – das passt.",
+    vorfach: "Fluorocarbon 0,20–0,22 mm bei der Mono-Hauptschnur 0,22 mm (das sonst hinterlegte 0,26–0,30 mm wäre dicker als die Hauptschnur) · für Hecht: + Stahlvorfach davor",
     extra: "Jigköpfe 7–25 g, Gummifische 10–13 cm (z. B. Easy Shiner 5\"), Stahlvorfach Perca, Motor Snap Wirbel 18 kg",
-    einsatz: "Zweite Spinnrute für Zander und Hecht neben der Prorex. 7–25 g deckt die leichten Jigköpfe vom NOK (7–12 g) und die mittleren von der Eider (12–16 g) ab. Die Revo 3 SX 2000S liegt laut Faustregel im passenden Größenbereich für 25 g Wurfgewicht (2000–3500).",
-    tippKompakt: "Auf der Revo liegt noch die geflochtene 0,06 mm – das ist dünner als bei deinen anderen Raubfisch-Setups (0,10 mm an der Savage, 0,16 mm an der Prorex). Naheliegend wäre 0,12–0,14 mm (abgeleitet aus diesen beiden Werten, keine Herstellerangabe); noch nicht umgespult."
+    einsatz: "Zweite Spinnrute für Zander und Hecht neben der Prorex. 7–25 g deckt die leichten Jigköpfe vom NOK (7–12 g) und die mittleren von der Eider (12–16 g) ab. Rolle: die Ninja LT 4000-C mit Monofil 0,22 mm, bewusst so gewählt.",
+    tippKompakt: "Die Ninja trägt Monofil 0,22 mm. Bei Jigköpfen ist Geflochtene üblicher (kein Dehnungsverlust beim Anschlag); naheliegend wären 0,12–0,14 mm, abgeleitet aus deinen Setups (0,10 mm an der Savage 5–18 g, 0,16 mm an der Prorex 15–50 g) – keine Herstellerangabe. Bleibt es bei der Mono, dann ein Vorfach, das nicht dicker als 0,22 mm ist."
   },
   setup6: {
     key: "setup6",
