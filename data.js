@@ -214,16 +214,13 @@ const AKTUELL = {
   setup15: {
     key: "setup15",
     kategorie: "forelle",
-    unvollstaendig: true,
-    name: "FTM Black Aryas 2 · 3,90 m (ohne Rolle)",
+    name: "FTM Black Aryas 2 · 3,90 m (Cardinal 1000, FC 0,16)",
     ruteId: "r_ftm_black_aryas_2_3",
-    rolleId: null,
-    rolleText: "⚠️ noch keine Rolle vorhanden – Empfehlung siehe Tipp",
-    schnurText: "⚠️ noch nicht bespult",
+    rolleId: "ro_abu_garcia_cardinal_x_1000",
     vorfach: "Fluorocarbon 0,12–0,16 mm · 1,5–3 m – Länge je nach Zieltiefe wählen",
     extra: "Camole (echt oder Kunstköder-Larven), Piombini/Olivette 0,5–3 g, Micro Snap ohne Wirbel",
-    einsatz: "Dritte FTM Black Aryas 2 – Rute liegt bereit, Rolle und Schnur fehlen noch. Gedacht als zweite Tremarella-Kombo: mit anderem Bleigewicht und anderer Vorfachlänge vorgerüstet, damit du am Wasser zwischen zwei Tiefenzonen wechseln kannst, ohne die Montage umzubauen.",
-    tippKompakt: "Empfehlung fürs Tremarella: weiches Monofil 0,16 mm als Hauptschnur – bewusst kein Fluorocarbon. FC ist steifer und speichert Windungen; beim dauerhaften Vibrieren und sehr langsamen Einholen stört das die Köderführung. Die Dehnung der Mono ist hier gewollt: sie puffert zusammen mit dem parabolischen Blank den zaghaften Biss ab, damit der Haken nicht aus dem weichen Forellenmaul reißt. 0,16 mm statt der 0,14 auf der Tubertini gibt Reserve für größere Fische, mehr Blei und Wind. Rolle: Größe 2000 mit feiner, ruckfreier Frontbremse und sauberer Schnurverlegung – noch eine Tubertini 2000 hält Balance und Bremsgefühl identisch zur bestehenden Kombo, was beim Rutenwechsel während der Technik mehr wert ist als Markenvielfalt. Alternative: Shimano/Daiwa 2000–2500, dann mit Ersatzspule für den Wechsel zwischen 0,14 und 0,16 mm."
+    einsatz: "Dritte FTM Black Aryas 2, jetzt mit der Cardinal X 1000 und der Akashi-Fluorocarbon 0,16 mm, die vorher auf der Flex Trout Spinning lag. Gedacht als zweite Tremarella-Kombo: mit anderem Bleigewicht und anderer Vorfachlänge vorgerüstet, damit du am Wasser zwischen zwei Tiefenzonen wechseln kannst, ohne die Montage umzubauen.",
+    tippKompakt: "Zwei Punkte, die gegenüber der ursprünglichen Planung für diese Rute abweichen: Die Rolle ist eine Größe 1000, geplant war 2000 – bei einer 3,90-m-Rute mit 1–4 g Wurfgewicht liegt die Faustregel bei 1500–3000, die 1000er ist also eine Nummer klein und die Kombo etwas kopflastig. Und auf der Rolle liegt Fluorocarbon statt des weichen Monofils: FC ist steifer und speichert Windungen, beim sehr langsamen Einholen kann das die Köderführung stören, und die Dehnung der Mono (puffert den zaghaften Biss, damit der Haken nicht aus dem weichen Forellenmaul reißt) fehlt. Zum Ausprobieren ist die Kombo völlig in Ordnung; wenn sie dir liegt, bleib dabei, sonst ist Monofil 0,16 mm die naheliegende Alternative."
   },
   setup20: {
     key: "setup20",
@@ -1134,7 +1131,7 @@ const KNOTEN_KURZ = {
 const EMPFEHLUNG = {
   reihenfolge: [
     "Deine <b>Rutenseite ist durch</b>: Raubfisch, Forelle, Ansitz, Feeder, Pose und Stippe sind alle abgedeckt. Eine weitere Rute schließt keine Lücke mehr – der Zuwachs kommt jetzt aus Technik und Zubehör.",
-    "<b>Eine Rute ist noch offen</b>: die dritte Aryas wartet auf Rolle und Schnur – bewusst zurückgestellt, du brauchst sie vorerst nicht. Alle anderen Ruten sind fischfertig.",
+    "<b>Alle Ruten sind bestückt</b>: die dritte Aryas läuft jetzt mit der Cardinal X 1000. Bei den beiden Black Widow 2500 fehlt noch die Schnur.",
     "<b>Beim Zubehör bist du praktisch durch</b> – ausrüstungsseitig ist alles Pflichtmaterial vorhanden. Offen bleibt nur die Ersatzspule für die häufig gefischten Rollen; Regenkleidung und Rutentasche sind Komfort. (Der Erlaubnisschein steht dauerhaft als Pflicht in der Checkliste – der gilt gewässerbezogen und ist vor jeder Tour neu zu prüfen, nicht einmalig abzuhaken.)",
     "<b>Küstenspinnen</b> auf Meerforelle/Hornhecht – die einzige wirklich neue Spielart, die dein Gerät noch nicht abdeckt (SH-Küste vor der Tür).",
     "<b>Brandung &amp; Pilk</b> erst kurz vor dem tatsächlichen Küsten-/Kuttertermin kaufen (Kutter vermieten oft Gerät).",

@@ -6317,6 +6317,13 @@ function migriereWerkstatt(p){
       if(p["r_berkley_flex_trout_spinning_"] === "ro_abu_garcia_cardinal_x_1000") p["r_berkley_flex_trout_spinning_"] = echt["r_berkley_flex_trout_spinning_"];
       try { localStorage.setItem(WK_UMBAU_FLAG + "_3", "1"); localStorage.setItem(WERKSTATT_KEY, JSON.stringify(p)); } catch(e){}
     }
+    // Dritte Black Aryas: Cardinal X 1000 montiert
+    let erledigt4 = false;
+    try { erledigt4 = localStorage.getItem(WK_UMBAU_FLAG + "_4") === "1"; } catch(err){}
+    if(!erledigt4){
+      if(p["r_ftm_black_aryas_2_3"] == null) p["r_ftm_black_aryas_2_3"] = echt["r_ftm_black_aryas_2_3"];
+      try { localStorage.setItem(WK_UMBAU_FLAG + "_4", "1"); localStorage.setItem(WERKSTATT_KEY, JSON.stringify(p)); } catch(err){}
+    }
   }
   return p;
 }
