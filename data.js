@@ -18,6 +18,7 @@ const RUTEN = [
   { id:"r_daiwa_ninja_x_feeder", name:"Daiwa Ninja X Feeder", kategorie:"feeder", wg:[40,120], laenge:3.9, text:"Daiwa Ninja X Feeder · 3,90 m · WG bis 120 g · 3-teilig · inkl. Wechselspitzen (Quivertips)" },
   { id:"r_berkley_flex", name:"Berkley Flex", kategorie:"forelle", wg:[10,30], laenge:3.9, text:"Berkley Flex · 3,90 m · WG 10–30 g" },
   { id:"r_berkley_flex_2", name:"Berkley Flex", kategorie:"forelle", wg:[10,30], laenge:3.9, text:"Berkley Flex · 3,90 m · WG 10–30 g" },
+  { id:"r_westin_w3_powershad_2nd_m", name:"Westin W3 Powershad 2nd M", kategorie:"raubfisch", wg:[7,25], laenge:2.7, text:"Westin W3 Powershad 2nd M · 2,70 m · WG 7–25 g" },
   { id:"r_daiwa_black_widow_xt_carp", name:"Daiwa Black Widow XT Carp", kategorie:"ansitz", wg:[60,150], laenge:3.6, text:"Daiwa Black Widow XT Carp · 3,60 m · 3 lb #50 · 2-teilig" },
   { id:"r_daiwa_black_widow_xt_bait", name:"Daiwa Black Widow XT Bait", kategorie:"ansitz", wg:[20,60], laenge:3.6, text:"Daiwa Black Widow XT Bait · 3,60 m · WG 20–60 g" },
   { id:"r_ftm_black_aryas_2", name:"FTM Black Aryas 2", kategorie:"forelle", wg:[1,4], laenge:3.9, text:"FTM Black Aryas 2 · 3,90 m · WG 1–4 g · 7-teilig · 146 g · Transportlänge 106 cm" },
@@ -51,6 +52,18 @@ const ROLLEN = [
   { id:"ro_abu_garcia_cardinal_x_2000", name:"Abu Garcia Cardinal X 2000", groesse:2000, freilauf:false, text:"Abu Garcia Cardinal X 2000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous", schnur:"Geflochten 0,06 mm" },
   { id:"ro_crivit_stationaerrolle_gr_30", name:"Crivit Stationärrolle Gr. 30", groesse:3000, freilauf:false, text:"Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult", schnur:"vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen" },
   { id:"ro_crivit_stationaerrolle_gr_50", name:"Crivit Stationärrolle Gr. 50", groesse:5000, freilauf:false, text:"Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult", schnur:"vorbespult ab Werk" }
+];
+
+/* ---------- 1b2) BEWUSST GEWAEHLTE KOMBOS ----------
+   Die Werkstatt bewertet Rute + Rolle nach Faustregeln. Wo der Nutzer eine
+   Kombo bewusst anders gewaehlt hat und sie so fischt, steht das hier – dann
+   zeigt die Werkstatt "passt" samt Begruendung statt "geht". */
+const KOMBO_BEWUSST = [
+  {
+    ruten:  ["r_berkley_flex", "r_berkley_flex_2"],
+    rollen: ["ro_daiwa_black_widow_br_lt_2500", "ro_daiwa_black_widow_br_lt_2500_2"],
+    text:   "Grundangeln am Forellenteich mit Freilauf, Rute im Halter – so wird sie geangelt."
+  }
 ];
 
 /* ---------- 1c) SETUPS ----------
@@ -132,23 +145,26 @@ const AKTUELL = {
   setup16: {
     key: "setup16",
     kategorie: "forelle",
-    name: "Berkley Flex · 3,90 m (Mono 0,22)",
+    name: "Berkley Flex · 3,90 m (Grundangeln 1)",
     ruteId: "r_berkley_flex",
-    rolleId: "ro_daiwa_ninja_lt_4000_c",
-    vorfach: "Fluorocarbon 0,18–0,22 mm (Weißfisch/Forelle) · 0,25–0,30 mm (Schleie/Karpfen) · ca. 40–80 cm",
-    extra: "Laufposen 3–15 g, Posenstopper + Gummiperlen (vorhanden), Schrotblei-Set, Haken Gr. 8–14",
-    einsatz: "Posen- und Schlepprute am Forellensee: Laufpose oder Sbirolino weit auswerfen und langsam schleppen (Teig, Bienenmade, Spirolino-Fliege) – oder als passive Zweitrute im Rutenhalter, während du mit der Aryas aktiv fischst. Die kräftigere der beiden Berkley: die 0,22er Mono und die 4000er Rolle geben Reserve für große Besatzforellen. Außerhalb des Forellensees auch Allround-Posenrute auf Schleie und Karpfen an See und Kanal."
+    rolleId: "ro_daiwa_black_widow_br_lt_2500",
+    bewusst: "Die 2500er ist für eine 3,90-m-Rute mit 30 g Wurfgewicht eine Nummer klein (Faustregel: 3000–4500). Fürs Grundangeln am Forellenteich mit Rute im Halter und Freilauf ist das so gewollt und passt – so wird sie geangelt.",
+    vorfach: "Fluorocarbon 0,20–0,22 mm (Forelle) · bei großen Besatzforellen bis 0,30 mm · ca. 60–100 cm",
+    extra: "Bodentaster, Rutenhalter, Haken Gr. 8–14 · für den Posen-Einsatz: Laufposen 3–15 g, Posenstopper + Gummiperlen, Schrotblei-Set",
+    einsatz: "Grundangeln am größeren Forellenteich, meist mit Bodentaster, Rute im Rutenhalter. Der Baitrunner (Freilauf) gibt Schnur frei, wenn die Forelle den Köder nimmt. Zur Not auch Posen-/Schlepprute (Laufpose, Sbirolino) und außerhalb des Forellensees Allround-Rute auf Schleie und Karpfen an See und Kanal.",
+    tippKompakt: "Die Rolle ist noch nicht bespult. Empfehlung: Monofil 0,22 mm als Hauptschnur – die Stroft GTM 0,22 mm von der Ninja LT 4000-C kannst du umspulen (ob die 2500er die volle Länge fasst, steht auf der Spule bzw. im Datenblatt). Vorfach Fluorocarbon 0,20–0,22 mm, bei großen Besatzforellen bis 0,30 mm."
   },
   setup19: {
     key: "setup19",
     kategorie: "forelle",
-    name: "Berkley Flex · 3,90 m (Geflochten 0,06)",
+    name: "Berkley Flex · 3,90 m (Grundangeln 2)",
     ruteId: "r_berkley_flex_2",
-    rolleId: "ro_abu_garcia_revo_3_sx_2000s",
-    vorfach: "Fluorocarbon 0,18–0,22 mm (Weißfisch/Forelle) · 0,25 mm (Schleie) · ca. 60–100 cm – bei Geflochtener eher länger, sie federt nichts ab",
-    extra: "Laufposen 3–15 g, Posenstopper + Gummiperlen, Schrotblei-Set, Haken Gr. 8–14",
-    einsatz: "Die leichtere der beiden Posen-/Schlepp-Ruten am Forellensee: Laufpose oder Sbirolino weit raus und langsam schleppen. Die geflochtene 0,06 wirft weiter und zeigt auch beim Schleppen den zaghaften Zupfer direkt an – dafür federt sie nichts ab, deshalb längeres Vorfach und leichte Bremse. Auch für Weißfisch und Schleie auf mittlere Distanz geeignet; die schwerere Arbeit macht die Schwesterrute mit der Ninja 4000 und 0,22er Mono.",
-    tippKompakt: "Die flache 2000S-Spule ist der begrenzende Faktor: Geflochtene 0,06 passt reichlich drauf, Monofil 0,25 dagegen nur etwa 70–80 m. Deshalb ist diese Kombo als leichtere Posenrute gedacht – für Weißfisch und Schleie völlig ausreichend. Zieht dir ein größerer Karpfen 40 m weg, wird es dünn; dafür ist die Schwesterrute mit der 4000er da. Ohne Freilauf gilt außerdem: Rute nie unbeaufsichtigt mit geschlossenem Bügel ablegen – entweder Bügel auf oder Schnurclip nutzen."
+    rolleId: "ro_daiwa_black_widow_br_lt_2500_2",
+    bewusst: "Die 2500er ist für eine 3,90-m-Rute mit 30 g Wurfgewicht eine Nummer klein (Faustregel: 3000–4500). Fürs Grundangeln am Forellenteich mit Rute im Halter und Freilauf ist das so gewollt und passt – so wird sie geangelt.",
+    vorfach: "Fluorocarbon 0,20–0,22 mm (Forelle) · bei großen Besatzforellen bis 0,30 mm · ca. 60–100 cm",
+    extra: "Bodentaster, Rutenhalter, Haken Gr. 8–14 · für den Posen-Einsatz: Laufposen 3–15 g, Posenstopper + Gummiperlen, Schrotblei-Set",
+    einsatz: "Zweite, baugleiche Grundrute für den größeren Forellenteich (Bodentaster, Rute im Rutenhalter, Freilauf). Mit zwei Ruten kannst du zwei Tiefen oder zwei Köder gleichzeitig anbieten. Auch als Posen-/Schlepprute einsetzbar.",
+    tippKompakt: "Die Rolle ist noch nicht bespult. Empfehlung wie bei der Schwesterrute: Monofil 0,22 mm als Hauptschnur, Vorfach Fluorocarbon 0,20–0,22 mm (große Besatzforellen bis 0,30 mm). Die geflochtene 0,06 mm ist mit der Revo 3 SX 2000S zur Westin gewandert."
   },
   setup10: {
     key: "setup10",
@@ -203,6 +219,17 @@ const AKTUELL = {
     extra: "Camole (echt oder Kunstköder-Larven), Piombini/Olivette 0,5–3 g, Micro Snap ohne Wirbel",
     einsatz: "Dritte FTM Black Aryas 2 – Rute liegt bereit, Rolle und Schnur fehlen noch. Gedacht als zweite Tremarella-Kombo: mit anderem Bleigewicht und anderer Vorfachlänge vorgerüstet, damit du am Wasser zwischen zwei Tiefenzonen wechseln kannst, ohne die Montage umzubauen.",
     tippKompakt: "Empfehlung fürs Tremarella: weiches Monofil 0,16 mm als Hauptschnur – bewusst kein Fluorocarbon. FC ist steifer und speichert Windungen; beim dauerhaften Vibrieren und sehr langsamen Einholen stört das die Köderführung. Die Dehnung der Mono ist hier gewollt: sie puffert zusammen mit dem parabolischen Blank den zaghaften Biss ab, damit der Haken nicht aus dem weichen Forellenmaul reißt. 0,16 mm statt der 0,14 auf der Tubertini gibt Reserve für größere Fische, mehr Blei und Wind. Rolle: Größe 2000 mit feiner, ruckfreier Frontbremse und sauberer Schnurverlegung – noch eine Tubertini 2000 hält Balance und Bremsgefühl identisch zur bestehenden Kombo, was beim Rutenwechsel während der Technik mehr wert ist als Markenvielfalt. Alternative: Shimano/Daiwa 2000–2500, dann mit Ersatzspule für den Wechsel zwischen 0,14 und 0,16 mm."
+  },
+  setup20: {
+    key: "setup20",
+    kategorie: "raubfisch",
+    name: "Westin W3 Powershad 2nd M · 2,70 m",
+    ruteId: "r_westin_w3_powershad_2nd_m",
+    rolleId: "ro_abu_garcia_revo_3_sx_2000s",
+    vorfach: "Fluorocarbon 0,26–0,30 mm · ca. 80–100 cm (wie bei der Prorex) · für Hecht: + Stahlvorfach davor",
+    extra: "Jigköpfe 7–25 g, Gummifische 10–13 cm (z. B. Easy Shiner 5\"), Stahlvorfach Perca, Motor Snap Wirbel 18 kg",
+    einsatz: "Zweite Spinnrute für Zander und Hecht neben der Prorex. 7–25 g deckt die leichten Jigköpfe vom NOK (7–12 g) und die mittleren von der Eider (12–16 g) ab. Die Revo 3 SX 2000S liegt laut Faustregel im passenden Größenbereich für 25 g Wurfgewicht (2000–3500).",
+    tippKompakt: "Auf der Revo liegt noch die geflochtene 0,06 mm – das ist dünner als bei deinen anderen Raubfisch-Setups (0,10 mm an der Savage, 0,16 mm an der Prorex). Naheliegend wäre 0,12–0,14 mm (abgeleitet aus diesen beiden Werten, keine Herstellerangabe); noch nicht umgespult."
   },
   setup6: {
     key: "setup6",

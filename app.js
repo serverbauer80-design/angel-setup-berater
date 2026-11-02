@@ -1267,6 +1267,7 @@ function inventarKarteHTML(s){
         <div class="row"><span class="k">Vorfach</span><span>${s.vorfach}</span></div>
         <div class="row"><span class="k">Extra</span><span>${s.extra}</span></div>
         ${s.einsatz ? `<div class="row"><span class="k">Einsatz</span><span>${s.einsatz}</span></div>` : ""}
+        ${s.bewusst ? `<div class="row"><span class="k">Passt</span><span>${s.bewusst}</span></div>` : ""}
         ${s.tippKompakt ? `<div class="tipp"><h4>💡 Tipp</h4><p>${s.tippKompakt}</p></div>` : ""}
         <div class="wartung-box${faellig ? " faellig" : ""}">
           <span>🔧 ${letzteWartung ? `Zuletzt gewartet: ${letzteWartung} (vor ${tage} Tagen)` : "Noch keine Wartung eingetragen"}</span>
@@ -6242,6 +6243,16 @@ function bewerteKombo(rute, rolle){
     gruende.push("ohne Freilauf: Bügel offen lassen oder Schnurclip nutzen");
   }
 
+  // Vom Nutzer bewusst so gewaehlt (data.js: KOMBO_BEWUSST) – dann gilt: passt
+  const bew = (typeof KOMBO_BEWUSST !== "undefined" ? KOMBO_BEWUSST : [])
+    .find(k => k.ruten.includes(rute.id) && k.rollen.includes(rolle.id));
+  if(bew && stufe > 0){
+    gruende.unshift("Von dir bewusst so gewählt: " + bew.text);
+    // der Freilauf-Hinweis gilt fuer aktives Fuehren – hier liegt die Rute im Halter
+    for(let k = gruende.length - 1; k > 0; k--) if(/^Freilauf bringt/.test(gruende[k])) gruende.splice(k, 1);
+    stufe = 0;
+  }
+
   return {
     stufe,
     urteil: ["passt", "geht", "passt nicht"][stufe],
@@ -6275,10 +6286,31 @@ function werkstattLeer(){
 
 function wkSchluessel(){ return WK_MODUS === "frei" ? WERKSTATT_FREI_KEY : WERKSTATT_KEY; }
 
+/* Gespeicherter Plan aus aelteren Staenden: neue Ruten (z. B. Westin W3) ergaenzen,
+   und einmalig die Rollen tauschen, die im November 2026 umgebaut wurden
+   (Flex 1: Ninja 4000-C -> Black Widow 2500, Flex 2: Revo 2000S -> Black Widow 2500).
+   Nur wenn der Plan noch den alten Stand hat – eigene Entwuerfe bleiben unberuehrt. */
+const WK_UMBAU_FLAG = "werkstatt_umbau_202611_v1";
+function migriereWerkstatt(p){
+  const echt = werkstattEcht();
+  Object.keys(echt).forEach(id => { if(!(id in p)) p[id] = WK_MODUS === "frei" ? null : echt[id]; });
+  if(WK_MODUS !== "frei"){
+    let erledigt = false;
+    try { erledigt = localStorage.getItem(WK_UMBAU_FLAG) === "1"; } catch(e){}
+    if(!erledigt){
+      const alt = { "r_berkley_flex": "ro_daiwa_ninja_lt_4000_c", "r_berkley_flex_2": "ro_abu_garcia_revo_3_sx_2000s" };
+      Object.keys(alt).forEach(id => { if(p[id] === alt[id]) p[id] = echt[id]; });
+      if(p["r_westin_w3_powershad_2nd_m"] == null) p["r_westin_w3_powershad_2nd_m"] = echt["r_westin_w3_powershad_2nd_m"];
+      try { localStorage.setItem(WK_UMBAU_FLAG, "1"); localStorage.setItem(WERKSTATT_KEY, JSON.stringify(p)); } catch(e){}
+    }
+  }
+  return p;
+}
+
 function ladeWerkstatt(){
   try {
     const p = JSON.parse(localStorage.getItem(wkSchluessel()));
-    if(p && typeof p === "object") return p;
+    if(p && typeof p === "object") return migriereWerkstatt(p);
   } catch(e){}
   return WK_MODUS === "frei" ? werkstattLeer() : werkstattEcht();
 }
