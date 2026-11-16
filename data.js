@@ -28,7 +28,9 @@ const RUTEN = [
   { id:"r_crivit_multi_x_feeder_300_5", name:"Crivit Multi-X Feeder 300-5", kategorie:"backup", wg:[30,100], laenge:3, text:"Crivit Multi-X Feeder 300-5 · 3,00 m Teleskoprute (HMGF-Glasfaser) · WG bis 100 g · Kork-Handteil" },
   { id:"r_shimano_hyperloop_7_00_m", name:"Shimano Hyperloop 7,00 m", kategorie:"stippe", laenge:7, text:"Shimano Hyperloop 7,00 m · 7 Segmente" },
   { id:"r_rod_rodman_s_focus_stipp", name:"Rod Rodman's Focus Stipp", kategorie:"stippe", laenge:4, text:"Rod Rodman's Focus Stipp · 4,00 m · unberingte Kopf-Tele-Stipprute · HDG-Composite, leicht & ausbalanciert" },
-  { id:"r_rod_rodman_axxa_stipp_combo", name:"Rod Rodman AXXA Stipp Combo", kategorie:"stippe", laenge:2.8, text:"Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk" }
+  { id:"r_rod_rodman_axxa_stipp_combo", name:"Rod Rodman AXXA Stipp Combo", kategorie:"stippe", laenge:2.8, text:"Rod Rodman AXXA Stipp Combo · 2,80 m Teleskoprute mit fertiger Posenmontage ab Werk" },
+  { id:"r_balzer_diabolo_golden_circle", name:"Balzer Diabolo Golden Circle Zander", kategorie:"raubfisch", wg:[17,55], laenge:2.35, text:"Balzer Diabolo Golden Circle Zander · 2,35 m · WG 17–55 g" },
+  { id:"r_balzer_shirasu_im8_spoon_ul", name:"Balzer Shirasu IM-8 Spoon UL", kategorie:"forelle", wg:[1.5,5], laenge:2.15, text:"Balzer Shirasu IM-8 Spoon UL · 2,15 m · WG 1,5–5 g" }
 ];
 
 /* ---------- 1b) ROLLEN ----------
@@ -51,7 +53,8 @@ const ROLLEN = [
   { id:"ro_tubertini_aryas_2000_spoonro", name:"Tubertini Aryas 2000 Spoonrolle", groesse:2000, freilauf:false, text:"Tubertini Aryas 2000 Spoonrolle · Spinrolle", schnur:"Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult" },
   { id:"ro_abu_garcia_cardinal_x_2000", name:"Abu Garcia Cardinal X 2000", groesse:2000, freilauf:false, text:"Abu Garcia Cardinal X 2000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous", schnur:"Geflochten 0,06 mm" },
   { id:"ro_crivit_stationaerrolle_gr_30", name:"Crivit Stationärrolle Gr. 30", groesse:3000, freilauf:false, text:"Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult", schnur:"vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen" },
-  { id:"ro_crivit_stationaerrolle_gr_50", name:"Crivit Stationärrolle Gr. 50", groesse:5000, freilauf:false, text:"Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult", schnur:"vorbespult ab Werk" }
+  { id:"ro_crivit_stationaerrolle_gr_50", name:"Crivit Stationärrolle Gr. 50", groesse:5000, freilauf:false, text:"Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult", schnur:"vorbespult ab Werk" },
+  { id:"ro_penn_clash_ii_1000", name:"Penn Clash II Spinning 1000", groesse:1000, freilauf:false, text:"Penn Clash II Spinning 1000 · Spinnrolle", schnur:"noch nicht bespult" }
 ];
 
 /* ---------- 1b2) BEWUSST GEWAEHLTE KOMBOS ----------
@@ -116,6 +119,29 @@ const AKTUELL = {
     extra: "Spoons 2–5 g, kleine Wobbler, Micro-Gummis am Jigkopf, Micro Snap ohne Wirbel",
     einsatz: "Schließt die Lücke zwischen den UL-Ruten (Presso 0,5–6 g, Westin 1–4 g) und dem Sbiro (3–25 g): genug Rückgrat für schwerere Spoons, Wind und größere Besatzforellen, ohne die Feinfühligkeit zu verlieren. Rolle: die Revo 3 SX 2000S mit der geflochtenen 0,06 mm.",
     tippKompakt: "Die Revo bringt die geflochtene 0,06 mm mit. Geflochtene federt nichts ab: Vorfach nicht zu kurz halten und die Bremse eher leicht einstellen. Die Cardinal X 1000 mit Akashi-Fluorocarbon 0,16 mm, die vorher auf dieser Rute lag, ist jetzt eine freie Rolle."
+  },
+  setup21: {
+    key: "setup21",
+    kategorie: "forelle",
+    name: "Balzer Shirasu IM-8 Spoon UL · 2,15 m",
+    ruteId: "r_balzer_shirasu_im8_spoon_ul",
+    rolleId: "ro_penn_clash_ii_1000",
+    vorfach: "Fluorocarbon 0,16–0,18 mm · 60–100 cm – bei Geflochtener per FG- oder Albright-Knoten, eher länger",
+    extra: "Spoons 1,5–5 g, Micro Snap ohne Wirbel",
+    einsatz: "Spoon-Spezialist für den Forellensee: UL-Rute mit 1,5–5 g WG, genau die Größe der Spoons aus der Spoon-Tasche. Die Penn Clash II 1000 passt größenmäßig ideal zu einer UL-Rute.",
+    tippKompakt: "Die Rolle ist noch nicht bespult. Naheliegend: feine Geflochtene 0,06–0,08 mm mit Fluorocarbon-Vorfach, oder Monofil 0,16 mm für mehr Dehnung. Bei Geflochtener Bremse leicht einstellen."
+  },
+  setup22: {
+    key: "setup22",
+    kategorie: "raubfisch",
+    name: "Balzer Diabolo Golden Circle Zander · 2,35 m",
+    ruteId: "r_balzer_diabolo_golden_circle",
+    rolleId: null,
+    rolleText: "noch keine Rolle montiert – passend wäre Größe 3000–4000",
+    schnurText: "noch keine Schnur – Empfehlung: Geflochtene 0,14–0,16 mm mit Fluorocarbon-Vorfach",
+    vorfach: "Fluorocarbon 0,28–0,35 mm · für Hecht: + Stahlvorfach davor",
+    extra: "Jigköpfe 12–40 g, Gummifische 10–15 cm",
+    einsatz: "Zander-Rute mit 17–55 g WG für schwere Jigköpfe an Elbe und NOK, neben Prorex und Westin W3. Rolle noch offen."
   },
   setup3: {
     key: "setup3",
