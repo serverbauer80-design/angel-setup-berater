@@ -95,15 +95,12 @@ export function alleSetups(){
   return liste.sort((a, b) => (rang[a.kategorie] ?? 99) - (rang[b.kategorie] ?? 99));
 }
 
-/* Baugleiche Setups (gleiche Rute, gleiche Rolle, gleiche Schnur) zu einer Karte bündeln */
+/* Jedes Setup ist eine eigene Karte – auch baugleiche (z. B. die zwei
+   Berkley Flex), damit eine Änderung an einer Rute nicht beide betrifft.
+   Die Gruppen-Struktur (glieder) bleibt, falls später wieder gebündelt
+   werden soll. */
 export function gruppiere(setups){
-  const map = new Map();
-  setups.forEach(s => {
-    const sig = [s.titel, s.laenge, s.wg && s.wg.join("-"), s.rolleName, s.schnurText, s.zustand].join("|");
-    if(!map.has(sig)) map.set(sig, { id: s.key, glieder: [], kopf: s });
-    map.get(sig).glieder.push(s);
-  });
-  return [...map.values()];
+  return setups.map(s => ({ id: s.key, glieder: [s], kopf: s }));
 }
 
 /* Pflegezustand eines Setups: Tage seit Wartung/Schnurwechsel, fällig? */
