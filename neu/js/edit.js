@@ -16,7 +16,7 @@ let toastFn = () => {}, geheZuFn = () => {};
 export function initEdit({ toast, geheZu }){ toastFn = toast; geheZuFn = geheZu; }
 
 /* ---------- Blatt ---------- */
-function blatt(titel, inhalt, onSubmit){
+export function blatt(titel, inhalt, onSubmit){
   const d = $("#blatt");
   d.innerHTML = `<form class="blatt-form" novalidate>
       <div class="dialog-kopf"><h2>${esc(titel)}</h2><button type="button" class="rund" data-blatt-zu aria-label="Schließen">✕</button></div>
@@ -37,12 +37,12 @@ function blatt(titel, inhalt, onSubmit){
   return d;
 }
 
-const feld = (name, label, wert, opt = {}) => `<label class="feld${opt.breit ? " breit" : ""}"><span>${label}${opt.pflicht ? " *" : ""}</span>
+export const feld = (name, label, wert, opt = {}) => `<label class="feld${opt.breit ? " breit" : ""}"><span>${label}${opt.pflicht ? " *" : ""}</span>
   ${opt.textarea
     ? `<textarea name="${name}" id="f-${name}" rows="${opt.rows || 3}" placeholder="${esc(opt.ph || "")}">${esc(wert ?? "")}</textarea>`
     : `<input name="${name}" id="f-${name}" value="${esc(wert ?? "")}" ${opt.typ ? `type="${opt.typ}"` : ""} ${opt.im ? `inputmode="${opt.im}"` : ""} placeholder="${esc(opt.ph || "")}" ${opt.pflicht ? "required" : ""} autocomplete="off">`}
   </label>`;
-const auswahl = (name, label, optionen, wert, opt = {}) => `<label class="feld${opt.breit ? " breit" : ""}"><span>${label}</span>
+export const auswahl = (name, label, optionen, wert, opt = {}) => `<label class="feld${opt.breit ? " breit" : ""}"><span>${label}</span>
   <select name="${name}" id="f-${name}">${optionen.map(([v, l]) => `<option value="${esc(v)}"${String(v) === String(wert ?? "") ? " selected" : ""}>${esc(l)}</option>`).join("")}</select></label>`;
 const KAT_OPT = () => SETUP_KATEGORIEN.map(k => [k.key, k.titel]);
 const ART_OPT = [["geflecht", "Geflecht"], ["mono", "Monofil"], ["fc", "Fluorocarbon"], ["", "unbekannt"]];

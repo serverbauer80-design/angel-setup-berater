@@ -7422,7 +7422,7 @@ document.addEventListener("click", async e => {
           await Promise.all(keys.map(k => caches.delete(k)));
         }
       } catch(e){}
-      location.href = location.pathname + "?r=" + Date.now();
+      location.href = location.pathname + (/[?&]alt=/.test(location.search) ? "?alt=1&r=" : "?r=") + Date.now();
     });
     document.body.appendChild(div);
   }

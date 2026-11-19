@@ -5,6 +5,7 @@
    Etappe 3: Berater mit Regeln (berater-ui.js, ../berater.js)
    Etappe 4: Heute mit Lage, Fischauswahl und Tasche (heute.js, lage.js, tasche.js)
    Etappe 5: Gewässer – eine Karte mit Ebenen und Steckbrief (karte.js)
+   Etappe 6: Fangbuch – Fänge + Ausflüge, Statistik je Setup (fangbuch.js, tagebuch.js)
    Routing über den Hash: #rutenwand, #rutenwand/setup22, #heute …
    ============================================================ */
 import { KEYS, pflege, setzePflege, beiAenderung, ladeFaenge, startSync, sync, anmelden, abmelden, lese, schreibe, leseText, schreibeText } from "./store.js";
@@ -19,6 +20,8 @@ import { wissenHTML } from "./wissen.js";
 import { heuteHTML, heuteNachladen, hst, merkeHeute, fischWaehlen } from "./heute.js";
 import { umschalten, abhaken, leeren, nurHakenWeg, inTasche } from "./tasche.js";
 import { gewaesserHTML, karteEinhaengen, initKarte, karteKlick, karteEingabe, karteAenderung } from "./karte.js";
+import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuSetup } from "./fangbuch.js";
+import { beiAusflugAenderung, ausfluegeNachSync } from "./tagebuch.js";
 import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen, tragkraftEintragen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
@@ -47,9 +50,14 @@ const NOCH_ALT = {
     links: [["heute","Heute"],["tagescheck","Tagescheck"],["berater","Berater"],["wochenende","Planung"]] },
   gewaesser: { etappe: 5, text: "Eine Karte für alles: LAV-Gewässer, Dänemark Put & Take, deine Spots, OSM und Küste als Ebenen, mit Steckbrief pro Gewässer.",
     links: [["lav","LAV-Gewässer"],["dkpt","Dänemark"],["faenge","Fänge & Spots"]] },
-  fangbuch: { etappe: 6, text: "Fänge und Tagebuch in einem Verlauf, mit Statistik pro Setup, Spot und Uhrzeit.",
-    links: [["faenge","Fänge & Spots"],["tagebuch","Tagebuch"]] }
 };
+/* Werkzeuge, die (noch) nur die bisherige App hat */
+const ALT_WERKZEUGE = [["knoten","Knotenkunde"],["saison","Saisonkalender"],["einsteiger","Starthilfe & Fischbestimmung"],["checkliste","Zubehör-Check"],["einkauf","Einkaufsliste"],["baitcast","Baitcast"],["unterlagen","Unterlagen"]];
+function altWerkzeugeHTML(){
+  return `<section class="alt-werkzeuge"><h3>Weitere Werkzeuge</h3>
+    <p class="hinweis-klein">Diese Seiten gibt es noch in der bisherigen App:</p>
+    <div class="alt-knoepfe">${ALT_WERKZEUGE.map(([v, l]) => `<a class="knopf" href="../index.html?view=${v}">${l}</a>`).join("")}</div></section>`;
+}
 
 /* ---------- Zustand ---------- */
 const st = {
@@ -290,13 +298,17 @@ function tabPflege(g){
   }).join("") + `<p class="hinweis-klein">Gespeichert unter denselben Daten wie in der bisherigen App und mit deinem Login auf alle Geräte synchronisiert.</p>`;
 }
 
-function tabFaenge(g, catches){
-  const eigene = faengeFuer(g.glieder.map(x => x.key), catches).sort((a, b) => String(b.datum).localeCompare(String(a.datum)));
-  if(!eigene.length) return `<p class="leer">Noch keine Fänge mit diesem Setup erkannt. Zugeordnet werden Fänge, die du im Berater mit einer Methode dieses Setups eingetragen hast. Ab Etappe 6 wählst du das Setup beim Eintragen direkt aus.</p>`;
+function tabFaenge(g){
+  const key = g.kopf.key;
+  const neu = `<button type="button" class="knopf prim" data-fb-neu="fang" data-setup="${esc(key)}">+ Fang mit diesem Setup</button>`;
+  const eigene = faengeZuSetup(g.glieder.map(x => x.key));
+  if(!eigene.length) return `<p class="leer">Noch keine Fänge mit diesem Setup. Trag deinen nächsten Fang ein – das Setup ist dann schon ausgewählt.</p>${neu}`;
   const groesster = eigene.filter(c => +c.laenge).sort((a, b) => b.laenge - a.laenge)[0];
   return `<div class="fang-kopf"><div><b>${eigene.length}</b><span>Fänge</span></div>${groesster ? `<div><b>${esc(groesster.laenge)} cm</b><span>größter · ${esc(groesster.fischName)}</span></div>` : ""}<div><b>${datumDE(eigene[0].datum)}</b><span>zuletzt</span></div></div>
-    <ul class="fang-liste">${eigene.slice(0, 30).map(c => `<li><span class="fang-datum">${datumDE(c.datum)}</span><b>${esc(c.fischName || c.fischId)}</b><span>${[c.laenge ? esc(c.laenge) + " cm" : "", c.gewicht ? komma(c.gewicht) + " kg" : ""].filter(Boolean).join(" · ")}</span></li>`).join("")}</ul>
-    <p class="hinweis-klein">Zugeordnet über Fischart und Berater-Methode.</p>`;
+    <ul class="fang-liste">${eigene.slice(0, 30).map(c => `<li${c.quelle === "fang" ? ` data-fb-fang="${esc(c.id)}"` : ` data-fb-ausflug="${esc(c.ausflugId)}"`} class="klickbar"><span class="fang-datum">${datumDE(c.datum)}</span><b>${esc(c.fischName || c.fischId)}</b><span>${[c.laenge ? esc(String(c.laenge).replace(".", ",")) + " cm" : "", c.gewicht ? komma(c.gewicht) + " kg" : ""].filter(Boolean).join(" · ")}</span></li>`).join("")}</ul>
+    ${neu}
+    ${eigene.some(c => c.setupGeraten) ? `<p class="hinweis-klein">Ältere Fänge ohne Setup-Angabe sind über Fischart und Berater-Methode zugeordnet.</p>` : ""}
+    <p><a href="#fangbuch">Alle Fänge im Fangbuch ›</a></p>`;
 }
 
 function tabKombi(g){
@@ -338,7 +350,7 @@ function detailHTML(g){
   const catches = ladeFaenge();
   const kat = katByKey[s.kategorie];
   const nFische = fischeAnzahl(g.kopf.key);
-  const nFaenge = faengeFuer(g.glieder.map(x => x.key), catches).length;
+  const nFaenge = faengeZuSetup(g.glieder.map(x => x.key)).length;
   const tiles = [
     ["Länge", s.laenge ? meter(s.laenge) : "–"],
     ["Wurfgewicht", s.wg ? `${komma(s.wg[0])}–${komma(s.wg[1])} g` : "–"],
@@ -349,7 +361,7 @@ function detailHTML(g){
   if(st.tab === "infos") body = tabInfos(g);
   if(st.tab === "fische") body = tabFische(g, catches);
   if(st.tab === "pflege") body = tabPflege(g);
-  if(st.tab === "faenge") body = tabFaenge(g, catches);
+  if(st.tab === "faenge") body = tabFaenge(g);
   if(st.tab === "kombi") body = tabKombi(g);
   const zahl = { fische: nFische, faenge: nFaenge };
   return `<article class="detail" aria-labelledby="det-titel">
@@ -390,8 +402,10 @@ function render(){
     document.body.classList.remove("hat-detail");
     main.innerHTML = st.bereich === "heute"
       ? (st.protokoll ? protokollHTML() : heuteHTML())
-      : st.bereich === "wissen" ? wissenHTML(st.wissen)
-      : st.bereich === "gewaesser" ? gewaesserHTML() : platzhalterHTML(st.bereich);
+      : st.bereich === "wissen" ? wissenHTML(st.wissen) + (st.wissen ? "" : altWerkzeugeHTML())
+      : st.bereich === "gewaesser" ? gewaesserHTML()
+      : st.bereich === "fangbuch" ? fangbuchHTML() : platzhalterHTML(st.bereich);
+    if(st.bereich === "fangbuch") fangbuchNachladen();
     if(st.bereich === "heute" && !st.protokoll) heuteNachladen();
     if(st.bereich === "gewaesser") karteEinhaengen();
     return;
@@ -431,6 +445,7 @@ function renderListe(){
 
 /* ---------- Ereignisse ---------- */
 document.addEventListener("click", e => {
+  if(fangbuchKlick(e)) return;
   if(st.bereich === "gewaesser" && karteKlick(e, toast, ortId => { hst.ort = ortId; merkeHeute(); geheZu("heute"); toast("Ort für Heute übernommen"); })) return;
   const f = e.target.closest("[data-filter]");
   if(f){ st.filter = f.dataset.filter; schreibeText(KEYS.filter, st.filter); renderListe(); return; }
@@ -547,7 +562,7 @@ function renderSync(inhaltAuch){
   dialogFuer = wer;
   const inh = $("#sync-inhalt");
   if(sync.user){
-    inh.innerHTML = `<p>Angemeldet als <b>${esc(sync.user.email)}</b>. Wartung und Schnurwechsel werden mit der bisherigen App und deinen anderen Geräten abgeglichen.</p>
+    inh.innerHTML = `<p>Angemeldet als <b>${esc(sync.user.email)}</b>. Ausrüstung, Pflege, Tasche, Fänge, Ausflüge und Spots werden mit deinen anderen Geräten abgeglichen.</p>
       ${sync.fehler ? `<p class="fehler">${esc(sync.fehler)}</p>` : ""}
       <button type="button" class="knopf" id="abmelden">Abmelden</button>`;
   } else {
@@ -580,7 +595,9 @@ $("#sync-dialog").addEventListener("click", async e => {
 /* ---------- Start ---------- */
 initEdit({ toast, geheZu });
 initKarte(() => render());
-beiAenderung(() => render());
+initFangbuch({ toast, render: () => render() });
+beiAenderung(() => { ausfluegeNachSync(); render(); });
+beiAusflugAenderung(() => { if(st.bereich === "fangbuch" || st.bereich === "rutenwand") render(); });
 leseHash();
 render();
 startSync();

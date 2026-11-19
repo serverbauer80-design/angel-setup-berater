@@ -2,12 +2,17 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
+  <script>
+    /* Etappe 6: Die neue Oberfläche ist jetzt die App. Die bisherige bleibt als
+       Archiv erreichbar (?alt=1) und für Werkzeuge, die es nur hier gibt (?view=…). */
+    if(!/[?&](alt|view)=/.test(location.search)) location.replace("neu/");
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Angel-Setup-Berater</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0e1b24">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=20261120-110">
+  <link rel="stylesheet" href="style.css?v=20261120-111">
 </head>
 <body>
   <header class="topbar">
@@ -17,7 +22,7 @@
         <h1>Angel-Setup</h1>
       </div>
       <div style="display:flex;gap:8px;align-items:center;order:2;margin-left:auto">
-        <a href="neu/" class="sync-status" style="text-decoration:none" title="Neue Oberfläche (Etappe 1: Rutenwand)">✨ Neu</a>
+        <a href="neu/" class="sync-status" style="text-decoration:none" title="Zur neuen App">✨ Zur neuen App</a>
         <button id="sync-status-btn" type="button" class="sync-status" title="Synchronisation">☁️ Nicht angemeldet</button>
       </div>
     </div>
@@ -316,10 +321,10 @@
     firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {});
   </script>
 
-  <script src="data.js?v=20261120-110"></script>
-  <script src="ausruestung.js?v=20261120-110"></script>
-  <script src="berater.js?v=20261120-110"></script>
-  <script src="app.js?v=20261120-110"></script>
+  <script src="data.js?v=20261120-111"></script>
+  <script src="ausruestung.js?v=20261120-111"></script>
+  <script src="berater.js?v=20261120-111"></script>
+  <script src="app.js?v=20261120-111"></script>
   <script>
     if("serviceWorker" in navigator){
       navigator.serviceWorker.register("sw.js").catch(()=>{});
