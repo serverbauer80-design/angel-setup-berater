@@ -118,7 +118,8 @@ function mehrLink(fisch, a){
 function karte(a, rl, gw, status, fisch) {
   const [farbe, label] = STATUS[status];
   const bester = rl[0] && rl[0].stufe < 2 ? rl[0] : null;
-  const alt = rl.slice(1).filter(x => x.stufe < 2 && bester && x.stufe <= bester.stufe).slice(0, 3);
+  const gruen = bester ? rl.slice(1).filter(x => x.stufe === 0) : [];
+  const gelb = bester ? rl.slice(1).filter(x => x.stufe === 1).slice(0, 2) : [];
   const set = bester ? bester.setup : null;
   const zweck = fisch.id + "#" + fisch.ansaetze.indexOf(a);
   return `<article class="b-karte">
@@ -127,7 +128,8 @@ function karte(a, rl, gw, status, fisch) {
       <button type="button" class="knopf klein ${inTascheFuer(set.key, zweck) ? "" : "prim"} b-tasche" data-tasche="${set.key}" data-zweck="${zweck}">${inTascheFuer(set.key, zweck) ? "✓ In der Tasche" : "In die Tasche"}</button>
       ${grundHTML(bester.plus, bester.gruende, bester.hinweise)}`
       : `<p class="leer">Keins deiner Setups passt hierfür.</p>`}
-    ${alt.length ? `<p class="besser">Geht auch: ${alt.map(x => `<a href="#rutenwand/${x.setup.key}">${kurz(x.setup)}</a>${x.stufe ? " (knapp)" : ""}`).join(", ")}</p>` : ""}
+    ${gruen.length ? `<p class="besser"><span class="amp g"></span> Passt ebenso: ${gruen.map(x => `<a href="#rutenwand/${x.setup.key}">${kurz(x.setup)}</a>`).join(", ")}</p>` : ""}
+    ${gelb.length ? `<p class="besser"><span class="amp y"></span> Geht auch (knapp): ${gelb.map(x => `<a href="#rutenwand/${x.setup.key}" title="${esc(x.gruende.join(" · "))}">${kurz(x.setup)}</a>`).join(", ")}</p>` : ""}
     ${status !== "machbar" ? wunschHTML(a) : ""}
     <details class="b-montage"${set ? "" : " open"}><summary>Montage</summary>${kettenHTML(a, set, gw)}</details>
     ${a.tipp ? `<p class="ansatz-tipp">${esc(a.tipp)}</p>` : ""}

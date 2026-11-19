@@ -449,6 +449,9 @@ button.frei-rolle:hover{border-color:var(--muted)}
 .w-setups li:last-child{border-bottom:none}
 .w-setups li a{grid-column:2;font-weight:600;text-decoration:none}
 .w-setups .w-ans{font-size:14.5px}
+.w-alle{grid-column:2;display:flex;flex-wrap:wrap;gap:4px 14px}
+.w-alle a{display:inline-flex;align-items:center;gap:6px;font-weight:600;text-decoration:none;min-height:32px}
+.besser .amp{display:inline-block;vertical-align:middle;margin-right:2px}
 .w-zwischen{font-size:26px;font-weight:700;padding-top:6px}
 .w-montage{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:12px;box-shadow:var(--shadow)}
 .w-montage-kopf{display:grid;gap:2px}

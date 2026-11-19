@@ -355,7 +355,9 @@ const BERATER = (function(){
         plus: bester ? bester.plus : [],
         hinweise: bester ? bester.hinweise : [],
         hinweis: anf.hinweis || "",
-        alternativen: liste.slice(1).filter(x => x.stufe <= (bester ? bester.stufe : 0) && x.stufe < 2).slice(0, 3).map(x => ({ key: x.setup.key, stufe: x.stufe })),
+        /* alle weiteren grünen, dazu höchstens zwei gelbe */
+        alternativen: [...liste.slice(1).filter(x => x.stufe === 0), ...liste.slice(1).filter(x => x.stufe === 1).slice(0, 2)]
+          .filter(() => bester && bester.stufe < 2).map(x => ({ key: x.setup.key, stufe: x.stufe })),
         gw: gw || null
       };
     }));

@@ -56,13 +56,15 @@ function setupsHTML(art){
     const b = BERATER.bewerte(a, null);
     if(!b) return "";
     const [farbe, label] = STATUS[b.status];
-    const s = b.bester ? b.bester.setup : null;
+    const gruen = b.liste.filter(x => x.stufe === 0);
+    const gelb = b.liste.filter(x => x.stufe === 1).slice(0, gruen.length ? 2 : 3);
+    const link = x => `<a href="#rutenwand/${x.setup.key}"><span class="amp ${x.stufe ? "y" : "g"}"></span>${kurzName(x.setup)}</a>`;
     return `<li><span class="status ${farbe}">${label}</span>
       <span class="w-ans"><b>${esc(f.name)}</b> · ${esc(a.methode.split(" – ").slice(-1)[0])}</span>
-      ${s ? `<a href="#rutenwand/${s.key}">${kurzName(s)} ›</a>` : `<span class="hinweis-klein">kein passendes Setup</span>`}</li>`;
+      <span class="w-alle">${gruen.length || gelb.length ? [...gruen, ...gelb].map(link).join("") : `<span class="hinweis-klein">kein passendes Setup</span>`}</span></li>`;
   }).join("");
   return zeilen ? `<div class="w-box"><h3>Deine Setups dafür</h3><ul class="w-setups">${zeilen}</ul>
-    <p class="hinweis-klein">Bewertet vom Berater über alle Gewässer. Für ein bestimmtes Gewässer nutze den Berater unter „Heute“.</p></div>` : "";
+    <p class="hinweis-klein">Grün = passt, gelb = geht mit Abstrichen – das beste zuerst. Bewertet über alle Gewässer; für ein bestimmtes Gewässer nutze den Berater unter „Heute“.</p></div>` : "";
 }
 
 function montageHTML(m, liste){
