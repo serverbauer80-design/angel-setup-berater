@@ -324,4 +324,22 @@ button.frei-rolle:hover{border-color:var(--muted)}
   .blatt-akt .knopf{flex:0 0 auto}
   .neu-knoepfe{grid-template-columns:auto auto;justify-content:start}
 }
+
+/* Rolle hervorgehoben + antippbare Kacheln */
+.rolle-feld{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;font:inherit;color:var(--ink);cursor:pointer;
+  background:var(--water-soft);border:1px solid transparent;border-left:4px solid var(--water);border-radius:12px;padding:12px 14px}
+.rolle-feld:hover{border-color:var(--water)}
+.rolle-feld-txt{display:grid;gap:1px;min-width:0}
+.rolle-feld-txt small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--water)}
+.rolle-feld-txt b{font-size:17px}
+.rolle-feld-txt span{font-size:13.5px;color:var(--muted)}
+.rolle-feld-pfeil{flex:none;font-weight:700;font-size:14px;color:var(--water);white-space:nowrap}
+.rolle-feld.leer-rolle{background:var(--warn-soft);border-left-color:var(--warn)}
+.rolle-feld.leer-rolle small,.rolle-feld.leer-rolle .rolle-feld-pfeil{color:var(--warn)}
+.tiles .kachel-link{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 12px;display:grid;gap:2px;min-width:0;text-align:left;font:inherit;color:var(--ink);cursor:pointer}
+.tiles .kachel-link small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--water)}
+.tiles .kachel-link b{font-family:var(--f-mono);font-size:15px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.tiles .kachel-link:hover{border-color:var(--water)}
+.tiles .kachel-link.fehlt{background:var(--warn-soft);border-color:transparent}
+.tiles .kachel-link.fehlt small,.tiles .kachel-link.fehlt b{color:var(--warn)}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} .sk:active{transform:none} }

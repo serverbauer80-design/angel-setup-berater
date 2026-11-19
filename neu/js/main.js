@@ -179,12 +179,25 @@ const AMPEL_TEXT = { machbar:"machbar", bedingt:"bedingt", wunsch:"Wunschliste" 
 
 function reihe(k, v){ return v ? `<div class="reihe"><dt>${k}</dt><dd>${esc(v)}</dd></div>` : ""; }
 
+function rolleFeldHTML(s){
+  if(s.kategorie === "stippe") return "";
+  if(s.rolle){
+    const details = [s.rolle.groesse ? "Größe " + s.rolle.groesse : "", s.rolle.freilauf ? "Freilauf" : ""].filter(Boolean).join(" · ");
+    return `<button type="button" class="rolle-feld" data-geh-tab="kombi">
+      <span class="rolle-feld-txt"><small>Montierte Rolle</small><b>${esc(s.rolle.name)}</b>
+        <span>${esc(details)}${s.schnurText ? (details ? " · " : "") + esc(s.schnurText.split(" – ")[0]) : ""}</span></span>
+      <span class="rolle-feld-pfeil">Tauschen ›</span></button>`;
+  }
+  return `<button type="button" class="rolle-feld leer-rolle" data-geh-tab="kombi">
+    <span class="rolle-feld-txt"><small>Rolle</small><b>Noch keine Rolle montiert</b><span>Antippen, um eine freie Rolle auszuwählen</span></span>
+    <span class="rolle-feld-pfeil">Auswählen ›</span></button>`;
+}
+
 function tabInfos(g){
   const s = g.kopf, r = s.roh;
-  let h = `<dl class="reihen">
+  let h = rolleFeldHTML(s) + `<dl class="reihen">
     ${reihe("Rute", s.rute ? s.rute.text : "")}
-    ${reihe("Rolle", s.rolle ? s.rolle.text : r.rolleText)}
-    ${reihe("Schnur", s.schnurText)}
+    ${s.kategorie === "stippe" ? reihe("Rolle", r.rolleText) + reihe("Schnur", s.schnurText) : ""}
     ${reihe("Vorfach", r.vorfach)}
     ${reihe("Dazu", r.extra)}
   </dl>`;
@@ -322,8 +335,8 @@ function detailHTML(g){
   const tiles = [
     ["Länge", s.laenge ? meter(s.laenge) : "–"],
     ["Wurfgewicht", s.wg ? `${komma(s.wg[0])}–${komma(s.wg[1])} g` : "–"],
-    ["Schnur", s.art ? (ART_LABEL[s.art] || s.art) + (s.dm ? " " + s.dm : "") : "–"],
-    ["Rolle", s.rolle ? (s.rolle.groesse + (s.rolle.freilauf ? " · Freilauf" : "")) : "–"]
+    ["Schnur", s.art ? (ART_LABEL[s.art] || s.art) + (s.dm ? " " + s.dm : "") : "–", s.kategorie === "stippe" ? null : "pflege"],
+    ["Rolle", s.rolle ? (s.rolle.groesse + (s.rolle.freilauf ? " · Freilauf" : "")) : "–", s.kategorie === "stippe" ? null : "kombi"]
   ];
   let body = "";
   if(st.tab === "infos") body = tabInfos(g);
@@ -337,7 +350,9 @@ function detailHTML(g){
     <p class="eyebrow">${esc(kat ? kat.titel : s.kategorie)} · ${ZUSTAND_LABEL[s.zustand]}${g.glieder.length > 1 ? ` · ${g.glieder.length}× vorhanden` : ""}</p>
     <h2 id="det-titel">${esc(s.titel)}</h2>
     <p class="det-sub">${esc(s.rolleName || "keine Rolle")}${s.schnurText ? " · " + esc(s.schnurText.split(" – ")[0].split(" · ")[0]) : ""}</p>
-    <div class="tiles">${tiles.map(([k, v]) => `<div><small>${k}</small><b>${esc(v)}</b></div>`).join("")}</div>
+    <div class="tiles">${tiles.map(([k, v, ziel]) => ziel
+      ? `<button type="button" class="kachel-link${v === "–" ? " fehlt" : ""}" data-geh-tab="${ziel}" aria-label="${k}: ${esc(v)} – öffnen"><small>${k} ›</small><b>${esc(v === "–" && k === "Rolle" ? "keine" : v)}</b></button>`
+      : `<div><small>${k}</small><b>${esc(v)}</b></div>`).join("")}</div>
     ${s.wg ? `<div class="det-wg">${wgHTML(s)}</div>` : ""}
     <div class="seg" role="tablist" aria-label="Setup-Details">${TABS.map(([k, l]) =>
       `<button type="button" role="tab" id="tab-${k}" aria-selected="${st.tab === k}" class="${st.tab === k ? "on" : ""}" data-tab="${k}">${l}${zahl[k] ? `<i>${zahl[k]}</i>` : ""}</button>`).join("")}</div>
@@ -406,6 +421,13 @@ function renderListe(){
 document.addEventListener("click", e => {
   const f = e.target.closest("[data-filter]");
   if(f){ st.filter = f.dataset.filter; schreibeText(KEYS.filter, st.filter); renderListe(); return; }
+  const gt = e.target.closest("[data-geh-tab]");
+  if(gt){
+    st.tab = gt.dataset.gehTab; render();
+    const seg = $(".seg"); if(seg) seg.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    const b = $(`#tab-${st.tab}`); if(b) b.focus({ preventScroll: true });
+    return;
+  }
   const t = e.target.closest("[data-tab]");
   if(t){ st.tab = t.dataset.tab; render(); const b = $(`#tab-${st.tab}`); if(b) b.focus(); return; }
   const b = e.target.closest("[data-neu],[data-rute-bearb],[data-rolle-bearb],[data-montiere],[data-montiere-wahl],[data-schnur-neu],[data-schnur-heute],[data-zurueck]");
