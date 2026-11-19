@@ -70,7 +70,7 @@ const GERAET_VORGABE = {
   ruten: {
     r_daiwa_prorex_s_spin:            { aktion:"schnell",     quelle:"geschätzt" },
     r_daiwa_presso_imprimi_st:        { aktion:"mittel",      quelle:"geschätzt" },
-    r_westin_w2_light_softlure_ul:    { aktion:"schnell",     quelle:"geschätzt" },
+    r_westin_w2_light_softlure_ul:    { aktion:"parabolisch", quelle:"du" },   // laut Christian die weichste seiner Ruten (20.11.2026)
     r_berkley_flex_trout_spinning_:   { aktion:"parabolisch", quelle:"Hersteller" },
     r_spro_tactical_lake_sbiro:       { aktion:"parabolisch", quelle:"geschätzt" },
     r_savage_gear_revenge_sg2_ligh:   { aktion:"schnell",     quelle:"geschätzt" },
