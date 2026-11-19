@@ -70,10 +70,10 @@ const GERAET_VORGABE = {
   /* Recherche 20.11.2026. quelle: "Hersteller" | "Händler" | "du" | "geschätzt" */
   ruten: {
     r_daiwa_prorex_s_spin:            { aktion:"schnell",     quelle:"Händler",    notiz:"extra fast / fast (kaufland.de, Art. 11282-271)" },
-    r_daiwa_presso_imprimi_st:        { aktion:"mittel",      quelle:"geschätzt",  notiz:"Presso Iprimi mit Vollcarbonspitze (Solid Tip) – Aktion nicht angegeben" },
+    r_daiwa_presso_imprimi_st:        { aktion:"parabolisch", quelle:"du",         notiz:"Area-Aktion (Regular): lädt bis ins Handteil, federt Fluchten an dünner Schnur ab" },
     r_westin_w2_light_softlure_ul:    { aktion:"parabolisch", quelle:"Hersteller", notiz:"Westin: Rod Action SLOW, 73 g, für Gummiköder (Softlure)" },
     r_berkley_flex_trout_spinning_:   { aktion:"parabolisch", quelle:"Hersteller", notiz:"moderat-parabolisch" },
-    r_spro_tactical_lake_sbiro:       { aktion:"parabolisch", quelle:"geschätzt",  notiz:"Sbirolino-Rute mit feiner Spitze – Aktion nicht angegeben" },
+    r_spro_tactical_lake_sbiro:       { aktion:"mittel",      quelle:"du",         notiz:"progressiv/semi-fast: weiche Spitze, kraftvolles Rückgrat für weite Sbiro-Würfe" },
     r_savage_gear_revenge_sg2_ligh:   { aktion:"schnell",     quelle:"Händler",    notiz:"„fast, yet forgiving action“" },
     r_daiwa_ninja_x_feeder:           { aktion:"mittel",      quelle:"geschätzt",  feederspitze:true, notiz:"3 Wechselspitzen laut Daiwa – Aktion für 3,90 m nicht angegeben" },
     r_berkley_flex:                   { aktion:"mittel",      quelle:"Händler",    notiz:"Berkley Flex Trout 3,90 m 10–30 g: Action Moderate (piscor.com)" },
@@ -81,13 +81,13 @@ const GERAET_VORGABE = {
     r_westin_w3_powershad_2nd_m:      { aktion:"mittel",      quelle:"Hersteller", notiz:"Westin: Rod Action MEDIUM, 149 g" },
     r_daiwa_black_widow_xt_carp:      { aktion:"mittel",      quelle:"Händler",    notiz:"progressiv" },
     r_daiwa_black_widow_xt_bait:      { aktion:"mittel",      quelle:"Hersteller", notiz:"Daiwa: progressive Aktion, Art. 11554-360, 350 g" },
-    r_ftm_black_aryas_2:              { aktion:"parabolisch", quelle:"geschätzt",  notiz:"Tremarella-Rute – keine Herstellerangabe gefunden" },
-    r_ftm_black_aryas_2_2:            { aktion:"parabolisch", quelle:"geschätzt",  notiz:"Tremarella-Rute – keine Herstellerangabe gefunden" },
-    r_ftm_black_aryas_2_3:            { aktion:"parabolisch", quelle:"geschätzt",  notiz:"Tremarella-Rute – keine Herstellerangabe gefunden" },
+    r_ftm_black_aryas_2:              { aktion:"mittel",      quelle:"du",         notiz:"Tremarella-Aktion: ultrafeine Spitze, Druck baut sich progressiv im Unterteil auf" },
+    r_ftm_black_aryas_2_2:            { aktion:"mittel",      quelle:"du",         notiz:"Tremarella-Aktion: ultrafeine Spitze, Druck baut sich progressiv im Unterteil auf" },
+    r_ftm_black_aryas_2_3:            { aktion:"mittel",      quelle:"du",         notiz:"Tremarella-Aktion: ultrafeine Spitze, Druck baut sich progressiv im Unterteil auf" },
     r_crivit_spinnangel_set_210_5:    { aktion:"mittel",      quelle:"geschätzt" },
     r_crivit_multi_x_feeder_300_5:    { aktion:"mittel",      quelle:"geschätzt",  feederspitze:false },
-    r_balzer_diabolo_golden_circle:   { aktion:"schnell",     quelle:"geschätzt",  notiz:"Serie mit IM-7-Blank „schnell“ beworben – für das Zander-Modell nicht bestätigt" },
-    r_balzer_shirasu_im8_spoon_ul:    { aktion:"mittel",      quelle:"geschätzt",  notiz:"keine Herstellerangabe gefunden" }
+    r_balzer_diabolo_golden_circle:   { aktion:"schnell",     quelle:"du",         notiz:"Spitzenaktion: straffer Blank, sensible Spitze, hartes Rückgrat für den Anhieb im Zandermaul" },
+    r_balzer_shirasu_im8_spoon_ul:    { aktion:"mittel",      quelle:"geschätzt",  notiz:"Spoon-UL-Modell – die Fast-Einstufung der Shirasu-Zanderruten gilt hierfür nicht" }
   },
   /* Salzwasserfest nur, wo eine Quelle es nennt – sonst unbekannt */
   rollen: {
