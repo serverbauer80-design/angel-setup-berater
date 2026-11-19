@@ -67,29 +67,33 @@ const ROLLEN = [
            "parabolisch" (durchgehend weich – Sbirolino, Tremarella, puffert Fluchten)
    Ruten "quelle":"Hersteller" stehen so in der Produktbeschreibung. */
 const GERAET_VORGABE = {
+  /* Recherche 20.11.2026. quelle: "Hersteller" | "Händler" | "du" | "geschätzt" */
   ruten: {
-    r_daiwa_prorex_s_spin:            { aktion:"schnell",     quelle:"geschätzt" },
-    r_daiwa_presso_imprimi_st:        { aktion:"mittel",      quelle:"geschätzt" },
-    r_westin_w2_light_softlure_ul:    { aktion:"parabolisch", quelle:"du" },   // laut Christian die weichste seiner Ruten (20.11.2026)
-    r_berkley_flex_trout_spinning_:   { aktion:"parabolisch", quelle:"Hersteller" },
-    r_spro_tactical_lake_sbiro:       { aktion:"parabolisch", quelle:"geschätzt" },
-    r_savage_gear_revenge_sg2_ligh:   { aktion:"schnell",     quelle:"geschätzt" },
-    r_daiwa_ninja_x_feeder:           { aktion:"mittel",      quelle:"geschätzt", feederspitze:true },
-    r_berkley_flex:                   { aktion:"parabolisch", quelle:"geschätzt" },
-    r_berkley_flex_2:                 { aktion:"parabolisch", quelle:"geschätzt" },
-    r_westin_w3_powershad_2nd_m:      { aktion:"schnell",     quelle:"geschätzt" },
-    r_daiwa_black_widow_xt_carp:      { aktion:"mittel",      quelle:"geschätzt" },
-    r_daiwa_black_widow_xt_bait:      { aktion:"mittel",      quelle:"geschätzt" },
-    r_ftm_black_aryas_2:              { aktion:"parabolisch", quelle:"geschätzt" },
-    r_ftm_black_aryas_2_2:            { aktion:"parabolisch", quelle:"geschätzt" },
-    r_ftm_black_aryas_2_3:            { aktion:"parabolisch", quelle:"geschätzt" },
+    r_daiwa_prorex_s_spin:            { aktion:"schnell",     quelle:"Händler",    notiz:"extra fast / fast (kaufland.de, Art. 11282-271)" },
+    r_daiwa_presso_imprimi_st:        { aktion:"mittel",      quelle:"geschätzt",  notiz:"Presso Iprimi mit Vollcarbonspitze (Solid Tip) – Aktion nicht angegeben" },
+    r_westin_w2_light_softlure_ul:    { aktion:"parabolisch", quelle:"Hersteller", notiz:"Westin: Rod Action SLOW, 73 g, für Gummiköder (Softlure)" },
+    r_berkley_flex_trout_spinning_:   { aktion:"parabolisch", quelle:"Hersteller", notiz:"moderat-parabolisch" },
+    r_spro_tactical_lake_sbiro:       { aktion:"parabolisch", quelle:"geschätzt",  notiz:"Sbirolino-Rute mit feiner Spitze – Aktion nicht angegeben" },
+    r_savage_gear_revenge_sg2_ligh:   { aktion:"schnell",     quelle:"Händler",    notiz:"„fast, yet forgiving action“" },
+    r_daiwa_ninja_x_feeder:           { aktion:"mittel",      quelle:"geschätzt",  feederspitze:true, notiz:"3 Wechselspitzen laut Daiwa – Aktion für 3,90 m nicht angegeben" },
+    r_berkley_flex:                   { aktion:"mittel",      quelle:"Händler",    notiz:"Berkley Flex Trout 3,90 m 10–30 g: Action Moderate (piscor.com)" },
+    r_berkley_flex_2:                 { aktion:"mittel",      quelle:"Händler",    notiz:"Berkley Flex Trout 3,90 m 10–30 g: Action Moderate (piscor.com)" },
+    r_westin_w3_powershad_2nd_m:      { aktion:"mittel",      quelle:"Hersteller", notiz:"Westin: Rod Action MEDIUM, 149 g" },
+    r_daiwa_black_widow_xt_carp:      { aktion:"mittel",      quelle:"Händler",    notiz:"progressiv" },
+    r_daiwa_black_widow_xt_bait:      { aktion:"mittel",      quelle:"Hersteller", notiz:"Daiwa: progressive Aktion, Art. 11554-360, 350 g" },
+    r_ftm_black_aryas_2:              { aktion:"parabolisch", quelle:"geschätzt",  notiz:"Tremarella-Rute – keine Herstellerangabe gefunden" },
+    r_ftm_black_aryas_2_2:            { aktion:"parabolisch", quelle:"geschätzt",  notiz:"Tremarella-Rute – keine Herstellerangabe gefunden" },
+    r_ftm_black_aryas_2_3:            { aktion:"parabolisch", quelle:"geschätzt",  notiz:"Tremarella-Rute – keine Herstellerangabe gefunden" },
     r_crivit_spinnangel_set_210_5:    { aktion:"mittel",      quelle:"geschätzt" },
-    r_crivit_multi_x_feeder_300_5:    { aktion:"mittel",      quelle:"geschätzt", feederspitze:false },
-    r_balzer_diabolo_golden_circle:   { aktion:"schnell",     quelle:"geschätzt" },
-    r_balzer_shirasu_im8_spoon_ul:    { aktion:"mittel",      quelle:"geschätzt" }
+    r_crivit_multi_x_feeder_300_5:    { aktion:"mittel",      quelle:"geschätzt",  feederspitze:false },
+    r_balzer_diabolo_golden_circle:   { aktion:"schnell",     quelle:"geschätzt",  notiz:"Serie mit IM-7-Blank „schnell“ beworben – für das Zander-Modell nicht bestätigt" },
+    r_balzer_shirasu_im8_spoon_ul:    { aktion:"mittel",      quelle:"geschätzt",  notiz:"keine Herstellerangabe gefunden" }
   },
-  /* Salzwasserfest nur, wo es sicher ist – sonst unbekannt (null) */
-  rollen: {}
+  /* Salzwasserfest nur, wo eine Quelle es nennt – sonst unbekannt */
+  rollen: {
+    ro_freams_lt4000_p:  { salzwasser:true, quelle:"Händler", notiz:"Magsealed-Hauptwelle, für Süß- und küstennahes Salzwasser" },
+    ro_penn_clash_ii_1000: { salzwasser:true, quelle:"Händler", notiz:"als Salzwasser-Spinnrolle verkauft, Metallkörper, abgedichtete Lager" }
+  }
 };
 
 /* ---------- 1b2) BEWUSST GEWAEHLTE KOMBOS ----------

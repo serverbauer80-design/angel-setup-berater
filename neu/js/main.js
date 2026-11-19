@@ -207,14 +207,15 @@ function rolleFeldHTML(s){
 function tabInfos(g){
   const s = g.kopf, r = s.roh;
   const AKT = { schnell: "schnell (Spitzenaktion)", mittel: "mittel (semiparabolisch)", parabolisch: "parabolisch (durchgehend)" };
-  const aktion = s.rute && s.rute.aktion ? AKT[s.rute.aktion] + (s.rute.aktionQuelle === "geschätzt" ? " · geschätzt" : "") : (s.kategorie === "stippe" ? "" : "unbekannt");
+  const QTXT = { "geschätzt": " · geschätzt", "Hersteller": " · laut Hersteller", "Händler": " · laut Händler", "du": " · deine Angabe" };
+  const aktion = s.rute && s.rute.aktion ? AKT[s.rute.aktion] + (QTXT[s.rute.aktionQuelle] || "") + (s.rute.aktionNotiz ? ` (${s.rute.aktionNotiz})` : "") : (s.kategorie === "stippe" ? "" : "unbekannt");
   const tk = s.rolle ? AUSR.tragkraft(s.rolle) : null;
   let h = rolleFeldHTML(s) + `<dl class="reihen">
     ${reihe("Rute", s.rute ? s.rute.text : "")}
     ${reihe("Aktion", aktion)}
     ${s.rute && s.rute.feederspitze ? reihe("Spitze", "Bibberspitze (Feeder)") : ""}
     ${tk ? reihe("Tragkraft", "ca. " + komma(tk.kg) + " kg" + (tk.quelle === "geschätzt" ? " · geschätzt aus dem Durchmesser" : "")) : ""}
-    ${s.rolle && s.rolle.salzwasser !== undefined && s.rolle.salzwasser !== null ? reihe("Salzwasser", s.rolle.salzwasser ? "Rolle salzwasserfest" : "Rolle nicht salzwasserfest") : ""}
+    ${s.rolle && s.rolle.salzwasser !== undefined && s.rolle.salzwasser !== null ? reihe("Salzwasser", (s.rolle.salzwasser ? "Rolle salzwassertauglich" : "Rolle nicht salzwasserfest") + (s.rolle.salzQuelle ? " · laut " + s.rolle.salzQuelle : "")) : ""}
     ${s.kategorie === "stippe" ? reihe("Rolle", r.rolleText) + reihe("Schnur", s.schnurText) : ""}
     ${reihe("Vorfach", r.vorfach)}
     ${reihe("Dazu", r.extra)}

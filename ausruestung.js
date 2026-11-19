@@ -102,12 +102,12 @@ const AUSR = (function(){
     RUTEN.forEach(r => {
       const v = V.ruten[r.id];
       if(!v) return;
-      if(r.aktion === undefined && v.aktion){ r.aktion = v.aktion; r.aktionQuelle = v.quelle || "geschätzt"; }
+      if(r.aktion === undefined && v.aktion){ r.aktion = v.aktion; r.aktionQuelle = v.quelle || "geschätzt"; if(v.notiz) r.aktionNotiz = v.notiz; }
       if(r.feederspitze === undefined && v.feederspitze !== undefined) r.feederspitze = v.feederspitze;
     });
     ROLLEN.forEach(r => {
       const v = V.rollen[r.id];
-      if(v && r.salzwasser === undefined && v.salzwasser !== undefined) r.salzwasser = v.salzwasser;
+      if(v && r.salzwasser === undefined && v.salzwasser !== undefined){ r.salzwasser = v.salzwasser; r.salzQuelle = v.quelle || ""; }
     });
   }
 
