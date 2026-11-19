@@ -290,8 +290,17 @@ function tabKombi(g){
     h += `<div class="kombi-jetzt ${ST[urteil.stufe]}"><span class="amp ${ST[urteil.stufe]}"></span><div><b>Jetzt montiert: ${esc(s.rolle.name)} · ${urteil.urteil}</b><span>${urteil.gruende.map(esc).join(" · ")}</span>
       <span class="akt-zeile"><button type="button" class="knopf" data-rolle-bearb="${s.rolle.id}">Rolle bearbeiten</button><button type="button" class="knopf leise" data-montiere="" data-key="${s.key}">Abnehmen</button></span></div></div>`;
   } else {
-    h += `<div class="kombi-jetzt"><span class="amp y"></span><div><b>Keine Rolle montiert</b><span>Wähle unten eine Rolle aus oder lege eine neue an.</span>
-      <span class="akt-zeile"><button type="button" class="knopf" data-neu="rolle" data-key="${s.key}">+ Neue Rolle für diese Rute</button></span></div></div>`;
+    /* Freie Rollen zur Auswahl, die passendsten zuerst */
+    const frei = freieRollen().map(r => ({ r, b: bewerteKombo(s.rute, r) }))
+      .sort((a, b) => (a.b ? a.b.stufe : 3) - (b.b ? b.b.stufe : 3) || (a.r.groesse || 0) - (b.r.groesse || 0));
+    const URTEIL = ["passt", "geht", "passt nicht"];
+    h += `<div class="kombi-jetzt"><span class="amp y"></span><div><b>Keine Rolle montiert</b>
+      ${frei.length ? `<label class="feld frei-wahl"><span>Freie Rolle montieren</span>
+          <select id="frei-wahl-${s.key}">${frei.map(x => `<option value="${x.r.id}">${esc(x.r.name)}${x.r.groesse ? " · " + x.r.groesse : ""}${x.b ? " – " + URTEIL[x.b.stufe] : ""}</option>`).join("")}</select></label>
+        <span class="akt-zeile"><button type="button" class="knopf prim" data-montiere-wahl="${s.key}">Montieren</button><button type="button" class="knopf" data-neu="rolle" data-key="${s.key}">+ Neue Rolle anlegen</button></span>`
+      : `<span>Gerade ist keine Rolle frei. Nimm eine von einer anderen Rute (unten) oder lege eine neue an.</span>
+        <span class="akt-zeile"><button type="button" class="knopf" data-neu="rolle" data-key="${s.key}">+ Neue Rolle anlegen</button></span>`}
+      </div></div>`;
   }
   const andere = ROLLEN.filter(r => !s.rolle || r.id !== s.rolle.id).map(r => ({ r, b: bewerteKombo(s.rute, r), auf: rolleMontiertAuf(r.id) }))
     .filter(x => x.b).sort((a, b) => a.b.stufe - b.b.stufe || (a.auf ? 1 : 0) - (b.auf ? 1 : 0) || a.r.groesse - b.r.groesse);
@@ -399,9 +408,10 @@ document.addEventListener("click", e => {
   if(f){ st.filter = f.dataset.filter; schreibeText(KEYS.filter, st.filter); renderListe(); return; }
   const t = e.target.closest("[data-tab]");
   if(t){ st.tab = t.dataset.tab; render(); const b = $(`#tab-${st.tab}`); if(b) b.focus(); return; }
-  const b = e.target.closest("[data-neu],[data-rute-bearb],[data-rolle-bearb],[data-montiere],[data-schnur-neu],[data-schnur-heute],[data-zurueck]");
+  const b = e.target.closest("[data-neu],[data-rute-bearb],[data-rolle-bearb],[data-montiere],[data-montiere-wahl],[data-schnur-neu],[data-schnur-heute],[data-zurueck]");
   if(b){
     const d = b.dataset;
+    if(d.montiereWahl){ const sel = document.getElementById("frei-wahl-" + d.montiereWahl); if(sel && sel.value) return montiere(d.montiereWahl, sel.value); return; }
     if(d.neu === "rute") return neueRute();
     if(d.neu === "rolle") return neueRolle(d.key || null);
     if(d.ruteBearb) return ruteBearbeiten(d.ruteBearb);

@@ -307,6 +307,10 @@ button.frei-rolle:hover{border-color:var(--muted)}
 .feld > span{font-size:13px;color:var(--muted);font-weight:600}
 .feld input,.feld select,.feld textarea{width:100%;min-height:46px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);padding:10px 12px;font:inherit;font-size:16px}
 .feld textarea{resize:vertical;line-height:1.4}
+/* iPhone: Datumsfelder haben eine eigene Mindestbreite und ragen sonst aus dem Raster */
+.feld input[type="date"],.datum-wahl input{-webkit-appearance:none;appearance:none;min-width:0;max-width:100%;display:block}
+.feld input[type="date"]::-webkit-date-and-time-value{text-align:left}
+.frei-wahl{margin-top:8px}
 .feld.haken{display:flex;align-items:center;gap:10px;align-self:end;min-height:46px}
 .feld.haken input{width:22px;height:22px;min-height:0;accent-color:var(--float)}
 .feld.haken span{font-size:15px;color:var(--ink);font-weight:600}
