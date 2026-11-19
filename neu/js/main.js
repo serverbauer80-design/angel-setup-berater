@@ -1,6 +1,7 @@
 /* ============================================================
-   Rutenwand – neue Oberfläche, Etappe 1
-   Gerüst (4 Bereiche, Handy unten / Desktop seitlich) + Rutenwand.
+   Rutenwand – neue Oberfläche
+   Etappe 1: Gerüst (4 Bereiche, Handy unten / Desktop seitlich) + Rutenwand
+   Etappe 2: Ausrüstung in der App pflegen (edit.js, ../ausruestung.js)
    Routing über den Hash: #rutenwand, #rutenwand/setup22, #heute …
    ============================================================ */
 import { KEYS, pflege, setzePflege, beiAenderung, ladeFaenge, startSync, sync, anmelden, abmelden, lese, schreibe, leseText, schreibeText } from "./store.js";
@@ -9,6 +10,7 @@ import {
   bewerteKombo, rolleMontiertAuf, wgPos, komma, ersterTeil, heuteISO, datumDE, tageSeit,
   ART_LABEL, ZUSTAND_LABEL, WARTUNG_TAGE, SCHNUR_TAGE
 } from "./setups.js";
+import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
@@ -49,6 +51,9 @@ const st = {
 let SETUPS = alleSetups();
 let GRUPPEN = gruppiere(SETUPS);
 
+const pv = x => pflegeVon(x.key, x.kategorie === "stippe", x.schnurInfo && x.schnurInfo.seit);
+function neuAufbauen(){ SETUPS = alleSetups(); GRUPPEN = gruppiere(SETUPS); }
+
 function gruppeZu(key){ return GRUPPEN.find(g => g.glieder.some(s => s.key === key)) || null; }
 
 /* ---------- Routing ---------- */
@@ -80,7 +85,7 @@ function renderNav(){
 function passtFilter(g){
   const s = g.kopf;
   if(st.filter === "achtung"){
-    if(!g.glieder.some(x => { const p = pflegeVon(x.key, x.kategorie === "stippe"); return p.wartungFaellig || p.schnurFaellig || x.zustand !== "bereit"; })) return false;
+    if(!g.glieder.some(x => { const p = pv(x); return p.wartungFaellig || p.schnurFaellig || x.zustand !== "bereit"; })) return false;
   } else if(st.filter !== "alle" && s.kategorie !== st.filter) return false;
   if(st.suche){
     const q = st.suche.toLowerCase();
@@ -102,7 +107,7 @@ function pillsHTML(g){
   if(s.art) out.push(`<span class="pill ${s.art.replace(" ", "-")}">${ART_LABEL[s.art] || s.art}${s.dm ? " " + s.dm : ""}</span>`);
   if(g.glieder.length > 1) out.push(`<span class="pill anzahl">×${g.glieder.length}</span>`);
   if(s.zustand !== "bereit") out.push(`<span class="pill zustand-${s.zustand}">${ZUSTAND_LABEL[s.zustand]}</span>`);
-  const p = g.glieder.map(x => pflegeVon(x.key, x.kategorie === "stippe"));
+  const p = g.glieder.map(x => pv(x));
   if(p.some(x => x.wartungFaellig)) out.push(`<span class="pill warn">Wartung fällig</span>`);
   if(p.some(x => x.schnurFaellig)) out.push(`<span class="pill warn">Schnur alt</span>`);
   return out.join("");
@@ -122,7 +127,7 @@ function karteHTML(g){
 function listeHTML(){
   const sichtbar = GRUPPEN.filter(passtFilter);
   const zahl = k => GRUPPEN.filter(g => g.kopf.kategorie === k).reduce((n, g) => n + g.glieder.length, 0);
-  const achtung = GRUPPEN.filter(g => g.glieder.some(x => { const p = pflegeVon(x.key, x.kategorie === "stippe"); return p.wartungFaellig || p.schnurFaellig || x.zustand !== "bereit"; })).length;
+  const achtung = GRUPPEN.filter(g => g.glieder.some(x => { const p = pv(x); return p.wartungFaellig || p.schnurFaellig || x.zustand !== "bereit"; })).length;
   const chips = [["alle", "Alle", SETUPS.length], ...KATEGORIEN.filter(k => zahl(k.key)).map(k => [k.key, k.titel, zahl(k.key)])];
   if(achtung) chips.push(["achtung", "Achtung", achtung]);
 
@@ -131,6 +136,7 @@ function listeHTML(){
       <input id="suche" type="search" placeholder="Rute, Rolle, Schnur …" value="${esc(st.suche)}" autocomplete="off" enterkeyhint="search"></label>
     <div class="chips" role="group" aria-label="Nach Einsatz filtern">${chips.map(([k, l, n]) =>
       `<button type="button" class="chip${st.filter === k ? " on" : ""}${k === "achtung" ? " chip-warn" : ""}" data-filter="${k}" aria-pressed="${st.filter === k}">${l}<i>${n}</i></button>`).join("")}</div>
+    <div class="neu-knoepfe"><button type="button" class="knopf" data-neu="rute">+ Rute</button><button type="button" class="knopf" data-neu="rolle">+ Rolle</button></div>
   </div>`;
 
   if(!sichtbar.length){
@@ -149,8 +155,18 @@ function listeHTML(){
   const frei = freieRollen();
   if(frei.length && (st.filter === "alle" || st.filter === "achtung") && !st.suche){
     html += `<section class="frei"><h2 class="gruppe-titel">Freie Rollen <span>${frei.length}</span></h2>
-      <p class="gruppe-hinweis">Liegen bereit, auf keiner Rute montiert.</p>
-      ${frei.map(r => `<div class="frei-rolle"><b>${esc(r.name)}</b><span>${esc(r.schnur || "")}</span></div>`).join("")}</section>`;
+      <p class="gruppe-hinweis">Liegen bereit, auf keiner Rute montiert. Antippen zum Bearbeiten.</p>
+      ${frei.map(r => `<button type="button" class="frei-rolle" data-rolle-bearb="${r.id}"><b>${esc(r.name)}${r.groesse ? ` <small>${r.groesse}${r.freilauf ? " · Freilauf" : ""}</small>` : ""}</b><span>${esc(r.schnur || "keine Schnur eingetragen")}</span></button>`).join("")}</section>`;
+  }
+  const arch = AUSR.archiv();
+  const nArch = arch.ruten.length + arch.rollen.length;
+  if(nArch && st.filter === "alle" && !st.suche){
+    const tag = d => d ? " · verkauft " + datumDE(d) : "";
+    html += `<details class="archiv"><summary><span class="gruppe-titel">Archiv <span>${nArch}</span></span></summary>
+      <p class="gruppe-hinweis">Verkauft oder ausgemustert. Fänge und Pflegedaten bleiben erhalten.</p>
+      ${arch.ruten.map(r => `<div class="archiv-teil"><div><b>${esc(r.name)}</b><span>Rute${tag(r.verkauftAm)}</span></div><button type="button" class="knopf leise" data-zurueck="rute" data-id="${r.id}">Zurückholen</button></div>`).join("")}
+      ${arch.rollen.map(r => `<div class="archiv-teil"><div><b>${esc(r.name)}</b><span>Rolle${tag(r.verkauftAm)}</span></div><button type="button" class="knopf leise" data-zurueck="rolle" data-id="${r.id}">Zurückholen</button></div>`).join("")}
+    </details>`;
   }
   html += `<p class="skala-hinweis">Der Wurfgewichtsbalken nutzt für alle Ruten dieselbe Skala von 0,5 bis 150 g. So siehst du Lücken und Überschneidungen.</p>`;
   return html;
@@ -175,6 +191,7 @@ function tabInfos(g){
   if(r.einsatz) h += `<div class="absatz"><h3>Einsatz</h3><p>${esc(r.einsatz)}</p></div>`;
   if(r.bewusst) h += `<div class="absatz bewusst"><h3>Bewusst so gewählt</h3><p>${esc(r.bewusst)}</p></div>`;
   if(r.tippKompakt) h += `<div class="absatz tipp"><h3>Tipp</h3><p>${esc(r.tippKompakt)}</p></div>`;
+  h += `<div class="akt-zeile"><button type="button" class="knopf" data-rute-bearb="${s.key}">Rute &amp; Angaben bearbeiten</button>${s.rolle ? `<button type="button" class="knopf" data-rolle-bearb="${s.rolle.id}">Rolle bearbeiten</button>` : ""}</div>`;
   return h;
 }
 
@@ -224,12 +241,32 @@ function pflegeZeile(art, s, p){
   </div>`;
 }
 
+function schnurBlock(s, p){
+  if(!s.rolle) return `<div class="pflege-zeile"><div class="pflege-txt"><b>Schnur</b><span>Keine Rolle montiert</span><small>Eine Rolle setzt du im Reiter „Kombi“ auf.</small></div></div>`;
+  const voll = AUSR.rolleVoll(s.rolle.id) || {};
+  const verlauf = voll.schnurVerlauf || [];
+  const datum = p.schnur, tage = p.schnurTage;
+  return `<div class="pflege-zeile${p.schnurFaellig ? " faellig" : ""}">
+    <div class="pflege-txt"><b>Schnur auf der ${esc(s.rolle.name)}</b><span class="schnur-jetzt">${esc(s.schnurText || "–")}</span>
+      <span>${datum ? `aufgespult ${datumDE(datum)} · ${tage === 0 ? "heute" : tage < 45 ? "vor " + tage + (tage === 1 ? " Tag" : " Tagen") : "vor " + komma((tage / 30).toFixed(1)) + " Monaten"}` : "Datum noch nicht eingetragen"}</span>
+      <small>Richtwert: alle ${Math.round(SCHNUR_TAGE / 30)} Monate wechseln</small></div>
+    <div class="pflege-akt">
+      <button type="button" class="knopf prim" data-schnur-neu="${s.rolle.id}" data-key="${s.key}">Neue Schnur</button>
+      <button type="button" class="knopf" data-schnur-heute="${s.rolle.id}" data-key="${s.key}">Gleiche heute neu</button>
+      <label class="datum-wahl"><span class="vh">Aufspul-Datum ändern</span>
+        <input type="date" id="d-schnur-${s.key}" data-schnur-datum="${s.rolle.id}" data-key="${s.key}" max="${heuteISO()}" value="${datum || ""}"></label>
+    </div>
+    ${verlauf.length ? `<details class="verlauf"><summary>Frühere Schnüre (${verlauf.length})</summary><ul>${verlauf.map(v =>
+      `<li><b>${esc(v.text || AUSR.schnurText(v))}</b><span>${v.seit ? datumDE(v.seit) : "?"} – ${v.bis ? datumDE(v.bis) : "?"}</span></li>`).join("")}</ul></details>` : ""}
+  </div>`;
+}
+
 function tabPflege(g){
   return g.glieder.map((s, i) => {
     const ohneSchnur = s.kategorie === "stippe";
-    const p = pflegeVon(s.key, ohneSchnur);
+    const p = pv(s);
     const kopf = g.glieder.length > 1 ? `<h3 class="glied">Rute ${i + 1}${s.zusatz ? " · " + esc(s.zusatz) : ""}</h3>` : "";
-    return `<div class="pflege-block">${kopf}${pflegeZeile("wartung", s, p)}${ohneSchnur ? "" : pflegeZeile("schnur", s, p)}</div>`;
+    return `<div class="pflege-block">${kopf}${pflegeZeile("wartung", s, p)}${ohneSchnur ? "" : schnurBlock(s, p)}</div>`;
   }).join("") + `<p class="hinweis-klein">Gespeichert unter denselben Daten wie in der bisherigen App und mit deinem Login auf alle Geräte synchronisiert.</p>`;
 }
 
@@ -250,15 +287,20 @@ function tabKombi(g){
   const ST = ["g", "y", "r"];
   let h = "";
   if(urteil){
-    h += `<div class="kombi-jetzt ${ST[urteil.stufe]}"><span class="amp ${ST[urteil.stufe]}"></span><div><b>Jetzt montiert: ${esc(s.rolle.name)} · ${urteil.urteil}</b><span>${urteil.gruende.map(esc).join(" · ")}</span></div></div>`;
+    h += `<div class="kombi-jetzt ${ST[urteil.stufe]}"><span class="amp ${ST[urteil.stufe]}"></span><div><b>Jetzt montiert: ${esc(s.rolle.name)} · ${urteil.urteil}</b><span>${urteil.gruende.map(esc).join(" · ")}</span>
+      <span class="akt-zeile"><button type="button" class="knopf" data-rolle-bearb="${s.rolle.id}">Rolle bearbeiten</button><button type="button" class="knopf leise" data-montiere="" data-key="${s.key}">Abnehmen</button></span></div></div>`;
+  } else {
+    h += `<div class="kombi-jetzt"><span class="amp y"></span><div><b>Keine Rolle montiert</b><span>Wähle unten eine Rolle aus oder lege eine neue an.</span>
+      <span class="akt-zeile"><button type="button" class="knopf" data-neu="rolle" data-key="${s.key}">+ Neue Rolle für diese Rute</button></span></div></div>`;
   }
   const andere = ROLLEN.filter(r => !s.rolle || r.id !== s.rolle.id).map(r => ({ r, b: bewerteKombo(s.rute, r), auf: rolleMontiertAuf(r.id) }))
     .filter(x => x.b).sort((a, b) => a.b.stufe - b.b.stufe || (a.auf ? 1 : 0) - (b.auf ? 1 : 0) || a.r.groesse - b.r.groesse);
   h += `<h3 class="kombi-titel">Andere Rollen auf dieser Rute</h3><ul class="kombi-liste">` + andere.map(x => `<li>
       <span class="amp ${ST[x.b.stufe]}" title="${x.b.urteil}"></span>
       <span class="kombi-txt"><b>${esc(x.r.name)}</b><small>${x.b.gruende.map(esc).join(" · ")}</small></span>
-      <span class="pill ${x.auf ? "" : "frei"}">${x.auf ? "auf " + esc(ersterTeil(x.auf.name)) : "frei"}</span></li>`).join("") + `</ul>
-    <p class="hinweis-klein">Gleiche Faustregeln wie die Werkstatt: Rollengröße folgt dem Wurfgewicht, lange Ruten brauchen Gegengewicht, Freilauf gehört an die Rute im Halter. Umbauen kommt in Etappe 2 direkt hierher.</p>`;
+      <span class="kombi-rechts"><span class="pill ${x.auf ? "" : "frei"}">${x.auf ? "auf " + esc(ersterTeil(x.auf.name)) : "frei"}</span>
+        <button type="button" class="knopf klein" data-montiere="${x.r.id}" data-key="${s.key}" aria-label="${esc(x.r.name)} auf diese Rute setzen">Montieren</button></span></li>`).join("") + `</ul>
+    <p class="hinweis-klein">Gleiche Faustregeln wie die Werkstatt: Rollengröße folgt dem Wurfgewicht, lange Ruten brauchen Gegengewicht, Freilauf gehört an die Rute im Halter. Beim Umsetzen wandert die Schnur mit der Rolle.</p>`;
   return h;
 }
 
@@ -318,6 +360,8 @@ function render(){
     main.innerHTML = platzhalterHTML(st.bereich);
     return;
   }
+  neuAufbauen();
+  if(st.setup && !GRUPPEN.some(x => x.id === st.setup)) st.setup = null;
   /* Desktop: ohne Auswahl das erste Setup zeigen */
   if(!st.setup && desktop.matches && GRUPPEN.length) st.setup = GRUPPEN.filter(passtFilter)[0]?.id || GRUPPEN[0].id;
   const g = st.setup ? GRUPPEN.find(x => x.id === st.setup) : null;
@@ -355,6 +399,18 @@ document.addEventListener("click", e => {
   if(f){ st.filter = f.dataset.filter; schreibeText(KEYS.filter, st.filter); renderListe(); return; }
   const t = e.target.closest("[data-tab]");
   if(t){ st.tab = t.dataset.tab; render(); const b = $(`#tab-${st.tab}`); if(b) b.focus(); return; }
+  const b = e.target.closest("[data-neu],[data-rute-bearb],[data-rolle-bearb],[data-montiere],[data-schnur-neu],[data-schnur-heute],[data-zurueck]");
+  if(b){
+    const d = b.dataset;
+    if(d.neu === "rute") return neueRute();
+    if(d.neu === "rolle") return neueRolle(d.key || null);
+    if(d.ruteBearb) return ruteBearbeiten(d.ruteBearb);
+    if(d.rolleBearb) return rolleBearbeiten(d.rolleBearb);
+    if(d.montiere !== undefined) return montiere(d.key, d.montiere || null);
+    if(d.schnurNeu) return schnurWechseln(d.schnurNeu, d.key);
+    if(d.schnurHeute){ schnurDatum(d.schnurHeute, d.key, heuteISO()); return toast("Schnurwechsel für heute eingetragen"); }
+    if(d.zurueck) return zurueckholen(d.zurueck, d.id);
+  }
   const p = e.target.closest("[data-pflege]");
   if(p){
     const art = p.dataset.pflege, key = p.dataset.key;
@@ -364,6 +420,13 @@ document.addEventListener("click", e => {
   }
 });
 document.addEventListener("change", e => {
+  const sd = e.target.closest("[data-schnur-datum]");
+  if(sd && sd.value){
+    if(sd.value > heuteISO()){ toast("Das Datum liegt in der Zukunft"); return; }
+    schnurDatum(sd.dataset.schnurDatum, sd.dataset.key, sd.value);
+    toast("Datum gespeichert: " + datumDE(sd.value));
+    return;
+  }
   const d = e.target.closest("[data-pflege-datum]");
   if(d && d.value){
     if(d.value > heuteISO()){ toast("Das Datum liegt in der Zukunft"); return; }
@@ -442,6 +505,7 @@ $("#sync-dialog").addEventListener("click", async e => {
 });
 
 /* ---------- Start ---------- */
+initEdit({ toast, geheZu });
 beiAenderung(() => render());
 leseHash();
 render();

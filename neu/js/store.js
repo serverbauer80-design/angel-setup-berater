@@ -53,6 +53,9 @@ export function setzePflege(art, setupKey, datum){
   melde();
 }
 
+/* Ausrüstung geändert (hier, in einem anderen Tab oder vom anderen Gerät) */
+AUSR.beiAenderung(quelle => { if(quelle === "lokal") pushDebounced(); melde(); });
+
 /* Andere Tabs (z. B. die alte App parallel offen) */
 window.addEventListener("storage", e => {
   if(e.key === KEYS.wartung){ pflege.wartung = lese(KEYS.wartung, {}) || {}; melde(); }
@@ -74,6 +77,9 @@ function fb(){ return (typeof firebase !== "undefined" && !window.FIREBASE_FEHLT
 function uebernimm(data){
   if(!data) return;
   let geaendert = false;
+  /* Ausrüstung: neuer Stand aus der Cloud wird übernommen, ist der lokale neuer, geht er hoch */
+  if(data.ausruestung){ const r = AUSR.vonRemote(data.ausruestung); if(r === "aelter") pushDebounced(); }
+  else if(AUSR.gespeichert()) pushDebounced();
   if(data.wartung && typeof data.wartung === "object"){ pflege.wartung = data.wartung; schreibe(KEYS.wartung, pflege.wartung); geaendert = true; }
   if(data.schnur && typeof data.schnur === "object"){  pflege.schnur  = data.schnur;  schreibe(KEYS.schnur,  pflege.schnur);  geaendert = true; }
   if(data.faenge && Array.isArray(data.faenge.catches)){
@@ -87,13 +93,15 @@ function uebernimm(data){
   if(geaendert) melde();
 }
 
-function pushDebounced(){
+export function pushDebounced(){
   if(!docRef || !bereit) return;
   clearTimeout(timer);
   timer = setTimeout(() => {
+    const aus = AUSR.gespeichert();
     docRef.set({
       wartung: pflege.wartung,
       schnur: pflege.schnur,
+      ...(aus ? { ausruestung: aus } : {}),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     }, { merge: true }).catch(err => {
       sync.status = "fehler"; sync.fehler = "Speichern in der Cloud fehlgeschlagen: " + err.message; melde();

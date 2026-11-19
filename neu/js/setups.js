@@ -84,6 +84,7 @@ function baue(s){
     schnurText,
     art: schnurArt(schnurText, s.kategorie),
     dm: schnurDurchmesser(schnurText),
+    schnurInfo: rolle ? (rolle.schnurInfo || AUSR.parseSchnur(rolle.schnur)) : null,
     zustand: zustandVon(s, rolle)
   };
 }
@@ -104,9 +105,12 @@ export function gruppiere(setups){
 }
 
 /* Pflegezustand eines Setups: Tage seit Wartung/Schnurwechsel, fällig? */
-export function pflegeVon(key, ohneSchnur){
+export function pflegeVon(key, ohneSchnur, rolleSeit){
   const w = pflege.wartung[key] || null;
-  const sc = pflege.schnur[key] || null;
+  /* Schnurdatum hängt an der Rolle (wandert beim Umbau mit); die alte App
+     trägt es am Setup ein – es gilt das jüngere von beiden */
+  const a = pflege.schnur[key] || null, b = rolleSeit || null;
+  const sc = a && b ? (a > b ? a : b) : (a || b);
   const wt = tageSeit(w), st = tageSeit(sc);
   return {
     wartung: w, wartungTage: wt, wartungFaellig: wt !== null && wt > WARTUNG_TAGE,

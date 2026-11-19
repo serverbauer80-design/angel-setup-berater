@@ -202,6 +202,8 @@ function fsSyncCollectState(){
   }) };
   return {
     zusatz: ZUSATZ, faenge: faengeOhneFotos, manuell: MANUELL, wartung: WARTUNG, schnur: SCHNUR, packliste: PACKLISTE, dkNotizen: DK_NOTIZEN, baitcast: BC_STAND,
+    /* Ausrüstung nur, wenn sie schon einmal in einer App geändert wurde (sonst gilt data.js) */
+    ...(AUSR.gespeichert() ? { ausruestung: AUSR.gespeichert() } : {}),
     osmCache: typeof OSM_CACHE !== "undefined" ? OSM_CACHE : [],
     flussCache: typeof FLUSS_CACHE !== "undefined" ? FLUSS_CACHE : [],
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -209,6 +211,9 @@ function fsSyncCollectState(){
 }
 
 function fsSyncApplyState(data){
+  /* Ausrüstung: nur übernehmen, wenn die Cloud neuer ist; ist der lokale Stand neuer, zurückschicken */
+  if(data.ausruestung && AUSR.vonRemote(data.ausruestung) === "aelter") fsSyncPushDebounced();
+  else if(!data.ausruestung && AUSR.gespeichert()) fsSyncPushDebounced();
   if(data.zusatz){ ZUSATZ = data.zusatz; try{localStorage.setItem(ZUSATZ_KEY, JSON.stringify(ZUSATZ));}catch(e){} }
   if(data.faenge){
     // Fotos sind rein lokal und werden nie synchronisiert (siehe fsSyncCollectState) -
@@ -4468,7 +4473,8 @@ document.getElementById("ul-viewer-close").addEventListener("click", ulSchliesse
 /* ---------- Ansitzangeln ---------- */
 function renderAnsitzAngeln(){
   const el = $("#ansitz");
-  const s = AKTUELL.setup10;
+  /* setup10 kann inzwischen verkauft sein -> erstes Ansitz-Setup nehmen */
+  const s = AKTUELL.setup10 || Object.values(AKTUELL).find(x => x.kategorie === "ansitz") || { name:"Kein Ansitz-Setup vorhanden", rute:"–", rolle:"–", schnur:"–", vorfach:"–" };
 
   function methode(titel, zeilen, hinweis){
     const rows = zeilen.map(([k,v]) => `<div class="row"><span>${k}</span><b>${v}</b></div>`).join("");
@@ -6566,34 +6572,30 @@ function renderWerkstatt(){
   });
 }
 
-/* Entwurf in die Setups schreiben. Nur rolleId wird angefasst – alles
-   andere (Vorfach, Einsatz, Tipps) bleibt, wie es ist. */
+/* Entwurf in die Setups schreiben – dauerhaft über den gemeinsamen
+   Ausrüstungs-Speicher (ausruestung.js), synchronisiert mit der neuen
+   Oberfläche und deinen anderen Geräten. Nur Rollen werden umgesetzt,
+   alles andere (Vorfach, Einsatz, Tipps) bleibt, wie es ist. */
 function werkstattUebernehmen(){
   if(WK_MODUS === "frei") return;   // Planspiel fasst den echten Stand nie an
-  const roById = Object.fromEntries(ROLLEN.map(r => [r.id, r]));
-  Object.values(AKTUELL).forEach(s => {
-    if(!(s.ruteId in WERKSTATT)) return;
-    const neu = WERKSTATT[s.ruteId] || null;
-    if((s.rolleId || null) === neu) return;
-    s.rolleId = neu;
-    if(neu){
-      s.rolle  = roById[neu].text;
-      s.schnur = roById[neu].schnur;
-      delete s.rolleText; delete s.schnurText;
-      s.unvollstaendig = false;
-    } else {
-      s.rolleText  = "⚠️ noch keine Rolle montiert";
-      s.schnurText = "⚠️ noch nicht bespult";
-      s.rolle = s.rolleText; s.schnur = s.schnurText;
-      s.unvollstaendig = true;
-    }
-  });
+  AUSR.montiereNachRute(WERKSTATT);
+  fsSyncPushDebounced();
   try { localStorage.removeItem(WERKSTATT_KEY); } catch(e){}
   WERKSTATT = werkstattEcht();
   renderWerkstatt();
   renderInventar();
-  alert("Übernommen. Hinweis: Die Änderung gilt für diese Sitzung – dauerhaft wird sie erst, wenn ich sie in data.js eintrage.");
+  alert("Übernommen und gespeichert. Die neue Rutenwand und deine anderen Geräte sehen den Umbau auch.");
 }
+
+/* Ausrüstung wurde woanders geändert (anderer Tab) -> neu zeichnen */
+AUSR.beiAenderung(quelle => {
+  if(quelle !== "tab" && quelle !== "remote") return;
+  const wkOffen = !!WERKSTATT;
+  WERKSTATT = null;   // beim nächsten Zeichnen frisch laden (neue Ruten/Rollen)
+  if(document.getElementById("inventar")) renderInventar();
+  if(wkOffen) renderWerkstatt();
+  if(document.getElementById("ergebnis") && typeof fischSel !== "undefined" && fischSel.value) berechne();
+});
 
 function renderBaitcast(){
   const wrap = document.getElementById("baitcast-main");

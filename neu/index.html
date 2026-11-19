@@ -50,6 +50,8 @@
     <div id="sync-inhalt"></div>
   </dialog>
 
+  <dialog id="blatt" class="dialog blatt" aria-label="Bearbeiten"></dialog>
+
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
@@ -71,6 +73,7 @@
   </script>
   <!-- Gemeinsame Datengrundlage mit der bisherigen App -->
   <script src="../data.js"></script>
+  <script src="../ausruestung.js"></script>
   <script type="module" src="js/main.js"></script>
   <script>
     if("serviceWorker" in navigator){ navigator.serviceWorker.register("sw.js", { scope: "./" }).catch(function(){}); }
