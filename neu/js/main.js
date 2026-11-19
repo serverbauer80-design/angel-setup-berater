@@ -2,6 +2,7 @@
    Rutenwand – neue Oberfläche
    Etappe 1: Gerüst (4 Bereiche, Handy unten / Desktop seitlich) + Rutenwand
    Etappe 2: Ausrüstung in der App pflegen (edit.js, ../ausruestung.js)
+   Etappe 3: Berater mit Regeln (berater-ui.js, ../berater.js)
    Routing über den Hash: #rutenwand, #rutenwand/setup22, #heute …
    ============================================================ */
 import { KEYS, pflege, setzePflege, beiAenderung, ladeFaenge, startSync, sync, anmelden, abmelden, lese, schreibe, leseText, schreibeText } from "./store.js";
@@ -10,6 +11,7 @@ import {
   bewerteKombo, rolleMontiertAuf, wgPos, komma, ersterTeil, heuteISO, datumDE, tageSeit,
   ART_LABEL, ZUSTAND_LABEL, WARTUNG_TAGE, SCHNUR_TAGE
 } from "./setups.js";
+import { beraterHTML, fischeHTML, fischeAnzahl, bst, merkeBerater } from "./berater-ui.js";
 import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
@@ -32,7 +34,7 @@ const BEREICHE = [
 ];
 /* Was in Etappe 1 noch in der bisherigen App lebt (?view= öffnet dort den Reiter) */
 const NOCH_ALT = {
-  heute: { etappe: 4, text: "Wetter, Wind, Gezeiten und die Frage, welcher Fisch heute passt. Daraus wird später eine „Tasche für heute“ mit Packliste.",
+  heute: { etappe: 4, text: "Wetter, Wind, Gezeiten und welcher Fisch heute passt – daraus wird eine „Tasche für heute“ mit Packliste.",
     links: [["heute","Heute"],["tagescheck","Tagescheck"],["berater","Berater"],["wochenende","Planung"]] },
   gewaesser: { etappe: 5, text: "Eine Karte für alles: LAV-Gewässer, Dänemark Put & Take, deine Spots, OSM und Küste als Ebenen, mit Steckbrief pro Gewässer.",
     links: [["lav","LAV-Gewässer"],["dkpt","Dänemark"],["faenge","Fänge & Spots"]] },
@@ -209,27 +211,7 @@ function tabInfos(g){
 }
 
 function tabFische(g, catches){
-  const liste = ansaetzeFuer(g.glieder.map(x => x.key));
-  if(!liste.length) return `<p class="leer">Der Berater empfiehlt dieses Setup bisher für keinen Fisch. Das liegt an der festen Zuordnung im alten Berater. Ab Etappe 3 prüft die App jedes Setup selbst gegen die Ansätze, dann taucht es überall auf, wo es passt.</p>`;
-  const schnurKurz = g.kopf.schnurText.split(" – ")[0].split(" · ")[0];
-  return `<p class="hinweis-klein">${liste.length} Ansätze aus dem Berater nutzen dieses Setup.</p>` + liste.map(({ fisch, ansatz }) => {
-    const gw = (ansatz.gewaesser || fisch.gewaesser || []).map(k => GEWAESSER[k] ? GEWAESSER[k].name : k).join(" · ");
-    const zahl = catches.filter(c => c.fischId === fisch.id && c.methode === ansatz.methode).length;
-    const montage = (ansatz.montage || []).map(m => {
-      if(/^hauptschnur$/i.test(m.k) && g.kopf.schnurText){
-        const anders = !m.v.toLowerCase().includes((g.kopf.dm || "§").toLowerCase());
-        return `<li><b>${esc(m.k)}</b><span>${esc(schnurKurz)} <em class="quelle">aus deinem Setup</em>${anders ? `<br><small class="alt">Anleitung nannte: ${esc(m.v)}</small>` : ""}</span></li>`;
-      }
-      return `<li><b>${esc(m.k)}</b><span>${esc(m.v)}</span></li>`;
-    }).join("");
-    return `<details class="ansatz">
-      <summary><span class="amp ${AMPEL[ansatz.status] || "y"}" title="${AMPEL_TEXT[ansatz.status] || ""}"></span>
-        <span class="ansatz-txt"><b>${esc(fisch.name)}</b><span>${esc(ansatz.methode)}</span><small>${esc(gw)}</small></span>
-        ${zahl ? `<span class="pill fang">${zahl} Fang${zahl > 1 ? "e" : ""}</span>` : ""}</summary>
-      ${montage ? `<ol class="kette">${montage}</ol>` : ""}
-      ${ansatz.tipp ? `<p class="ansatz-tipp">${esc(ansatz.tipp)}</p>` : ""}
-    </details>`;
-  }).join("");
+  return fischeHTML(g.kopf.key, catches);
 }
 
 function pflegeZeile(art, s, p){
@@ -330,7 +312,7 @@ function detailHTML(g){
   const s = g.kopf;
   const catches = ladeFaenge();
   const kat = katByKey[s.kategorie];
-  const nFische = ansaetzeFuer(g.glieder.map(x => x.key)).length;
+  const nFische = fischeAnzahl(g.kopf.key);
   const nFaenge = faengeFuer(g.glieder.map(x => x.key), catches).length;
   const tiles = [
     ["Länge", s.laenge ? meter(s.laenge) : "–"],
@@ -361,12 +343,12 @@ function detailHTML(g){
 }
 
 /* ---------- Platzhalter für spätere Etappen ---------- */
-function platzhalterHTML(id){
+function platzhalterHTML(id, klein){
   const p = NOCH_ALT[id];
   const b = BEREICHE.find(x => x.id === id);
-  return `<section class="platzhalter">
+  return `<section class="platzhalter${klein ? " klein" : ""}">
     <p class="eyebrow">Kommt in Etappe ${p.etappe}</p>
-    <h2>${b.label}</h2>
+    ${klein ? `<h3>Wetter, Tagescheck &amp; Packliste</h3>` : `<h2>${b.label}</h2>`}
     <p>${p.text}</p>
     <p class="hinweis-klein">Bis dahin funktioniert alles wie gewohnt in der bisherigen App:</p>
     <div class="alt-knoepfe">${p.links.map(([v, l]) => `<a class="knopf" href="../index.html?view=${v}">${l}</a>`).join("")}</div>
@@ -381,7 +363,7 @@ function render(){
   document.body.dataset.bereich = st.bereich;
   if(st.bereich !== "rutenwand"){
     document.body.classList.remove("hat-detail");
-    main.innerHTML = platzhalterHTML(st.bereich);
+    main.innerHTML = st.bereich === "heute" ? beraterHTML() + platzhalterHTML("heute", true) : platzhalterHTML(st.bereich);
     return;
   }
   neuAufbauen();
@@ -452,6 +434,12 @@ document.addEventListener("click", e => {
   }
 });
 document.addEventListener("change", e => {
+  if(e.target.id === "b-fisch" || e.target.id === "b-gw"){
+    if(e.target.id === "b-fisch"){ bst.fisch = e.target.value; bst.gw = ""; } else bst.gw = e.target.value;
+    merkeBerater(); render();
+    const z = document.getElementById(e.target.id); if(z) z.focus();
+    return;
+  }
   const sd = e.target.closest("[data-schnur-datum]");
   if(sd && sd.value){
     if(sd.value > heuteISO()){ toast("Das Datum liegt in der Zukunft"); return; }

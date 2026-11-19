@@ -877,6 +877,7 @@ function ansatzHTML(a, fisch, inKarte){
   let body = "";
   if(a.status === "machbar" || a.status === "bedingt"){
     body += setupLineHTML(a.setup);
+    body += regelHTML(a);
   }
   body += montageHTML(a.montage);
   if(!inKarte) body += packlisteHTML(fisch, a);
@@ -901,6 +902,19 @@ function ansatzHTML(a, fisch, inKarte){
     ${perfBadge}
     <div class="ansatz-body">${body}</div>
   </article>`;
+}
+
+/* Warum dieses Setup? Begründung und Alternativen aus berater.js */
+function regelHTML(a){
+  const r = a.regel;
+  if(!r) return "";
+  const plus = (r.plus || []).map(t => `<div style="color:var(--ok)">✓ ${t}</div>`).join("");
+  const minus = (r.gruende || []).map(t => `<div style="color:var(--warn)">⚠ ${t}</div>`).join("");
+  const alt = (r.alternativen || []).map(x => AKTUELL[x.key] ? setupLabel(AKTUELL[x.key]) + (x.stufe ? " (knapp)" : "") : "").filter(Boolean);
+  const k = r.koeder ? `<div class="k-hint" style="margin:4px 0 0">Gesamtgewicht am Wurf ≈ ${String(r.koeder[0]).replace(".", ",")}–${String(r.koeder[1]).replace(".", ",")} g (Blei/Jigkopf + Köder)</div>` : "";
+  return `<div class="regel-box" style="font-size:14px;margin:8px 0 4px;display:grid;gap:2px">${plus}${minus}${k}
+    ${alt.length ? `<div class="k-hint" style="margin:4px 0 0">Geht auch: ${alt.join(", ")}</div>` : ""}
+    ${r.hinweis ? `<div class="k-hint" style="margin:2px 0 0">${r.hinweis}</div>` : ""}</div>`;
 }
 
 function fangEintragenHTML(fisch, methode){
@@ -1148,6 +1162,9 @@ function berechne(){
   hintEl.style.display = "none";
 
   const gw = GEWAESSER[gwKey];
+  /* Berater mit Regeln (berater.js): für dieses Gewässer (und ggf. nur die
+     Setups, die heute dabei sind) jedem Ansatz das passendste Setup zuweisen */
+  BERATER.wendeAn(gwKey || null, HEUTE_DABEI);
   // passende Ansätze für dieses Gewässer (oder alle, wenn kein Gewässer gewählt)
   let ansaetze = fisch.ansaetze;
   if(gwKey) ansaetze = ansaetze.filter(a => !a.gewaesser || a.gewaesser.includes(gwKey));

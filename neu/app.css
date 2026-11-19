@@ -342,4 +342,43 @@ button.frei-rolle:hover{border-color:var(--muted)}
 .tiles .kachel-link:hover{border-color:var(--water)}
 .tiles .kachel-link.fehlt{background:var(--warn-soft);border-color:transparent}
 .tiles .kachel-link.fehlt small,.tiles .kachel-link.fehlt b{color:var(--warn)}
+
+/* ============================================================
+   Etappe 3: Berater
+   ============================================================ */
+.berater{display:grid;gap:12px;padding-top:4px;max-width:820px}
+.berater h2{font-size:34px;font-weight:700}
+.berater-wahl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.berater-wahl select{width:100%;min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:0 12px;font:inherit;font-size:16px}
+.fisch-info{font-size:15px;color:var(--muted);max-width:68ch}
+.b-karte{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px;box-shadow:var(--shadow)}
+.b-kopf{display:grid;gap:6px}
+.b-kopf h3{font-size:21px;font-weight:600}
+.status{justify-self:start;font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:5px}
+.status.g{background:var(--ok-soft);color:var(--ok)} .status.y{background:var(--warn-soft);color:var(--warn)} .status.r{background:var(--bad-soft);color:var(--bad)}
+.b-setup{display:grid;gap:1px;text-decoration:none;color:var(--ink);background:var(--water-soft);border-left:4px solid var(--water);border-radius:10px;padding:10px 12px}
+.b-setup small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--water)}
+.b-setup b{font-size:17px}
+.b-setup b small{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-size:14px;color:var(--muted);font-weight:400}
+.b-setup span{font-size:13.5px;color:var(--muted)}
+.b-setup i{font-style:normal;font-weight:700;font-size:13.5px;color:var(--water)}
+.gruende{list-style:none;margin:0;padding:0;display:grid;gap:3px;font-size:14px}
+.gruende li{padding-left:20px;position:relative}
+.gruende li::before{position:absolute;left:0;top:0;font-weight:700}
+.gruende li.plus::before{content:"✓";color:var(--ok)}
+.gruende li.minus::before{content:"!";color:var(--warn);left:5px}
+.besser{font-size:14px;color:var(--muted)}
+.besser small{color:var(--muted)}
+.wunsch-box{display:grid;gap:2px;background:var(--bad-soft);border-radius:10px;padding:10px 12px;font-size:14px}
+.wunsch-box .preis{font-family:var(--f-mono);font-size:13px}
+.b-montage summary{cursor:pointer;font-weight:600;font-size:15px;min-height:40px;display:flex;align-items:center;color:var(--water)}
+.b-montage .kette{padding-left:22px}
+.ansatz-rechts{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.pill.rang1{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.ansatz-innen{display:grid;gap:8px;padding:0 14px 12px}
+.ansatz-innen .kette{padding-left:20px}
+.ansatz-innen .ansatz-tipp{padding:0}
+.platzhalter.klein{padding-top:24px;border-top:1px solid var(--line);margin-top:20px}
+.platzhalter.klein h3{font-size:22px;font-weight:600}
+@media (max-width: 420px){ .berater-wahl{grid-template-columns:1fr} }
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} .sk:active{transform:none} }
