@@ -4,6 +4,7 @@
    Etappe 2: Ausrüstung in der App pflegen (edit.js, ../ausruestung.js)
    Etappe 3: Berater mit Regeln (berater-ui.js, ../berater.js)
    Etappe 4: Heute mit Lage, Fischauswahl und Tasche (heute.js, lage.js, tasche.js)
+   Etappe 5: Gewässer – eine Karte mit Ebenen und Steckbrief (karte.js)
    Routing über den Hash: #rutenwand, #rutenwand/setup22, #heute …
    ============================================================ */
 import { KEYS, pflege, setzePflege, beiAenderung, ladeFaenge, startSync, sync, anmelden, abmelden, lese, schreibe, leseText, schreibeText } from "./store.js";
@@ -17,6 +18,7 @@ import { protokollHTML } from "./protokoll.js";
 import { wissenHTML } from "./wissen.js";
 import { heuteHTML, heuteNachladen, hst, merkeHeute, fischWaehlen } from "./heute.js";
 import { umschalten, abhaken, leeren, nurHakenWeg, inTasche } from "./tasche.js";
+import { gewaesserHTML, karteEinhaengen, initKarte, karteKlick, karteEingabe, karteAenderung } from "./karte.js";
 import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen, tragkraftEintragen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
@@ -388,8 +390,10 @@ function render(){
     document.body.classList.remove("hat-detail");
     main.innerHTML = st.bereich === "heute"
       ? (st.protokoll ? protokollHTML() : heuteHTML())
-      : st.bereich === "wissen" ? wissenHTML(st.wissen) : platzhalterHTML(st.bereich);
+      : st.bereich === "wissen" ? wissenHTML(st.wissen)
+      : st.bereich === "gewaesser" ? gewaesserHTML() : platzhalterHTML(st.bereich);
     if(st.bereich === "heute" && !st.protokoll) heuteNachladen();
+    if(st.bereich === "gewaesser") karteEinhaengen();
     return;
   }
   neuAufbauen();
@@ -427,6 +431,7 @@ function renderListe(){
 
 /* ---------- Ereignisse ---------- */
 document.addEventListener("click", e => {
+  if(st.bereich === "gewaesser" && karteKlick(e, toast, ortId => { hst.ort = ortId; merkeHeute(); geheZu("heute"); toast("Ort für Heute übernommen"); })) return;
   const f = e.target.closest("[data-filter]");
   if(f){ st.filter = f.dataset.filter; schreibeText(KEYS.filter, st.filter); renderListe(); return; }
   const ht = e.target.closest("[data-h-tag]");
@@ -473,6 +478,7 @@ document.addEventListener("click", e => {
   }
 });
 document.addEventListener("change", e => {
+  if(karteAenderung(e)){ toast("Notiz gespeichert"); return; }
   if(e.target.id === "h-ort"){ hst.ort = e.target.value; merkeHeute(); render(); return; }
   const pk = e.target.closest("[data-pack]");
   if(pk){ abhaken(pk.dataset.pack); return; }
@@ -497,6 +503,11 @@ document.addEventListener("change", e => {
   }
 });
 document.addEventListener("input", e => {
+  if(karteEingabe(e)){
+    const pos = e.target.selectionStart; render();
+    const i = document.getElementById("gw-suche"); if(i){ i.focus(); try { i.setSelectionRange(pos, pos); } catch(err){} }
+    return;
+  }
   if(e.target.id === "suche"){ st.suche = e.target.value.trim(); renderListe(); }
 });
 desktop.addEventListener("change", () => render());
@@ -568,6 +579,7 @@ $("#sync-dialog").addEventListener("click", async e => {
 
 /* ---------- Start ---------- */
 initEdit({ toast, geheZu });
+initKarte(() => render());
 beiAenderung(() => render());
 leseHash();
 render();

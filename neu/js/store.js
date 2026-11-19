@@ -56,6 +56,31 @@ export function setzePflege(art, setupKey, datum){
 /* Ausrüstung geändert (hier, in einem anderen Tab oder vom anderen Gerät) */
 AUSR.beiAenderung(quelle => { if(quelle === "lokal") pushDebounced(); melde(); });
 
+/* ---------- Spots & Dänemark-Notizen (Etappe 5) ----------
+   Spots stehen im selben Fangbuch-Objekt wie in der alten App
+   (meine_faenge_v1 / Firestore-Feld "faenge"). Fotos bleiben lokal. */
+export function ladeFaengeDaten(){
+  const d = lese(KEYS.faenge, null);
+  return d && typeof d === "object" ? { spots: d.spots || [], catches: d.catches || [], ...d } : { spots: [], catches: [] };
+}
+let faengeGeaendert = false, dkGeaendert = false;
+export function speichereFaengeDaten(d){
+  schreibe(KEYS.faenge, d);
+  faengeGeaendert = true;
+  pushDebounced();
+  melde();
+}
+export const DK_KEY = "dk_puttake_notizen_v1";
+export function dkNotizen(){ return lese(DK_KEY, {}) || {}; }
+export function setzeDkNotiz(nr, text){
+  const n = dkNotizen();
+  if(text) n[nr] = text; else delete n[nr];
+  schreibe(DK_KEY, n);
+  dkGeaendert = true;
+  pushDebounced();
+  melde();
+}
+
 /* ---------- Tasche für heute (Etappe 4) ---------- */
 const TASCHE_KEY = "neu_tasche_v1";
 export function tascheSetzen(t){
@@ -96,6 +121,7 @@ function uebernimm(data){
   }
   if(data.wartung && typeof data.wartung === "object"){ pflege.wartung = data.wartung; schreibe(KEYS.wartung, pflege.wartung); geaendert = true; }
   if(data.schnur && typeof data.schnur === "object"){  pflege.schnur  = data.schnur;  schreibe(KEYS.schnur,  pflege.schnur);  geaendert = true; }
+  if(data.dkNotizen && typeof data.dkNotizen === "object"){ schreibe(DK_KEY, data.dkNotizen); geaendert = true; }
   if(data.faenge && Array.isArray(data.faenge.catches)){
     /* Fotos sind in der Cloud nie enthalten: lokale Fotos je Fang behalten */
     const lokal = lese(KEYS.faenge, null);
@@ -113,7 +139,17 @@ export function pushDebounced(){
   timer = setTimeout(() => {
     const aus = AUSR.gespeichert();
     const ta = lese(TASCHE_KEY, null);
+    /* Fänge/Spots und Dänemark-Notizen nur mitschicken, wenn hier geändert –
+       sonst bleibt der Stand der alten App unangetastet */
+    const extra = {};
+    if(faengeGeaendert){
+      const f = lese(KEYS.faenge, null);
+      if(f) extra.faenge = { ...f, catches: (f.catches || []).map(c => { if(!c.foto) return c; const { foto, ...rest } = c; return rest; }) };
+      faengeGeaendert = false;
+    }
+    if(dkGeaendert){ extra.dkNotizen = dkNotizen(); dkGeaendert = false; }
     docRef.set({
+      ...extra,
       ...(ta ? { tasche: ta } : {}),
       wartung: pflege.wartung,
       schnur: pflege.schnur,

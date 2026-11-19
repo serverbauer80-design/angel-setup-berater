@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="app.css">
   <script>
     /* Theme vor dem ersten Zeichnen setzen, sonst blitzt beim Laden das falsche auf */
@@ -71,6 +72,7 @@
       firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(function(){});
     } catch(e){ window.FIREBASE_FEHLT = true; }
   </script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Gemeinsame Datengrundlage mit der bisherigen App -->
   <script src="../data.js"></script>
   <script src="../ausruestung.js"></script>

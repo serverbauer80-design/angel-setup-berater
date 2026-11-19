@@ -26,7 +26,7 @@ export function orteListe(){
   const catches = d && Array.isArray(d.catches) ? d.catches : [];
   const eigene = spots
     .filter(s => typeof s.lat === "number" && typeof s.lng === "number")
-    .filter(s => s.visited || s.rating > 0 || catches.some(c => c.spotId === s.id))
+    .filter(s => s.visited || s.rating > 0 || catches.some(c => c.spotId === s.id) || ("spot_" + s.id) === ((lese("neu_heute_v1", {}) || {}).ort))
     .map(s => ({ id: "spot_" + s.id, name: s.name, lat: s.lat, lng: s.lng, gw: SPOT_GW[s.type] ?? null, tides: false, eigen: true, kueste: s.type === "kueste" }));
   return ORTE.concat(eigene);
 }
