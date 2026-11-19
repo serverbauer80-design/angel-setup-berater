@@ -29,10 +29,11 @@ function kettenHTML(a, set, gw){
   return zeilen.length ? `<ol class="kette">${zeilen.join("")}</ol>` : "";
 }
 
-function grundHTML(plus, gruende){
+function grundHTML(plus, gruende, hinweise){
   const p = (plus || []).map(t => `<li class="plus">${esc(t)}</li>`).join("");
   const m = (gruende || []).map(t => `<li class="minus">${esc(t)}</li>`).join("");
-  return p || m ? `<ul class="gruende">${p}${m}</ul>` : "";
+  const h = (hinweise || []).map(t => `<li class="info">${esc(t)}</li>`).join("");
+  return p || m || h ? `<ul class="gruende">${p}${m}${h}</ul>` : "";
 }
 
 /* ---------- Reiter „Fische“ im Setup-Detail ---------- */
@@ -58,7 +59,7 @@ export function fischeHTML(key, catches){
           <span class="ansatz-txt"><b>${esc(x.fisch.name)}</b><span>${esc(x.ansatz.methode)}</span><small>${esc(gwTxt)}</small></span>
           <span class="ansatz-rechts">${rang}${zahl ? `<span class="pill fang">${zahl} Fang${zahl > 1 ? "e" : ""}</span>` : ""}</span></summary>
         <div class="ansatz-innen">
-          ${grundHTML(x.plus, x.gruende)}
+          ${grundHTML(x.plus, x.gruende, x.hinweise)}
           ${besser}
           ${kettenHTML(x.ansatz, set, null)}
           ${x.ansatz.tipp ? `<p class="ansatz-tipp">${esc(x.ansatz.tipp)}</p>` : ""}
@@ -97,6 +98,7 @@ export function beraterHTML(){
     h += karten.map(k => k.html).join("");
     h += `<p class="hinweis-klein">Schonzeiten und Mindestmaße findest du vorerst im <a href="../index.html?view=saison">Saisonkalender der bisherigen App</a>.</p>`;
   }
+  h += `<a class="knopf proto-link" href="#heute/pruefprotokoll">Wie rechnet der Berater? Prüfprotokoll ansehen</a>`;
   return h + `</section>`;
 }
 
@@ -113,7 +115,7 @@ function karte(a, rl, gw, status) {
   return `<article class="b-karte">
     <div class="b-kopf"><span class="status ${farbe}">${label}</span><h3>${esc(a.methode)}</h3></div>
     ${set ? `<a class="b-setup" href="#rutenwand/${set.key}"><small>Dein bestes Setup</small><b>${kurz(set)}</b><span>${esc(String(set.rolle || "").split(" · ")[0])} · ${esc(String(set.schnur || "").split(" – ")[0])}</span><i>Setup öffnen ›</i></a>
-      ${grundHTML(bester.plus, bester.gruende)}`
+      ${grundHTML(bester.plus, bester.gruende, bester.hinweise)}`
       : `<p class="leer">Keins deiner Setups passt hierfür.</p>`}
     ${alt.length ? `<p class="besser">Geht auch: ${alt.map(x => `<a href="#rutenwand/${x.setup.key}">${kurz(x.setup)}</a>${x.stufe ? " (knapp)" : ""}`).join(", ")}</p>` : ""}
     ${status !== "machbar" ? wunschHTML(a) : ""}

@@ -58,6 +58,40 @@ const ROLLEN = [
   { id:"ro_daiwa_crossfire_lt2000s", name:"Daiwa Crossfire LT2000S", groesse:2000, freilauf:false, text:"Daiwa Crossfire LT2000S · Spinnrolle", schnur:"Geflochten 0,08 mm" }
 ];
 
+/* ---------- 1b1) AKTION, BIBBERSPITZE, SALZWASSER (Vorbelegung) ----------
+   Für den Berater wichtig, aber in der Inventurliste nicht erfasst.
+   quelle "geschätzt" = aus dem Rutentyp abgeleitet, bitte in der App prüfen
+   (Rute bearbeiten) – sobald du dort speicherst, gilt dein Wert.
+   aktion: "schnell" (Spitzenaktion, straff – Jiggen, Dropshot, Bisserkennung)
+           "mittel"  (semiparabolisch – Allround, Spoons, Ansitz)
+           "parabolisch" (durchgehend weich – Sbirolino, Tremarella, puffert Fluchten)
+   Ruten "quelle":"Hersteller" stehen so in der Produktbeschreibung. */
+const GERAET_VORGABE = {
+  ruten: {
+    r_daiwa_prorex_s_spin:            { aktion:"schnell",     quelle:"geschätzt" },
+    r_daiwa_presso_imprimi_st:        { aktion:"mittel",      quelle:"geschätzt" },
+    r_westin_w2_light_softlure_ul:    { aktion:"schnell",     quelle:"geschätzt" },
+    r_berkley_flex_trout_spinning_:   { aktion:"parabolisch", quelle:"Hersteller" },
+    r_spro_tactical_lake_sbiro:       { aktion:"parabolisch", quelle:"geschätzt" },
+    r_savage_gear_revenge_sg2_ligh:   { aktion:"schnell",     quelle:"geschätzt" },
+    r_daiwa_ninja_x_feeder:           { aktion:"mittel",      quelle:"geschätzt", feederspitze:true },
+    r_berkley_flex:                   { aktion:"parabolisch", quelle:"geschätzt" },
+    r_berkley_flex_2:                 { aktion:"parabolisch", quelle:"geschätzt" },
+    r_westin_w3_powershad_2nd_m:      { aktion:"schnell",     quelle:"geschätzt" },
+    r_daiwa_black_widow_xt_carp:      { aktion:"mittel",      quelle:"geschätzt" },
+    r_daiwa_black_widow_xt_bait:      { aktion:"mittel",      quelle:"geschätzt" },
+    r_ftm_black_aryas_2:              { aktion:"parabolisch", quelle:"geschätzt" },
+    r_ftm_black_aryas_2_2:            { aktion:"parabolisch", quelle:"geschätzt" },
+    r_ftm_black_aryas_2_3:            { aktion:"parabolisch", quelle:"geschätzt" },
+    r_crivit_spinnangel_set_210_5:    { aktion:"mittel",      quelle:"geschätzt" },
+    r_crivit_multi_x_feeder_300_5:    { aktion:"mittel",      quelle:"geschätzt", feederspitze:false },
+    r_balzer_diabolo_golden_circle:   { aktion:"schnell",     quelle:"geschätzt" },
+    r_balzer_shirasu_im8_spoon_ul:    { aktion:"mittel",      quelle:"geschätzt" }
+  },
+  /* Salzwasserfest nur, wo es sicher ist – sonst unbekannt (null) */
+  rollen: {}
+};
+
 /* ---------- 1b2) BEWUSST GEWAEHLTE KOMBOS ----------
    Die Werkstatt bewertet Rute + Rolle nach Faustregeln. Wo der Nutzer eine
    Kombo bewusst anders gewaehlt hat und sie so fischt, steht das hier – dann

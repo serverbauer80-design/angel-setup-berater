@@ -910,9 +910,10 @@ function regelHTML(a){
   if(!r) return "";
   const plus = (r.plus || []).map(t => `<div style="color:var(--ok)">✓ ${t}</div>`).join("");
   const minus = (r.gruende || []).map(t => `<div style="color:var(--warn)">⚠ ${t}</div>`).join("");
+  const info = (r.hinweise || []).map(t => `<div class="k-hint" style="margin:0">ℹ️ ${t}</div>`).join("");
   const alt = (r.alternativen || []).map(x => AKTUELL[x.key] ? setupLabel(AKTUELL[x.key]) + (x.stufe ? " (knapp)" : "") : "").filter(Boolean);
   const k = r.koeder ? `<div class="k-hint" style="margin:4px 0 0">Gesamtgewicht am Wurf ≈ ${String(r.koeder[0]).replace(".", ",")}–${String(r.koeder[1]).replace(".", ",")} g (Blei/Jigkopf + Köder)</div>` : "";
-  return `<div class="regel-box" style="font-size:14px;margin:8px 0 4px;display:grid;gap:2px">${plus}${minus}${k}
+  return `<div class="regel-box" style="font-size:14px;margin:8px 0 4px;display:grid;gap:2px">${plus}${minus}${info}${k}
     ${alt.length ? `<div class="k-hint" style="margin:4px 0 0">Geht auch: ${alt.join(", ")}</div>` : ""}
     ${r.hinweis ? `<div class="k-hint" style="margin:2px 0 0">${r.hinweis}</div>` : ""}</div>`;
 }

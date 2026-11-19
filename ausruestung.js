@@ -75,6 +75,42 @@ const AUSR = (function(){
   /* Aktueller Gesamtstand (gespeichert oder aus dem Code), immer als Kopie */
   function stand(){ return kopie(gespeichert || CODE); }
 
+  /* ---------- Tragkraft schätzen ----------
+     Grobe Richtwerte aus Durchmesser und Schnurart, wenn keine Herstellerangabe
+     eingetragen ist. Geflecht-Durchmesser sind je Marke kaum vergleichbar –
+     deshalb immer als „geschätzt“ gekennzeichnet. */
+  function schaetzeTragkraft(art, dm){
+    const d = typeof dm === "number" ? dm : parseFloat(String(dm || "").replace(",", "."));
+    if(!d || !art) return null;
+    if(art === "geflecht") return Math.round(d * 75 * 10) / 10;      // 0,10 ≈ 7,5 kg · 0,16 ≈ 12 kg
+    if(art === "mono")     return Math.round(d * d * 90 * 10) / 10;  // 0,20 ≈ 3,6 kg · 0,35 ≈ 11 kg
+    if(art === "fc")       return Math.round(d * d * 75 * 10) / 10;  // Fluorocarbon etwas schwächer
+    return null;
+  }
+  /* Tragkraft der aktuellen Schnur: eingetragen oder geschätzt */
+  function tragkraft(rolle){
+    if(!rolle) return null;
+    const i = rolle.schnurInfo || parseSchnur(rolle.schnur);
+    if(i.tragkraft) return { kg: +i.tragkraft, quelle: "eingetragen" };
+    const kg = schaetzeTragkraft(i.art || schnurArt(rolle.schnur), i.dm);
+    return kg ? { kg, quelle: "geschätzt" } : null;
+  }
+
+  /* Vorbelegung aus data.js (GERAET_VORGABE) für Felder, die noch fehlen */
+  function ergaenze(){
+    const V = typeof GERAET_VORGABE !== "undefined" ? GERAET_VORGABE : { ruten: {}, rollen: {} };
+    RUTEN.forEach(r => {
+      const v = V.ruten[r.id];
+      if(!v) return;
+      if(r.aktion === undefined && v.aktion){ r.aktion = v.aktion; r.aktionQuelle = v.quelle || "geschätzt"; }
+      if(r.feederspitze === undefined && v.feederspitze !== undefined) r.feederspitze = v.feederspitze;
+    });
+    ROLLEN.forEach(r => {
+      const v = V.rollen[r.id];
+      if(v && r.salzwasser === undefined && v.salzwasser !== undefined) r.salzwasser = v.salzwasser;
+    });
+  }
+
   /* Globals RUTEN / ROLLEN / AKTUELL mit einem Stand füllen (nur aktive Teile) */
   function wendeAn(s){
     const ruten  = s.ruten.filter(r => r.status !== "verkauft");
@@ -84,6 +120,7 @@ const AUSR = (function(){
 
     RUTEN.length = 0;  ruten.forEach(r => RUTEN.push(kopie(r)));
     ROLLEN.length = 0; rollen.forEach(r => { const o = kopie(r); delete o.schnurVerlauf; ROLLEN.push(o); });
+    ergaenze();
     Object.keys(AKTUELL).forEach(k => delete AKTUELL[k]);
 
     Object.values(s.setups).forEach(roh => {
@@ -182,7 +219,8 @@ const AUSR = (function(){
     stand, wendeAn, speichere, vonRemote,
     gespeichert: () => gespeichert ? kopie(gespeichert) : null,
     beiAenderung: fn => hoerer.add(fn),
-    parseSchnur, schnurText, schnurArt, ruteText, setupName,
+    parseSchnur, schnurText, schnurArt, ruteText, setupName, tragkraft, schaetzeTragkraft,
+    vorgabeRute: id => (typeof GERAET_VORGABE !== "undefined" && GERAET_VORGABE.ruten[id]) || null,
 
     /* Rolle auf ein Setup setzen (null = abnehmen). Sitzt sie woanders, wird sie dort abgenommen.
        Rückgabe: Schlüssel des Setups, von dem sie kam (oder null). */
@@ -214,7 +252,8 @@ const AUSR = (function(){
 
     neueRute(d){
       return aendere(s => {
-        const r = { id: id("r_"), name: d.name, kategorie: d.kategorie, laenge: d.laenge || null, status: "aktiv" };
+        const r = { id: id("r_"), name: d.name, kategorie: d.kategorie, laenge: d.laenge || null, status: "aktiv",
+          aktion: d.aktion || null, aktionQuelle: "du", feederspitze: !!d.feederspitze };
         if(d.wg) r.wg = d.wg;
         r.details = d.details || "";
         r.text = ruteText(r);
@@ -229,8 +268,8 @@ const AUSR = (function(){
 
     neueRolle(d){
       return aendere(s => {
-        const info = { bezeichnung: d.schnur?.bezeichnung || "", art: d.schnur?.art || "", dm: d.schnur?.dm || "", laenge: d.schnur?.laenge || null, seit: d.schnur?.seit || null };
-        const r = { id: id("ro_"), name: d.name, groesse: d.groesse, freilauf: !!d.freilauf, status: "aktiv",
+        const info = { bezeichnung: d.schnur?.bezeichnung || "", art: d.schnur?.art || "", dm: d.schnur?.dm || "", laenge: d.schnur?.laenge || null, seit: d.schnur?.seit || null, tragkraft: d.schnur?.tragkraft || null };
+        const r = { id: id("ro_"), name: d.name, groesse: d.groesse, freilauf: !!d.freilauf, status: "aktiv", salzwasser: d.salzwasser ?? null,
           text: [d.name, d.details].filter(Boolean).join(" · "), details: d.details || "",
           schnurInfo: info, schnur: schnurText(info), schnurVerlauf: [] };
         s.rollen.push(r);
@@ -243,6 +282,8 @@ const AUSR = (function(){
         const r = s.ruten.find(x => x.id === ruteId); if(!r) return;
         const set = Object.values(s.setups).find(x => x.ruteId === ruteId);
         Object.assign(r, { name: d.name, laenge: d.laenge || null });
+        if(d.aktion !== undefined){ if(d.aktion){ r.aktion = d.aktion; r.aktionQuelle = "du"; } else { r.aktion = null; r.aktionQuelle = "du"; } }
+        if(d.feederspitze !== undefined) r.feederspitze = !!d.feederspitze;
         if(d.wg) r.wg = d.wg; else delete r.wg;
         if(d.details !== undefined) r.details = d.details;
         r.text = d.textBehalten ? r.text : ruteText(r);
@@ -258,6 +299,7 @@ const AUSR = (function(){
       aendere(s => {
         const r = s.rollen.find(x => x.id === rolleId); if(!r) return;
         r.name = d.name; r.groesse = d.groesse; r.freilauf = !!d.freilauf;
+        if(d.salzwasser !== undefined) r.salzwasser = d.salzwasser;
         if(d.details !== undefined) r.details = d.details;
         r.text = d.textBehalten ? r.text : [r.name, r.details].filter(Boolean).join(" · ");
       });
@@ -270,8 +312,17 @@ const AUSR = (function(){
         r.schnurVerlauf = r.schnurVerlauf || [];
         const alt = r.schnurInfo || parseSchnur(r.schnur);
         if(alt && (alt.bezeichnung || alt.dm)) r.schnurVerlauf.unshift({ ...alt, text: r.schnur, bis: info.seit || null });
-        r.schnurInfo = { bezeichnung: info.bezeichnung || "", art: info.art || "", dm: info.dm || "", laenge: info.laenge || null, seit: info.seit || null };
+        r.schnurInfo = { bezeichnung: info.bezeichnung || "", art: info.art || "", dm: info.dm || "", laenge: info.laenge || null, seit: info.seit || null, tragkraft: info.tragkraft || null };
         r.schnur = schnurText(r.schnurInfo);
+      });
+    },
+
+    /* Tragkraft der aktuellen Schnur nachtragen (ohne Schnurwechsel) */
+    setzeTragkraft(rolleId, kg){
+      aendere(s => {
+        const r = s.rollen.find(x => x.id === rolleId); if(!r) return;
+        r.schnurInfo = r.schnurInfo || parseSchnur(r.schnur);
+        r.schnurInfo.tragkraft = kg || null;
       });
     },
 
@@ -314,6 +365,6 @@ const AUSR = (function(){
     rolleVoll(rolleId){ return stand().rollen.find(r => r.id === rolleId) || null; }
   };
 
-  if(gespeichert) wendeAn(gespeichert);
+  if(gespeichert) wendeAn(gespeichert); else ergaenze();
   return api;
 })();

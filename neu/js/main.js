@@ -12,7 +12,8 @@ import {
   ART_LABEL, ZUSTAND_LABEL, WARTUNG_TAGE, SCHNUR_TAGE
 } from "./setups.js";
 import { beraterHTML, fischeHTML, fischeAnzahl, bst, merkeBerater } from "./berater-ui.js";
-import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen } from "./edit.js";
+import { protokollHTML } from "./protokoll.js";
+import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen, tragkraftEintragen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
@@ -63,6 +64,7 @@ function leseHash(){
   const h = decodeURIComponent(location.hash.replace(/^#/, ""));
   const [b, s] = h.split("/");
   st.bereich = BEREICHE.some(x => x.id === b) ? b : "rutenwand";
+  st.protokoll = st.bereich === "heute" && s === "pruefprotokoll";
   const g = s ? gruppeZu(s) : null;
   if(g && g.id !== st.setup) st.tab = "infos";
   st.setup = g ? g.id : null;
@@ -197,8 +199,15 @@ function rolleFeldHTML(s){
 
 function tabInfos(g){
   const s = g.kopf, r = s.roh;
+  const AKT = { schnell: "schnell (Spitzenaktion)", mittel: "mittel (semiparabolisch)", parabolisch: "parabolisch (durchgehend)" };
+  const aktion = s.rute && s.rute.aktion ? AKT[s.rute.aktion] + (s.rute.aktionQuelle === "geschätzt" ? " · geschätzt" : "") : (s.kategorie === "stippe" ? "" : "unbekannt");
+  const tk = s.rolle ? AUSR.tragkraft(s.rolle) : null;
   let h = rolleFeldHTML(s) + `<dl class="reihen">
     ${reihe("Rute", s.rute ? s.rute.text : "")}
+    ${reihe("Aktion", aktion)}
+    ${s.rute && s.rute.feederspitze ? reihe("Spitze", "Bibberspitze (Feeder)") : ""}
+    ${tk ? reihe("Tragkraft", "ca. " + komma(tk.kg) + " kg" + (tk.quelle === "geschätzt" ? " · geschätzt aus dem Durchmesser" : "")) : ""}
+    ${s.rolle && s.rolle.salzwasser !== undefined && s.rolle.salzwasser !== null ? reihe("Salzwasser", s.rolle.salzwasser ? "Rolle salzwasserfest" : "Rolle nicht salzwasserfest") : ""}
     ${s.kategorie === "stippe" ? reihe("Rolle", r.rolleText) + reihe("Schnur", s.schnurText) : ""}
     ${reihe("Vorfach", r.vorfach)}
     ${reihe("Dazu", r.extra)}
@@ -206,6 +215,11 @@ function tabInfos(g){
   if(r.einsatz) h += `<div class="absatz"><h3>Einsatz</h3><p>${esc(r.einsatz)}</p></div>`;
   if(r.bewusst) h += `<div class="absatz bewusst"><h3>Bewusst so gewählt</h3><p>${esc(r.bewusst)}</p></div>`;
   if(r.tippKompakt) h += `<div class="absatz tipp"><h3>Tipp</h3><p>${esc(r.tippKompakt)}</p></div>`;
+  const offen = [];
+  if(s.rute && s.rute.aktionQuelle === "geschätzt") offen.push("die Aktion");
+  if(tk && tk.quelle === "geschätzt") offen.push("die Tragkraft der Schnur");
+  if(offen.length) h += `<p class="pruefen">Für den Berater geschätzt: ${offen.join(" und ")}. Ein Blick auf Rute bzw. Schnurspule macht die Empfehlung genauer.
+    ${tk && tk.quelle === "geschätzt" ? `<button type="button" class="knopf klein" data-tragkraft="${s.rolle.id}">Tragkraft eintragen</button>` : ""}</p>`;
   h += `<div class="akt-zeile"><button type="button" class="knopf" data-rute-bearb="${s.key}">Rute &amp; Angaben bearbeiten</button>${s.rolle ? `<button type="button" class="knopf" data-rolle-bearb="${s.rolle.id}">Rolle bearbeiten</button>` : ""}</div>`;
   return h;
 }
@@ -363,7 +377,9 @@ function render(){
   document.body.dataset.bereich = st.bereich;
   if(st.bereich !== "rutenwand"){
     document.body.classList.remove("hat-detail");
-    main.innerHTML = st.bereich === "heute" ? beraterHTML() + platzhalterHTML("heute", true) : platzhalterHTML(st.bereich);
+    main.innerHTML = st.bereich === "heute"
+      ? (st.protokoll ? protokollHTML() : beraterHTML() + platzhalterHTML("heute", true))
+      : platzhalterHTML(st.bereich);
     return;
   }
   neuAufbauen();
@@ -412,9 +428,10 @@ document.addEventListener("click", e => {
   }
   const t = e.target.closest("[data-tab]");
   if(t){ st.tab = t.dataset.tab; render(); const b = $(`#tab-${st.tab}`); if(b) b.focus(); return; }
-  const b = e.target.closest("[data-neu],[data-rute-bearb],[data-rolle-bearb],[data-montiere],[data-montiere-wahl],[data-schnur-neu],[data-schnur-heute],[data-zurueck]");
+  const b = e.target.closest("[data-neu],[data-rute-bearb],[data-rolle-bearb],[data-montiere],[data-montiere-wahl],[data-schnur-neu],[data-schnur-heute],[data-zurueck],[data-tragkraft]");
   if(b){
     const d = b.dataset;
+    if(d.tragkraft) return tragkraftEintragen(d.tragkraft);
     if(d.montiereWahl){ const sel = document.getElementById("frei-wahl-" + d.montiereWahl); if(sel && sel.value) return montiere(d.montiereWahl, sel.value); return; }
     if(d.neu === "rute") return neueRute();
     if(d.neu === "rolle") return neueRolle(d.key || null);

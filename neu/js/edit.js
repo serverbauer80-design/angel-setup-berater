@@ -46,6 +46,8 @@ const auswahl = (name, label, optionen, wert, opt = {}) => `<label class="feld${
   <select name="${name}" id="f-${name}">${optionen.map(([v, l]) => `<option value="${esc(v)}"${String(v) === String(wert ?? "") ? " selected" : ""}>${esc(l)}</option>`).join("")}</select></label>`;
 const KAT_OPT = () => SETUP_KATEGORIEN.map(k => [k.key, k.titel]);
 const ART_OPT = [["geflecht", "Geflecht"], ["mono", "Monofil"], ["fc", "Fluorocarbon"], ["", "unbekannt"]];
+const AKTION_OPT = [["", "unbekannt"], ["schnell", "schnell – Spitzenaktion, straff"], ["mittel", "mittel – semiparabolisch"], ["parabolisch", "parabolisch – durchgehend weich"]];
+const SALZ_OPT = [["", "unbekannt"], ["ja", "ja, salzwasserfest"], ["nein", "nein"]];
 
 /* Zusatzangaben aus einem alten Text holen: alles nach Name, Länge und WG */
 function details(text, name){
@@ -62,7 +64,9 @@ function ruteFelder(r, set, neu){
     ${feld("zusatz", "Zusatzname", zusatzAus(set.name), { ph: "z. B. Grundangeln 1" })}
     ${feld("laenge", "Länge (m)", kZahl(r.laenge), { im: "decimal", ph: "2,70" })}
     <div class="feld-paar">${feld("wgvon", "WG von (g)", r.wg ? kZahl(r.wg[0]) : "", { im: "decimal", ph: "7" })}${feld("wgbis", "WG bis (g)", r.wg ? kZahl(r.wg[1]) : "", { im: "decimal", ph: "25" })}</div>
-    ${feld("details", "Weitere Angaben zur Rute", r.details ?? details(r.text, r.name), { breit: true, ph: "z. B. 2-teilig · 121 g · Aktion schnell" })}
+    ${auswahl("aktion", "Aktion" + (r.aktion && r.aktionQuelle === "geschätzt" ? " (geschätzt – bitte prüfen)" : ""), AKTION_OPT, r.aktion || "", { breit: true })}
+    <label class="feld haken breit"><input type="checkbox" name="feederspitze" id="f-feederspitze"${r.feederspitze ? " checked" : ""}><span>Bibberspitze (Feeder-Rute mit Wechselspitzen)</span></label>
+    ${feld("details", "Weitere Angaben zur Rute", r.details ?? details(r.text, r.name), { breit: true, ph: "z. B. 2-teilig · 121 g" })}
     ${neu ? "" : feld("vorfach", "Vorfach", set.vorfach, { breit: true, textarea: true, rows: 2 })}
     ${neu ? "" : feld("extra", "Dazu (Köder, Kleinteile)", set.extra, { breit: true, textarea: true, rows: 2 })}
     ${feld("einsatz", "Einsatz", set.einsatz, { breit: true, textarea: true, rows: 3, ph: "Wofür nimmst du die Rute?" })}
@@ -78,7 +82,8 @@ function leseRute(fd){
   if(von !== null && von > bis) return { fehler: "Beim Wurfgewicht ist „von“ größer als „bis“." };
   if(laenge !== null && (laenge < 0.5 || laenge > 20)) return { fehler: "Die Länge bitte in Metern eintragen, z. B. 2,70." };
   const d = { name, kategorie: fd.get("kategorie"), zusatz: String(fd.get("zusatz") || "").trim(), laenge,
-    wg: von !== null ? [von, bis] : null, details: String(fd.get("details") || "").trim() };
+    wg: von !== null ? [von, bis] : null, details: String(fd.get("details") || "").trim(),
+    aktion: fd.get("aktion") || "", feederspitze: fd.get("feederspitze") === "on" };
   ["vorfach", "extra", "einsatz", "tippKompakt"].forEach(k => { if(fd.has(k)) d[k] = String(fd.get(k) || "").trim(); });
   return { d };
 }
@@ -87,7 +92,9 @@ function leseRute(fd){
 export function ruteBearbeiten(setupKey){
   const s = AUSR.stand();
   const set = s.setups[setupKey]; if(!set) return;
-  const r = s.ruten.find(x => x.id === set.ruteId); if(!r) return;
+  const r0 = s.ruten.find(x => x.id === set.ruteId); if(!r0) return;
+  const g = RUTEN.find(x => x.id === r0.id) || {};
+  const r = { ...r0, aktion: r0.aktion !== undefined ? r0.aktion : g.aktion, aktionQuelle: r0.aktionQuelle || g.aktionQuelle, feederspitze: r0.feederspitze !== undefined ? r0.feederspitze : g.feederspitze };
   blatt("Rute bearbeiten", ruteFelder(r, set, false) + `
     <div class="blatt-akt"><button type="submit" class="knopf prim" value="speichern">Speichern</button></div>
     <div class="gefahr"><p>Rute verkauft oder ausgemustert? Sie wandert ins Archiv, ihre Fänge bleiben erhalten. ${set.rolleId ? "Die Rolle wird frei." : ""}</p>
@@ -101,6 +108,9 @@ export function ruteBearbeiten(setupKey){
         return null;
       }
       const { d, fehler } = leseRute(fd); if(fehler) return fehler;
+      /* Unveränderte Schätzung bleibt „geschätzt“ – erst eine bewusste Wahl wird zu deinem Wert */
+      if((d.aktion || "") === (r.aktion || "") && r.aktionQuelle !== "du") delete d.aktion;
+      if(!!d.feederspitze === !!r.feederspitze && r0.feederspitze === undefined) delete d.feederspitze;
       AUSR.aendereRute(r.id, d);
       toastFn("Rute gespeichert");
       return null;
@@ -135,6 +145,7 @@ function schnurFelder(info, mitDatum){
     ${auswahl("sart", "Art", ART_OPT, info.art || "")}
     ${feld("sdm", "Ø (mm)", info.dm, { im: "decimal", ph: "0,12" })}
     ${feld("slaenge", "Länge (m)", info.laenge ?? "", { im: "numeric", ph: "150" })}
+    ${feld("skg", "Tragkraft (kg)", info.tragkraft ? komma(info.tragkraft) : "", { im: "decimal", ph: "von der Spule, z. B. 9" })}
     ${mitDatum ? feld("sseit", "Aufgespult am", info.seit || heuteISO(), { typ: "date" }) : ""}
   </div>`;
 }
@@ -147,13 +158,16 @@ function leseSchnur(fd){
   const laenge = fd.get("slaenge") ? Math.round(zahl(fd.get("slaenge"))) : null;
   const seit = fd.get("sseit") || null;
   if(seit && seit > heuteISO()) return { fehler: "Das Datum liegt in der Zukunft." };
-  return { info: { bezeichnung: String(fd.get("sbez") || "").trim(), art: fd.get("sart") || "", dm, laenge: laenge || null, seit } };
+  const kg = fd.get("skg") ? zahl(fd.get("skg")) : null;
+  if(kg !== null && (kg <= 0 || kg > 150)) return { fehler: "Die Tragkraft bitte in kg eintragen, z. B. 9 oder 4,5." };
+  return { info: { bezeichnung: String(fd.get("sbez") || "").trim(), art: fd.get("sart") || "", dm, laenge: laenge || null, seit, tragkraft: kg } };
 }
 function rolleFelder(r){
   return `<div class="feld-raster">
     ${feld("name", "Name der Rolle", r.name, { pflicht: true, breit: true, ph: "z. B. Daiwa Fuego LT 2500" })}
     ${feld("groesse", "Größe", r.groesse ?? "", { im: "numeric", ph: "2500" })}
     <label class="feld haken"><input type="checkbox" name="freilauf" id="f-freilauf"${r.freilauf ? " checked" : ""}><span>Freilauf (Baitrunner)</span></label>
+    ${auswahl("salzwasser", "Salzwasserfest", SALZ_OPT, r.salzwasser === true ? "ja" : r.salzwasser === false ? "nein" : "", { breit: true })}
     ${feld("details", "Weitere Angaben", r.details ?? details(r.text, r.name), { breit: true, ph: "z. B. Frontbremse · Übersetzung 5,2:1" })}
   </div>`;
 }
@@ -162,7 +176,9 @@ function leseRolle(fd){
   if(!name) return { fehler: "Bitte einen Namen für die Rolle eintragen." };
   const g = zahl(fd.get("groesse"));
   if(g === null || g < 100 || g > 30000) return { fehler: "Die Größe bitte als Zahl eintragen, z. B. 2500." };
-  return { d: { name, groesse: Math.round(g), freilauf: fd.get("freilauf") === "on", details: String(fd.get("details") || "").trim() } };
+  const sw = fd.get("salzwasser");
+  return { d: { name, groesse: Math.round(g), freilauf: fd.get("freilauf") === "on", details: String(fd.get("details") || "").trim(),
+    salzwasser: sw === "ja" ? true : sw === "nein" ? false : null } };
 }
 
 export function rolleBearbeiten(rolleId){
@@ -247,6 +263,21 @@ export function schnurWechseln(rolleId, setupKey){
 export function schnurDatum(rolleId, setupKey, datum){
   AUSR.setzeSchnurDatum(rolleId, datum);
   setzePflege("schnur", setupKey, datum);
+}
+
+export function tragkraftEintragen(rolleId){
+  const r = AUSR.rolleVoll(rolleId); if(!r) return;
+  const tk = AUSR.tragkraft(r);
+  blatt("Tragkraft eintragen", `<p class="hinweis-klein">Steht auf der Spule oder Verpackung deiner Schnur: <b>${esc(r.schnur || "")}</b>. ${tk && tk.quelle === "geschätzt" ? `Bisher geschätzt: ca. ${komma(tk.kg)} kg.` : ""}</p>
+    <div class="feld-raster">${feld("skg", "Tragkraft (kg)", r.schnurInfo && r.schnurInfo.tragkraft ? komma(r.schnurInfo.tragkraft) : "", { im: "decimal", ph: "z. B. 9", breit: true })}</div>
+    <div class="blatt-akt"><button type="submit" class="knopf prim">Speichern</button></div>`,
+    fd => {
+      const kg = fd.get("skg") ? zahl(fd.get("skg")) : null;
+      if(kg !== null && (kg <= 0 || kg > 150)) return "Die Tragkraft bitte in kg eintragen, z. B. 9 oder 4,5.";
+      AUSR.setzeTragkraft(rolleId, kg);
+      toastFn(kg ? "Tragkraft gespeichert" : "Tragkraft gelöscht – es gilt wieder die Schätzung");
+      return null;
+    });
 }
 
 export function zurueckholen(art, id){

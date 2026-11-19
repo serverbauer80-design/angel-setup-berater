@@ -367,6 +367,9 @@ button.frei-rolle:hover{border-color:var(--muted)}
 .gruende li::before{position:absolute;left:0;top:0;font-weight:700}
 .gruende li.plus::before{content:"✓";color:var(--ok)}
 .gruende li.minus::before{content:"!";color:var(--warn);left:5px}
+.gruende li.info{color:var(--muted)}
+.pruefen{font-size:14px;background:var(--warn-soft);border-radius:10px;padding:10px 12px;display:grid;gap:8px;justify-items:start}
+.gruende li.info::before{content:"i";color:var(--water);left:5px;font-family:var(--f-mono)}
 .besser{font-size:14px;color:var(--muted)}
 .besser small{color:var(--muted)}
 .wunsch-box{display:grid;gap:2px;background:var(--bad-soft);border-radius:10px;padding:10px 12px;font-size:14px}
@@ -381,4 +384,34 @@ button.frei-rolle:hover{border-color:var(--muted)}
 .platzhalter.klein{padding-top:24px;border-top:1px solid var(--line);margin-top:20px}
 .platzhalter.klein h3{font-size:22px;font-weight:600}
 @media (max-width: 420px){ .berater-wahl{grid-template-columns:1fr} }
+
+/* ============================================================
+   Prüfprotokoll
+   ============================================================ */
+.proto-link{justify-self:start;margin-top:8px}
+.protokoll{display:grid;gap:14px;max-width:1000px;padding-top:4px}
+.protokoll h2{font-size:34px;font-weight:700}
+.protokoll h3{font-size:22px;font-weight:600;padding-top:8px}
+.protokoll .zurueck.sichtbar{display:inline-flex}
+.proto-text{display:grid;gap:8px;max-width:72ch;font-size:15.5px}
+.proto-text ul{margin:0;padding-left:20px;display:grid;gap:4px}
+.tab-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.proto-tab{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
+.proto-tab th,.proto-tab td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.proto-tab th{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface2);font-weight:600}
+.proto-tab tr:last-child td{border-bottom:none}
+.proto-tab td.num{font-family:var(--f-mono);white-space:nowrap}
+.proto-tab td.klein{font-size:12.5px;color:var(--muted)}
+.proto-tab .amp{display:inline-block;vertical-align:middle}
+.gesch{font-style:normal;font-size:11px;color:var(--warn);font-family:var(--f-mono)}
+.proto-fisch{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.proto-fisch > summary{cursor:pointer;min-height:52px;display:flex;align-items:center;gap:10px;padding:0 14px;font-family:var(--f-display);font-size:21px;font-weight:600}
+.proto-fisch > summary span{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-weight:400}
+.proto-ansatz{display:grid;gap:8px;padding:12px 14px;border-top:1px solid var(--line)}
+.proto-ansatz h4{margin:0;font-size:16px}
+.proto-anf{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:4px 24px}
+.proto-anf div{display:grid;grid-template-columns:160px minmax(0,1fr);gap:8px;font-size:13.5px}
+.proto-anf dt{color:var(--muted)}
+.proto-anf dd{margin:0}
+@media (max-width:560px){ .proto-anf div{grid-template-columns:1fr;gap:0} }
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} .sk:active{transform:none} }
