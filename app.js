@@ -1743,15 +1743,43 @@ const GEZEITEN_ORTE = [
   { id:"soendervig", name:"Søndervig (Dänemark)", lat:56.09, lng:8.15 }
 ];
 const gezeitenCache = {};
+/* Gezeiten: Der worldtides-Schlüssel hat keine Guthaben mehr ("Not enough credits").
+   Ersatz seit 20.11.2026: Open-Meteo Marine (kostenlos, ohne Schlüssel) liefert den
+   stündlichen Wasserstand; Hoch-/Niedrigwasser werden daraus berechnet (±30 Min).
+   Gibt dasselbe Format zurück wie früher: [{ type:"High"|"Low", date }]. */
 async function ladeGezeiten(ort, datum){
   const cacheKey = ort.id + "_" + datum;
   if(gezeitenCache[cacheKey]) return gezeitenCache[cacheKey];
-  const url = `https://www.worldtides.info/api/v3?extremes&date=${datum}&days=1&lat=${ort.lat}&lon=${ort.lng}&key=${WORLDTIDES_KEY}`;
+  const versatz = d => { const x = new Date(datum + "T12:00:00"); x.setDate(x.getDate() + d); return x.toISOString().slice(0, 10); };
+  /* Vor- und Folgetag mitladen, sonst fehlen Extreme kurz nach/vor Mitternacht */
+  const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${ort.lat}&longitude=${ort.lng}&hourly=sea_level_height_msl&timezone=Europe%2FBerlin&start_date=${versatz(-1)}&end_date=${versatz(1)}`;
   const res = await fetch(url);
   if(!res.ok) throw new Error("HTTP " + res.status);
   const data = await res.json();
-  if(data.status !== 200) throw new Error(data.error || ("Status " + data.status));
-  gezeitenCache[cacheKey] = data.extremes || [];
+  const v = data.hourly && data.hourly.sea_level_height_msl;
+  if(!v || v.filter(x => x !== null).length < 36) throw new Error("keine Wasserstandsdaten für diesen Ort");
+  const roh = [];
+  for(let i = 1; i < v.length - 1; i++){
+    const a = v[i - 1], b = v[i], c = v[i + 1];
+    if(a === null || b === null || c === null) continue;
+    const hoch = b >= a && b > c, tief = b <= a && b < c;
+    if(!hoch && !tief) continue;
+    const n = a - 2 * b + c;
+    const off = n ? Math.max(-0.5, Math.min(0.5, (a - c) / (2 * n))) : 0;
+    roh.push({ typ: hoch ? "High" : "Low", t: i + off, h: b });
+  }
+  const ext = [];
+  roh.forEach(e => {
+    const l = ext[ext.length - 1];
+    if(l && l.typ === e.typ){ if(e.typ === "High" ? e.h > l.h : e.h < l.h) ext[ext.length - 1] = e; return; }
+    if(l && Math.abs(l.h - e.h) < 0.25) return;
+    ext.push(e);
+  });
+  gezeitenCache[cacheKey] = ext.filter(e => e.t >= 24 && e.t < 48).map(e => {
+    const min = Math.round((e.t - 24) * 12) * 5;
+    const hh = String(Math.floor(min / 60) % 24).padStart(2, "0"), mm = String(min % 60).padStart(2, "0");
+    return { type: e.typ, date: new Date(`${datum}T${hh}:${mm}:00`).toISOString(), height: e.h };
+  });
   return gezeitenCache[cacheKey];
 }
 async function tagescheckLadeGezeiten(){
@@ -1777,7 +1805,7 @@ async function tagescheckLadeGezeiten(){
     container.innerHTML = `<div class="card fs-stats-block">
       <h3>🌊 Gezeiten – ${escAttr(ort.name)}</h3>
       ${rows}
-      <p class="k-hint" style="margin-top:8px">Zeiten in Ortszeit (Europe/Berlin) · Daten von worldtides.info</p>
+      <p class="k-hint" style="margin-top:8px">Zeiten in Ortszeit, berechnet aus dem Wasserstandsmodell von Open-Meteo (±30 Min) · exakt: Gezeitenkalender des BSH</p>
     </div>`;
   } catch(err){
     container.innerHTML = `<div class="card fs-stats-block"><p class="k-hint">⚠️ Gezeiten konnten nicht geladen werden (${escAttr(err.message)}). Internetverbindung oder API-Kontingent prüfen.</p></div>`;

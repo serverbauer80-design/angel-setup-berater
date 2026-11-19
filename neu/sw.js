@@ -2,9 +2,9 @@
    Alles network-first: online immer der neueste Stand (kein ?v=-Hochzählen
    nötig), offline der zuletzt geladene. VERSION nur ändern, wenn der
    Cache bewusst geleert werden soll. */
-const VERSION = "neu-5";
+const VERSION = "neu-8";
 const CACHE = "rutenwand-" + VERSION;
-const KERN = ["./", "./index.html", "./app.css", "./js/main.js", "./js/store.js", "./js/setups.js", "./js/edit.js", "./js/berater-ui.js", "./js/protokoll.js", "./js/wissen.js", "./js/angelarten.js", "./js/schaubild.js", "./manifest.json", "../data.js", "../ausruestung.js", "../berater.js"];
+const KERN = ["./", "./index.html", "./app.css", "./js/main.js", "./js/store.js", "./js/setups.js", "./js/edit.js", "./js/berater-ui.js", "./js/protokoll.js", "./js/wissen.js", "./js/angelarten.js", "./js/schaubild.js", "./js/heute.js", "./js/lage.js", "./js/tasche.js", "./manifest.json", "../data.js", "../ausruestung.js", "../berater.js"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.allSettled(KERN.map(u => c.add(new Request(u, { cache: "no-cache" }))))).then(() => self.skipWaiting()));

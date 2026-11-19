@@ -1,0 +1,178 @@
+/* ============================================================
+   Bereich „Heute“ (Etappe 4)
+   Ort + Tag wählen -> Lage (Wetter, Druck, Wind, Sonne, Mond, Gezeiten),
+   welche Fische passen (mit Begründung), Schonzeit, Tasche mit Packliste
+   und darunter der Berater, vorbelegt mit dem Gewässer des Orts.
+   ============================================================ */
+import { lese, schreibe } from "./store.js";
+import { orteListe, ladeWetter, tagesLage, ladeGezeiten, mondphase, windRichtung, fischBewertung, urteil, rechtFuer, tagISO } from "./lage.js";
+import { tasche, packliste } from "./tasche.js";
+import { beraterHTML, bst, merkeBerater } from "./berater-ui.js";
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const KEY = "neu_heute_v1";
+export const hst = Object.assign({ ort: "eider_rd", tag: 0 }, lese(KEY, {}) || {});
+export function merkeHeute(){ schreibe(KEY, hst); }
+
+const wetterCache = {};   // ortId -> Rohdaten (im Speicher, damit Neuzeichnen sofort geht)
+const gezCache = {};
+
+export function aktuellerOrt(){
+  const orte = orteListe();
+  return orte.find(o => o.id === hst.ort) || orte[0];
+}
+function aktuelleLage(){
+  const w = wetterCache[aktuellerOrt().id];
+  return w ? tagesLage(w, hst.tag) : null;
+}
+const TAGE = ["Heute", "Morgen", "Übermorgen"];
+
+export function heuteHTML(){
+  const ort = aktuellerOrt();
+  const orte = orteListe();
+  const iso = tagISO(hst.tag);
+  const datum = new Date(iso + "T12:00:00").toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" });
+  /* Berater folgt dem Ort, solange du dort kein anderes Gewässer gewählt hast */
+  if(ort.gw && bst.fisch && FISCHE.find(f => f.id === bst.fisch)?.gewaesser.includes(ort.gw) && !bst.gwFest) bst.gw = ort.gw;
+
+  return `<section class="heute">
+    <div class="h-kopf">
+      <p class="eyebrow">${esc(datum)}</p>
+      <div class="h-wahl">
+        <label class="feld"><span>Wo gehst du hin?</span>
+          <select id="h-ort">${groupOrte(orte, ort.id)}</select></label>
+        <div class="chips h-tage" role="group" aria-label="Tag">${TAGE.map((t, i) => `<button type="button" class="chip${hst.tag === i ? " on" : ""}" data-h-tag="${i}" aria-pressed="${hst.tag === i}">${t}</button>`).join("")}</div>
+      </div>
+    </div>
+    <div id="h-lage" class="h-lage">${lageHTML(ort)}</div>
+    <div id="h-gezeiten"></div>
+    <div id="h-fische">${fischeHTML(ort)}</div>
+    <div id="h-tasche">${tascheHTML(ort)}</div>
+    <div id="berater-anker">${beraterHTML()}</div>
+  </section>`;
+}
+
+function groupOrte(orte, aktiv){
+  const opt = o => `<option value="${esc(o.id)}"${o.id === aktiv ? " selected" : ""}>${esc(o.name)}</option>`;
+  const std = orte.filter(o => !o.eigen), eig = orte.filter(o => o.eigen);
+  return `<optgroup label="Gewässer">${std.map(opt).join("")}</optgroup>${eig.length ? `<optgroup label="Deine Spots">${eig.map(opt).join("")}</optgroup>` : ""}`;
+}
+
+/* ---------- Lage ---------- */
+function lageHTML(ort){
+  const w = wetterCache[ort.id];
+  if(!w) return `<div class="h-karte"><p class="hinweis-klein">Lade Wetter für ${esc(ort.name)} …</p></div>`;
+  const l = tagesLage(w, hst.tag);
+  if(!l) return `<div class="h-karte"><p class="hinweis-klein">Für diesen Tag liegen noch keine Wetterdaten vor.</p></div>`;
+  const mond = mondphase(l.iso);
+  const pfeil = /fallend/.test(l.trend) ? "↘" : /steigend/.test(l.trend) ? "↗" : "→";
+  const stand = new Date(l.stand).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+  return `<div class="h-karte">
+    <div class="h-kacheln">
+      <div><small>${hst.tag ? "Mittags" : "Jetzt"}</small><b>${Math.round(l.temp)}°</b><span>${l.tmin !== null ? `${Math.round(l.tmin)}–${Math.round(l.tmax)}°` : ""}</span></div>
+      <div><small>Wind</small><b>${Math.round(l.wind)} <i>km/h</i></b><span>${windRichtung(l.richtung)} · Böen ${Math.round(l.boenMax)}</span></div>
+      <div class="${/fallend/.test(l.trend) ? "akzent" : ""}"><small>Luftdruck</small><b>${Math.round(l.druck)} ${pfeil}</b><span>${l.trend}</span></div>
+      <div><small>Himmel</small><b>${Math.round(l.wolken)} %</b><span>Regen bis ${l.regenMax ?? "–"} %</span></div>
+    </div>
+    <div class="h-zeile"><span>Sonne ${l.aufgang}–${l.untergang}</span><span>Mond: ${mond.name}</span></div>
+    ${l.boenMax > 55 ? `<p class="h-warn">Böen bis ${Math.round(l.boenMax)} km/h – am Wasser vorsichtig sein, an der Küste besser nicht waten.</p>` : ""}
+    ${l.stunden.length ? `<div class="h-stunden">${l.stunden.map(s => `<div><b>${s.zeit}</b><span>${Math.round(s.temp)}°</span><span>${Math.round(s.wind)}</span><span>${s.regen ?? 0}%</span></div>`).join("")}</div>
+      <p class="h-legende">Uhrzeit · Temperatur · Wind km/h · Regenrisiko</p>` : ""}
+    <p class="hinweis-klein">${l.ausCache ? `Ohne Netz – letzter Stand von ${stand} Uhr.` : `Open-Meteo · Stand ${stand} Uhr`}</p>
+  </div>`;
+}
+
+function gezeitenHTML(ort, liste, fehler){
+  if(!ort.tides) return "";
+  if(fehler) return `<div class="h-karte"><h3>Gezeiten</h3><p class="hinweis-klein">Nicht ladbar (${esc(fehler)}).</p></div>`;
+  if(!liste) return `<div class="h-karte"><h3>Gezeiten</h3><p class="hinweis-klein">Lade …</p></div>`;
+  return `<div class="h-karte"><h3>Gezeiten</h3><div class="h-tiden">${liste.map(e => `<div class="${e.typ === "Hochwasser" ? "hoch" : "niedrig"}"><small>${e.typ}</small><b>ca. ${e.zeit}</b></div>`).join("")}</div>
+    <p class="hinweis-klein">Die ersten zwei Stunden nach dem Tidenwechsel bringen oft die meiste Bewegung – und Fisch. Zeiten aus dem Wasserstandsmodell von Open-Meteo (±30 Min). Exakt: Gezeitenkalender des BSH.</p></div>`;
+}
+
+/* ---------- Welche Fische passen? ---------- */
+function fischeHTML(ort){
+  const monat = +tagISO(hst.tag).slice(5, 7);
+  const lage = aktuelleLage();
+  const b = fischBewertung(ort, lage, monat);
+  const zeile = x => {
+    const [farbe, text] = urteil(x.punkte);
+    const gruende = [...x.plus.slice(0, 2).map(t => `<li class="plus">${esc(t)}</li>`), ...x.minus.slice(0, 2).map(t => `<li class="minus">${esc(t)}</li>`)].join("");
+    const r = x.recht && x.recht.status === "achtung" ? `<li class="minus">${esc(x.recht.r.hinweis.replace(/&amp;/g, "&").replace(/^⚠️\s*/, ""))}</li>` : "";
+    return `<li class="h-fisch">
+      <div class="h-fisch-kopf"><span class="amp ${farbe}"></span><b>${esc(x.fisch.name)}</b><span class="status ${farbe}">${text}</span></div>
+      <ul class="gruende">${gruende}${r}</ul>
+      ${x.zeitTipp ? `<p class="hinweis-klein">${esc(x.zeitTipp)}${lage && lage.untergang ? ` · Sonnenuntergang ${lage.untergang}` : ""}</p>` : ""}
+      <div class="h-fisch-akt">
+        <button type="button" class="knopf klein" data-h-fisch="${x.fisch.id}">Methode &amp; Montage ›</button>
+        ${x.setup ? `<span class="hinweis-klein">mit ${esc(String(x.setup.name).split(" · ")[0])}</span>` : ""}
+      </div></li>`;
+  };
+  return `<div class="h-karte">
+    <h3>Passt ${hst.tag === 0 ? "heute" : hst.tag === 1 ? "morgen" : "übermorgen"} am ${esc(ort.name)}</h3>
+    ${b.passt.length ? `<ul class="h-fische">${b.passt.slice(0, 6).map(zeile).join("")}</ul>` : `<p class="leer">Für diesen Ort ist kein passender Fisch hinterlegt.</p>`}
+    ${b.passt.length > 6 ? `<details class="h-mehr"><summary>${b.passt.length - 6} weitere</summary><ul class="h-fische">${b.passt.slice(6).map(zeile).join("")}</ul></details>` : ""}
+    ${b.gesperrt.length ? `<div class="h-schonzeit"><b>Schonzeit / geschützt:</b> ${b.gesperrt.map(g => `${esc(g.fisch.name)} <small>(${esc(g.recht.r.schonzeit)})</small>`).join(", ")}<br><span>Nicht gezielt beangeln, ein Beifang wird sofort schonend zurückgesetzt.</span></div>` : ""}
+    ${b.fehltGeraet.length ? `<p class="hinweis-klein">Ohne passendes Gerät: ${b.fehltGeraet.map(x => esc(x.fisch.name)).join(", ")} – siehe Wunschliste im Berater.</p>` : ""}
+    <p class="hinweis-klein">Einschätzung aus Saison, Wetter und deinem Gerät – Erfahrungswerte, keine Garantie. Schonzeiten und Mindestmaße sind Orientierungswerte für Schleswig-Holstein: Gewässerordnung und Erlaubnisschein gehen immer vor.</p>
+  </div>`;
+}
+
+/* ---------- Tasche ---------- */
+function tascheHTML(ort){
+  const p = packliste(ort, aktuelleLage());
+  const t = p.t;
+  if(!t.setups.length){
+    return `<div class="h-karte h-tasche-leer"><h3>Tasche für ${hst.tag === 0 ? "heute" : TAGE[hst.tag].toLowerCase()}</h3>
+      <p class="hinweis-klein">Leg im Berater unten oder in der Rutenwand Setups mit „In die Tasche“ hinein – dann entsteht hier deine Packliste mit allem, was du für die Montagen, das Wetter und den Ort brauchst.</p></div>`;
+  }
+  const prozent = Math.round(p.erledigt / p.gesamt * 100);
+  return `<div class="h-karte">
+    <div class="h-tasche-kopf"><h3>Tasche: ${t.setups.length} Setup${t.setups.length > 1 ? "s" : ""}</h3><span class="mono">${p.erledigt}/${p.gesamt} eingepackt</span></div>
+    <div class="fortschritt" role="progressbar" aria-valuenow="${prozent}" aria-valuemin="0" aria-valuemax="100"><span style="width:${prozent}%"></span></div>
+    ${p.gruppen.map(g => `<div class="pack-gruppe"><h4>${esc(g.titel)}</h4>${g.hinweis ? `<p class="hinweis-klein">${esc(g.hinweis)}</p>` : ""}
+      <ul>${g.punkte.map(x => `<li><label class="pack${t.abgehakt[x.text] ? " erledigt" : ""}"><input type="checkbox" data-pack="${esc(x.text)}"${t.abgehakt[x.text] ? " checked" : ""}>
+        <span><b>${esc(x.text)}</b>${x.info ? `<small>${esc(x.info)}</small>` : ""}</span></label></li>`).join("")}</ul></div>`).join("")}
+    <div class="akt-zeile">
+      ${t.setups.map(k => AKTUELL[k] ? `<button type="button" class="knopf klein leise" data-tasche="${k}">${esc(String(AKTUELL[k].name).split(" · ")[0])} ✕</button>` : "").join("")}
+    </div>
+    <div class="akt-zeile"><button type="button" class="knopf" data-tasche-haken>Häkchen zurücksetzen</button><button type="button" class="knopf leise" data-tasche-leeren>Tasche leeren</button></div>
+  </div>`;
+}
+
+/* ---------- Nachladen (Wetter, Gezeiten) ---------- */
+let laeuft = null;
+export function heuteNachladen(neuZeichnen){
+  const ort = aktuellerOrt();
+  const fuelle = () => {
+    const l = document.getElementById("h-lage"); if(l) l.innerHTML = lageHTML(ort);
+    const f = document.getElementById("h-fische"); if(f) f.innerHTML = fischeHTML(ort);
+    const t = document.getElementById("h-tasche"); if(t) t.innerHTML = tascheHTML(ort);
+  };
+  if(!wetterCache[ort.id] && laeuft !== ort.id){
+    laeuft = ort.id;
+    ladeWetter(ort).then(w => { wetterCache[ort.id] = w; laeuft = null; if(aktuellerOrt().id === ort.id) fuelle(); })
+      .catch(err => { laeuft = null; const l = document.getElementById("h-lage");
+        if(l) l.innerHTML = `<div class="h-karte"><p class="hinweis-klein">Wetter nicht ladbar (${esc(err.message)}). Ohne Netz? Die Fischauswahl unten nutzt dann nur Saison und Gerät.</p></div>`; });
+  }
+  if(ort.tides){
+    const iso = tagISO(hst.tag), k = ort.id + iso;
+    const g = document.getElementById("h-gezeiten");
+    if(gezCache[k]){ if(g) g.innerHTML = gezeitenHTML(ort, gezCache[k]); }
+    else {
+      if(g) g.innerHTML = gezeitenHTML(ort, null);
+      ladeGezeiten(ort, iso).then(liste => { gezCache[k] = liste; const gg = document.getElementById("h-gezeiten"); if(gg && aktuellerOrt().id === ort.id) gg.innerHTML = gezeitenHTML(ort, liste); })
+        .catch(err => { const gg = document.getElementById("h-gezeiten"); if(gg) gg.innerHTML = gezeitenHTML(ort, null, err.message); });
+    }
+  }
+}
+
+/* Fisch aus „Passt heute“ in den Berater übernehmen */
+export function fischWaehlen(id){
+  const ort = aktuellerOrt();
+  bst.fisch = id;
+  const f = FISCHE.find(x => x.id === id);
+  bst.gw = ort.gw && f && f.gewaesser.includes(ort.gw) ? ort.gw : "";
+  bst.gwFest = false;
+  merkeBerater();
+}

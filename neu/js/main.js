@@ -3,6 +3,7 @@
    Etappe 1: Gerüst (4 Bereiche, Handy unten / Desktop seitlich) + Rutenwand
    Etappe 2: Ausrüstung in der App pflegen (edit.js, ../ausruestung.js)
    Etappe 3: Berater mit Regeln (berater-ui.js, ../berater.js)
+   Etappe 4: Heute mit Lage, Fischauswahl und Tasche (heute.js, lage.js, tasche.js)
    Routing über den Hash: #rutenwand, #rutenwand/setup22, #heute …
    ============================================================ */
 import { KEYS, pflege, setzePflege, beiAenderung, ladeFaenge, startSync, sync, anmelden, abmelden, lese, schreibe, leseText, schreibeText } from "./store.js";
@@ -14,6 +15,8 @@ import {
 import { beraterHTML, fischeHTML, fischeAnzahl, bst, merkeBerater } from "./berater-ui.js";
 import { protokollHTML } from "./protokoll.js";
 import { wissenHTML } from "./wissen.js";
+import { heuteHTML, heuteNachladen, hst, merkeHeute, fischWaehlen } from "./heute.js";
+import { umschalten, abhaken, leeren, nurHakenWeg, inTasche } from "./tasche.js";
 import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen, tragkraftEintragen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
@@ -224,7 +227,8 @@ function tabInfos(g){
   if(tk && tk.quelle === "geschätzt") offen.push("die Tragkraft der Schnur");
   if(offen.length) h += `<p class="pruefen">Für den Berater geschätzt: ${offen.join(" und ")}. Ein Blick auf Rute bzw. Schnurspule macht die Empfehlung genauer.
     ${tk && tk.quelle === "geschätzt" ? `<button type="button" class="knopf klein" data-tragkraft="${s.rolle.id}">Tragkraft eintragen</button>` : ""}</p>`;
-  h += `<div class="akt-zeile"><button type="button" class="knopf" data-rute-bearb="${s.key}">Rute &amp; Angaben bearbeiten</button>${s.rolle ? `<button type="button" class="knopf" data-rolle-bearb="${s.rolle.id}">Rolle bearbeiten</button>` : ""}</div>`;
+  h += `<div class="akt-zeile"><button type="button" class="knopf ${inTasche(s.key) ? "" : "prim"}" data-tasche="${s.key}">${inTasche(s.key) ? "Aus der Tasche nehmen" : "In die Tasche"}</button>
+    <button type="button" class="knopf" data-rute-bearb="${s.key}">Rute &amp; Angaben bearbeiten</button>${s.rolle ? `<button type="button" class="knopf" data-rolle-bearb="${s.rolle.id}">Rolle bearbeiten</button>` : ""}</div>`;
   return h;
 }
 
@@ -382,8 +386,9 @@ function render(){
   if(st.bereich !== "rutenwand"){
     document.body.classList.remove("hat-detail");
     main.innerHTML = st.bereich === "heute"
-      ? (st.protokoll ? protokollHTML() : beraterHTML() + platzhalterHTML("heute", true))
+      ? (st.protokoll ? protokollHTML() : heuteHTML())
       : st.bereich === "wissen" ? wissenHTML(st.wissen) : platzhalterHTML(st.bereich);
+    if(st.bereich === "heute" && !st.protokoll) heuteNachladen();
     return;
   }
   neuAufbauen();
@@ -423,6 +428,18 @@ function renderListe(){
 document.addEventListener("click", e => {
   const f = e.target.closest("[data-filter]");
   if(f){ st.filter = f.dataset.filter; schreibeText(KEYS.filter, st.filter); renderListe(); return; }
+  const ht = e.target.closest("[data-h-tag]");
+  if(ht){ hst.tag = +ht.dataset.hTag; merkeHeute(); render(); return; }
+  const hf = e.target.closest("[data-h-fisch]");
+  if(hf){
+    fischWaehlen(hf.dataset.hFisch); render();
+    const z = document.getElementById("berater-anker"); if(z) z.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    return;
+  }
+  const tb = e.target.closest("[data-tasche]");
+  if(tb){ const drin = umschalten(tb.dataset.tasche, tb.dataset.zweck || null); toast(drin ? "In der Tasche" : "Aus der Tasche genommen"); return; }
+  if(e.target.closest("[data-tasche-leeren]")){ leeren(); toast("Tasche geleert"); return; }
+  if(e.target.closest("[data-tasche-haken]")){ nurHakenWeg(); toast("Häkchen zurückgesetzt"); return; }
   const gt = e.target.closest("[data-geh-tab]");
   if(gt){
     st.tab = gt.dataset.gehTab; render();
@@ -455,8 +472,11 @@ document.addEventListener("click", e => {
   }
 });
 document.addEventListener("change", e => {
+  if(e.target.id === "h-ort"){ hst.ort = e.target.value; merkeHeute(); render(); return; }
+  const pk = e.target.closest("[data-pack]");
+  if(pk){ abhaken(pk.dataset.pack); return; }
   if(e.target.id === "b-fisch" || e.target.id === "b-gw"){
-    if(e.target.id === "b-fisch"){ bst.fisch = e.target.value; bst.gw = ""; } else bst.gw = e.target.value;
+    if(e.target.id === "b-fisch"){ bst.fisch = e.target.value; bst.gw = ""; bst.gwFest = false; } else { bst.gw = e.target.value; bst.gwFest = true; }
     merkeBerater(); render();
     const z = document.getElementById(e.target.id); if(z) z.focus();
     return;

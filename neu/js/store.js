@@ -56,6 +56,14 @@ export function setzePflege(art, setupKey, datum){
 /* Ausrüstung geändert (hier, in einem anderen Tab oder vom anderen Gerät) */
 AUSR.beiAenderung(quelle => { if(quelle === "lokal") pushDebounced(); melde(); });
 
+/* ---------- Tasche für heute (Etappe 4) ---------- */
+const TASCHE_KEY = "neu_tasche_v1";
+export function tascheSetzen(t){
+  schreibe(TASCHE_KEY, t);
+  pushDebounced();
+  melde();
+}
+
 /* Andere Tabs (z. B. die alte App parallel offen) */
 window.addEventListener("storage", e => {
   if(e.key === KEYS.wartung){ pflege.wartung = lese(KEYS.wartung, {}) || {}; melde(); }
@@ -80,6 +88,12 @@ function uebernimm(data){
   /* Ausrüstung: neuer Stand aus der Cloud wird übernommen, ist der lokale neuer, geht er hoch */
   if(data.ausruestung){ const r = AUSR.vonRemote(data.ausruestung); if(r === "aelter") pushDebounced(); }
   else if(AUSR.gespeichert()) pushDebounced();
+  /* Tasche: neuere gewinnt */
+  if(data.tasche && data.tasche.geaendert){
+    const lokal = lese(TASCHE_KEY, null);
+    if(!lokal || (lokal.geaendert || "") < data.tasche.geaendert){ schreibe(TASCHE_KEY, data.tasche); geaendert = true; }
+    else if((lokal.geaendert || "") > data.tasche.geaendert) pushDebounced();
+  }
   if(data.wartung && typeof data.wartung === "object"){ pflege.wartung = data.wartung; schreibe(KEYS.wartung, pflege.wartung); geaendert = true; }
   if(data.schnur && typeof data.schnur === "object"){  pflege.schnur  = data.schnur;  schreibe(KEYS.schnur,  pflege.schnur);  geaendert = true; }
   if(data.faenge && Array.isArray(data.faenge.catches)){
@@ -98,7 +112,9 @@ export function pushDebounced(){
   clearTimeout(timer);
   timer = setTimeout(() => {
     const aus = AUSR.gespeichert();
+    const ta = lese(TASCHE_KEY, null);
     docRef.set({
+      ...(ta ? { tasche: ta } : {}),
       wartung: pflege.wartung,
       schnur: pflege.schnur,
       ...(aus ? { ausruestung: aus } : {}),

@@ -505,4 +505,61 @@ button.frei-rolle:hover{border-color:var(--muted)}
 .schaubild .sb-gitter{stroke:var(--muted);stroke-width:.8}
 .schaubild .sb-boilie{fill:var(--float-soft);stroke:var(--float);stroke-width:1.4}
 .schaubild .sb-glitzer{fill:var(--water-soft);stroke:var(--water);stroke-width:.8}
+
+/* ============================================================
+   Etappe 4: Heute
+   ============================================================ */
+.heute{display:grid;gap:12px;max-width:860px;padding-top:2px}
+.h-kopf{display:grid;gap:8px}
+.h-wahl{display:grid;gap:10px}
+.h-wahl select{width:100%;min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:0 12px;font:inherit;font-size:16px}
+.h-tage{margin:0;padding:0}
+.h-karte{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px;box-shadow:var(--shadow)}
+.h-karte h3{font-size:21px;font-weight:700}
+.h-kacheln{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.h-kacheln div{background:var(--surface2);border-radius:10px;padding:8px 10px;display:grid;gap:1px;min-width:0}
+.h-kacheln div.akzent{background:var(--water-soft)}
+.h-kacheln small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.h-kacheln b{font-family:var(--f-display);font-size:28px;line-height:1.05;font-weight:700}
+.h-kacheln b i{font-style:normal;font-size:15px;font-family:var(--f-body);font-weight:600;color:var(--muted)}
+.h-kacheln span{font-size:13px;color:var(--muted)}
+.h-zeile{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px}
+.h-warn{background:var(--bad-soft);color:var(--bad);border-radius:10px;padding:8px 12px;font-size:14px;font-weight:600}
+.h-stunden{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(52px,1fr);gap:4px;overflow-x:auto;scrollbar-width:none}
+.h-stunden::-webkit-scrollbar{display:none}
+.h-stunden div{display:grid;justify-items:center;gap:1px;background:var(--surface2);border-radius:8px;padding:6px 2px;font-family:var(--f-mono);font-size:12px}
+.h-stunden b{font-size:12.5px}
+.h-stunden span{color:var(--muted)}
+.h-legende{font-size:11.5px;color:var(--muted);margin-top:-4px}
+.h-tiden{display:flex;flex-wrap:wrap;gap:8px}
+.h-tiden div{display:grid;border-radius:10px;padding:6px 12px;background:var(--surface2)}
+.h-tiden div.hoch{background:var(--water-soft)}
+.h-tiden small{font-size:12px;color:var(--muted)}
+.h-tiden b{font-family:var(--f-mono);font-size:17px}
+.h-fische{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.h-fisch{display:grid;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
+.h-fisch:first-child{border-top:none;padding-top:0}
+.h-fisch-kopf{display:flex;align-items:center;gap:8px}
+.h-fisch-kopf b{font-size:17px;flex:1}
+.h-fisch-akt{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.h-mehr summary{cursor:pointer;color:var(--water);font-weight:600;min-height:40px;display:flex;align-items:center}
+.h-schonzeit{background:var(--bad-soft);border-radius:10px;padding:10px 12px;font-size:14px}
+.h-schonzeit small{color:var(--muted)}
+.h-schonzeit span{color:var(--muted);font-size:13px}
+.h-tasche-kopf{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.fortschritt{height:8px;border-radius:4px;background:var(--surface2);border:1px solid var(--line);overflow:hidden}
+.fortschritt span{display:block;height:100%;background:var(--ok)}
+.pack-gruppe{display:grid;gap:4px}
+.pack-gruppe h4{margin:4px 0 0;font-family:var(--f-display);font-size:18px;font-weight:600}
+.pack-gruppe ul{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.pack{display:flex;gap:10px;align-items:flex-start;padding:8px 2px;border-bottom:1px solid var(--line);cursor:pointer;min-height:44px}
+.pack input{width:22px;height:22px;margin:1px 0 0;accent-color:var(--ok);flex:none}
+.pack span{display:grid;min-width:0}
+.pack small{font-size:12.5px;color:var(--muted)}
+.pack.erledigt b{text-decoration:line-through;color:var(--muted)}
+.b-tasche{justify-self:start}
+@media (min-width: 900px){
+  .h-wahl{grid-template-columns:1fr auto;align-items:end}
+  .h-kacheln{grid-template-columns:repeat(4,1fr)}
+}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} .sk:active{transform:none} }
