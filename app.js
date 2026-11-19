@@ -384,9 +384,9 @@ function rechtHTML(fischId){
 }
 
 function statusLabel(s){
-  return s === "machbar" ? "✅ Machbar mit deinem Setup"
-       : s === "bedingt" ? "🟡 Bedingt machbar"
-       : "❌ Nicht mit aktuellem Gerät";
+  return s === "machbar" ? "✅ Passt – mit deinem Setup"
+       : s === "bedingt" ? "🟡 Geht mit Abstrichen"
+       : "❌ Gerät fehlt";
 }
 
 /* Setup-Bezeichnung ausserhalb des Inventars: dort fehlt die Gruppen-Ueberschrift,

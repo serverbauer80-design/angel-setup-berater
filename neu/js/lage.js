@@ -237,7 +237,7 @@ export function fischBewertung(ort, lage, monat){
       if(hint.topSaison.includes(saison)){ p += 2; plus.push(`${saison} ist Hauptsaison`); }
       else { p -= 1; minus.push(`${saison} ist nicht die beste Zeit`); }
     } else p += 1;
-    if(beste.b.status === "machbar"){ p += 1; } else minus.push("dein Gerät passt nur bedingt");
+    if(beste.b.status === "machbar"){ p += 1; } else minus.push("dein Gerät geht nur mit Abstrichen");
 
     if(lage){
       /* Lufttemperatur ist nicht Wassertemperatur: Tagesmittel als grober Hinweis */

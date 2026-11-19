@@ -186,7 +186,7 @@ function listeHTML(){
 /* ---------- Rutenwand: Detail ---------- */
 const TABS = [["infos","Infos"],["fische","Fische"],["pflege","Pflege"],["faenge","Fänge"],["kombi","Kombi"]];
 const AMPEL = { machbar:"g", bedingt:"y", wunsch:"r" };
-const AMPEL_TEXT = { machbar:"machbar", bedingt:"bedingt", wunsch:"Wunschliste" };
+const AMPEL_TEXT = { machbar:"passt", bedingt:"geht mit Abstrichen", wunsch:"Gerät fehlt" };
 
 function reihe(k, v){ return v ? `<div class="reihe"><dt>${k}</dt><dd>${esc(v)}</dd></div>` : ""; }
 

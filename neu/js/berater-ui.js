@@ -12,7 +12,7 @@ import { inTascheFuer } from "./tasche.js";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const komma = v => String(v).replace(".", ",");
 const AMPEL = ["g", "y", "r"];
-const STATUS = { machbar: ["g", "Machbar"], bedingt: ["y", "Bedingt"], wunsch: ["r", "Wunschliste"] };
+const STATUS = { machbar: ["g", "Passt"], bedingt: ["y", "Geht mit Abstrichen"], wunsch: ["r", "Gerät fehlt"] };
 const gwName = k => GEWAESSER[k] ? GEWAESSER[k].name : k;
 const kurz = s => esc(String(s.name || "").split(" · ")[0]) + (String(s.name).match(/\(([^)]+)\)\s*$/) ? ` <small>(${esc(s.name.match(/\(([^)]+)\)\s*$/)[1])})</small>` : "");
 
