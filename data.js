@@ -87,7 +87,7 @@ const GERAET_VORGABE = {
     r_crivit_spinnangel_set_210_5:    { aktion:"mittel",      quelle:"geschätzt" },
     r_crivit_multi_x_feeder_300_5:    { aktion:"mittel",      quelle:"geschätzt",  feederspitze:false },
     r_balzer_diabolo_golden_circle:   { aktion:"schnell",     quelle:"du",         notiz:"Spitzenaktion: straffer Blank, sensible Spitze, hartes Rückgrat für den Anhieb im Zandermaul" },
-    r_balzer_shirasu_im8_spoon_ul:    { aktion:"mittel",      quelle:"geschätzt",  notiz:"Spoon-UL-Modell – die Fast-Einstufung der Shirasu-Zanderruten gilt hierfür nicht" }
+    r_balzer_shirasu_im8_spoon_ul:    { aktion:"mittel",      quelle:"du",         notiz:"semiparabolisch bis Moderate-Fast: feine Tubular-Spitze, arbeitet im Drill bis ins Mittelteil, straffer als die Presso – stark bei Spoons 2,5–5 g, kleinen Gummis und Mini-Wobblern" }
   },
   /* Salzwasserfest nur, wo eine Quelle es nennt – sonst unbekannt */
   rollen: {
