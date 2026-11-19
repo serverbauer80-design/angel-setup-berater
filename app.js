@@ -384,9 +384,10 @@ function rechtHTML(fischId){
 }
 
 function statusLabel(s){
-  return s === "machbar" ? "✅ Passt – mit deinem Setup"
-       : s === "bedingt" ? "🟡 Geht mit Abstrichen"
-       : "❌ Gerät fehlt";
+  const d = `<i class="daumen d-${s === "machbar" || s === "bedingt" ? s : "wunsch"}" aria-hidden="true"></i>`;
+  return s === "machbar" ? d + "Passt – mit deinem Setup"
+       : s === "bedingt" ? d + "Geht mit Abstrichen"
+       : d + "Gerät fehlt";
 }
 
 /* Setup-Bezeichnung ausserhalb des Inventars: dort fehlt die Gruppen-Ueberschrift,
