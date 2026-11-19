@@ -13,6 +13,7 @@ import {
 } from "./setups.js";
 import { beraterHTML, fischeHTML, fischeAnzahl, bst, merkeBerater } from "./berater-ui.js";
 import { protokollHTML } from "./protokoll.js";
+import { wissenHTML } from "./wissen.js";
 import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen, tragkraftEintragen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
@@ -25,13 +26,15 @@ const ICON = {
   heute: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>',
   rutenwand: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4.5 20.5L19 3.5M8.5 20.5L20.5 7"/><circle cx="16.5" cy="15.5" r="2.3"/><path d="M14.4 14.3l-2.2-.9"/></svg>',
   gewaesser: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 21s-6.5-5.9-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.1-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg>',
-  fangbuch: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2.5 12c3-4.2 8.2-5.2 12.3-3l4.7-3.3v12.6l-4.7-3.3C10.7 17.2 5.5 16.2 2.5 12z"/><circle cx="7.6" cy="11.2" r=".9" fill="currentColor"/></svg>'
+  fangbuch: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2.5 12c3-4.2 8.2-5.2 12.3-3l4.7-3.3v12.6l-4.7-3.3C10.7 17.2 5.5 16.2 2.5 12z"/><circle cx="7.6" cy="11.2" r=".9" fill="currentColor"/></svg>',
+  wissen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5.5C6.5 4.3 9.5 4.3 12 6c2.5-1.7 5.5-1.7 8-.5V19c-2.5-1.2-5.5-1.2-8 .5-2.5-1.7-5.5-1.7-8-.5z"/><path d="M12 6v13.5"/></svg>'
 };
 const BEREICHE = [
   { id:"heute",     label:"Heute" },
   { id:"rutenwand", label:"Rutenwand" },
   { id:"gewaesser", label:"Gewässer" },
-  { id:"fangbuch",  label:"Fangbuch" }
+  { id:"fangbuch",  label:"Fangbuch" },
+  { id:"wissen",    label:"Wissen" }
 ];
 /* Was in Etappe 1 noch in der bisherigen App lebt (?view= öffnet dort den Reiter) */
 const NOCH_ALT = {
@@ -65,6 +68,7 @@ function leseHash(){
   const [b, s] = h.split("/");
   st.bereich = BEREICHE.some(x => x.id === b) ? b : "rutenwand";
   st.protokoll = st.bereich === "heute" && s === "pruefprotokoll";
+  st.wissen = st.bereich === "wissen" ? (s || null) : null;
   const g = s ? gruppeZu(s) : null;
   if(g && g.id !== st.setup) st.tab = "infos";
   st.setup = g ? g.id : null;
@@ -379,7 +383,7 @@ function render(){
     document.body.classList.remove("hat-detail");
     main.innerHTML = st.bereich === "heute"
       ? (st.protokoll ? protokollHTML() : beraterHTML() + platzhalterHTML("heute", true))
-      : platzhalterHTML(st.bereich);
+      : st.bereich === "wissen" ? wissenHTML(st.wissen) : platzhalterHTML(st.bereich);
     return;
   }
   neuAufbauen();

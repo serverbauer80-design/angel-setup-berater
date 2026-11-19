@@ -6,6 +6,7 @@
    Die Bewertung selbst steckt in ../berater.js (gemeinsam mit der alten App).
    ============================================================ */
 import { lese, schreibe } from "./store.js";
+import { angelartFuer } from "./angelarten.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const komma = v => String(v).replace(".", ",");
@@ -64,6 +65,7 @@ export function fischeHTML(key, catches){
           ${kettenHTML(x.ansatz, set, null)}
           ${x.ansatz.tipp ? `<p class="ansatz-tipp">${esc(x.ansatz.tipp)}</p>` : ""}
           ${x.hinweis ? `<p class="ansatz-tipp">${esc(x.hinweis)}</p>` : ""}
+          ${mehrLink(x.fisch, x.ansatz)}
         </div>
       </details>`;
     }).join("");
@@ -93,7 +95,7 @@ export function beraterHTML(){
     const karten = ansaetze.map(a => {
       const b = BERATER.bewerte(a, gw);
       if(!b) return { rang: RANG[a._orig.status] ?? 2, html: altKarte(a) };
-      return { rang: RANG[b.status], html: karte(a, b.liste, gw, b.status) };
+      return { rang: RANG[b.status], html: karte(a, b.liste, gw, b.status, fisch) };
     }).sort((x, y) => x.rang - y.rang);
     h += karten.map(k => k.html).join("");
     h += `<p class="hinweis-klein">Schonzeiten und Mindestmaße findest du vorerst im <a href="../index.html?view=saison">Saisonkalender der bisherigen App</a>.</p>`;
@@ -107,7 +109,12 @@ function wunschHTML(a){
   return w ? `<div class="wunsch-box"><b>Dafür fehlt dir: ${esc(w.name)}</b><span>${esc([w.rute, w.rolle].filter(Boolean).join(" · "))}</span><span class="preis">${esc(w.preis || "")}</span></div>` : "";
 }
 
-function karte(a, rl, gw, status) {
+function mehrLink(fisch, a){
+  const art = angelartFuer(fisch.id, fisch.ansaetze.indexOf(a));
+  return art ? `<a class="mehr-link" href="#wissen/${art.id}">Mehr zur Methode: ${esc(art.name)} – mit Schaubild ›</a>` : "";
+}
+
+function karte(a, rl, gw, status, fisch) {
   const [farbe, label] = STATUS[status];
   const bester = rl[0] && rl[0].stufe < 2 ? rl[0] : null;
   const alt = rl.slice(1).filter(x => x.stufe < 2 && bester && x.stufe <= bester.stufe).slice(0, 3);
@@ -122,6 +129,7 @@ function karte(a, rl, gw, status) {
     <details class="b-montage"${set ? "" : " open"}><summary>Montage</summary>${kettenHTML(a, set, gw)}</details>
     ${a.tipp ? `<p class="ansatz-tipp">${esc(a.tipp)}</p>` : ""}
     ${a.regel && a.regel.hinweis ? `<p class="ansatz-tipp">${esc(a.regel.hinweis)}</p>` : ""}
+    ${mehrLink(fisch, a)}
   </article>`;
 }
 
