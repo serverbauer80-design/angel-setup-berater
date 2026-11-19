@@ -8,7 +8,7 @@ import { schaubildSVG } from "./schaubild.js";
 import { lese } from "./store.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-const STATUS = { machbar: ["g", "Passt"], bedingt: ["y", "Geht mit Abstrichen"], wunsch: ["r", "Gerät fehlt"] };
+const STATUS = { machbar: ["g", "Passt"], bedingt: ["y", "Geht mit Abstrichen"], wunsch: ["w", "Wunschliste"] };
 const kurzName = s => esc(String(s.name || "").split(" · ")[0]) + (String(s.name).match(/\(([^)]+)\)\s*$/) ? ` <small>(${esc(s.name.match(/\(([^)]+)\)\s*$/)[1])})</small>` : "");
 
 /* Was hast du schon? Zubehörliste + eigene Ergänzungen + Schnüre auf deinen Rollen */

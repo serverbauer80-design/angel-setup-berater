@@ -12,7 +12,7 @@ import { inTascheFuer } from "./tasche.js";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const komma = v => String(v).replace(".", ",");
 const AMPEL = ["g", "y", "r"];
-const STATUS = { machbar: ["g", "Passt"], bedingt: ["y", "Geht mit Abstrichen"], wunsch: ["r", "Gerät fehlt"] };
+const STATUS = { machbar: ["g", "Passt"], bedingt: ["y", "Geht mit Abstrichen"], wunsch: ["w", "Wunschliste"] };
 const gwName = k => GEWAESSER[k] ? GEWAESSER[k].name : k;
 const kurz = s => esc(String(s.name || "").split(" · ")[0]) + (String(s.name).match(/\(([^)]+)\)\s*$/) ? ` <small>(${esc(s.name.match(/\(([^)]+)\)\s*$/)[1])})</small>` : "");
 
@@ -107,7 +107,7 @@ export function beraterHTML(){
 
 function wunschHTML(a){
   const w = a.braucht && typeof WUNSCH !== "undefined" ? WUNSCH[a.braucht] : null;
-  return w ? `<div class="wunsch-box"><b>Dafür fehlt dir: ${esc(w.name)}</b><span>${esc([w.rute, w.rolle].filter(Boolean).join(" · "))}</span><span class="preis">${esc(w.preis || "")}</span></div>` : "";
+  return w ? `<div class="wunsch-box"><b>Passt dafür (Wunschliste): ${esc(w.name)}</b><span>${esc([w.rute, w.rolle].filter(Boolean).join(" · "))}</span><span class="preis">${esc(w.preis || "")}</span></div>` : "";
 }
 
 function mehrLink(fisch, a){

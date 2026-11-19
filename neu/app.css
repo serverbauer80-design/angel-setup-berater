@@ -372,7 +372,7 @@ button.frei-rolle:hover{border-color:var(--muted)}
 .gruende li.info::before{content:"i";color:var(--water);left:5px;font-family:var(--f-mono)}
 .besser{font-size:14px;color:var(--muted)}
 .besser small{color:var(--muted)}
-.wunsch-box{display:grid;gap:2px;background:var(--bad-soft);border-radius:10px;padding:10px 12px;font-size:14px}
+.wunsch-box{display:grid;gap:2px;background:var(--water-soft);border-radius:10px;padding:10px 12px;font-size:14px}
 .wunsch-box .preis{font-family:var(--f-mono);font-size:13px}
 .b-montage summary{cursor:pointer;font-weight:600;font-size:15px;min-height:40px;display:flex;align-items:center;color:var(--water)}
 .b-montage .kette{padding-left:22px}
@@ -570,5 +570,8 @@ button.frei-rolle:hover{border-color:var(--muted)}
 .status{display:inline-flex;align-items:center;gap:5px}
 .status::before{content:"";width:13px;height:13px;flex:none;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 10v12'/%3E%3Cpath d='M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 10v12'/%3E%3Cpath d='M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z'/%3E%3C/svg%3E") center/contain no-repeat}
 .status.y::before{transform:rotate(90deg)}
-.status.r::before{transform:rotate(180deg)}
+.status.r::before{display:none}
+/* Wunschliste: neutral, kein Urteil – dir fehlt für diese Methode nur noch passendes Gerät */
+.status.w{background:var(--water-soft);color:var(--water)}
+.status.w::before{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9.5'/%3E%3Cpath d='M8 12h8M12 8v8'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9.5'/%3E%3Cpath d='M8 12h8M12 8v8'/%3E%3C/svg%3E") center/contain no-repeat}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} .sk:active{transform:none} }

@@ -86,7 +86,7 @@ export function protokollHTML(){
         const top = b.liste.filter(x => x.stufe < 2).slice(0, 3);
         const erste = top[0];
         return `<tr><td>${esc(gwName(gw))}</td>
-          <td><span class="status ${AMP[{ machbar: 0, bedingt: 1, wunsch: 2 }[b.status]]}">${{ machbar: "passt", bedingt: "mit Abstrichen", wunsch: "Gerät fehlt" }[b.status]}</span></td>
+          <td><span class="status ${{ machbar: "g", bedingt: "y", wunsch: "w" }[b.status]}">${{ machbar: "passt", bedingt: "mit Abstrichen", wunsch: "Wunschliste" }[b.status]}</span></td>
           <td>${top.length ? top.map((x, i) => `<span class="amp ${AMP[x.stufe]}"></span> ${i === 0 ? "<b>" : ""}${esc(kurzName(x.setup))}${i === 0 ? "</b>" : ""}`).join("<br>") : "—"}</td>
           <td class="klein">${erste ? [...erste.plus.map(t => "✓ " + esc(t)), ...erste.gruende.map(t => "! " + esc(t))].join("<br>") : "Keins deiner Setups ist geeignet."}</td></tr>`;
       }).join("");
