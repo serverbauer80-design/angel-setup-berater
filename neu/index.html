@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Rutenwand</title>
+  <meta name="description" content="Angel-Setup-Berater, neue Oberfläche: deine Setups auf einen Blick.">
+  <meta name="theme-color" content="#edf1f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a1318" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="app.css">
+  <script>
+    /* Theme vor dem ersten Zeichnen setzen, sonst blitzt beim Laden das falsche auf */
+    try { var t = localStorage.getItem("neu_theme_v1"); if(t === "hell") document.documentElement.dataset.theme = "light"; if(t === "dunkel") document.documentElement.dataset.theme = "dark"; } catch(e){}
+  </script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="seite" aria-label="Bereiche">
+      <div class="seite-logo">Rutenwand</div>
+      <nav class="seite-nav" id="seite-nav"></nav>
+      <div class="seite-fuss">
+        <a class="alt-link" href="../index.html">Zur bisherigen App</a>
+      </div>
+    </aside>
+
+    <div class="haupt">
+      <header class="kopf">
+        <h1 id="kopf-titel">Rutenwand</h1>
+        <div class="kopf-aktionen">
+          <button type="button" class="sync-chip" id="sync-chip" aria-haspopup="dialog">Nicht angemeldet</button>
+          <button type="button" class="rund" id="theme-btn" aria-label="Hell oder dunkel umschalten" title="Hell/Dunkel"></button>
+        </div>
+      </header>
+
+      <main id="inhalt" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <nav class="tabbar" id="tabbar" aria-label="Bereiche"></nav>
+
+  <dialog id="sync-dialog" class="dialog">
+    <form method="dialog" class="dialog-kopf">
+      <h2>Geräte-Synchronisation</h2>
+      <button class="rund" value="zu" aria-label="Schließen">✕</button>
+    </form>
+    <div id="sync-inhalt"></div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+  <script>
+    /* Dieselbe Firebase-App wie die bisherige Oberfläche: gleicher Login, gleiches Sync-Dokument */
+    try {
+      firebase.initializeApp({
+        apiKey: "AIzaSyAVgGGBpJ3Hg3a1GhBhsJ63eSkDZQZV_tU",
+        authDomain: "angel-setup-berater.firebaseapp.com",
+        projectId: "angel-setup-berater",
+        storageBucket: "angel-setup-berater.firebasestorage.app",
+        messagingSenderId: "557649371251",
+        appId: "1:557649371251:web:7e296ead21fb8f156fca06"
+      });
+      firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(function(){});
+    } catch(e){ window.FIREBASE_FEHLT = true; }
+  </script>
+  <!-- Gemeinsame Datengrundlage mit der bisherigen App -->
+  <script src="../data.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script>
+    if("serviceWorker" in navigator){ navigator.serviceWorker.register("sw.js", { scope: "./" }).catch(function(){}); }
+  </script>
+</body>
+</html>

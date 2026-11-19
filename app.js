@@ -4663,6 +4663,13 @@ renderSubTabs("planen");
 document.querySelector('.sub-tab[data-view="heute"]').classList.add("active");
 renderHeute();
 
+/* ?view=tagescheck usw. oeffnet direkt diesen Reiter (Links aus der neuen Oberflaeche neu/) */
+(function startReiterAusUrl(){
+  let v = null;
+  try { v = new URLSearchParams(location.search).get("view"); } catch(e){}
+  if(v && v !== "heute" && Object.values(NAV_GROUPS).some(g => g.some(i => i.view === v))) switchView(v);
+})();
+
 /* ---------- Events ---------- */
 fischSel.addEventListener("change", () => { fuelleGewaesser(fischSel.value); berechne(); });
 /* Nach dem Berechnen zum Ergebnis scrollen – sonst sieht man auf dem Handy nicht, dass etwas passiert ist */

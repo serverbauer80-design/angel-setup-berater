@@ -3,7 +3,7 @@
    Unkritisch, falls es mal vergessen wird: Navigationen laufen network-first
    und Assets tragen ihre Version in der ?v=-Query, ein alter Cache-Name
    haelt also nichts mehr fest – er wird nur nicht aufgeraeumt. */
-const VERSION = "20261119-96";
+const VERSION = "20261119-97";
 const CACHE = "angel-" + VERSION;
 
 /* Nur was ohne Versions-Query angefragt wird. style.css/app.js/data.js
@@ -46,6 +46,11 @@ self.addEventListener("fetch", e => {
 
   let url;
   try { url = new URL(req.url); } catch(err){ return; }
+
+  /* Die neue Oberflaeche unter neu/ hat ihren eigenen Service Worker.
+     Ohne diese Ausnahme wuerde ihre Startseite hier als Offline-Kopie
+     der alten index.html gespeichert. */
+  if(url.pathname.includes("/neu/")) return;
 
   /* version.txt niemals aus dem Cache beantworten – sonst kann der
      Update-Check per Definition nie ein Update entdecken. */

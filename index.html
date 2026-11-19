@@ -7,7 +7,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0e1b24">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=20261119-96">
+  <link rel="stylesheet" href="style.css?v=20261119-97">
 </head>
 <body>
   <header class="topbar">
@@ -16,7 +16,10 @@
         <span class="brand-emoji">🎣</span>
         <h1>Angel-Setup</h1>
       </div>
-      <button id="sync-status-btn" type="button" class="sync-status" title="Synchronisation">☁️ Nicht angemeldet</button>
+      <div style="display:flex;gap:8px;align-items:center;order:2;margin-left:auto">
+        <a href="neu/" class="sync-status" style="text-decoration:none" title="Neue Oberfläche (Etappe 1: Rutenwand)">✨ Neu</a>
+        <button id="sync-status-btn" type="button" class="sync-status" title="Synchronisation">☁️ Nicht angemeldet</button>
+      </div>
     </div>
     <nav class="nav-groups" id="nav-groups">
       <button class="group-tab active" data-group="planen">Planen</button>
@@ -313,8 +316,8 @@
     firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {});
   </script>
 
-  <script src="data.js?v=20261119-96"></script>
-  <script src="app.js?v=20261119-96"></script>
+  <script src="data.js?v=20261119-97"></script>
+  <script src="app.js?v=20261119-97"></script>
   <script>
     if("serviceWorker" in navigator){
       navigator.serviceWorker.register("sw.js").catch(()=>{});
