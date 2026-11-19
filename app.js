@@ -6324,6 +6324,20 @@ function migriereWerkstatt(p){
       if(p["r_ftm_black_aryas_2_3"] == null) p["r_ftm_black_aryas_2_3"] = echt["r_ftm_black_aryas_2_3"];
       try { localStorage.setItem(WK_UMBAU_FLAG + "_4", "1"); localStorage.setItem(WERKSTATT_KEY, JSON.stringify(p)); } catch(err){}
     }
+    // Neuordnung 19.11.2026: Diabolo, Westin W3, Savage, Feeder und dritte Aryas
+    let erledigt5 = false;
+    try { erledigt5 = localStorage.getItem(WK_UMBAU_FLAG + "_5") === "1"; } catch(err){}
+    if(!erledigt5){
+      const alt5 = {
+        "r_balzer_diabolo_golden_circle": null,
+        "r_westin_w3_powershad_2nd_m":    "ro_daiwa_ninja_lt_4000_c",
+        "r_savage_gear_revenge_sg2_ligh": "ro_daiwa_23_ninja_lt2500",
+        "r_daiwa_ninja_x_feeder":         "ro_daiwa_23_ninja_match_feeder_",
+        "r_ftm_black_aryas_2_3":          "ro_abu_garcia_cardinal_x_1000"
+      };
+      Object.keys(alt5).forEach(id => { if((p[id] ?? null) === alt5[id]) p[id] = echt[id]; });
+      try { localStorage.setItem(WK_UMBAU_FLAG + "_5", "1"); localStorage.setItem(WERKSTATT_KEY, JSON.stringify(p)); } catch(err){}
+    }
   }
   return p;
 }

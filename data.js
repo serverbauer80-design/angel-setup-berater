@@ -43,18 +43,19 @@ const ROLLEN = [
   { id:"ro_abu_garcia_cardinal_x_1000", name:"Abu Garcia Cardinal X 1000", groesse:1000, freilauf:false, text:"Abu Garcia Cardinal X 1000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous", schnur:"Akashi Fluorocarbon 0,16 mm – reines FC durchgehend als Hauptschnur" },
   { id:"ro_spro_trout_master_tt3", name:"SPRO Trout Master TT3", groesse:3000, freilauf:false, text:"SPRO Trout Master TT3 · Übersetzung 5:1 · 6 Kugellager · 301 g", schnur:"Monofil 0,25 mm · 170 m Fassung" },
   { id:"ro_daiwa_23_ninja_lt2500", name:"Daiwa 23 Ninja LT2500", groesse:2500, freilauf:false, text:"Daiwa 23 Ninja LT2500 · 4 Kugellager · Übersetzung 5,3:1 · 230 g · Frontbremse", schnur:"J-Braid X8 Expedition 0,10 mm (geflochten) – schließt die Lücke zwischen der 0,06 mm (Presso) und 0,16 mm (Prorex)" },
-  { id:"ro_daiwa_23_ninja_match_feeder_", name:"Daiwa 23 Ninja Match&Feeder LT4000-C", groesse:4000, freilauf:false, text:"Daiwa 23 Ninja Match&Feeder LT4000-C · Frontbremse", schnur:"J-Braid X8 0,12 mm (geflochten) – Vorfach Mono/FC 0,20–0,25 mm, ca. 50–80 cm" },
+  { id:"ro_daiwa_23_ninja_match_feeder_", name:"Daiwa 23 Ninja Match&Feeder LT4000-C", groesse:4000, freilauf:false, text:"Daiwa 23 Ninja Match&Feeder LT4000-C · Frontbremse", schnur:"J-Braid X8 0,12 mm (geflochten)" },
   { id:"ro_daiwa_ninja_lt_4000_c", name:"Daiwa Ninja LT 4000-C", groesse:4000, freilauf:false, text:"Daiwa Ninja LT 4000-C · Frontbremse", schnur:"Stroft GTM Monofil 0,22 mm" },
   { id:"ro_abu_garcia_revo_3_sx_2000s", name:"Abu Garcia Revo 3 SX 2000S", groesse:2000, freilauf:false, text:"Abu Garcia Revo 3 SX 2000S · Spinnrolle · flache Spule", schnur:"Daiwa J-Braid X8 0,06 mm (geflochten)" },
   { id:"ro_daiwa_black_widow_br_lt_4000", name:"Daiwa Black Widow BR LT 4000-C", groesse:4000, freilauf:true, text:"Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse", schnur:"Daiwa Monofil 0,35 mm (durchgehend)" },
   { id:"ro_daiwa_black_widow_br_lt_4000_2", name:"Daiwa Black Widow BR LT 4000-C", groesse:4000, freilauf:true, text:"Daiwa Black Widow BR LT 4000-C · Baitrunner/Freilauf · Frontbremse", schnur:"Daiwa Monofil 0,35 mm (durchgehend)" },
-  { id:"ro_daiwa_black_widow_br_lt_2500", name:"Daiwa Black Widow BR LT 2500", groesse:2500, freilauf:true, text:"Daiwa Black Widow BR LT 2500 · Baitrunner/Freilauf · Frontbremse", schnur:"noch nicht bespult" },
-  { id:"ro_daiwa_black_widow_br_lt_2500_2", name:"Daiwa Black Widow BR LT 2500", groesse:2500, freilauf:true, text:"Daiwa Black Widow BR LT 2500 · Baitrunner/Freilauf · Frontbremse", schnur:"noch nicht bespult" },
+  { id:"ro_daiwa_black_widow_br_lt_2500", name:"Daiwa Black Widow BR LT 2500", groesse:2500, freilauf:true, text:"Daiwa Black Widow BR LT 2500 · Baitrunner/Freilauf · Frontbremse", schnur:"Stroft GTM Monofil 0,18 mm" },
+  { id:"ro_daiwa_black_widow_br_lt_2500_2", name:"Daiwa Black Widow BR LT 2500", groesse:2500, freilauf:true, text:"Daiwa Black Widow BR LT 2500 · Baitrunner/Freilauf · Frontbremse", schnur:"Stroft GTM Monofil 0,18 mm" },
   { id:"ro_tubertini_aryas_2000_spoonro", name:"Tubertini Aryas 2000 Spoonrolle", groesse:2000, freilauf:false, text:"Tubertini Aryas 2000 Spoonrolle · Spinrolle", schnur:"Stroft GTM Monofil 0,14 mm · 120 m · fachgerecht aufgespult" },
   { id:"ro_abu_garcia_cardinal_x_2000", name:"Abu Garcia Cardinal X 2000", groesse:2000, freilauf:false, text:"Abu Garcia Cardinal X 2000 · Spinnrolle · Übersetzung 5,2:1 · Aluminium · Ambidextrous", schnur:"Geflochten 0,06 mm" },
   { id:"ro_crivit_stationaerrolle_gr_30", name:"Crivit Stationärrolle Gr. 30", groesse:3000, freilauf:false, text:"Crivit Stationärrolle Gr. 30 · 4 Kugellager · Übersetzung 5,5:1 · S-Stroke-System, feinjustierbare Heckbremse, bereits fachgerecht bespult", schnur:"vorbespult ab Werk (Stärke laut Rolle) – für gezielte Ansätze ggf. auf passende Geflochtene/Fluorocarbon umspulen" },
   { id:"ro_crivit_stationaerrolle_gr_50", name:"Crivit Stationärrolle Gr. 50", groesse:5000, freilauf:false, text:"Crivit Stationärrolle Gr. 50 · 4 Kugellager · Übersetzung 5,2:1 · Heckbremse, bespult", schnur:"vorbespult ab Werk" },
-  { id:"ro_penn_clash_ii_1000", name:"Penn Clash II Spinning 1000", groesse:1000, freilauf:false, text:"Penn Clash II Spinning 1000 · Spinnrolle", schnur:"noch nicht bespult" }
+  { id:"ro_penn_clash_ii_1000", name:"Penn Clash II Spinning 1000", groesse:1000, freilauf:false, text:"Penn Clash II Spinning 1000 · Spinnrolle", schnur:"Stroft GTM Monofil 0,18 mm" },
+  { id:"ro_daiwa_crossfire_lt2000s", name:"Daiwa Crossfire LT2000S", groesse:2000, freilauf:false, text:"Daiwa Crossfire LT2000S · Spinnrolle", schnur:"Geflochten 0,08 mm" }
 ];
 
 /* ---------- 1b2) BEWUSST GEWAEHLTE KOMBOS ----------
@@ -66,11 +67,6 @@ const KOMBO_BEWUSST = [
     ruten:  ["r_berkley_flex", "r_berkley_flex_2"],
     rollen: ["ro_daiwa_black_widow_br_lt_2500", "ro_daiwa_black_widow_br_lt_2500_2"],
     text:   "Grundangeln am Forellenteich mit Freilauf, Rute im Halter – so wird sie geangelt."
-  },
-  {
-    ruten:  ["r_westin_w3_powershad_2nd_m"],
-    rollen: ["ro_daiwa_ninja_lt_4000_c"],
-    text:   "Westin W3 mit der 4000er Ninja, bewusst so gewählt – so wird sie geangelt."
   }
 ];
 
@@ -126,22 +122,21 @@ const AKTUELL = {
     name: "Balzer Shirasu IM-8 Spoon UL · 2,15 m",
     ruteId: "r_balzer_shirasu_im8_spoon_ul",
     rolleId: "ro_penn_clash_ii_1000",
-    vorfach: "Fluorocarbon 0,16–0,18 mm · 60–100 cm – bei Geflochtener per FG- oder Albright-Knoten, eher länger",
+    vorfach: "Fluorocarbon 0,16–0,18 mm · 60–100 cm",
     extra: "Spoons 1,5–5 g, Micro Snap ohne Wirbel",
     einsatz: "Spoon-Spezialist für den Forellensee: UL-Rute mit 1,5–5 g WG, genau die Größe der Spoons aus der Spoon-Tasche. Die Penn Clash II 1000 passt größenmäßig ideal zu einer UL-Rute.",
-    tippKompakt: "Die Rolle ist noch nicht bespult. Naheliegend: feine Geflochtene 0,06–0,08 mm mit Fluorocarbon-Vorfach, oder Monofil 0,16 mm für mehr Dehnung. Bei Geflochtener Bremse leicht einstellen."
+    tippKompakt: "Die Penn ist mit Stroft GTM Monofil 0,18 mm bespult: die Dehnung puffert den Biss, ideal für weichmäulige Forellen. Vorfach Fluorocarbon 0,16–0,18 mm, nicht dicker als die Hauptschnur."
   },
   setup22: {
     key: "setup22",
     kategorie: "raubfisch",
     name: "Balzer Diabolo Golden Circle Zander · 2,35 m",
     ruteId: "r_balzer_diabolo_golden_circle",
-    rolleId: null,
-    rolleText: "noch keine Rolle montiert – passend wäre Größe 3000–4000",
-    schnurText: "noch keine Schnur – Empfehlung: Geflochtene 0,14–0,16 mm mit Fluorocarbon-Vorfach",
-    vorfach: "Fluorocarbon 0,28–0,35 mm · für Hecht: + Stahlvorfach davor",
+    rolleId: "ro_daiwa_23_ninja_match_feeder_",
+    vorfach: "Fluorocarbon 0,28–0,35 mm · ca. 80–120 cm per FG- oder Albright-Knoten · für Hecht: + Stahlvorfach davor",
     extra: "Jigköpfe 12–40 g, Gummifische 10–15 cm",
-    einsatz: "Zander-Rute mit 17–55 g WG für schwere Jigköpfe an Elbe und NOK, neben Prorex und Westin W3. Rolle noch offen."
+    einsatz: "Zander-Rute mit 17–55 g WG für schwere Jigköpfe an Elbe und NOK, neben Prorex und Westin W3. Rolle: die Ninja Match&Feeder LT4000-C mit Geflochtener 0,12 mm – die 4000er passt zum Wurfgewicht, die Geflochtene bringt den direkten Anschlag am Jig.",
+    tippKompakt: "Die Geflochtene 0,12 mm reicht für Jigköpfe bis etwa 40 g. Fischst du oft am oberen Ende (50–55 g, starke Strömung an der Elbe), ist 0,14–0,16 mm die sicherere Wahl."
   },
   setup3: {
     key: "setup3",
@@ -158,18 +153,20 @@ const AKTUELL = {
     kategorie: "raubfisch",
     name: "Savage Gear Revenge SG2 · 2,21 m",
     ruteId: "r_savage_gear_revenge_sg2_ligh",
-    rolleId: "ro_daiwa_23_ninja_lt2500",
-    vorfach: "Daiwa J-Fluoro Carbon 0,178 mm oder 0,200 mm (Barsch/fein) · 0,218 mm (Standard) · ca. 40–80 cm",
+    rolleId: "ro_daiwa_crossfire_lt2000s",
+    vorfach: "Daiwa J-Fluoro Carbon 0,178 mm oder 0,200 mm (Barsch/fein) · 0,218 mm (Standard) · ca. 60–100 cm per FG- oder Albright-Knoten",
     extra: "",
-    einsatz: "Leichtes, aktives Spinnfischen mit kleinen Gummifischen/Spinnern/Wobblern auf Barsch, Döbel, kleinen Zander – auch gut für Hornhecht/Meerforelle zum Reinschnuppern."
+    einsatz: "Leichtes, aktives Spinnfischen mit kleinen Gummifischen/Spinnern/Wobblern auf Barsch, Döbel, kleinen Zander – auch gut für Hornhecht/Meerforelle zum Reinschnuppern. Rolle: die Crossfire LT2000S mit Geflochtener 0,08 mm.",
+    tippKompakt: "Die 0,08 mm Geflochtene ist fein und wirft kleine Köder weit. Bei Zander oder Hängern ruhig ein kräftigeres Vorfach (0,218 mm) nehmen und die Bremse sauber einstellen."
   },
   setup5: {
     key: "setup5",
     kategorie: "feeder",
     name: "Daiwa Ninja X Feeder · 3,90 m",
     ruteId: "r_daiwa_ninja_x_feeder",
-    rolleId: "ro_daiwa_23_ninja_match_feeder_",
-    vorfach: "Daiwa J-Fluoro Carbon 0,178 mm oder 0,200 mm (Rotauge/Brasse fein) · 0,218 mm (Standard) · 0,298 mm für Karpfen",
+    rolleId: "ro_daiwa_ninja_lt_4000_c",
+    vorfach: "Daiwa J-Fluoro Carbon 0,178 mm oder 0,200 mm (Rotauge/Brasse fein) · 0,218 mm (Standard) – nicht dicker als die Hauptschnur 0,22 mm",
+    tippKompakt: "Die Ninja LT 4000-C trägt Stroft GTM Monofil 0,22 mm. Mono ist am Feeder ideal: die Dehnung puffert Bisse und Drill ab, Ausschlitzer werden seltener. Bei Würfen mit schweren Körben auf Distanz eine Schlagschnur (Mono 0,28–0,30 mm, ca. 2× Rutenlänge) vorschalten.",
     extra: "Futterkorb / Method-Feeder, Haken Gr. 10–14, Schrotblei, Made/Mais/Pellet",
     einsatz: "Feeder- und Grundangeln auf Friedfische (Brasse, Schleie, Rotauge, Karpfen) – ruhiger Ansitz mit Futterkorb an See, Kanal oder ruhigem Fluss. Deutlich kräftiger als die Crivit-Kombo: 3,90 m Wurfweite, Quivertip-Bisserkennung, Frontbremse."
   },
@@ -180,10 +177,10 @@ const AKTUELL = {
     ruteId: "r_berkley_flex",
     rolleId: "ro_daiwa_black_widow_br_lt_2500",
     bewusst: "Die 2500er ist für eine 3,90-m-Rute mit 30 g Wurfgewicht eine Nummer klein (Faustregel: 3000–4500). Fürs Grundangeln am Forellenteich mit Rute im Halter und Freilauf ist das so gewollt und passt – so wird sie geangelt.",
-    vorfach: "Fluorocarbon 0,20–0,22 mm (Forelle) · bei großen Besatzforellen bis 0,30 mm · ca. 60–100 cm",
+    vorfach: "Fluorocarbon 0,16–0,18 mm (nicht dicker als die Hauptschnur 0,18 mm) · ca. 60–100 cm",
     extra: "Bodentaster, Rutenhalter, Haken Gr. 8–14 · für den Posen-Einsatz: Laufposen 3–15 g, Posenstopper + Gummiperlen, Schrotblei-Set",
     einsatz: "Grundangeln am größeren Forellenteich, meist mit Bodentaster, Rute im Rutenhalter. Der Baitrunner (Freilauf) gibt Schnur frei, wenn die Forelle den Köder nimmt. Zur Not auch Posen-/Schlepprute (Laufpose, Sbirolino) und außerhalb des Forellensees Allround-Rute auf Schleie und Karpfen an See und Kanal.",
-    tippKompakt: "Die Rolle ist noch nicht bespult. Empfehlung: Monofil 0,22 mm als Hauptschnur (Fassungsvermögen der 2500er steht auf der Spule bzw. im Datenblatt). Vorfach Fluorocarbon 0,20–0,22 mm, bei großen Besatzforellen bis 0,30 mm."
+    tippKompakt: "Die Rolle ist mit Stroft GTM Monofil 0,18 mm bespult. Vorfach Fluorocarbon 0,16–0,18 mm, damit es nicht dicker als die Hauptschnur ist."
   },
   setup19: {
     key: "setup19",
@@ -192,10 +189,10 @@ const AKTUELL = {
     ruteId: "r_berkley_flex_2",
     rolleId: "ro_daiwa_black_widow_br_lt_2500_2",
     bewusst: "Die 2500er ist für eine 3,90-m-Rute mit 30 g Wurfgewicht eine Nummer klein (Faustregel: 3000–4500). Fürs Grundangeln am Forellenteich mit Rute im Halter und Freilauf ist das so gewollt und passt – so wird sie geangelt.",
-    vorfach: "Fluorocarbon 0,20–0,22 mm (Forelle) · bei großen Besatzforellen bis 0,30 mm · ca. 60–100 cm",
+    vorfach: "Fluorocarbon 0,16–0,18 mm (nicht dicker als die Hauptschnur 0,18 mm) · ca. 60–100 cm",
     extra: "Bodentaster, Rutenhalter, Haken Gr. 8–14 · für den Posen-Einsatz: Laufposen 3–15 g, Posenstopper + Gummiperlen, Schrotblei-Set",
     einsatz: "Zweite, baugleiche Grundrute für den größeren Forellenteich (Bodentaster, Rute im Rutenhalter, Freilauf). Mit zwei Ruten kannst du zwei Tiefen oder zwei Köder gleichzeitig anbieten. Auch als Posen-/Schlepprute einsetzbar.",
-    tippKompakt: "Die Rolle ist noch nicht bespult. Empfehlung wie bei der Schwesterrute: Monofil 0,22 mm als Hauptschnur, Vorfach Fluorocarbon 0,20–0,22 mm (große Besatzforellen bis 0,30 mm). Die Revo 3 SX 2000S mit der geflochtenen 0,06 mm ist frei geworden."
+    tippKompakt: "Die Rolle ist wie bei der Schwesterrute mit Stroft GTM Monofil 0,18 mm bespult, Vorfach Fluorocarbon 0,16–0,18 mm."
   },
   setup10: {
     key: "setup10",
@@ -240,25 +237,25 @@ const AKTUELL = {
   setup15: {
     key: "setup15",
     kategorie: "forelle",
-    name: "FTM Black Aryas 2 · 3,90 m (Cardinal 1000, FC 0,16)",
+    name: "FTM Black Aryas 2 · 3,90 m (wird verkauft)",
     ruteId: "r_ftm_black_aryas_2_3",
-    rolleId: "ro_abu_garcia_cardinal_x_1000",
-    vorfach: "Fluorocarbon 0,12–0,16 mm · 1,5–3 m – Länge je nach Zieltiefe wählen",
-    extra: "Camole (echt oder Kunstköder-Larven), Piombini/Olivette 0,5–3 g, Micro Snap ohne Wirbel",
-    einsatz: "Dritte FTM Black Aryas 2, jetzt mit der Cardinal X 1000 und der Akashi-Fluorocarbon 0,16 mm, die vorher auf der Flex Trout Spinning lag. Gedacht als zweite Tremarella-Kombo: mit anderem Bleigewicht und anderer Vorfachlänge vorgerüstet, damit du am Wasser zwischen zwei Tiefenzonen wechseln kannst, ohne die Montage umzubauen.",
-    tippKompakt: "Zwei Punkte, die gegenüber der ursprünglichen Planung für diese Rute abweichen: Die Rolle ist eine Größe 1000, geplant war 2000 – bei einer 3,90-m-Rute mit 1–4 g Wurfgewicht liegt die Faustregel bei 1500–3000, die 1000er ist also eine Nummer klein und die Kombo etwas kopflastig. Und auf der Rolle liegt Fluorocarbon statt des weichen Monofils: FC ist steifer und speichert Windungen, beim sehr langsamen Einholen kann das die Köderführung stören, und die Dehnung der Mono (puffert den zaghaften Biss, damit der Haken nicht aus dem weichen Forellenmaul reißt) fehlt. Zum Ausprobieren ist die Kombo völlig in Ordnung; wenn sie dir liegt, bleib dabei, sonst ist Monofil 0,16 mm die naheliegende Alternative."
+    rolleId: null,
+    rolleText: "keine Rolle montiert – Rute wird verkauft",
+    schnurText: "–",
+    vorfach: "–",
+    extra: "",
+    einsatz: "Dritte FTM Black Aryas 2 – soll verkauft werden und bleibt bis dahin im Bestand. Die Cardinal X 1000 (Fluorocarbon 0,16 mm), die hier lag, ist jetzt freie Reserverolle."
   },
   setup20: {
     key: "setup20",
     kategorie: "raubfisch",
     name: "Westin W3 Powershad 2nd M · 2,70 m",
     ruteId: "r_westin_w3_powershad_2nd_m",
-    rolleId: "ro_daiwa_ninja_lt_4000_c",
-    bewusst: "Die 4000er ist für eine 2,70-m-Rute mit 25 g Wurfgewicht eine halbe Größe über der Faustregel (2000–3500). So wird die Westin gefischt – das passt.",
-    vorfach: "Fluorocarbon 0,20–0,22 mm bei der Mono-Hauptschnur 0,22 mm (das sonst hinterlegte 0,26–0,30 mm wäre dicker als die Hauptschnur) · für Hecht: + Stahlvorfach davor",
+    rolleId: "ro_daiwa_23_ninja_lt2500",
+    vorfach: "Fluorocarbon 0,26–0,30 mm · ca. 80–100 cm per FG- oder Albright-Knoten · für Hecht: + Stahlvorfach davor",
     extra: "Jigköpfe 7–25 g, Gummifische 10–13 cm (z. B. Easy Shiner 5\"), Stahlvorfach Perca, Motor Snap Wirbel 18 kg",
-    einsatz: "Zweite Spinnrute für Zander und Hecht neben der Prorex. 7–25 g deckt die leichten Jigköpfe vom NOK (7–12 g) und die mittleren von der Eider (12–16 g) ab. Rolle: die Ninja LT 4000-C mit Monofil 0,22 mm, bewusst so gewählt.",
-    tippKompakt: "Die Ninja trägt Monofil 0,22 mm. Bei Jigköpfen ist Geflochtene üblicher (kein Dehnungsverlust beim Anschlag); naheliegend wären 0,12–0,14 mm, abgeleitet aus deinen Setups (0,10 mm an der Savage 5–18 g, 0,16 mm an der Prorex 15–50 g) – keine Herstellerangabe. Bleibt es bei der Mono, dann ein Vorfach, das nicht dicker als 0,22 mm ist."
+    einsatz: "Zweite Spinnrute für Zander und Hecht neben der Prorex. 7–25 g deckt die leichten Jigköpfe vom NOK (7–12 g) und die mittleren von der Eider (12–16 g) ab. Rolle: die 23 Ninja LT2500 mit Geflochtener 0,10 mm – Größe genau in der Faustregel (2000–3500).",
+    tippKompakt: "Die Geflochtene 0,10 mm überträgt jeden Grundkontakt und setzt den Anschlag ohne Dehnungsverlust – ideal fürs Jiggen. Bei Hängern in Steinpackungen lieber das Vorfach opfern: es sollte die Sollbruchstelle sein."
   },
   setup6: {
     key: "setup6",
