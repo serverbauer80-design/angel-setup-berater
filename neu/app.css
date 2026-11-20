@@ -1035,3 +1035,22 @@ body.druck-fm .fm-druck .fm-titel{display:block}
 .kw-fisch{display:grid;gap:4px;padding-top:8px;border-top:1px solid var(--line)}
 .kw-fisch:first-child{border-top:0;padding-top:0}
 .kw-fisch small{color:var(--muted)}
+
+/* ---------- Hotspots ---------- */
+.gw-hs{display:grid;gap:6px;margin:6px 0}
+.gw-hs-kopf{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.gw-hs-liste{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.gw-hs-liste li{display:flex;align-items:center;gap:6px}
+.gw-hs-zeile{flex:1;display:flex;align-items:center;gap:10px;background:var(--surface2);border:0;border-radius:10px;padding:7px 10px;text-align:left;font:inherit;color:var(--ink);cursor:pointer}
+.gw-hs-zeile span:last-child{display:grid;gap:1px}
+.gw-hs-zeile small{color:var(--muted);font-size:13px}
+.gw-hs-sym,.gw-hs-pin span{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;background:#5b6b73;flex:none}
+.gw-hs-pin span{border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.hs-kante span,.gw-hs-sym.hs-kante{background:#1d5a6d}
+.hs-steine span,.gw-hs-sym.hs-steine{background:#6b5a4a}
+.hs-kraut span,.gw-hs-sym.hs-kraut{background:#2a7f45}
+.hs-tief span,.gw-hs-sym.hs-tief{background:#173a8a}
+.hs-flach span,.gw-hs-sym.hs-flach{background:#4a9ab0}
+.hs-bauwerk span,.gw-hs-sym.hs-bauwerk{background:#555}
+.hs-stroemung span,.gw-hs-sym.hs-stroemung{background:#7a4ab0}
+.hs-biss span,.gw-hs-sym.hs-biss{background:#d4500a}

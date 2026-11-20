@@ -145,6 +145,18 @@ function zeichneMarker(){
     m.on("click", ev => { L.DomEvent.stopPropagation(ev); waehle(e.id, false); });
     m.addTo(schicht);
   });
+  /* Hotspots */
+  const alleHs = karte.getZoom() >= 15;
+  ladeFaengeDaten().spots.forEach(sp => {
+    if(!(sp.hotspots || []).length || !(alleHs || kst.auswahl === "spot:" + sp.id)) return;
+    sp.hotspots.forEach(h => {
+      const [sym, label] = HS_TYP[h.typ] || HS_TYP.sonst;
+      const hm = L.marker([h.lat, h.lng], { icon: L.divIcon({ className: "gw-hs-pin hs-" + h.typ, html: `<span>${sym}</span>`, iconSize: [24, 24], iconAnchor: [12, 12] }), keyboard: false, zIndexOffset: 400 });
+      hm.bindTooltip(`${label}${h.tiefe != null ? " · " + String(h.tiefe).replace(".", ",") + " m" : ""}${h.notiz ? ": " + h.notiz : ""}`, { direction: "top", offset: [0, -10] });
+      hm.on("click", ev => { L.DomEvent.stopPropagation(ev); hotspotForm(sp.id, h, h.lat, h.lng, m2 => { neuZeichnenFn(); }); });
+      hm.addTo(schicht);
+    });
+  });
   flussLaden();
 }
 
@@ -200,7 +212,7 @@ export function gewaesserHTML(){
       <div class="gw-links">
         <div id="gw-karten-platz" class="gw-karten-platz"></div>
         <p class="gw-offline"><button type="button" class="knopf klein leise" data-gw-offline>Ausschnitt offline speichern</button><span class="hinweis-klein" id="gw-offline-status"></span></p>
-        ${setzModus ? `<p class="gw-setzen">Tippe auf die Karte, um die Position zu setzen. <button type="button" class="knopf klein leise" data-gw-setzen-ab>Abbrechen</button></p>` : ""}
+        ${setzModus ? `<p class="gw-setzen">Tippe auf die Karte, um die Position zu setzen (zum Genauen: nah heranzoomen). <button type="button" class="knopf klein leise" data-gw-setzen-ab>Abbrechen</button></p>` : ""}
         ${scheineHTML()}
       </div>
       <div class="gw-rechts">
@@ -251,6 +263,7 @@ function steckbriefHTML(e){
       ${r.rating ? `<div class="reihe"><dt>Wertung</dt><dd>${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</dd></div>` : ""}
       ${r.notes ? `<div class="reihe"><dt>Notiz</dt><dd>${esc(r.notes)}</dd></div>` : ""}
     </dl>
+    ${hotspotsHTML(r)}
     ${scheineSpotHTML(r.id)}
     <div class="gw-faenge">${fa.length ? `<b>${fa.length > 1 ? fa.length + " Fänge" : "1 Fang"} hier</b> · zuletzt ${esc(fa[0].datum)}${groesster ? ` · größter: ${esc(groesster.fischName)} ${esc(groesster.laenge)} cm` : ""}
       <ul>${fa.slice(0, 5).map(c => `<li>${esc(c.datum)} · ${esc(c.fischName || c.fischId)}${c.laenge ? " · " + esc(c.laenge) + " cm" : ""}${c.methode ? " · " + esc(c.methode.split(" – ")[0]) : ""}</li>`).join("")}</ul>` : `<span class="hinweis-klein">Noch keine Fänge hier eingetragen.</span>`}</div>`;
@@ -292,6 +305,51 @@ function steckbriefHTML(e){
 }
 
 /* ---------- Spot anlegen / bearbeiten ---------- */
+/* ---------- Hotspots im Spot: Kante, Steine, Kraut, Tiefe, Biss-Stelle … ---------- */
+export const HS_TYP = { kante: ["K", "Kante / Abbruch"], steine: ["S", "Steinpackung"], kraut: ["Kr", "Krautfeld"], tief: ["T", "Loch / tiefe Stelle"],
+  flach: ["F", "Flachwasser"], bauwerk: ["B", "Steg / Bauwerk"], stroemung: ["E", "Einlauf / Strömung"], biss: ["★", "Hier gebissen"], sonst: ["•", "Notiz"] };
+const hsGenId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+function hotspotForm(spotId, hs, lat, lng, fertig){
+  const d = $blatt();
+  const h = hs || { typ: "kante" };
+  d.innerHTML = `<form class="blatt-form" novalidate>
+    <div class="dialog-kopf"><h2>${hs ? "Hotspot bearbeiten" : "Neuer Hotspot"}</h2><button type="button" class="rund" data-blatt-zu aria-label="Schließen">✕</button></div>
+    <div class="feld-raster">
+      <label class="feld breit"><span>Was ist hier?</span><select name="typ">${Object.entries(HS_TYP).map(([k, [, l]]) => `<option value="${k}"${h.typ === k ? " selected" : ""}>${l}</option>`).join("")}</select></label>
+      <label class="feld"><span>Tiefe (m)</span><input name="tiefe" inputmode="decimal" value="${h.tiefe != null ? String(h.tiefe).replace(".", ",") : ""}" placeholder="optional"></label>
+      <label class="feld breit"><span>Notiz</span><textarea name="notiz" rows="2" placeholder="z. B. Kante auf 4 m, Zander abends, Hänger-Gefahr">${esc(h.notiz || "")}</textarea></label>
+    </div>
+    <div class="blatt-akt"><button type="submit" class="knopf prim">Speichern</button></div>
+    ${hs ? `<div class="gefahr"><button type="submit" class="knopf warn" value="loeschen" formnovalidate>Hotspot löschen</button></div>` : ""}
+  </form>`;
+  const form = d.querySelector("form");
+  d.querySelector("[data-blatt-zu]").addEventListener("click", () => d.close());
+  form.addEventListener("submit", ev => {
+    ev.preventDefault();
+    const fd = new FormData(form);
+    const daten = ladeFaengeDaten();
+    const sp = daten.spots.find(x => x.id === spotId); if(!sp){ d.close(); return; }
+    sp.hotspots = sp.hotspots || [];
+    if(ev.submitter && ev.submitter.value === "loeschen") sp.hotspots = sp.hotspots.filter(x => x.id !== hs.id);
+    else {
+      const t = parseFloat(String(fd.get("tiefe") || "").replace(",", "."));
+      const neu = { ...(hs || { id: hsGenId(), lat, lng, erstellt: new Date().toISOString() }), typ: fd.get("typ"), tiefe: isNaN(t) ? null : t, notiz: String(fd.get("notiz") || "").trim() };
+      if(hs) sp.hotspots = sp.hotspots.map(x => x.id === hs.id ? neu : x); else sp.hotspots.push(neu);
+    }
+    speichereFaengeDaten(daten); d.close(); fertig(ev.submitter && ev.submitter.value === "loeschen" ? "Hotspot gelöscht" : "Hotspot gespeichert");
+  });
+  d.showModal();
+}
+function hotspotsHTML(r){
+  const hs = r.hotspots || [];
+  return `<div class="gw-hs"><div class="gw-hs-kopf"><b>Hotspots${hs.length ? ` (${hs.length})` : ""}</b><button type="button" class="knopf klein" data-hs-neu="${esc(r.id)}">+ Hotspot setzen</button></div>
+    ${hs.length ? `<ul class="gw-hs-liste">${hs.map(h => `<li><button type="button" class="gw-hs-zeile" data-hs-zeige="${esc(r.id)}|${esc(h.id)}">
+      <span class="gw-hs-sym hs-${esc(h.typ)}">${HS_TYP[h.typ] ? HS_TYP[h.typ][0] : "•"}</span>
+      <span><b>${esc(HS_TYP[h.typ] ? HS_TYP[h.typ][1] : "Notiz")}${h.tiefe != null ? ` · ${String(h.tiefe).replace(".", ",")} m` : ""}</b>${h.notiz ? `<small>${esc(h.notiz)}</small>` : ""}</span></button>
+      <button type="button" class="knopf klein leise" data-hs-bearb="${esc(r.id)}|${esc(h.id)}" aria-label="Hotspot bearbeiten">✎</button></li>`).join("")}</ul>`
+      : `<p class="hinweis-klein">Markiere Kanten, Steinpackungen, Krautfelder, tiefe Löcher oder wo es gebissen hat – sie erscheinen auf der Karte, sobald der Spot gewählt ist.</p>`}</div>`;
+}
+
 function spotForm(spot, lat, lng, fertig){
   const d = $blatt();
   const s = spot || {};
@@ -362,6 +420,31 @@ export function karteKlick(e, toast, geheZuHeute){
     const n = document.querySelector('#blatt input[name="name"]'); if(n && e2) n.value = e2.name;
     const ty = document.querySelector('#blatt select[name="type"]'); if(ty && e2 && e2.ebene === "dk") ty.value = "forellensee";
     const rg = document.querySelector('#blatt select[name="region"]'); if(rg && e2 && e2.ebene === "dk") rg.value = "dk";
+    return true;
+  }
+  const hn = t.closest("[data-hs-neu]");
+  if(hn){
+    const spotId = hn.dataset.hsNeu;
+    setzModus = (lat, lng) => { setzModus = null; hotspotForm(spotId, null, lat, lng, m => { toast(m); if(setzMarker){ karte.removeLayer(setzMarker); setzMarker = null; } neuZeichnenFn(); }); };
+    const sp = ladeFaengeDaten().spots.find(x => x.id === spotId);
+    if(sp && karte && typeof sp.lat === "number") karte.setView([sp.lat, sp.lng], Math.max(karte.getZoom(), 16));
+    neuZeichnenFn();
+    toast("Tippe auf die Karte, wo der Hotspot liegt");
+    const k = document.getElementById("gw-karte"); if(k) k.scrollIntoView({ block: "center", behavior: "smooth" });
+    return true;
+  }
+  const hz = t.closest("[data-hs-zeige]");
+  if(hz){
+    const [sid, hid] = hz.dataset.hsZeige.split("|");
+    const h = ((ladeFaengeDaten().spots.find(x => x.id === sid) || {}).hotspots || []).find(x => x.id === hid);
+    if(h && karte){ karte.setView([h.lat, h.lng], Math.max(karte.getZoom(), 17)); const k = document.getElementById("gw-karte"); if(k) k.scrollIntoView({ block: "center", behavior: "smooth" }); }
+    return true;
+  }
+  const hb = t.closest("[data-hs-bearb]");
+  if(hb){
+    const [sid, hid] = hb.dataset.hsBearb.split("|");
+    const h = ((ladeFaengeDaten().spots.find(x => x.id === sid) || {}).hotspots || []).find(x => x.id === hid);
+    if(h) hotspotForm(sid, h, h.lat, h.lng, m => { toast(m); neuZeichnenFn(); });
     return true;
   }
   if(t.closest("[data-gw-neu]")){
