@@ -17,6 +17,7 @@ import { pflegeKarteHTML } from "./geraetepflege.js";
 import { startPlan, startHTML } from "./startzeit.js";
 import { wohinHTML } from "./wohin.js";
 import { liveHTML } from "./live.js";
+import { koederKarteHTML } from "./koederwahl.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const KEY = "neu_heute_v1";
@@ -68,6 +69,7 @@ export function heuteHTML(){
     <div id="h-start">${startKarte(ort)}</div>
     <div id="h-erfahrung">${erfahrungHTML(erfahrung(ort, aktuelleLage(), iso), ort.name)}</div>
     <div id="h-fische">${fischeHTML(ort)}</div>
+    <div id="h-koeder">${koederKarte(ort)}</div>
     <div id="h-schonzeit">${hst.tag === 0 ? schonzeitHTML() : ""}</div>
     <div id="h-pflege">${pflegeKarteHTML()}</div>
     <div id="h-tasche">${tascheHTML(ort)}</div>
@@ -103,6 +105,15 @@ function lageHTML(ort){
       <p class="h-legende">Uhrzeit · Temperatur · Wind km/h · Regenrisiko</p>` : ""}
     <p class="hinweis-klein">${l.ausCache ? `Ohne Netz – letzter Stand von ${stand} Uhr.` : `Open-Meteo · Stand ${stand} Uhr`}</p>
   </div>`;
+}
+
+function koederKarte(ort){
+  const lage = aktuelleLage();
+  if(!lage) return "";
+  const iso = tagISO(hst.tag);
+  const b = fischBewertung(ort, lage, +iso.slice(5, 7), iso, null);
+  const top = b.passt.filter(x => x.punkte >= 1).slice(0, 3).map(x => ({ id: x.fisch.id, name: x.fisch.name, zeitTipp: x.zeitTipp }));
+  return koederKarteHTML(ort, lage, top, lage.kueste);
 }
 
 /* Wann losfahren? – braucht Wetter (und an Tidegewässern die Gezeiten) */
@@ -220,6 +231,7 @@ export function heuteNachladen(neuZeichnen){
     const k = document.getElementById("h-kueste"); if(k) k.innerHTML = kuesteKarte(ort);
     const pf = document.getElementById("h-pflege"); if(pf) pf.innerHTML = pflegeKarteHTML();
     const sz = document.getElementById("h-start"); if(sz) sz.innerHTML = startKarte(ort);
+    const kw = document.getElementById("h-koeder"); if(kw) kw.innerHTML = koederKarte(ort);
   };
   if(!ausfluegeGeladen()) ladeAusfluege();   /* Wetter der Ausflüge für den Vergleich */
   if(!wetterCache[ort.id] && laeuft !== ort.id){

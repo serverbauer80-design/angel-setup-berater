@@ -1028,3 +1028,10 @@ body.druck-fm .fm-druck .fm-titel{display:block}
 .live-limit{display:flex;flex-wrap:wrap;gap:6px;margin:0}
 .live-limit span{background:var(--surface2);border-radius:999px;padding:3px 10px;font-size:13.5px;font-weight:600}
 .live-limit span.voll{background:var(--bad-soft);color:var(--bad)}
+
+/* ---------- Köder heute ---------- */
+.kw-lage{display:grid;gap:4px}
+.kw-liste{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.kw-fisch{display:grid;gap:4px;padding-top:8px;border-top:1px solid var(--line)}
+.kw-fisch:first-child{border-top:0;padding-top:0}
+.kw-fisch small{color:var(--muted)}

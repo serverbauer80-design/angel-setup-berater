@@ -23,6 +23,8 @@ import { spuelenQuittieren, einsatzZeileHTML } from "./geraetepflege.js";
 import { startpunktSetzen } from "./startzeit.js";
 import { wohinBerechnen, wohinHTML } from "./wohin.js";
 import { liveKlick, liveAenderung, liveFabHTML } from "./live.js";
+import { truebungSetzen } from "./koederwahl.js";
+import { tagISO } from "./lage.js";
 import { umschalten, abhaken, leeren, nurHakenWeg, inTasche } from "./tasche.js";
 import { gewaesserHTML, karteEinhaengen, initKarte, karteKlick, karteEingabe, karteAenderung } from "./karte.js";
 import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuSetup } from "./fangbuch.js";
@@ -477,6 +479,8 @@ document.addEventListener("click", e => {
     p.then(() => { if(box()) box().innerHTML = wohinHTML(); }).catch(() => toast("Vergleich nicht möglich – ist Netz da?"));
     return;
   }
+  const trb = e.target.closest("[data-truebung]");
+  if(trb){ truebungSetzen(hst.ort, tagISO(hst.tag), trb.dataset.truebung); render(); return; }
   const wo = e.target.closest("[data-wohin-ort]");
   if(wo){ hst.ort = wo.dataset.wohinOrt; hst.tag = +wo.dataset.wohinTag; merkeHeute(); render(); window.scrollTo(0, 0); return; }
   if(e.target.closest("[data-start-setzen]")){
