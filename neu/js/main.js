@@ -19,6 +19,7 @@ import { protokollHTML } from "./protokoll.js";
 import { wissenHTML } from "./wissen.js";
 import { heuteHTML, heuteNachladen, hst, merkeHeute, fischWaehlen, kuesteSeeAendern, unterwegsStarten } from "./heute.js";
 import { istOffline } from "./offline.js";
+import { spuelenQuittieren, einsatzZeileHTML } from "./geraetepflege.js";
 import { umschalten, abhaken, leeren, nurHakenWeg, inTasche } from "./tasche.js";
 import { gewaesserHTML, karteEinhaengen, initKarte, karteKlick, karteEingabe, karteAenderung } from "./karte.js";
 import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuSetup } from "./fangbuch.js";
@@ -299,7 +300,7 @@ function tabPflege(g){
     const ohneSchnur = s.kategorie === "stippe";
     const p = pv(s);
     const kopf = g.glieder.length > 1 ? `<h3 class="glied">Rute ${i + 1}${s.zusatz ? " · " + esc(s.zusatz) : ""}</h3>` : "";
-    return `<div class="pflege-block">${kopf}${pflegeZeile("wartung", s, p)}${ohneSchnur ? "" : schnurBlock(s, p)}</div>`;
+    return `<div class="pflege-block">${kopf}${pflegeZeile("wartung", s, p)}${einsatzZeileHTML(s.key)}${ohneSchnur ? "" : schnurBlock(s, p)}</div>`;
   }).join("") + `<p class="hinweis-klein">Gespeichert unter denselben Daten wie in der bisherigen App und mit deinem Login auf alle Geräte synchronisiert.</p>`;
 }
 
@@ -459,6 +460,12 @@ document.addEventListener("click", e => {
   const f = e.target.closest("[data-filter]");
   if(f){ st.filter = f.dataset.filter; schreibeText(KEYS.filter, st.filter); renderListe(); return; }
   if(e.target.closest("[data-unterwegs]")){ unterwegsStarten(toast); return; }
+  const pfs = e.target.closest("[data-pf-gespuelt]");
+  if(pfs){ spuelenQuittieren(pfs.dataset.pfGespuelt); toast("Gut gemacht – Salz ist der größte Rollenfeind"); render(); return; }
+  const pfw = e.target.closest("[data-pf-gewartet]");
+  if(pfw){ setzePflege("wartung", pfw.dataset.pfGewartet, heuteISO()); toast("Wartung eingetragen"); render(); return; }
+  const zp = e.target.closest("[data-zu-pflege]");
+  if(zp){ location.hash = "#rutenwand/" + zp.dataset.zuPflege; setTimeout(() => { st.tab = "pflege"; render(); window.scrollTo(0, 0); }, 150); return; }
   const ko = e.target.closest("[data-h-ort-wahl]");
   if(ko){ hst.ort = ko.dataset.hOrtWahl; merkeHeute(); render(); window.scrollTo(0, 0); return; }
   const ht = e.target.closest("[data-h-tag]");

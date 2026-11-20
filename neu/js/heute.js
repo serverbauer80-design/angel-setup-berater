@@ -13,6 +13,7 @@ import { ausfluegeGeladen, ladeAusfluege } from "./tagebuch.js";
 import { scheinHinweisHTML } from "./scheine.js";
 import { ladeKueste, kuesteTag, kuesteHTML, seeSetzen } from "./kueste.js";
 import { unterwegsHTML, unterwegsVorbereiten } from "./offline.js";
+import { pflegeKarteHTML } from "./geraetepflege.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const KEY = "neu_heute_v1";
@@ -62,6 +63,7 @@ export function heuteHTML(){
     <div id="h-erfahrung">${erfahrungHTML(erfahrung(ort, aktuelleLage(), iso), ort.name)}</div>
     <div id="h-fische">${fischeHTML(ort)}</div>
     <div id="h-schonzeit">${hst.tag === 0 ? schonzeitHTML() : ""}</div>
+    <div id="h-pflege">${pflegeKarteHTML()}</div>
     <div id="h-tasche">${tascheHTML(ort)}</div>
     <div id="berater-anker">${beraterHTML()}</div>
   </section>`;
@@ -199,6 +201,7 @@ export function heuteNachladen(neuZeichnen){
     const f = document.getElementById("h-fische"); if(f) f.innerHTML = fischeHTML(ort);
     const t = document.getElementById("h-tasche"); if(t) t.innerHTML = tascheHTML(ort);
     const k = document.getElementById("h-kueste"); if(k) k.innerHTML = kuesteKarte(ort);
+    const pf = document.getElementById("h-pflege"); if(pf) pf.innerHTML = pflegeKarteHTML();
   };
   if(!ausfluegeGeladen()) ladeAusfluege();   /* Wetter der Ausflüge für den Vergleich */
   if(!wetterCache[ort.id] && laeuft !== ort.id){

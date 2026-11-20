@@ -948,3 +948,13 @@ body.druck-fm .fm-druck .fm-titel{display:block}
   body.druck-fm .fm-druck *{color:#000!important;background:none!important}
   body.druck-fm .fm-tab th,body.druck-fm .fm-tab td{border-bottom:1px solid #999}
 }
+
+/* ---------- Gerätepflege ---------- */
+.pf-liste{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.pf-liste li{display:grid;gap:3px;padding:10px 12px;border-radius:12px;background:var(--surface2);border-left:3px solid var(--line)}
+.pf-liste li.pf-spuelen{border-left-color:var(--water)}
+.pf-liste li.pf-wartung{border-left-color:var(--warn)}
+.pf-liste li.pf-schnur{border-left-color:var(--float)}
+.pf-liste span{font-size:14.5px}
+.pf-akt{margin-top:4px}
+.pf-zaehler{margin:6px 0 0}
