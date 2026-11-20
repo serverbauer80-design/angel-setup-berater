@@ -66,10 +66,15 @@ export function ladeFaengeDaten(){
   out.spots.forEach(s => { if(s.name === "Elbe (Lauenburg)" && Math.abs(s.lng - 8.4752) < 0.001){ s.lat = 53.371; s.lng = 10.565; } });
   return out;
 }
-let faengeGeaendert = false, dkGeaendert = false;
+/* „Noch nicht in der Cloud“ wird gespeichert (nicht nur im Speicher):
+   Fänge, die ohne Netz eingetragen wurden, überleben so auch einen
+   Neustart der App und werden beim nächsten Abgleich hochgeladen. */
+const OFFEN_KEY = "neu_sync_offen_v1";
+const offen = () => lese(OFFEN_KEY, {}) || {};
+function markiere(was, an){ const o = offen(); if(an) o[was] = true; else delete o[was]; schreibe(OFFEN_KEY, o); }
 export function speichereFaengeDaten(d){
   schreibe(KEYS.faenge, d);
-  faengeGeaendert = true;
+  markiere("faenge", true);
   pushDebounced();
   melde();
 }
@@ -79,7 +84,7 @@ export function setzeDkNotiz(nr, text){
   const n = dkNotizen();
   if(text) n[nr] = text; else delete n[nr];
   schreibe(DK_KEY, n);
-  dkGeaendert = true;
+  markiere("dk", true);
   pushDebounced();
   melde();
 }
@@ -138,8 +143,17 @@ function uebernimm(data){
   }
   if(data.wartung && typeof data.wartung === "object"){ pflege.wartung = data.wartung; schreibe(KEYS.wartung, pflege.wartung); geaendert = true; }
   if(data.schnur && typeof data.schnur === "object"){  pflege.schnur  = data.schnur;  schreibe(KEYS.schnur,  pflege.schnur);  geaendert = true; }
-  if(data.dkNotizen && typeof data.dkNotizen === "object"){ schreibe(DK_KEY, data.dkNotizen); geaendert = true; }
-  if(data.faenge && Array.isArray(data.faenge.catches)){
+  if(data.dkNotizen && typeof data.dkNotizen === "object"){
+    schreibe(DK_KEY, offen().dk ? { ...data.dkNotizen, ...dkNotizen() } : data.dkNotizen); geaendert = true;
+  }
+  if(data.faenge && Array.isArray(data.faenge.catches) && offen().faenge){
+    /* Hier liegen Änderungen, die noch nicht oben sind: nach id zusammenführen, lokal gewinnt */
+    const lokal = lese(KEYS.faenge, null) || {};
+    const misch = (cloud, hier) => { const m = new Map((cloud || []).map(x => [x.id, x])); (hier || []).forEach(x => m.set(x.id, x)); return [...m.values()]; };
+    schreibe(KEYS.faenge, { ...data.faenge, ...lokal, catches: misch(data.faenge.catches, lokal.catches), spots: misch(data.faenge.spots, lokal.spots) });
+    pushDebounced();
+    geaendert = true;
+  } else if(data.faenge && Array.isArray(data.faenge.catches)){
     /* Fotos sind in der Cloud nie enthalten: lokale Fotos je Fang behalten */
     const lokal = lese(KEYS.faenge, null);
     const fotos = new Map(((lokal && lokal.catches) || []).filter(c => c.foto).map(c => [c.id, c.foto]));
@@ -160,12 +174,12 @@ export function pushDebounced(){
     /* Fänge/Spots und Dänemark-Notizen nur mitschicken, wenn hier geändert –
        sonst bleibt der Stand der alten App unangetastet */
     const extra = {};
-    if(faengeGeaendert){
+    const o = offen();
+    if(o.faenge){
       const f = lese(KEYS.faenge, null);
       if(f) extra.faenge = { ...f, catches: (f.catches || []).map(c => { if(!c.foto) return c; const { foto, ...rest } = c; return rest; }) };
-      faengeGeaendert = false;
     }
-    if(dkGeaendert){ extra.dkNotizen = dkNotizen(); dkGeaendert = false; }
+    if(o.dk) extra.dkNotizen = dkNotizen();
     docRef.set({
       ...extra,
       ...(ta ? { tasche: ta } : {}),
@@ -174,7 +188,11 @@ export function pushDebounced(){
       schnur: pflege.schnur,
       ...(aus ? { ausruestung: aus } : {}),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }, { merge: true }).catch(err => {
+    }, { merge: true }).then(() => {
+      /* erst wenn die Cloud bestätigt hat, gilt es als hochgeladen */
+      if(o.faenge) markiere("faenge", false);
+      if(o.dk) markiere("dk", false);
+    }).catch(err => {
       sync.status = "fehler"; sync.fehler = "Speichern in der Cloud fehlgeschlagen: " + err.message; melde();
     });
   }, 1200);
@@ -198,6 +216,8 @@ export function startSync(){
         sync.status = "fehler"; sync.fehler = "Erstabgleich fehlgeschlagen: " + e.message;
       }
       bereit = true;
+      /* Offline Geändertes jetzt hochladen */
+      if(Object.keys(offen()).length) pushDebounced();
       melde();
       unsub = docRef.onSnapshot(s => {
         if(!s.exists || s.metadata.hasPendingWrites) return;

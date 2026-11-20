@@ -12,6 +12,7 @@ import { istFluss, linienVon, anfordern, UMKREIS_KM, vorabGeladen } from "./flus
 import { pegelHTML } from "./pegel.js";
 import { alleFaenge } from "./fangbuch.js";
 import { scheineHTML, scheineSpotHTML } from "./scheine.js";
+import { kachelnAusschnitt } from "./offline.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -88,7 +89,8 @@ function karteErzeugen(){
   kartenEl.id = "gw-karte";
   kartenEl.className = "gw-karte";
   karte = L.map(kartenEl, { zoomControl: true, attributionControl: true }).setView(kst.zentrum || [54.35, 9.6], kst.zoom || 8);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© OpenStreetMap" }).addTo(karte);
+  /* ohne Subdomain und mit CORS: so kann der Service Worker die Kacheln für offline zwischenspeichern */
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, crossOrigin: true, attribution: "© OpenStreetMap" }).addTo(karte);
   schicht = L.layerGroup().addTo(karte);
   karte.on("moveend", () => { const c = karte.getCenter(); kst.zentrum = [c.lat, c.lng]; kst.zoom = karte.getZoom(); merke(); flussLaden(); });
   karte.on("click", e => {
@@ -197,6 +199,7 @@ export function gewaesserHTML(){
     <div class="gw-raster">
       <div class="gw-links">
         <div id="gw-karten-platz" class="gw-karten-platz"></div>
+        <p class="gw-offline"><button type="button" class="knopf klein leise" data-gw-offline>Ausschnitt offline speichern</button><span class="hinweis-klein" id="gw-offline-status"></span></p>
         ${setzModus ? `<p class="gw-setzen">Tippe auf die Karte, um die Position zu setzen. <button type="button" class="knopf klein leise" data-gw-setzen-ab>Abbrechen</button></p>` : ""}
         ${scheineHTML()}
       </div>
@@ -337,6 +340,17 @@ export function karteKlick(e, toast, geheZuHeute){
   if(eb){ kst.ebenen[eb.dataset.ebene] = !kst.ebenen[eb.dataset.ebene]; merke(); neuZeichnenFn(); return true; }
   const w = t.closest("[data-gw-wahl]");
   if(w){ waehle(w.dataset.gwWahl, true); return true; }
+  if(t.closest("[data-gw-offline]")){
+    if(!karte) return true;
+    const st = document.getElementById("gw-offline-status");
+    if(karte.getZoom() < 11){ toast("Bitte näher heranzoomen – gespeichert wird nur ein kleiner Ausschnitt"); return true; }
+    t.closest("[data-gw-offline]").disabled = true;
+    kachelnAusschnitt(karte.getBounds(), karte.getZoom(), (a, b) => { if(st) st.textContent = ` ${a} von ${b} …`; })
+      .then(r => { if(st) st.textContent = ` ${r.n} Kacheln gespeichert${r.begrenzt ? " (Ausschnitt gekürzt – für mehr näher heranzoomen)" : ""}.`; toast("Kartenausschnitt offline gespeichert"); })
+      .catch(err => { if(st) st.textContent = " " + err.message; })
+      .finally(() => { const b = document.querySelector("[data-gw-offline]"); if(b) b.disabled = false; });
+    return true;
+  }
   const h = t.closest("[data-gw-heute]");
   if(h){ geheZuHeute("spot_" + h.dataset.gwHeute); return true; }
   const b = t.closest("[data-gw-bearb]");

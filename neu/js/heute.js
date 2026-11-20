@@ -12,6 +12,7 @@ import { erfahrung, erfahrungHTML, schonzeitHTML } from "./erfahrung.js";
 import { ausfluegeGeladen, ladeAusfluege } from "./tagebuch.js";
 import { scheinHinweisHTML } from "./scheine.js";
 import { ladeKueste, kuesteTag, kuesteHTML, seeSetzen } from "./kueste.js";
+import { unterwegsHTML, unterwegsVorbereiten } from "./offline.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const KEY = "neu_heute_v1";
@@ -53,6 +54,7 @@ export function heuteHTML(){
         <div class="chips h-tage" role="group" aria-label="Tag">${TAGE.map((t, i) => `<button type="button" class="chip${hst.tag === i ? " on" : ""}" data-h-tag="${i}" aria-pressed="${hst.tag === i}">${t}</button>`).join("")}</div>
       </div>
     </div>
+    <div id="h-unterwegs">${unterwegsHTML(ort)}</div>
     ${scheinHinweisHTML()}
     <div id="h-lage" class="h-lage">${lageHTML(ort)}</div>
     <div id="h-gezeiten"></div>
@@ -224,6 +226,17 @@ export function heuteNachladen(neuZeichnen){
         .catch(err => { const gg = document.getElementById("h-gezeiten"); if(gg) gg.innerHTML = gezeitenHTML(ort, null, err.message); });
     }
   }
+}
+
+/* Für unterwegs: Daten und Karte vorab laden */
+export function unterwegsStarten(toast){
+  const ort = aktuellerOrt();
+  const knopf = document.querySelector("[data-unterwegs]"), st = document.getElementById("h-unterwegs-status");
+  if(knopf) knopf.disabled = true;
+  delete wetterCache[ort.id]; delete kuesteCache[ort.id];
+  unterwegsVorbereiten(ort, msg => { if(st) st.textContent = msg; })
+    .then(teile => { toast && toast(teile.length ? "Für unterwegs gespeichert" : "Nichts geladen – ist Netz da?"); const u = document.getElementById("h-unterwegs"); if(u) u.innerHTML = unterwegsHTML(ort); heuteNachladen(); })
+    .catch(() => { if(knopf) knopf.disabled = false; });
 }
 
 /* Fisch aus „Passt heute“ in den Berater übernehmen */

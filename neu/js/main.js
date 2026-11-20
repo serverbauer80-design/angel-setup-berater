@@ -8,7 +8,7 @@
    Etappe 6: Fangbuch – Fänge + Ausflüge, Statistik je Setup (fangbuch.js, tagebuch.js)
    Routing über den Hash: #rutenwand, #rutenwand/setup22, #heute …
    ============================================================ */
-import { KEYS, pflege, setzePflege, beiAenderung, ladeFaenge, startSync, sync, anmelden, abmelden, lese, schreibe, leseText, schreibeText } from "./store.js";
+import { KEYS, pflege, setzePflege, beiAenderung, ladeFaenge, startSync, sync, anmelden, abmelden, lese, schreibe, leseText, schreibeText, pushDebounced } from "./store.js";
 import {
   KATEGORIEN, katByKey, alleSetups, gruppiere, pflegeVon, freieRollen, ansaetzeFuer, faengeFuer,
   bewerteKombo, rolleMontiertAuf, wgPos, komma, ersterTeil, heuteISO, datumDE, tageSeit,
@@ -17,7 +17,8 @@ import {
 import { beraterHTML, fischeHTML, fischeAnzahl, bst, merkeBerater } from "./berater-ui.js";
 import { protokollHTML } from "./protokoll.js";
 import { wissenHTML } from "./wissen.js";
-import { heuteHTML, heuteNachladen, hst, merkeHeute, fischWaehlen, kuesteSeeAendern } from "./heute.js";
+import { heuteHTML, heuteNachladen, hst, merkeHeute, fischWaehlen, kuesteSeeAendern, unterwegsStarten } from "./heute.js";
+import { istOffline } from "./offline.js";
 import { umschalten, abhaken, leeren, nurHakenWeg, inTasche } from "./tasche.js";
 import { gewaesserHTML, karteEinhaengen, initKarte, karteKlick, karteEingabe, karteAenderung } from "./karte.js";
 import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuSetup } from "./fangbuch.js";
@@ -457,6 +458,7 @@ document.addEventListener("click", e => {
   if(st.bereich === "gewaesser" && karteKlick(e, toast, ortId => { hst.ort = ortId; merkeHeute(); geheZu("heute"); toast("Ort für Heute übernommen"); })) return;
   const f = e.target.closest("[data-filter]");
   if(f){ st.filter = f.dataset.filter; schreibeText(KEYS.filter, st.filter); renderListe(); return; }
+  if(e.target.closest("[data-unterwegs]")){ unterwegsStarten(toast); return; }
   const ko = e.target.closest("[data-h-ort-wahl]");
   if(ko){ hst.ort = ko.dataset.hOrtWahl; merkeHeute(); render(); window.scrollTo(0, 0); return; }
   const ht = e.target.closest("[data-h-tag]");
@@ -564,9 +566,10 @@ $("#theme-btn").addEventListener("click", () => {
 let dialogFuer;   // für welchen Login-Zustand der Dialog zuletzt gebaut wurde
 function renderSync(inhaltAuch){
   const chip = $("#sync-chip");
-  const txt = { aus: "Nicht angemeldet", laedt: "Verbinde …", an: "Synchronisiert", fehler: "Sync-Fehler", offline: "Nur lokal" }[sync.status] || "Nicht angemeldet";
+  const txt = istOffline() ? (sync.user ? "Offline – wird später abgeglichen" : "Offline")
+    : { aus: "Nicht angemeldet", laedt: "Verbinde …", an: "Synchronisiert", fehler: "Sync-Fehler", offline: "Nur lokal" }[sync.status] || "Nicht angemeldet";
   chip.textContent = txt;
-  chip.dataset.status = sync.status;
+  chip.dataset.status = istOffline() ? "offline" : sync.status;
   /* Offenen Dialog nur neu bauen, wenn sich der Login geändert hat – sonst wären getippte Eingaben weg */
   const wer = sync.user ? sync.user.uid + sync.fehler : "";
   if(!inhaltAuch && !($("#sync-dialog").open && dialogFuer !== wer)) return;
@@ -586,6 +589,10 @@ function renderSync(inhaltAuch){
       </form>`;
   }
 }
+/* Netz weg / wieder da */
+window.addEventListener("offline", () => { renderSync(); if(st.bereich === "heute") render(); });
+window.addEventListener("online", () => { renderSync(); pushDebounced(); toast("Wieder online"); if(st.bereich === "heute") render(); });
+
 $("#sync-chip").addEventListener("click", () => { renderSync(true); $("#sync-dialog").showModal(); });
 $("#sync-dialog").addEventListener("submit", async e => {
   if(e.target.id !== "login-form") return;
