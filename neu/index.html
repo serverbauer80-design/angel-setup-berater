@@ -79,7 +79,37 @@
   <script src="../berater.js"></script>
   <script type="module" src="js/main.js"></script>
   <script>
-    if("serviceWorker" in navigator){ navigator.serviceWorker.register("sw.js", { scope: "./" }).catch(function(){}); }
+    /* Neuerungen sofort laden: beim Öffnen und bei jeder Rückkehr zur App
+       (iPhone-Homescreen, anderer Tab) nach einer neuen Version fragen.
+       Neue Version da → Seite lädt neu. Ist gerade ein Formular offen,
+       erscheint stattdessen ein Hinweis mit „Neu laden“ – nichts geht verloren. */
+    if("serviceWorker" in navigator){
+      var hatteSW = !!navigator.serviceWorker.controller, geladen = Date.now(), zuletzt = 0, laedt = false;
+      navigator.serviceWorker.register("sw.js", { scope: "./", updateViaCache: "none" }).then(function(reg){
+        function pruefe(){ if(Date.now() - zuletzt < 30000) return; zuletzt = Date.now(); reg.update().catch(function(){}); }
+        document.addEventListener("visibilitychange", function(){ if(document.visibilityState === "visible") pruefe(); });
+        window.addEventListener("pageshow", function(e){ if(e.persisted) pruefe(); });
+        window.addEventListener("focus", pruefe);
+        setInterval(pruefe, 30 * 60 * 1000);
+      }).catch(function(){});
+      function beschaeftigt(){
+        if(document.querySelector("dialog[open]")) return true;
+        var a = document.activeElement;
+        return !!(a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && a.value);
+      }
+      function neuLaden(){ if(laedt) return; laedt = true; location.reload(); }
+      navigator.serviceWorker.addEventListener("controllerchange", function(){
+        if(!hatteSW){ hatteSW = true; return; }          /* allererste Installation: Seite ist schon aktuell */
+        if(Date.now() - geladen < 4000) return;          /* direkt beim Start: Dateien kamen eh frisch aus dem Netz */
+        if(!beschaeftigt()){ neuLaden(); return; }
+        var b = document.getElementById("update-hinweis");
+        if(b){ b.hidden = false; return; }
+        b = document.createElement("div"); b.id = "update-hinweis"; b.setAttribute("role", "status");
+        b.innerHTML = '<span>Neue Version ist da</span><button type="button" class="knopf prim klein">Neu laden</button>';
+        b.querySelector("button").addEventListener("click", neuLaden);
+        document.body.appendChild(b);
+      });
+    }
   </script>
 </body>
 </html>
