@@ -1138,3 +1138,18 @@ body.druck-fm .fm-druck .fm-titel{display:block}
 .vs-rezept{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:4px;margin-top:10px}
 .vs-rezept h3{margin:0;font-size:18px}
 .vs h3{margin:14px 0 6px}
+
+/* ---------- Ziele & Bestmarken ---------- */
+.zl-liste{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:8px}
+.zl{background:var(--surface2);border-radius:12px;padding:8px 12px;display:grid;gap:4px}
+.zl.ok{background:var(--ok-soft)}
+.zl-kopf{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.zl-spur{height:8px;border-radius:99px;background:var(--line);overflow:hidden;display:block}
+.zl-spur span{display:block;height:100%;background:var(--float);border-radius:99px}
+.zl.ok .zl-spur span{background:var(--ok)}
+.zl small{color:var(--muted);font-size:13.5px}
+.zl-tipp{color:var(--ink)!important}
+.zl-form{border:1px solid var(--line);padding:12px}
+.zl-bm{list-style:none;margin:0;padding:0;display:grid}
+.zl-bm li{display:grid;gap:1px;padding:8px 0;border-top:1px solid var(--line);font-size:15px}
+.zl-bm small{color:var(--muted);font-size:13px}

@@ -9,6 +9,7 @@ import { ladeFaengeDaten, speichereFaengeDaten, lese, schreibe } from "./store.j
 import { alleSetups, heuteISO, datumDE, komma, katByKey } from "./setups.js";
 import { saisonHTML, saisonKlick } from "./saison.js";
 import { koederBilanzHTML } from "./koederbilanz.js";
+import { zieleHTML, zieleKlick } from "./ziele.js";
 import { ausfluege, ausfluegeGeladen, ladeAusfluege, speichereAusflug, loescheAusflug } from "./tagebuch.js";
 import { rechtFuer, ladeWetter, tagesLage, windRichtung, orteListe } from "./lage.js";
 import { blatt, feld, auswahl } from "./edit.js";
@@ -482,8 +483,8 @@ function statistikHTML(alle){
 }
 
 /* Reiter des Fangbuchs */
-const FB_TABS = [["verlauf", "Verlauf"], ["statistik", "Was funktioniert?"], ["koeder", "Köder"], ["saison", "Saison"]];
-const FB_ANSICHT = { verlauf: a => verlaufHTML(a), statistik: a => statistikHTML(a), koeder: () => koederBilanzHTML(), saison: () => saisonHTML() };
+const FB_TABS = [["verlauf", "Verlauf"], ["statistik", "Was funktioniert?"], ["koeder", "Köder"], ["ziele", "Ziele"], ["saison", "Saison"]];
+const FB_ANSICHT = { verlauf: a => verlaufHTML(a), statistik: a => statistikHTML(a), koeder: () => koederBilanzHTML(), ziele: () => zieleHTML(), saison: () => saisonHTML() };
 
 export function fangbuchHTML(){
   setupsNeu();
@@ -531,6 +532,7 @@ export function fangbuchKlick(e){
     return true;
   }
   if(saisonKlick(e)){ renderFn(); return true; }
+  if(zieleKlick(e, toastFn)){ renderFn(); return true; }
   const f = e.target.closest("[data-fb-fang]"); if(f){ fangBearbeiten(f.dataset.fbFang); return true; }
   const a = e.target.closest("[data-fb-ausflug]"); if(a){ ausflugBearbeiten(a.dataset.fbAusflug); return true; }
   const v = e.target.closest("[data-fb-ansicht]"); if(v){ fst.ansicht = v.dataset.fbAnsicht; merke(); renderFn(); return true; }

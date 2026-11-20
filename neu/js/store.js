@@ -105,6 +105,14 @@ export function kleinteileSetzen(b){
   melde();
 }
 
+/* ---------- Ziele, Ausgaben & Co.: ein Objekt, neuere Fassung gewinnt ---------- */
+export const EX_KEY = "neu_extras_v1";
+export function extras(){ return lese(EX_KEY, null) || { geaendert: "" }; }
+export function extrasSetzen(fn){
+  const e = extras(); fn(e); e.geaendert = new Date().toISOString();
+  schreibe(EX_KEY, e); pushDebounced(); melde();
+}
+
 /* Andere Tabs (z. B. die alte App parallel offen) */
 window.addEventListener("storage", e => {
   if(e.key === KEYS.wartung){ pflege.wartung = lese(KEYS.wartung, {}) || {}; melde(); }
@@ -141,6 +149,11 @@ function uebernimm(data){
     if(!lokal || (lokal.geaendert || "") < data.kleinteile.geaendert){ schreibe(KT_KEY, data.kleinteile); geaendert = true; }
     else if((lokal.geaendert || "") > data.kleinteile.geaendert) pushDebounced();
   }
+  if(data.extras && data.extras.geaendert){
+    const lokal = lese(EX_KEY, null);
+    if(!lokal || (lokal.geaendert || "") < data.extras.geaendert){ schreibe(EX_KEY, data.extras); geaendert = true; }
+    else if((lokal.geaendert || "") > data.extras.geaendert) pushDebounced();
+  } else if(lese(EX_KEY, null)) pushDebounced();
   if(data.wartung && typeof data.wartung === "object"){ pflege.wartung = data.wartung; schreibe(KEYS.wartung, pflege.wartung); geaendert = true; }
   if(data.schnur && typeof data.schnur === "object"){  pflege.schnur  = data.schnur;  schreibe(KEYS.schnur,  pflege.schnur);  geaendert = true; }
   if(data.dkNotizen && typeof data.dkNotizen === "object"){
@@ -171,6 +184,7 @@ export function pushDebounced(){
     const aus = AUSR.gespeichert();
     const ta = lese(TASCHE_KEY, null);
     const kt = lese(KT_KEY, null);
+    const ex = lese(EX_KEY, null);
     /* Fänge/Spots und Dänemark-Notizen nur mitschicken, wenn hier geändert –
        sonst bleibt der Stand der alten App unangetastet */
     const extra = {};
@@ -184,6 +198,7 @@ export function pushDebounced(){
       ...extra,
       ...(ta ? { tasche: ta } : {}),
       ...(kt ? { kleinteile: kt } : {}),
+      ...(ex ? { extras: ex } : {}),
       wartung: pflege.wartung,
       schnur: pflege.schnur,
       ...(aus ? { ausruestung: aus } : {}),
