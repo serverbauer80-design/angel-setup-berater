@@ -25,6 +25,7 @@ import { wohinBerechnen, wohinHTML } from "./wohin.js";
 import { liveKlick, liveAenderung, liveFabHTML } from "./live.js";
 import { truebungSetzen } from "./koederwahl.js";
 import { tagISO } from "./lage.js";
+import { bremseHTML } from "./bremse.js";
 import { umschalten, abhaken, leeren, nurHakenWeg, inTasche } from "./tasche.js";
 import { gewaesserHTML, karteEinhaengen, initKarte, karteKlick, karteEingabe, karteAenderung } from "./karte.js";
 import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuSetup } from "./fangbuch.js";
@@ -242,6 +243,7 @@ function tabInfos(g){
     ${reihe("Dazu", r.extra)}
   </dl>`;
   if(r.einsatz) h += `<div class="absatz"><h3>Einsatz</h3><p>${esc(r.einsatz)}</p></div>`;
+  h += bremseHTML(s);
   if(r.bewusst) h += `<div class="absatz bewusst"><h3>Bewusst so gewählt</h3><p>${esc(r.bewusst)}</p></div>`;
   if(r.tippKompakt) h += `<div class="absatz tipp"><h3>Tipp</h3><p>${esc(r.tippKompakt)}</p></div>`;
   const offen = [];
