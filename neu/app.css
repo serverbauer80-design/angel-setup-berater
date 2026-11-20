@@ -5,7 +5,7 @@
 :root{
   --bg:#edf1f2; --surface:#ffffff; --surface2:#f5f7f8; --ink:#13232b; --muted:#56666e; --line:#d2dadd;
   --float:#d4500a; --float-soft:#fde6d8; --on-float:#ffffff;
-  --water:#1d5a6d; --water-soft:#dcebf0;
+  --water:#1d5a6d; --water-soft:#dcebf0; --guide:#6b3fa0;
   --ok:#2a7f45; --ok-soft:#dff1e5; --warn:#9a6500; --warn-soft:#fbefd2; --bad:#b3361e; --bad-soft:#f8e0da;
   --shadow:0 1px 2px rgba(19,35,43,.06),0 4px 14px rgba(19,35,43,.05);
   --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
@@ -17,13 +17,13 @@
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#0a1318; --surface:#111e25; --surface2:#16262e; --ink:#e4edf0; --muted:#93a7b0; --line:#24363f;
   --float:#ff7b33; --float-soft:#3a2217; --on-float:#1a0c04;
-  --water:#6bb8ce; --water-soft:#14303a;
+  --water:#6bb8ce; --water-soft:#14303a; --guide:#b79be0;
   --ok:#5cc47e; --ok-soft:#163023; --warn:#e8b34a; --warn-soft:#332811; --bad:#f07a62; --bad-soft:#3a1c16;
   --shadow:none; color-scheme:dark } }
 :root[data-theme="dark"]{
   --bg:#0a1318; --surface:#111e25; --surface2:#16262e; --ink:#e4edf0; --muted:#93a7b0; --line:#24363f;
   --float:#ff7b33; --float-soft:#3a2217; --on-float:#1a0c04;
-  --water:#6bb8ce; --water-soft:#14303a;
+  --water:#6bb8ce; --water-soft:#14303a; --guide:#b79be0;
   --ok:#5cc47e; --ok-soft:#163023; --warn:#e8b34a; --warn-soft:#332811; --bad:#f07a62; --bad-soft:#3a1c16;
   --shadow:none; color-scheme:dark }
 
@@ -1084,3 +1084,16 @@ body.druck-fm .fm-druck .fm-titel{display:block}
 #update-hinweis{position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));z-index:60;display:flex;align-items:center;gap:12px;
   background:var(--ink);color:var(--bg);padding:8px 8px 8px 14px;border-radius:12px;font-size:14.5px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:calc(100vw - 32px);white-space:nowrap}
 #update-hinweis[hidden]{display:none}
+
+/* ---------- Angelführer SH/HH ---------- */
+.fu-kosten{border-radius:12px;padding:10px 12px;background:var(--surface2);display:grid;gap:4px}
+.fu-kosten.frei{background:var(--ok-soft)}
+.fu-kosten.erfragen{background:var(--warn-soft)}
+.fu-kosten ul{list-style:none;margin:0;padding:0;display:grid;gap:3px}
+.fu-kosten li{display:flex;justify-content:space-between;gap:12px;font-size:14.5px}
+.fu-kosten li b{white-space:nowrap}
+.fu-kosten p{margin:0}
+.fu-tipp{margin:0;font-size:15px}
+.fu-grund{margin:8px 0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.fu-grund summary{font-weight:700;cursor:pointer}
+.fu-grund p{margin:6px 0 0;font-size:14.5px}

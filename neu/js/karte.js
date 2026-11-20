@@ -13,6 +13,7 @@ import { pegelHTML } from "./pegel.js";
 import { alleFaenge } from "./fangbuch.js";
 import { scheineHTML, scheineSpotHTML } from "./scheine.js";
 import { kachelnAusschnitt } from "./offline.js";
+import { FUEHRER, GRUNDKOSTEN, STAND as FUEHRER_STAND } from "../daten/fuehrer.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -20,6 +21,7 @@ const KEY = "neu_karte_v1";
 export const kst = Object.assign({ ebenen: { spots: true, lav: true, dk: false, kueste: false, osm: false }, auswahl: null, suche: "", zentrum: null, zoom: null }, lese(KEY, {}) || {});
 kst.auswahl = null;
 if(kst.ebenen.faenge === undefined) kst.ebenen.faenge = true;
+if(kst.ebenen.fuehrer === undefined) kst.ebenen.fuehrer = true;
 function merke(){ schreibe(KEY, { ebenen: kst.ebenen, zentrum: kst.zentrum, zoom: kst.zoom }); }
 
 const TYP = { see: "See", fluss: "Fluss", kanal: "Kanal", kueste: "Küste / Meer", forellensee: "Forellensee / Put & Take", teich: "Teich" };
@@ -27,6 +29,7 @@ const REGION = { sh: "Schleswig-Holstein", hh: "Hamburg", ni: "Niedersachsen", m
 const EBENEN = [
   { id: "spots",  label: "Deine Spots",       farbe: "--float" },
   { id: "faenge", label: "Meine Fänge",       farbe: "--warn" },
+  { id: "fuehrer", label: "Angelführer SH/HH", farbe: "--guide" },
   { id: "lav",    label: "LAV-Gewässer",      farbe: "--water" },
   { id: "dk",     label: "Dänemark P&T",      farbe: "--ok" },
   { id: "kueste", label: "Freie Küste SH",    farbe: "--bad" },
@@ -51,6 +54,40 @@ const KUESTE_PUNKTE = [
   { id: "k_eidermuendung", name: "Eidermündung – Ausnahme", lat: 54.32, lng: 8.94, art: "ausnahme", text: "Zwischen Schleuse Nordfeld und der Straßenbrücke Tönning/Karolinenkoog ist ein Erlaubnisschein nötig." }
 ];
 
+/* ---------- Angelführer: Kosten kurz und als Tabelle ---------- */
+const FU_ART = { kueste: "Küste", see: "See", fluss: "Fluss / Elbe", forellensee: "Forellensee" };
+function kostenKurz(g){
+  if(g.preis === "frei") return g.region === "hh" ? "frei – nur Abgabe 10 €/Jahr" : "frei – nur Abgabe";
+  if(g.preis === "erfragen") return "Gastkarte – Preis erfragen";
+  const k = (g.karten || [])[0];
+  return k ? `${k[0]} ${k[1].split(" · ")[0]}` : "";
+}
+function fuehrerHTML(g){
+  const gk = GRUNDKOSTEN[g.region] || GRUNDKOSTEN.sh;
+  return `<dl class="reihen">
+      <div class="reihe"><dt>Ort</dt><dd>${esc(g.ort)} · ${esc(g.typ)}</dd></div>
+      <div class="reihe"><dt>Fische</dt><dd>${esc(g.fische)}</dd></div>
+    </dl>
+    <div class="fu-kosten ${g.preis}">
+      <b>${g.preis === "frei" ? "Keine Angelkarte nötig" : g.preis === "ok" ? "Angelkarte" : "Gastkarte – Preis nicht veröffentlicht"}</b>
+      <ul>${(g.karten || []).map(([a, p]) => `<li><span>${esc(a)}</span><b>${esc(p)}</b></li>`).join("")}</ul>
+      ${g.kauf ? `<p><small>Kaufen: ${esc(g.kauf)}</small></p>` : ""}
+      <p><small>Dazu immer: Fischereischein + ${esc(gk.titel)} – ${esc(gk.text.split(".")[0])}.</small></p>
+    </div>
+    ${g.tipp ? `<p class="fu-tipp">${esc(g.tipp)}</p>` : ""}
+    ${g.art === "kueste" && g.lng > 9.5 && !/Dorsch und Aal/.test(g.tipp || "") ? `<p class="hinweis-klein">Ostsee: Dorsch und Aal sind für Angler ganzjährig verboten. Meeresangler müssen sich seit 2026 registrieren – Infos beim Land SH.</p>` : ""}
+    <p class="hinweis-klein">${[g.url ? `<a href="${esc(g.url)}" target="_blank" rel="noopener">Seite des Anbieters ›</a>` : "", g.quelle && g.quelle !== g.url ? `<a href="${esc(g.quelle)}" target="_blank" rel="noopener">Quelle ›</a>` : ""].filter(Boolean).join(" · ")}
+      ${esc(FUEHRER_STAND)} – Preise und Regeln vor dem Angeltag prüfen. Lage ungefähr.</p>`;
+}
+/* Grundkosten-Karte über der Liste, wenn der Führer an ist */
+function grundkostenHTML(){
+  return `<details class="fu-grund"><summary>Was kostet Angeln in SH und HH?</summary>
+    ${Object.values(GRUNDKOSTEN).map(g => `<p><b>${esc(g.titel)}:</b> ${esc(g.text)} <a href="${esc(g.url)}" target="_blank" rel="noopener">Quelle ›</a></p>`).join("")}
+    <p><b>Küste SH:</b> Ostsee und Nordsee sind größtenteils freie Küstengewässer – Fischereischein und Abgabe reichen. Ausnahmen (Erlaubnisschein): Schlei, Teile der Lübecker Bucht, Eidermündung.</p>
+    <p><b>Forellensee:</b> Tageskarte beim Betreiber, Fischereiabgabe gilt trotzdem.</p>
+    <p class="hinweis-klein">${esc(FUEHRER_STAND)}</p></details>`;
+}
+
 /* ---------- Daten aller Ebenen als einheitliche Liste ---------- */
 function eintraege(){
   const f = ladeFaengeDaten();
@@ -71,6 +108,7 @@ function eintraege(){
   }
   if(kst.ebenen.lav && typeof LAV_GEWAESSER !== "undefined") LAV_GEWAESSER.forEach(g => out.push({ id: "lav:" + g.id, ebene: "lav", name: g.name, lat: g.lat, lng: g.lng, roh: g,
     unter: `${g.typ} · LAV${g.kostenlosLav ? " · für Mitglieder kostenlos" : ""}` }));
+  if(kst.ebenen.fuehrer) FUEHRER.forEach(g => out.push({ id: "fuehrer:" + g.id, ebene: "fuehrer", name: g.name, lat: g.lat, lng: g.lng, roh: g, unter: `${FU_ART[g.art] || g.art} · ${kostenKurz(g)}` }));
   if(kst.ebenen.dk && typeof DK_PUTTAKE !== "undefined") DK_PUTTAKE.forEach(d => out.push({ id: "dk:" + d.nr, ebene: "dk", name: d.name, lat: d.lat, lng: d.lng, roh: d,
     unter: `Nr. ${d.nr} · ${d.gew || ""} · ${d.km} km ab Fockbek` }));
   if(kst.ebenen.kueste) KUESTE_PUNKTE.forEach(k => out.push({ id: "kueste:" + k.id, ebene: "kueste", name: k.name, lat: k.lat, lng: k.lng, roh: k, unter: k.art === "ausnahme" ? "Erlaubnisschein nötig" : "Grenze des freien Küstengewässers" }));
@@ -109,7 +147,7 @@ function zeichneMarker(){
   if(kst.ebenen.kueste){
     kuesteSchicht = L.layerGroup(KUESTE_ZONEN.map(z => L.polygon(z.punkte, { color: farbe("--bad"), weight: 1.5, fillOpacity: 0.12, interactive: false }))).addTo(karte);
   }
-  const FARBE = { spots: farbe("--float"), faenge: farbe("--warn"), lav: farbe("--water"), dk: farbe("--ok"), kueste: farbe("--bad"), osm: farbe("--muted") };
+  const FARBE = { fuehrer: farbe("--guide"), spots: farbe("--float"), faenge: farbe("--warn"), lav: farbe("--water"), dk: farbe("--ok"), kueste: farbe("--bad"), osm: farbe("--muted") };
   const pinPlatz = {};
   eintraege().forEach(e => {
     const gewaehlt = kst.auswahl === e.id;
@@ -197,7 +235,7 @@ export function gewaesserHTML(){
   if(typeof L === "undefined") return `<section class="gewaesser"><p class="leer">Die Karte konnte nicht geladen werden (keine Verbindung?). Die Liste der Gewässer funktioniert trotzdem, sobald du wieder online bist.</p></section>`;
   const alle = eintraege();
   const q = kst.suche.toLowerCase();
-  const liste = q ? alle.filter(e => (e.name + " " + e.unter + " " + (e.roh.notes || "") + " " + (e.roh.adr || "")).toLowerCase().includes(q)) : alle.filter(e => e.ebene !== "osm" && e.ebene !== "faenge");
+  const liste = q ? alle.filter(e => (e.name + " " + e.unter + " " + (e.roh.notes || "") + " " + (e.roh.adr || "") + " " + (e.roh.fische || "") + " " + (e.roh.ort || "")).toLowerCase().includes(q)) : alle.filter(e => e.ebene !== "osm" && e.ebene !== "faenge");
   const sortiert = liste.sort((a, b) => (b.eigen ? 1 : 0) - (a.eigen ? 1 : 0) || a.name.localeCompare(b.name, "de")).slice(0, 60);
   const aktiv = alle.find(e => e.id === kst.auswahl);
   return `<section class="gewaesser">
@@ -213,6 +251,7 @@ export function gewaesserHTML(){
         <div id="gw-karten-platz" class="gw-karten-platz"></div>
         <p class="gw-offline"><button type="button" class="knopf klein leise" data-gw-offline>Ausschnitt offline speichern</button><span class="hinweis-klein" id="gw-offline-status"></span></p>
         ${setzModus ? `<p class="gw-setzen">Tippe auf die Karte, um die Position zu setzen (zum Genauen: nah heranzoomen). <button type="button" class="knopf klein leise" data-gw-setzen-ab>Abbrechen</button></p>` : ""}
+        ${kst.ebenen.fuehrer ? grundkostenHTML() : ""}
         ${scheineHTML()}
       </div>
       <div class="gw-rechts">
@@ -273,6 +312,8 @@ function steckbriefHTML(e){
     inhalt = `<dl class="reihen">${(r.gruppen || []).map(g => `<div class="reihe"><dt>${esc(g.name)}</dt><dd>${esc(g.preise)}</dd></div>`).join("")}</dl>
       ${r.url ? `<p><a href="${esc(r.url)}" target="_blank" rel="noopener">Gewässerseite beim LAV ›</a></p>` : ""}
       <p class="hinweis-klein">${esc(typeof LAV_GEWAESSER_META !== "undefined" ? LAV_GEWAESSER_META.stand : "")} – Preise vor dem Angeltag prüfen.</p>`;
+  } else if(e.ebene === "fuehrer"){
+    inhalt = fuehrerHTML(r);
   } else if(e.ebene === "dk"){
     const notiz = dkNotizen()[r.nr] || "";
     inhalt = `<dl class="reihen">
@@ -420,6 +461,14 @@ export function karteKlick(e, toast, geheZuHeute){
     const n = document.querySelector('#blatt input[name="name"]'); if(n && e2) n.value = e2.name;
     const ty = document.querySelector('#blatt select[name="type"]'); if(ty && e2 && e2.ebene === "dk") ty.value = "forellensee";
     const rg = document.querySelector('#blatt select[name="region"]'); if(rg && e2 && e2.ebene === "dk") rg.value = "dk";
+    if(e2 && e2.ebene === "fuehrer"){
+      const g = e2.roh;
+      if(ty) ty.value = g.art;
+      if(rg) rg.value = g.region;
+      const pr = document.querySelector('#blatt input[name="price"]'); const tag = (g.karten || []).find(k => /^tag/i.test(k[0]));
+      if(pr && tag && g.preis === "ok"){ const n = parseFloat(tag[1].replace(",", ".")); if(!isNaN(n)) pr.value = String(n).replace(".", ","); }
+      const no = document.querySelector('#blatt textarea[name="notes"]'); if(no) no.value = [g.fische, g.tipp].filter(Boolean).join(" | ");
+    }
     return true;
   }
   const hn = t.closest("[data-hs-neu]");

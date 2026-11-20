@@ -2,9 +2,9 @@
    Alles network-first: online immer der neueste Stand (kein ?v=-Hochzählen
    nötig), offline der zuletzt geladene. VERSION nur ändern, wenn der
    Cache bewusst geleert werden soll. */
-const VERSION = "neu-33";
+const VERSION = "neu-34";
 const CACHE = "rutenwand-" + VERSION;
-const KERN = ["./", "./index.html", "./app.css", "./js/main.js", "./js/store.js", "./js/setups.js", "./js/edit.js", "./js/berater-ui.js", "./js/protokoll.js", "./js/wissen.js", "./js/angelarten.js", "./js/schaubild.js", "./js/heute.js", "./js/lage.js", "./js/tasche.js", "./js/karte.js", "./js/flusslauf.js", "./js/pegel.js", "./js/erfahrung.js", "./js/scheine.js", "./js/einkauf.js", "./js/knoten.js", "./js/kueste.js", "./js/kleinteile.js", "./js/offline.js", "./js/saison.js", "./js/fangmeldung.js", "./js/geraetepflege.js", "./js/startzeit.js", "./js/wohin.js", "./js/live.js", "./js/bestimmen.js", "./js/koederwahl.js", "./js/bremse.js", "./js/jahresplan.js", "./daten/fluesse.json", "./js/fangbuch.js", "./js/tagebuch.js", "./manifest.json", "../data.js", "../ausruestung.js", "../berater.js",
+const KERN = ["./", "./index.html", "./app.css", "./js/main.js", "./js/store.js", "./js/setups.js", "./js/edit.js", "./js/berater-ui.js", "./js/protokoll.js", "./js/wissen.js", "./js/angelarten.js", "./js/schaubild.js", "./js/heute.js", "./js/lage.js", "./js/tasche.js", "./js/karte.js", "./js/flusslauf.js", "./js/pegel.js", "./js/erfahrung.js", "./js/scheine.js", "./js/einkauf.js", "./js/knoten.js", "./js/kueste.js", "./js/kleinteile.js", "./js/offline.js", "./js/saison.js", "./js/fangmeldung.js", "./js/geraetepflege.js", "./js/startzeit.js", "./js/wohin.js", "./js/live.js", "./js/bestimmen.js", "./js/koederwahl.js", "./js/bremse.js", "./js/jahresplan.js", "./daten/fluesse.json", "./daten/fuehrer.js", "./js/fangbuch.js", "./js/tagebuch.js", "./manifest.json", "../data.js", "../ausruestung.js", "../berater.js",
   "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css", "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"];
 
 /* Fremde Bibliotheken ohne CORS (Firebase, Schriften): als „opaque“ zwischenspeichern,
