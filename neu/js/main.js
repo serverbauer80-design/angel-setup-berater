@@ -33,6 +33,7 @@ import { beiAusflugAenderung, ausfluegeNachSync } from "./tagebuch.js";
 import { initScheine, scheineKlick, scheineNachSync, beiScheinAenderung } from "./scheine.js";
 import { einkaufHTML } from "./einkauf.js";
 import { kleinteileHTML, kleinteileKlick, kleinteileEingabe, kleinteileAenderung } from "./kleinteile.js";
+import { ausgabenAenderung } from "./ausgaben.js";
 import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen, tragkraftEintragen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
@@ -550,6 +551,7 @@ document.addEventListener("change", e => {
   if(e.target.id === "h-ort"){ hst.ort = e.target.value; merkeHeute(); render(); return; }
   if(liveAenderung(e)){ render(); return; }
   if(kleinteileAenderung(e, toast, renderListe)) return;
+  if(ausgabenAenderung(e)){ toast("Gespeichert"); render(); return; }
   if(e.target.matches("[data-kk-see]")){ kuesteSeeAendern(e.target.value); render(); return; }
   const pk = e.target.closest("[data-pack]");
   if(pk){ abhaken(pk.dataset.pack); return; }

@@ -10,6 +10,7 @@ import { alleSetups, heuteISO, datumDE, komma, katByKey } from "./setups.js";
 import { saisonHTML, saisonKlick } from "./saison.js";
 import { koederBilanzHTML } from "./koederbilanz.js";
 import { zieleHTML, zieleKlick } from "./ziele.js";
+import { ausgabenHTML, ausgabenKlick } from "./ausgaben.js";
 import { ausfluege, ausfluegeGeladen, ladeAusfluege, speichereAusflug, loescheAusflug } from "./tagebuch.js";
 import { rechtFuer, ladeWetter, tagesLage, windRichtung, orteListe } from "./lage.js";
 import { blatt, feld, auswahl } from "./edit.js";
@@ -483,8 +484,8 @@ function statistikHTML(alle){
 }
 
 /* Reiter des Fangbuchs */
-const FB_TABS = [["verlauf", "Verlauf"], ["statistik", "Was funktioniert?"], ["koeder", "Köder"], ["ziele", "Ziele"], ["saison", "Saison"]];
-const FB_ANSICHT = { verlauf: a => verlaufHTML(a), statistik: a => statistikHTML(a), koeder: () => koederBilanzHTML(), ziele: () => zieleHTML(), saison: () => saisonHTML() };
+const FB_TABS = [["verlauf", "Verlauf"], ["statistik", "Was funktioniert?"], ["koeder", "Köder"], ["ziele", "Ziele"], ["saison", "Saison"], ["kosten", "Kosten"]];
+const FB_ANSICHT = { verlauf: a => verlaufHTML(a), statistik: a => statistikHTML(a), koeder: () => koederBilanzHTML(), ziele: () => zieleHTML(), kosten: () => ausgabenHTML(), saison: () => saisonHTML() };
 
 export function fangbuchHTML(){
   setupsNeu();
@@ -533,6 +534,7 @@ export function fangbuchKlick(e){
   }
   if(saisonKlick(e)){ renderFn(); return true; }
   if(zieleKlick(e, toastFn)){ renderFn(); return true; }
+  if(ausgabenKlick(e, toastFn)){ renderFn(); return true; }
   const f = e.target.closest("[data-fb-fang]"); if(f){ fangBearbeiten(f.dataset.fbFang); return true; }
   const a = e.target.closest("[data-fb-ausflug]"); if(a){ ausflugBearbeiten(a.dataset.fbAusflug); return true; }
   const v = e.target.closest("[data-fb-ansicht]"); if(v){ fst.ansicht = v.dataset.fbAnsicht; merke(); renderFn(); return true; }

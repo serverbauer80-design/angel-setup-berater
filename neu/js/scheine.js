@@ -248,6 +248,7 @@ export function scheinBearbeiten(id, vorgabeSpot){
       ${feld("name", "Bezeichnung", v.name || "", { pflicht: true, breit: true, ph: "z. B. Jahreskarte ASV Rendsburg" })}
       ${auswahl("art", "Art", ARTEN, v.art || "jahr")}
       ${feld("nr", "Nummer", v.nr || "", { ph: "optional" })}
+      ${feld("preis", "Preis (€)", v.preis != null ? String(v.preis).replace(".", ",") : "", { ph: "optional – zählt in den Ausgaben" })}
       ${feld("von", "Gültig ab", v.von || "", { typ: "date" })}
       ${feld("bis", "Gültig bis", v.bis || "", { typ: "date" })}
       ${spotAuswahl(v.spotIds || [])}
@@ -277,6 +278,7 @@ export function scheinBearbeiten(id, vorgabeSpot){
         name, art: fd.get("art"), nr: String(fd.get("nr") || "").trim(), von, bis,
         spotIds: fd.getAll("spot"), gilt: String(fd.get("gilt") || "").trim(), notiz: String(fd.get("notiz") || "").trim(),
         limit: String(fd.get("limit") || "").trim(),
+        preis: (p => isNaN(p) ? null : p)(parseFloat(String(fd.get("preis") || "").replace(",", "."))),
         fmBis: fd.get("fmBis") || "", fmAbgegeben: alt && alt.fmBis === (fd.get("fmBis") || "") ? alt.fmAbgegeben || null : null,
         foto: fotos[0], foto2: fotos[1] };
       speichere(s).then(wo => toastFn(wo === "cloud" ? "Schein gespeichert" : wo === "lokal" ? "Schein gespeichert (nur auf diesem Gerät)" : "Nicht gespeichert"));
