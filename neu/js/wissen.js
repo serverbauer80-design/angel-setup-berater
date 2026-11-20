@@ -6,6 +6,7 @@
 import { GRUPPEN, ANGELARTEN } from "./angelarten.js";
 import { schaubildSVG } from "./schaubild.js";
 import { lese } from "./store.js";
+import { knotenUebersichtHTML, knotenDetailHTML, knotenLinks, knotenIn } from "./knoten.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const STATUS = { machbar: ["g", "Passt"], bedingt: ["y", "Geht mit Abstrichen"], wunsch: ["w", "Wunschliste"] };
@@ -29,8 +30,19 @@ function treffer(suche, liste){
 }
 
 export function wissenHTML(id){
+  if(id === "knoten") return `<section class="wissen"><a class="zurueck sichtbar" href="#wissen">‹ Alle Angelarten</a><p class="eyebrow">Wissen</p><h2>Knoten</h2>
+    <p class="lead-klein">Jeder Knoten, den die Montagen brauchen – Schritt für Schritt gezeichnet.</p>${knotenUebersichtHTML()}</section>`;
+  if(id && id.startsWith("knoten-")) return knotenDetailHTML(id.slice(7), montagenMit);
   const art = id ? ANGELARTEN.find(a => a.id === id) : null;
   return art ? detailHTML(art) : uebersichtHTML();
+}
+
+/* Montage -> darin vorkommende Knoten (Schaubild-Beschriftung + Bauschritte) */
+const montageText = m => [...m.bild.filter(b => b[0] === "knoten").map(b => b[1]), ...m.schritte].join(" ");
+function montagenMit(k){
+  const out = [];
+  ANGELARTEN.forEach(art => art.montagen.forEach(m => { if(knotenIn(montageText(m)).includes(k)) out.push({ art, montage: m }); }));
+  return out;
 }
 
 function uebersichtHTML(){
@@ -45,6 +57,7 @@ function uebersichtHTML(){
         <div class="w-karten">${arten.map(a => `<a class="w-karte" href="#wissen/${a.id}">
           <b>${esc(a.name)}</b><span>${esc(a.kurz)}</span><small>${esc(a.fische)} · ${a.montagen.length} Montage${a.montagen.length > 1 ? "n" : ""}</small></a>`).join("")}</div></div>`;
     }).join("")}
+    ${knotenUebersichtHTML()}
   </section>`;
 }
 
@@ -84,7 +97,8 @@ function montageHTML(m, liste){
         <h4>Das brauchst du <span>${n} von ${m.teile.length} vermutlich vorhanden</span></h4>
         <ul class="w-teile">${teile}</ul>
         <h4>So baust du sie</h4>
-        <ol class="w-schritte">${m.schritte.map(s => `<li>${esc(s)}</li>`).join("")}</ol>
+        <ol class="w-schritte">${m.schritte.map(s => `<li>${knotenLinks(esc(s))}</li>`).join("")}</ol>
+        ${(() => { const kn = knotenIn(montageText(m)); return kn.length ? `<p class="kn-chips"><span>Knoten:</span>${kn.map(k => `<a class="pill" href="#wissen/knoten-${k.id}">${esc(k.name)} ›</a>`).join("")}</p>` : ""; })()}
       </div>
     </div>
   </article>`;

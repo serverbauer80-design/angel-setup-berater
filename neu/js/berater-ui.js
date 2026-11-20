@@ -8,6 +8,7 @@
 import { lese, schreibe } from "./store.js";
 import { angelartFuer } from "./angelarten.js";
 import { inTascheFuer } from "./tasche.js";
+import { knotenLinks } from "./knoten.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const komma = v => String(v).replace(".", ",");
@@ -25,7 +26,7 @@ function kettenHTML(a, set, gw){
   const k = BERATER.koederFuer(a, gw);
   const zeilen = montage.map(m => {
     const echt = /^hauptschnur$/i.test(m.k) && set && set.rolleId;
-    return `<li><b>${esc(m.k)}</b><span>${esc(m.v)}${echt ? ` <em class="quelle">aus deinem Setup</em>` : ""}</span></li>`;
+    return `<li><b>${esc(m.k)}</b><span>${knotenLinks(esc(m.v))}${echt ? ` <em class="quelle">aus deinem Setup</em>` : ""}</span></li>`;
   });
   if(k) zeilen.push(`<li><b>Gesamtgewicht am Wurf</b><span>≈ ${komma(k[0])}–${komma(k[1])} g (Blei/Jigkopf + Köder)</span></li>`);
   return zeilen.length ? `<ol class="kette">${zeilen.join("")}</ol>` : "";

@@ -789,3 +789,38 @@ button.frei-rolle:hover{border-color:var(--muted)}
 .ek-gruende li.warn{color:var(--warn)}
 .ek-details summary{cursor:pointer;color:var(--water);font-size:14px;font-weight:600;min-height:32px;display:flex;align-items:center}
 .ek-details .reihen{margin-top:6px}
+
+/* ---------- Knoten ---------- */
+.kn-bild{width:100%;height:auto;display:block;background:var(--surface2);border-radius:10px}
+.kn-bild .kn-a{stroke:var(--ink);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.kn-bild .kn-b{stroke:var(--float);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.kn-bild .kn-c{stroke:var(--water);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.kn-bild .kn-hinten{stroke-opacity:.35}
+.kn-bild .kn-oese{fill:none;stroke:var(--muted);stroke-width:2.6}
+.kn-bild .kn-metall{fill:var(--muted);stroke:none}
+.kn-bild .kn-metall-l{fill:none;stroke:var(--muted);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.kn-bild .kn-knoten{fill:var(--ink)}
+.kn-bild .kn-pfeil{stroke:var(--ok);stroke-width:2}
+.kn-bild .kn-pfeilkopf{fill:var(--ok)}
+.kn-bild .kn-markier{fill:none;stroke:var(--warn);stroke-width:1.4;stroke-dasharray:3 3}
+.kn-bild .kn-txt{font-family:var(--f-body);font-size:11px;fill:var(--muted)}
+.w-karte.kn-karte{grid-template-columns:120px 1fr;column-gap:12px}
+.kn-karte .kn-bild{grid-row:1 / span 3;align-self:center}
+.kn-karte b,.kn-karte span,.kn-karte small{grid-column:2}
+.kn-fakten{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin:0}
+.kn-fakten div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.kn-fakten dt{font-size:12px;color:var(--muted)}
+.kn-fakten dd{margin:0;font-weight:600}
+.kn-legende{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:13px;color:var(--muted)}
+.kn-legende span{display:inline-block;width:18px;height:3px;border-radius:2px;margin-left:6px}
+.kn-l-a{background:var(--ink)}.kn-l-b{background:var(--float)}.kn-l-c{background:var(--water)}.kn-l-p{background:var(--ok)}
+.kn-schritte{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.kn-schritte li{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;display:grid;gap:8px;align-content:start}
+.kn-schritte p{margin:0;font-size:15px}
+.kn-nr{float:left;margin:1px 8px 0 0;width:24px;height:24px;border-radius:50%;background:var(--float);color:var(--on-float);font-weight:700;font-size:13px;display:grid;place-items:center}
+.kn-wo{list-style:none;padding:0!important}
+.kn-wo small{color:var(--muted)}
+.kn-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 0}
+.kn-chips>span{font-size:13px;color:var(--muted)}
+.kn-chips a.pill{text-decoration:none}
+a.kn-link{color:var(--water);text-decoration:underline dotted;text-underline-offset:2px}
