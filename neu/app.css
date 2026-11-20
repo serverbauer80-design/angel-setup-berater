@@ -715,3 +715,9 @@ button.frei-rolle:hover{border-color:var(--muted)}
 .h-schon-liste li.bald{background:var(--float-soft);border-left:4px solid var(--float)}
 .h-schon-liste li.bald span,.h-schon-liste li.endet span{color:var(--ink);font-weight:600}
 .h-schon-liste li.endet{background:var(--ok-soft);border-left:4px solid var(--ok)}
+
+/* Etappe 9: Vorschläge für die Tasche */
+.h-vorschlag{display:grid;gap:6px}
+.h-vorschlag-knoepfe{display:flex;flex-wrap:wrap;gap:8px}
+.h-vorschlag-knoepfe .knopf{min-height:44px;color:var(--water);text-align:left}
+.h-vorschlag-knoepfe .knopf small{color:var(--muted);font-weight:400;margin-left:4px}

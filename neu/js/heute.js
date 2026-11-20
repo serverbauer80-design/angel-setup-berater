@@ -124,23 +124,43 @@ function fischeHTML(ort){
 }
 
 /* ---------- Tasche ---------- */
+/* Vorschläge: die Setups der stärksten Fische aus „Passt heute“, die noch nicht in der Tasche sind */
+function vorschlaege(ort, t){
+  const iso = tagISO(hst.tag), lage = aktuelleLage();
+  const b = fischBewertung(ort, lage, +iso.slice(5, 7), iso, erfahrung(ort, lage, iso).map);
+  const out = [], gesehen = new Set(t.setups);
+  b.passt.filter(x => x.punkte >= 2 && x.setup && x.besteStatus === "machbar").forEach(x => {
+    if(out.length >= 3 || gesehen.has(x.setup.key)) return;
+    gesehen.add(x.setup.key);
+    out.push({ key: x.setup.key, name: String(x.setup.name).split(" · ")[0], fisch: x.fisch.name.split(" (")[0], zweck: x.fisch.id + "#" + x.fisch.ansaetze.indexOf(x.beste) });
+  });
+  return out;
+}
+function vorschlagHTML(v, leer){
+  if(!v.length) return "";
+  return `<div class="h-vorschlag"><p class="hinweis-klein">${leer ? "Vorschlag für heute – antippen packt das Setup ein:" : "Passt heute auch:"}</p>
+    <div class="h-vorschlag-knoepfe">${v.map(x => `<button type="button" class="knopf klein" data-tasche="${esc(x.key)}" data-zweck="${esc(x.zweck)}">+ ${esc(x.name)} <small>für ${esc(x.fisch)}</small></button>`).join("")}</div></div>`;
+}
 function tascheHTML(ort){
   const p = packliste(ort, aktuelleLage());
   const t = p.t;
+  const v = vorschlaege(ort, t);
   if(!t.setups.length){
     return `<div class="h-karte h-tasche-leer"><h3>Tasche für ${hst.tag === 0 ? "heute" : TAGE[hst.tag].toLowerCase()}</h3>
-      <p class="hinweis-klein">Leg im Berater unten oder in der Rutenwand Setups mit „In die Tasche“ hinein – dann entsteht hier deine Packliste mit allem, was du für die Montagen, das Wetter und den Ort brauchst.</p></div>`;
+      ${vorschlagHTML(v, true)}
+      <p class="hinweis-klein">Oder leg im Berater unten bzw. in der Rutenwand Setups mit „In die Tasche“ hinein. Dann entsteht hier deine Packliste mit allem, was du für die Montagen, das Wetter und den Ort brauchst.</p></div>`;
   }
   const prozent = Math.round(p.erledigt / p.gesamt * 100);
   return `<div class="h-karte">
     <div class="h-tasche-kopf"><h3>Tasche: ${t.setups.length} Setup${t.setups.length > 1 ? "s" : ""}</h3><span class="mono">${p.erledigt}/${p.gesamt} eingepackt</span></div>
     <div class="fortschritt" role="progressbar" aria-valuenow="${prozent}" aria-valuemin="0" aria-valuemax="100"><span style="width:${prozent}%"></span></div>
     ${p.gruppen.map(g => `<div class="pack-gruppe"><h4>${esc(g.titel)}</h4>${g.hinweis ? `<p class="hinweis-klein">${esc(g.hinweis)}</p>` : ""}
-      <ul>${g.punkte.map(x => `<li><label class="pack${t.abgehakt[x.text] ? " erledigt" : ""}"><input type="checkbox" data-pack="${esc(x.text)}"${t.abgehakt[x.text] ? " checked" : ""}>
+      <ul>${g.punkte.map(x => `<li><label class="pack${p.haken[x.text] ? " erledigt" : ""}"><input type="checkbox" data-pack="${esc(x.text)}"${p.haken[x.text] ? " checked" : ""}>
         <span><b>${esc(x.text)}</b>${x.info ? `<small>${esc(x.info)}</small>` : ""}</span></label></li>`).join("")}</ul></div>`).join("")}
     <div class="akt-zeile">
       ${t.setups.map(k => AKTUELL[k] ? `<button type="button" class="knopf klein leise" data-tasche="${k}">${esc(String(AKTUELL[k].name).split(" · ")[0])} ✕</button>` : "").join("")}
     </div>
+    ${vorschlagHTML(v, false)}
     <div class="akt-zeile"><button type="button" class="knopf" data-tasche-haken>Häkchen zurücksetzen</button><button type="button" class="knopf leise" data-tasche-leeren>Tasche leeren</button></div>
   </div>`;
 }

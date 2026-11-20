@@ -3,7 +3,7 @@
    Du legst Setups in die Tasche – die Packliste ergibt sich aus den
    Montagen, für die diese Setups am gewählten Ort die beste Wahl sind,
    plus Pflicht-Dingen, Wetter und Tageszeit. Abgehakt bleibt abgehakt,
-   bis du die Tasche leerst. Wird mit deinem Login synchronisiert.
+   für den Tag (am nächsten Tag ist die Liste frisch). Wird synchronisiert.
    ============================================================ */
 import { lese, schreibe, beiAenderung, pushDebounced, tascheSetzen } from "./store.js";
 import { angelartFuer } from "./angelarten.js";
@@ -33,8 +33,13 @@ export function inTascheFuer(key, zweck){
   const z = (t.zwecke || {})[key];
   return !zweck || !z || z.includes(zweck);
 }
+/* Häkchen gelten für einen Angeltag – am nächsten Tag ist die Liste wieder frisch */
+const heuteTag = () => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); };
+export function haken(t){ return (!t.hakenTag || t.hakenTag === heuteTag()) ? (t.abgehakt || {}) : {}; }
 export function abhaken(text){
   const t = tasche();
+  if(t.hakenTag && t.hakenTag !== heuteTag()) t.abgehakt = {};
+  t.hakenTag = heuteTag();
   if(t.abgehakt[text]) delete t.abgehakt[text]; else t.abgehakt[text] = true;
   speichere(t);
 }
@@ -52,7 +57,7 @@ export function packliste(ort, lage){
   if(setups.length) gruppen.push({ titel: "Ruten & Rollen", punkte: setups.map(s => ({ text: String(s.name).split(" (")[0] + (String(s.name).match(/\(([^)]+)\)/) ? " (" + s.name.match(/\(([^)]+)\)/)[1] + ")" : ""), info: String(s.rolle || "").split(" · ")[0] })) });
 
   /* 2) Montage-Teile: für welche Ansätze ist das Setup hier die beste Wahl? */
-  const teile = new Map(), methoden = [];
+  const teile = new Map(), methoden = [], zielfische = new Set();
   setups.forEach(s => {
     FISCHE.forEach(f => {
       if(gw && !f.gewaesser.includes(gw)) return;
@@ -65,6 +70,7 @@ export function packliste(ort, lage){
           if(!b || !b.bester || b.bester.setup.key !== s.key) return;
         }
         methoden.push(`${f.name}: ${a.methode.split(" – ")[0]}`);
+        zielfische.add(f.id);
         const art = angelartFuer(f.id, i);
         const m = art && art.montagen[0];
         if(m){
@@ -86,7 +92,7 @@ export function packliste(ort, lage){
     { text: "Fischereischein + Personalausweis" },
     { text: ort && /Dänemark/.test(ort.name) ? "Dänischer Angelschein (Fisketegn)" : "Erlaubnisschein / Tageskarte fürs Gewässer" },
     { text: "Kescher" }, { text: "Abhakmatte" }, { text: "Lösezange / Hakenlöser" },
-    { text: "Maßband" }, { text: "Fischtöter + Messer", info: "nur wenn du entnehmen willst" },
+    { text: "Maßband", info: mindestmasse(zielfische) }, { text: "Fischtöter + Messer", info: "nur wenn du entnehmen willst" },
     { text: "Eimer / Kühltasche für den Fang" }
   ]});
 
@@ -105,5 +111,14 @@ export function packliste(ort, lage){
   gruppen.push({ titel: "Wetter & Komfort", punkte: extra });
 
   const alle = gruppen.flatMap(g => g.punkte);
-  return { gruppen, gesamt: alle.length, erledigt: alle.filter(p => t.abgehakt[p.text]).length, t };
+  const h = haken(t);
+  return { gruppen, gesamt: alle.length, erledigt: alle.filter(p => h[p.text]).length, t, haken: h };
+}
+
+/* „Mindestmaß Zander 45 cm · Hecht 45 cm“ für die Zielfische der Tasche */
+function mindestmasse(ids){
+  if(typeof RECHT_SH === "undefined") return "";
+  const l = [...ids].map(id => { const r = RECHT_SH[id]; const m = r && String(r.mindestmass).match(/^(\d+)\s*cm/);
+    return m ? `${(FISCHE.find(f => f.id === id) || {}).name.split(" (")[0]} ${m[1]} cm` : null; }).filter(Boolean);
+  return l.length ? "Mindestmaß " + l.join(" · ") : "";
 }
