@@ -1018,3 +1018,13 @@ body.druck-fm .fm-druck .fm-titel{display:block}
 .best-art ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:15px}
 .best-recht{margin:0;font-size:13.5px;color:var(--warn)}
 .fb-bestimmen{margin:-4px 0 0;font-size:14px}
+
+/* ---------- Fanglimit ---------- */
+.fb-limit p{margin:0;padding:8px 10px;border-radius:10px;background:var(--surface2);font-size:14.5px}
+.fb-limit p+p{margin-top:6px}
+.fb-limit p.knapp{background:var(--warn-soft)}
+.fb-limit p.voll{background:var(--bad-soft);color:var(--bad)}
+.fb-limit small{color:var(--muted)}
+.live-limit{display:flex;flex-wrap:wrap;gap:6px;margin:0}
+.live-limit span{background:var(--surface2);border-radius:999px;padding:3px 10px;font-size:13.5px;font-weight:600}
+.live-limit span.voll{background:var(--bad-soft);color:var(--bad)}

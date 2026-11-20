@@ -13,6 +13,7 @@ import { rechtFuer, ladeWetter, tagesLage, windRichtung, orteListe } from "./lag
 import { blatt, feld, auswahl } from "./edit.js";
 import { hst } from "./heute.js";
 import { tasche } from "./tasche.js";
+import { limitHTML } from "./scheine.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const zahl = v => { const n = parseFloat(String(v ?? "").replace(",", ".").trim()); return isNaN(n) ? null : n; };
@@ -189,6 +190,7 @@ export function fangBearbeiten(id, vorgabe = {}){
       ${feld("laenge", "Länge (cm)", v.laenge ?? "", { im: "decimal", ph: "z. B. 52" })}
       ${feld("gewicht", "Gewicht (kg)", v.gewicht != null ? komma(v.gewicht) : "", { im: "decimal", ph: "optional" })}
       <div class="breit" id="fb-recht-platz">${rechtHTML(fid, v.datum, zahl(v.laenge))}</div>
+      <div class="breit" id="fb-limit-platz">${limitHTML(v.spotId, v.datum, fid, c ? c.id : null, !v.zurueck)}</div>
       <label class="feld haken breit"><input type="checkbox" name="zurueck" id="f-zurueck"${v.zurueck ? " checked" : ""}><span>Zurückgesetzt</span></label>
       ${feld("datum", "Datum", v.datum, { typ: "date" })}
       ${feld("uhrzeit", "Uhrzeit", v.uhrzeit || "", { typ: "time" })}
@@ -238,6 +240,12 @@ export function fangBearbeiten(id, vorgabe = {}){
   const form = dlg.querySelector("form");
   form.querySelector("[data-blatt-weg]")?.addEventListener("click", () => dlg.close());
   const k = form.querySelector("#f-koeder"); if(k) k.setAttribute("list", "fb-koeder-liste");
+  const neuLimit = () => {
+    const pl = form.querySelector("#fb-limit-platz"); if(!pl) return;
+    const fw = form.fisch.value;
+    pl.innerHTML = limitHTML(form.spot.value || null, form.datum.value, fw && fw !== "_andere" ? fw : null, c ? c.id : null, !form.zurueck.checked);
+  };
+  form.addEventListener("change", e => { if(["spot", "zurueck"].includes(e.target.name)) neuLimit(); });
   const neuRecht = () => {
     const w = form.fisch.value;
     form.querySelector("#fb-andere").hidden = w !== "_andere";
@@ -245,6 +253,7 @@ export function fangBearbeiten(id, vorgabe = {}){
     platz.innerHTML = rechtHTML(w && w !== "_andere" ? w : null, form.datum.value, zahl(form.laenge.value));
     /* Untermaßig/Schonzeit: „Zurückgesetzt“ vorschlagen, solange du es nicht selbst angefasst hast */
     if(!form.zurueck.dataset.angefasst && platz.querySelector(".warn")) form.zurueck.checked = true;
+    neuLimit();
   };
   form.zurueck.addEventListener("change", () => { form.zurueck.dataset.angefasst = "1"; });
   form.addEventListener("input", e => { if(["laenge", "datum"].includes(e.target.name)) neuRecht(); });

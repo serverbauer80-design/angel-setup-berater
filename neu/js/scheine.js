@@ -120,6 +120,44 @@ function fmOeffnen(s){
     abgegeben: () => { const x = liste.find(y => y.id === s.id); if(x) speichere({ ...x, fmAbgegeben: heuteISO() }).then(() => toastFn("Fangmeldung als abgegeben markiert")); }
   }));
 }
+/* ---------- Fanglimit pro Tag ----------
+   Freitext im Schein: „3 Forellen, 1 Hecht“ oder „5 Fische insgesamt“ */
+const LIMIT_NAMEN = [["meerforelle", /meerforell/], ["forelle", /forell|salmonid/], ["hecht", /hecht/], ["zander", /zander/], ["barsch", /barsch/],
+  ["aal", /\baal/], ["karpfen", /karpfen/], ["schleie", /schlei/], ["dorsch", /dorsch/], ["flunder", /plattfisch|flunder|scholle/], ["wolfsbarsch", /wolfsbarsch/],
+  ["quappe", /quappe|rutte/], ["wels", /wels|waller/], ["hornhecht", /hornhecht/], ["rotauge", /rotaug|weißfisch|weissfisch/], ["hering", /hering|makrele/]];
+export function limitsAus(text){
+  return String(text || "").split(/[,;\n]|\bund\b/).map(t => t.trim().toLowerCase()).filter(Boolean).map(t => {
+    const n = t.match(/(\d+)/); if(!n) return null;
+    if(/fisch(e)?\b.*(gesamt|insgesamt)|gesamt|insgesamt|^\d+\s*fische?$/.test(t) && !LIMIT_NAMEN.some(([, re]) => re.test(t))) return { fischId: null, max: +n[1], label: "Fische insgesamt" };
+    /* Wortgrenzen: „hornhecht“ vor „hecht“, „meerforelle“ vor „forelle“, „wolfsbarsch“ vor „barsch“ */
+    const treffer = [...LIMIT_NAMEN].sort((a, b) => b[0].length - a[0].length).find(([, re]) => re.test(t));
+    return treffer ? { fischId: treffer[0], max: +n[1], label: ((FISCHE.find(f => f.id === treffer[0]) || {}).name || treffer[0]).split(" (")[0] } : null;
+  }).filter(Boolean);
+}
+/* Stand für Spot + Tag: entnommene Fische aus dem Fangbuch an allen Spots desselben Scheins */
+export function limitStand(spotId, datum, ohneId){
+  if(!spotId) return [];
+  const catches = ladeFaengeDaten().catches;
+  const out = [];
+  liste.filter(s => (s.spotIds || []).includes(spotId) && s.limit && gueltig(s).st !== "ab").forEach(s => {
+    const heute = catches.filter(c => c.datum === datum && !c.zurueck && c.id !== ohneId && (s.spotIds || []).includes(c.spotId));
+    limitsAus(s.limit).forEach(l => {
+      const n = heute.filter(c => !l.fischId || c.fischId === l.fischId || (l.fischId === "forelle" && /forelle/i.test(c.fischName || "") && c.fischId !== "meerforelle")).length;
+      out.push({ schein: s.name, ...l, n });
+    });
+  });
+  return out;
+}
+export function limitHTML(spotId, datum, fischId, ohneId, entnehmen){
+  const l = limitStand(spotId, datum, ohneId).filter(x => !x.fischId || !fischId || x.fischId === fischId);
+  if(!l.length) return "";
+  return `<div class="fb-limit">${l.map(x => {
+    const mit = entnehmen && (!x.fischId || x.fischId === fischId) ? x.n + 1 : x.n;
+    const voll = mit > x.max;
+    return `<p class="${voll ? "voll" : mit === x.max ? "knapp" : ""}"><b>Tageslimit ${esc(x.label)}: ${mit} von ${x.max}</b>${entnehmen && fischId ? (voll ? " – Limit überschritten, bitte zurücksetzen" : " mit diesem Fang") : ""} <small>(${esc(x.schein)})</small></p>`;
+  }).join("")}</div>`;
+}
+
 export function scheineFuerSpot(spotId){ return liste.filter(s => (s.spotIds || []).includes(spotId)); }
 /* Für einen Ort aus „Heute“: eigener Spot direkt, sonst Spots im Umkreis von 5 km */
 export function scheineFuerOrt(ort){
@@ -215,6 +253,8 @@ export function scheinBearbeiten(id, vorgabeSpot){
       ${spotAuswahl(v.spotIds || [])}
       ${feld("gilt", "Gilt außerdem für", v.gilt || "", { breit: true, ph: "z. B. alle Vereinsgewässer, Strecke A–B" })}
       ${feld("notiz", "Notiz", v.notiz || "", { breit: true, textarea: true, rows: 2, ph: "Regeln, Fanglimit …" })}
+      ${feld("limit", "Fanglimit pro Tag", v.limit || "", { breit: true, ph: "z. B. 3 Forellen, 1 Hecht – oder 5 Fische insgesamt" })}
+      <p class="breit hinweis-klein" id="sch-limit-vorschau">${v.limit ? esc(limitsAus(v.limit).map(x => x.max + " × " + x.label).join(" · ") || "nicht erkannt – bitte „Zahl + Fischart“ schreiben") : ""}</p>
       ${feld("fmBis", "Fangmeldung abgeben bis", v.fmBis || "", { typ: "date" })}
       ${alt ? `<div class="breit sch-fm"><span><b>Fangmeldung</b><small id="sch-fm-kurz">…</small></span><button type="button" class="knopf klein" data-sch-fm>Ansehen</button></div>` : ""}
       <label class="feld"><span>Foto Vorderseite</span><input type="file" name="foto" data-nr="0" accept="image/*"></label>
@@ -236,6 +276,7 @@ export function scheinBearbeiten(id, vorgabeSpot){
       const s = { ...(alt || {}), id: alt ? alt.id : genId(), erstellt: alt ? alt.erstellt : new Date().toISOString(),
         name, art: fd.get("art"), nr: String(fd.get("nr") || "").trim(), von, bis,
         spotIds: fd.getAll("spot"), gilt: String(fd.get("gilt") || "").trim(), notiz: String(fd.get("notiz") || "").trim(),
+        limit: String(fd.get("limit") || "").trim(),
         fmBis: fd.get("fmBis") || "", fmAbgegeben: alt && alt.fmBis === (fd.get("fmBis") || "") ? alt.fmAbgegeben || null : null,
         foto: fotos[0], foto2: fotos[1] };
       speichere(s).then(wo => toastFn(wo === "cloud" ? "Schein gespeichert" : wo === "lokal" ? "Schein gespeichert (nur auf diesem Gerät)" : "Nicht gespeichert"));
@@ -250,6 +291,7 @@ export function scheinBearbeiten(id, vorgabeSpot){
     }
   });
   form.addEventListener("input", e => {
+    if(e.target.name === "limit"){ const v = form.querySelector("#sch-limit-vorschau"); const l = limitsAus(e.target.value); if(v) v.textContent = e.target.value.trim() ? (l.map(x => x.max + " × " + x.label).join(" · ") || "nicht erkannt – bitte „Zahl + Fischart“ schreiben") : ""; return; }
     if(!e.target.classList.contains("sch-spot-filter")) return;
     const q = e.target.value.toLowerCase();
     form.querySelectorAll(".sch-spot-wahl label").forEach(l => { l.hidden = q && !l.textContent.toLowerCase().includes(q) && !l.querySelector("input").checked; });

@@ -14,6 +14,7 @@ import { orteListe, tagesLage, windRichtung } from "./lage.js";
 import { alleSetups, heuteISO } from "./setups.js";
 import { tasche } from "./tasche.js";
 import { box } from "./kleinteile.js";
+import { limitStand } from "./scheine.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const KEY = "neu_live_v1";
@@ -76,6 +77,7 @@ export function liveHTML(ortId){
   const koederListe = [...new Set(box().teile.filter(t => ["gummi", "kunst", "natur", "jig"].includes(t.kat)).map(t => t.name))];
   return `<div class="h-karte h-live"><div class="live-kopf"><span class="live-punkt"></span><b>Live seit ${esc(l.von)}</b><span>${esc(l.ortName || "")}</span></div>
     <div class="live-zahlen"><div><b>${f.length}</b><span>Fänge</span></div><div><b>${n("biss")}</b><span>Bisse</span></div><div><b>${n("fehlbiss")}</b><span>Fehlbisse</span></div></div>
+    ${(() => { const lim = limitStand(l.spotId, l.datum); return lim.length ? `<p class="live-limit">${lim.map(x => `<span class="${x.n >= x.max ? "voll" : ""}">${esc(x.label)} ${x.n}/${x.max}</span>`).join("")}</p>` : ""; })()}
     <button type="button" class="knopf prim live-fang" data-live-fang>Fang!</button>
     <div class="live-knoepfe"><button type="button" class="knopf" data-live-ereignis="biss">Biss</button><button type="button" class="knopf" data-live-ereignis="fehlbiss">Fehlbiss</button></div>
     <div class="live-felder">
