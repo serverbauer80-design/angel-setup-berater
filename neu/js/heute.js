@@ -8,6 +8,8 @@ import { lese, schreibe } from "./store.js";
 import { orteListe, ladeWetter, tagesLage, ladeGezeiten, mondphase, windRichtung, fischBewertung, urteil, rechtFuer, tagISO } from "./lage.js";
 import { tasche, packliste } from "./tasche.js";
 import { beraterHTML, bst, merkeBerater } from "./berater-ui.js";
+import { erfahrung, erfahrungHTML, schonzeitHTML } from "./erfahrung.js";
+import { ausfluegeGeladen, ladeAusfluege } from "./tagebuch.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const KEY = "neu_heute_v1";
@@ -46,7 +48,9 @@ export function heuteHTML(){
     </div>
     <div id="h-lage" class="h-lage">${lageHTML(ort)}</div>
     <div id="h-gezeiten"></div>
+    <div id="h-erfahrung">${erfahrungHTML(erfahrung(ort, aktuelleLage(), iso), ort.name)}</div>
     <div id="h-fische">${fischeHTML(ort)}</div>
+    <div id="h-schonzeit">${hst.tag === 0 ? schonzeitHTML() : ""}</div>
     <div id="h-tasche">${tascheHTML(ort)}</div>
     <div id="berater-anker">${beraterHTML()}</div>
   </section>`;
@@ -94,7 +98,8 @@ function gezeitenHTML(ort, liste, fehler){
 function fischeHTML(ort){
   const monat = +tagISO(hst.tag).slice(5, 7);
   const lage = aktuelleLage();
-  const b = fischBewertung(ort, lage, monat);
+  const iso = tagISO(hst.tag);
+  const b = fischBewertung(ort, lage, monat, iso, erfahrung(ort, lage, iso).map);
   const zeile = x => {
     const [farbe, text] = urteil(x.punkte);
     const gruende = [...x.plus.slice(0, 2).map(t => `<li class="plus">${esc(t)}</li>`), ...x.minus.slice(0, 2).map(t => `<li class="minus">${esc(t)}</li>`)].join("");
@@ -146,9 +151,11 @@ export function heuteNachladen(neuZeichnen){
   const ort = aktuellerOrt();
   const fuelle = () => {
     const l = document.getElementById("h-lage"); if(l) l.innerHTML = lageHTML(ort);
+    const e = document.getElementById("h-erfahrung"); if(e) e.innerHTML = erfahrungHTML(erfahrung(ort, aktuelleLage(), tagISO(hst.tag)), ort.name);
     const f = document.getElementById("h-fische"); if(f) f.innerHTML = fischeHTML(ort);
     const t = document.getElementById("h-tasche"); if(t) t.innerHTML = tascheHTML(ort);
   };
+  if(!ausfluegeGeladen()) ladeAusfluege();   /* Wetter der Ausflüge für den Vergleich */
   if(!wetterCache[ort.id] && laeuft !== ort.id){
     laeuft = ort.id;
     ladeWetter(ort).then(w => { wetterCache[ort.id] = w; laeuft = null; if(aktuellerOrt().id === ort.id) fuelle(); })

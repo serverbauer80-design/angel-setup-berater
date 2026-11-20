@@ -181,12 +181,27 @@ export function schonzeitMonate(text){
   if(a <= b) for(let x = a; x <= b; x++) out.push(x); else { for(let x = a; x <= 12; x++) out.push(x); for(let x = 1; x <= b; x++) out.push(x); }
   return out;
 }
-export function rechtFuer(fischId, monat){
+/* Tagesgenaue Spanne aus „15. Februar – 30. April“ -> { von:[tag,monat], bis:[tag,monat] } */
+export function schonzeitSpanne(text){
+  if(!text) return null;
+  const re = /(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)/g; const t = []; let m;
+  while((m = re.exec(text)) !== null){ const n = MONAT[m[2].toLowerCase()]; if(n) t.push([+m[1], n]); }
+  return t.length >= 2 ? { von: t[0], bis: t[1] } : null;
+}
+/* liegt der Tag (ISO) in der Spanne? Spannen über den Jahreswechsel werden beachtet */
+export function inSpanne(sp, iso){
+  const md = +iso.slice(5, 7) * 100 + +iso.slice(8, 10);
+  const a = sp.von[1] * 100 + sp.von[0], b = sp.bis[1] * 100 + (sp.bis[1] === 2 && sp.bis[0] === 28 ? 29 : sp.bis[0]);
+  return a <= b ? md >= a && md <= b : md >= a || md <= b;
+}
+/* monat: 1–12; iso (optional) macht die Prüfung tagesgenau */
+export function rechtFuer(fischId, monat, iso){
   const r = typeof RECHT_SH !== "undefined" ? RECHT_SH[fischId] : null;
   if(!r) return { status: "unbekannt" };
   if(r.schutz && /ganzjährig/i.test(r.schonzeit)) return { status: "geschuetzt", r };
-  const mon = schonzeitMonate(r.schonzeit);
-  if(mon && mon.includes(monat)) return { status: "schonzeit", r };
+  const sp = iso ? schonzeitSpanne(r.schonzeit) : null;
+  if(sp){ if(inSpanne(sp, iso)) return { status: "schonzeit", r }; }
+  else { const mon = schonzeitMonate(r.schonzeit); if(mon && mon.includes(monat)) return { status: "schonzeit", r }; }
   if(r.schutz) return { status: "achtung", r };
   if(/eingeschränkt|verboten|quote/i.test(r.schonzeit)) return { status: "achtung", r };
   return { status: "frei", r };
@@ -208,13 +223,14 @@ const TOPMONATE = {
 const MONATSNAME = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 const WARM = ["karpfen", "schleie", "aal", "wels", "rotauge", "doebel", "rapfen"];
 
-export function fischBewertung(ort, lage, monat){
+/* iso: Tag (für tagesgenaue Schonzeit); erf: deine Erfahrung je Fisch aus dem Fangbuch (erfahrung.js) */
+export function fischBewertung(ort, lage, monat, iso, erf){
   const saison = jahreszeit(monat);
   const ergebnis = { passt: [], gesperrt: [], fehltGeraet: [] };
   FISCHE.forEach(f => {
     if(ort.gw && !f.gewaesser.includes(ort.gw)) return;
     if(ort.ohne && ort.ohne.includes(f.id)) return;          // kommt an diesem Ort praktisch nicht vor
-    let recht = rechtFuer(f.id, monat);
+    let recht = rechtFuer(f.id, monat, iso);
     /* Forellensee: dort gilt die Gewässerordnung, nicht die Schonzeit der wilden Bachforelle */
     if(f.id === "forelle" && ort.gw === "forellensee" && recht.status === "schonzeit") recht = { status: "achtung", r: { ...recht.r, hinweis: "Am Forellensee gilt die Gewässerordnung der Anlage – die gesetzliche Schonzeit betrifft wilde Bachforellen." } };
     if(recht.status === "schonzeit" || recht.status === "geschuetzt"){ ergebnis.gesperrt.push({ fisch: f, recht }); return; }
@@ -254,6 +270,9 @@ export function fischBewertung(ort, lage, monat){
         if(lage.boenMax > 55){ p -= 2; minus.push(`Böen bis ${Math.round(lage.boenMax)} km/h – an der Küste zu viel`); }
       } else if(lage.boenMax > 60){ p -= 1; minus.push(`Böen bis ${Math.round(lage.boenMax)} km/h`); }
     }
+    /* Deine eigenen Fänge unter ähnlichen Bedingungen zählen mit */
+    const e = erf && erf[f.id];
+    if(e && e.n){ p += e.n >= 2 ? 2 : 1; plus.unshift(`dein Fangbuch: ${e.n > 1 ? e.n + " ähnliche Fänge" : "1 ähnlicher Fang"}`); }
     const zeitTipp = hint.nachtaktiv ? "beste Zeit: Abenddämmerung und Nacht" : hint.daemmerung ? "beste Zeit: Morgen- und Abenddämmerung" : "";
     ergebnis.passt.push({ fisch: f, punkte: p, plus, minus, zeitTipp, recht, beste: beste.a, besteStatus: beste.b.status, setup: beste.b.bester ? beste.b.bester.setup : null });
   });

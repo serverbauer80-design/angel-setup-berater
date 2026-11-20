@@ -106,7 +106,7 @@ function spotVorschlag(){
 function rechtHTML(fischId, datum, laenge){
   if(!fischId) return "";
   const monat = datum ? +datum.slice(5, 7) : new Date().getMonth() + 1;
-  const r = rechtFuer(fischId, monat);
+  const r = rechtFuer(fischId, monat, datum || undefined);
   if(r.status === "unbekannt") return `<p class="fb-recht">Für diese Art sind keine Schonzeit und kein Mindestmaß hinterlegt. Bitte im Erlaubnisschein nachsehen.</p>`;
   const mm = /^(\d+)\s*cm/.exec(r.r.mindestmass || "");
   const zuKlein = mm && laenge !== null && laenge < +mm[1];

@@ -597,7 +597,7 @@ initEdit({ toast, geheZu });
 initKarte(() => render());
 initFangbuch({ toast, render: () => render() });
 beiAenderung(() => { ausfluegeNachSync(); render(); });
-beiAusflugAenderung(() => { if(st.bereich === "fangbuch" || st.bereich === "rutenwand") render(); });
+beiAusflugAenderung(() => { if(["fangbuch", "rutenwand", "heute"].includes(st.bereich)) render(); });
 leseHash();
 render();
 startSync();
