@@ -290,6 +290,9 @@ function fangUebersicht(fa, spot){
     <p><button type="button" class="knopf leise klein" data-gw-wahl="spot:${esc(spot.id)}">Spot-Steckbrief öffnen ›</button></p>`;
 }
 
+/* Google Maps mit Ziel = Koordinaten des Spots. Auf dem Handy öffnet der Link
+   die Google-Maps-App (falls installiert) direkt in der Routenführung. */
+export const naviLink = (lat, lng) => `https://www.google.com/maps/dir/?api=1&destination=${(+lat).toFixed(6)},${(+lng).toFixed(6)}&travelmode=driving`;
 function steckbriefHTML(e){
   const r = e.roh;
   const heuteKnopf = e.ebene === "spots" || e.ebene === "faenge" ? `<button type="button" class="knopf prim" data-gw-heute="${esc(e.ebene === "faenge" ? r.spot.id : r.id)}">Heute hier angeln</button>` : "";
@@ -338,11 +341,11 @@ function steckbriefHTML(e){
     <p class="eyebrow">${esc(eb.label)}</p>
     <h2>${esc(e.name)}</h2>
     <p class="det-sub">${esc(e.unter)}</p>
+    <a class="knopf prim gw-navi" href="${naviLink(e.lat, e.lng)}" target="_blank" rel="noopener">Navigieren</a>
     ${istFluss(e) ? `<p class="hinweis-klein">${linienVon(e) ? `Die Linie zeigt den Verlauf aus OpenStreetMap im Umkreis von etwa ${UMKREIS_KM} km um den Zugangspunkt – nicht die erlaubte Angelstrecke. Die steht im Erlaubnisschein.` : "Verlauf wird geladen, sobald du online bist …"}</p>` : ""}
     ${istFluss(e) ? pegelHTML(e) : ""}
     ${inhalt}
     <div class="akt-zeile">${heuteKnopf}${alsSpot}${e.ebene === "spots" ? `<button type="button" class="knopf" data-gw-bearb="${esc(r.id)}">Bearbeiten</button>` : ""}
-      <a class="knopf leise" href="https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}" target="_blank" rel="noopener">Route ›</a>
       ${e.ebene !== "faenge" ? `<button type="button" class="knopf leise" data-gw-teilen="${esc(e.id)}">Teilen</button><button type="button" class="knopf leise" data-gw-plan="${esc(e.id)}">Angeltag hier planen</button>` : ""}</div>
   </article>`;
 }

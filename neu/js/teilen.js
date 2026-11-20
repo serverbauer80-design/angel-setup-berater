@@ -76,7 +76,7 @@ export function teilenSeiteHTML(code){
   const kopf = `<a class="zurueck sichtbar" href="#heute">‹ Zur App</a><p class="eyebrow">Geteilt mit dir</p>`;
   if(!x) return `<section class="wissen">${kopf}<p class="leer">Der Link ist unvollständig – vielleicht beim Kopieren abgeschnitten?</p></section>`;
   const ort = x.t === "spot" ? { n: x.n, la: x.la, lo: x.lo } : x.o;
-  const route = ort && ort.la ? `<a class="knopf" href="https://www.google.com/maps/dir/?api=1&destination=${ort.la},${ort.lo}" target="_blank" rel="noopener">Route ›</a>` : "";
+  const route = ort && ort.la ? `<a class="knopf prim" href="https://www.google.com/maps/dir/?api=1&destination=${ort.la},${ort.lo}&travelmode=driving" target="_blank" rel="noopener">Navigieren</a>` : "";
   const speichern = ort && ort.la ? `<button type="button" class="knopf" data-teilen-speichern>Als Spot speichern</button>` : "";
   if(x.t === "spot") return `<section class="wissen tl">${kopf}<h2>${esc(x.n)}</h2>
     <dl class="reihen">${x.ty ? `<div class="reihe"><dt>Art</dt><dd>${esc(x.ty)}</dd></div>` : ""}${x.p ? `<div class="reihe"><dt>Tageskarte</dt><dd>${esc(String(x.p).replace(".", ","))} €</dd></div>` : ""}${x.i ? `<div class="reihe"><dt>Fische</dt><dd>${esc(x.i)}</dd></div>` : ""}</dl>
@@ -90,7 +90,7 @@ export function teilenSeiteHTML(code){
         <div class="reihe"><dt>Wo</dt><dd>${esc(ort ? ort.n : "noch offen")}${x.ot ? ` – ${esc(x.ot)}` : ""}</dd></div>
         ${x.f ? `<div class="reihe"><dt>Zielfisch</dt><dd>${esc(x.f)}</dd></div>` : ""}
         ${x.m ? `<div class="reihe"><dt>Mitbringen</dt><dd>${esc(x.m)}</dd></div>` : ""}</dl>
-      <div class="akt-zeile"><a class="knopf prim" href="${ics}" download="angeltag.ics">In den Kalender</a>${route}${speichern}</div>
+      <div class="akt-zeile"><a class="knopf" href="${ics}" download="angeltag.ics">In den Kalender</a>${route}${speichern}</div>
       <p class="hinweis-klein">Vergiss Fischereischein und Abgabe-Nachweis nicht.</p></section>`;
   }
   return `<section class="wissen">${kopf}<p class="leer">Unbekannter Inhalt.</p></section>`;
