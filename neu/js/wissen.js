@@ -73,6 +73,24 @@ function uebersichtHTML(){
   </section>`;
 }
 
+/* Anzeigename eines Ansatzes: ohne Rutennamen in Klammern, dafür mit der
+   Rutenlänge – so unterscheiden sich z. B. „Spoons kurze Rute“ und
+   „Spoons lange Rute“. Der interne Name (a.methode) bleibt, weil Fänge
+   darüber zugeordnet sind. */
+const mFmt = n => String(n).replace(".", ",");
+const mBasis = m => m.split(" – ").slice(-1)[0].replace(/\s*\([^)]*\)\s*$/, "");
+function ansatzLabel(a){
+  const voll = a.methode.split(" – ").slice(-1)[0];
+  const f = FISCHE.find(x => (x.ansaetze || []).includes(a));
+  const gleich = f ? f.ansaetze.filter(x => x !== a && mBasis(x.methode) === mBasis(a.methode)) : [];
+  if(!gleich.length) return voll;
+  /* Unterscheiden sie sich in der Methode (Spinnfischen / Light Game), die nennen */
+  const vor = m => m.includes(" – ") ? m.split(" – ")[0] : "";
+  if(vor(a.methode) && gleich.every(x => vor(x.methode) !== vor(a.methode))) return `${vor(a.methode)}: ${mBasis(a.methode)}`;
+  const anf = BERATER.anforderung ? BERATER.anforderung(a) : null;
+  const lg = anf && anf.laenge;
+  return lg ? `${mBasis(a.methode)} · ${lg[1] <= 3 ? "kurze" : "lange"} Rute ${mFmt(lg[0])}–${mFmt(lg[1])} m` : voll;
+}
 function setupsHTML(art){
   const zeilen = art.ansaetze.map(([fid, i]) => {
     const f = FISCHE.find(x => x.id === fid);
@@ -85,7 +103,7 @@ function setupsHTML(art){
     const gelb = b.liste.filter(x => x.stufe === 1).slice(0, gruen.length ? 2 : 3);
     const link = x => `<a href="#rutenwand/${x.setup.key}"><span class="amp ${x.stufe ? "y" : "g"}"></span>${kurzName(x.setup)}</a>`;
     return `<li><span class="status ${farbe}">${label}</span>
-      <span class="w-ans"><b>${esc(f.name)}</b> · ${esc(a.methode.split(" – ").slice(-1)[0])}</span>
+      <span class="w-ans"><b>${esc(f.name)}</b> · ${esc(ansatzLabel(a))}</span>
       <span class="w-alle">${gruen.length || gelb.length ? [...gruen, ...gelb].map(link).join("") : `<span class="hinweis-klein">kein passendes Setup</span>`}</span></li>`;
   }).join("");
   return zeilen ? `<div class="w-box"><h3>Deine Setups dafür</h3><ul class="w-setups">${zeilen}</ul>
