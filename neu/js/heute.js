@@ -14,6 +14,7 @@ import { scheinHinweisHTML } from "./scheine.js";
 import { ladeKueste, kuesteTag, kuesteHTML, seeSetzen } from "./kueste.js";
 import { unterwegsHTML, unterwegsVorbereiten } from "./offline.js";
 import { pflegeKarteHTML } from "./geraetepflege.js";
+import { startPlan, startHTML } from "./startzeit.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const KEY = "neu_heute_v1";
@@ -60,6 +61,7 @@ export function heuteHTML(){
     <div id="h-lage" class="h-lage">${lageHTML(ort)}</div>
     <div id="h-gezeiten"></div>
     <div id="h-kueste">${kuesteKarte(ort, orte)}</div>
+    <div id="h-start">${startKarte(ort)}</div>
     <div id="h-erfahrung">${erfahrungHTML(erfahrung(ort, aktuelleLage(), iso), ort.name)}</div>
     <div id="h-fische">${fischeHTML(ort)}</div>
     <div id="h-schonzeit">${hst.tag === 0 ? schonzeitHTML() : ""}</div>
@@ -97,6 +99,17 @@ function lageHTML(ort){
       <p class="h-legende">Uhrzeit · Temperatur · Wind km/h · Regenrisiko</p>` : ""}
     <p class="hinweis-klein">${l.ausCache ? `Ohne Netz – letzter Stand von ${stand} Uhr.` : `Open-Meteo · Stand ${stand} Uhr`}</p>
   </div>`;
+}
+
+/* Wann losfahren? – braucht Wetter (und an Tidegewässern die Gezeiten) */
+function startKarte(ort){
+  const w = wetterCache[ort.id], lage = aktuelleLage();
+  if(!w || !lage) return "";
+  const iso = tagISO(hst.tag);
+  if(ort.tides && !gezCache[ort.id + iso]) return "";
+  const b = fischBewertung(ort, lage, +iso.slice(5, 7), iso, null);
+  const fische = b.passt.filter(x => x.punkte >= 1).slice(0, 3).map(x => x.fisch.id);
+  return startHTML(startPlan(w, iso, ort, lage, ort.tides ? gezCache[ort.id + iso] : null, fische.length ? fische : b.passt.slice(0, 2).map(x => x.fisch.id), hst.tag === 0), ort, hst.tag === 0, ["heute", "morgen", "übermorgen"][hst.tag]);
 }
 
 function kuesteKarte(ort, orte){
@@ -202,6 +215,7 @@ export function heuteNachladen(neuZeichnen){
     const t = document.getElementById("h-tasche"); if(t) t.innerHTML = tascheHTML(ort);
     const k = document.getElementById("h-kueste"); if(k) k.innerHTML = kuesteKarte(ort);
     const pf = document.getElementById("h-pflege"); if(pf) pf.innerHTML = pflegeKarteHTML();
+    const sz = document.getElementById("h-start"); if(sz) sz.innerHTML = startKarte(ort);
   };
   if(!ausfluegeGeladen()) ladeAusfluege();   /* Wetter der Ausflüge für den Vergleich */
   if(!wetterCache[ort.id] && laeuft !== ort.id){
@@ -225,7 +239,7 @@ export function heuteNachladen(neuZeichnen){
     if(gezCache[k]){ if(g) g.innerHTML = gezeitenHTML(ort, gezCache[k]); }
     else {
       if(g) g.innerHTML = gezeitenHTML(ort, null);
-      ladeGezeiten(ort, iso).then(liste => { gezCache[k] = liste; const gg = document.getElementById("h-gezeiten"); if(gg && aktuellerOrt().id === ort.id) gg.innerHTML = gezeitenHTML(ort, liste); })
+      ladeGezeiten(ort, iso).then(liste => { gezCache[k] = liste; const gg = document.getElementById("h-gezeiten"); if(gg && aktuellerOrt().id === ort.id){ gg.innerHTML = gezeitenHTML(ort, liste); const sz = document.getElementById("h-start"); if(sz) sz.innerHTML = startKarte(ort); } })
         .catch(err => { const gg = document.getElementById("h-gezeiten"); if(gg) gg.innerHTML = gezeitenHTML(ort, null, err.message); });
     }
   }

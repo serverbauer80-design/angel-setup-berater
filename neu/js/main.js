@@ -20,6 +20,7 @@ import { wissenHTML } from "./wissen.js";
 import { heuteHTML, heuteNachladen, hst, merkeHeute, fischWaehlen, kuesteSeeAendern, unterwegsStarten } from "./heute.js";
 import { istOffline } from "./offline.js";
 import { spuelenQuittieren, einsatzZeileHTML } from "./geraetepflege.js";
+import { startpunktSetzen } from "./startzeit.js";
 import { umschalten, abhaken, leeren, nurHakenWeg, inTasche } from "./tasche.js";
 import { gewaesserHTML, karteEinhaengen, initKarte, karteKlick, karteEingabe, karteAenderung } from "./karte.js";
 import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuSetup } from "./fangbuch.js";
@@ -460,6 +461,13 @@ document.addEventListener("click", e => {
   const f = e.target.closest("[data-filter]");
   if(f){ st.filter = f.dataset.filter; schreibeText(KEYS.filter, st.filter); renderListe(); return; }
   if(e.target.closest("[data-unterwegs]")){ unterwegsStarten(toast); return; }
+  if(e.target.closest("[data-start-setzen]")){
+    if(!navigator.geolocation){ toast("Standort ist in diesem Browser nicht verfügbar"); return; }
+    navigator.geolocation.getCurrentPosition(pos => { startpunktSetzen({ lat: pos.coords.latitude, lng: pos.coords.longitude }); toast("Startpunkt gespeichert"); render(); },
+      () => toast("Standort nicht verfügbar – Freigabe erlaubt?"), { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
+    return;
+  }
+  if(e.target.closest("[data-start-weg]")){ startpunktSetzen(null); render(); return; }
   const pfs = e.target.closest("[data-pf-gespuelt]");
   if(pfs){ spuelenQuittieren(pfs.dataset.pfGespuelt); toast("Gut gemacht – Salz ist der größte Rollenfeind"); render(); return; }
   const pfw = e.target.closest("[data-pf-gewartet]");
