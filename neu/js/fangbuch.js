@@ -184,6 +184,7 @@ export function fangBearbeiten(id, vorgabe = {}){
   const dlg = blatt(c ? "Fang bearbeiten" : "Fang eintragen", `
     <div class="feld-raster">
       ${auswahl("fisch", "Fischart", fischOpt, andere ? "_andere" : fid, { breit: true })}
+      <p class="breit fb-bestimmen"><a href="#wissen/bestimmen" data-blatt-weg>Unsicher, welcher Fisch? Bestimmen ›</a></p>
       <div class="breit" id="fb-andere"${andere ? "" : " hidden"}>${feld("andere", "Welche Art?", andere, { ph: "z. B. Brasse" })}</div>
       ${feld("laenge", "Länge (cm)", v.laenge ?? "", { im: "decimal", ph: "z. B. 52" })}
       ${feld("gewicht", "Gewicht (kg)", v.gewicht != null ? komma(v.gewicht) : "", { im: "decimal", ph: "optional" })}
@@ -235,6 +236,7 @@ export function fangBearbeiten(id, vorgabe = {}){
       return null;
     });
   const form = dlg.querySelector("form");
+  form.querySelector("[data-blatt-weg]")?.addEventListener("click", () => dlg.close());
   const k = form.querySelector("#f-koeder"); if(k) k.setAttribute("list", "fb-koeder-liste");
   const neuRecht = () => {
     const w = form.fisch.value;
