@@ -32,7 +32,7 @@ import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuS
 import { beiAusflugAenderung, ausfluegeNachSync } from "./tagebuch.js";
 import { initScheine, scheineKlick, scheineNachSync, beiScheinAenderung } from "./scheine.js";
 import { einkaufHTML } from "./einkauf.js";
-import { kleinteileHTML, kleinteileKlick } from "./kleinteile.js";
+import { kleinteileHTML, kleinteileKlick, kleinteileEingabe, kleinteileAenderung } from "./kleinteile.js";
 import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen, tragkraftEintragen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
@@ -457,9 +457,10 @@ function aktivenChipZeigen(){
 function renderListe(){
   const el = $(".liste"); if(!el) return render();
   const i = $("#suche"); const pos = i ? i.selectionStart : null;
+  const hatteFokus = i && document.activeElement === i;
   el.innerHTML = listeHTML();
   aktivenChipZeigen();
-  const n = $("#suche"); if(n){ n.focus(); try { n.setSelectionRange(pos, pos); } catch(e){} }
+  const n = $("#suche"); if(n && hatteFokus){ n.focus(); try { n.setSelectionRange(pos, pos); } catch(e){} }
 }
 
 /* ---------- Ereignisse ---------- */
@@ -467,6 +468,7 @@ document.addEventListener("click", e => {
   if(liveKlick(e, { toast, neuZeichnen: render, wetterFuer: l => { const c = (lese("neu_wetter_cache_v1", {}) || {})[l.ortId]; return c ? { ...c.data, _stand: c.t } : null; } })) return;
   if(fangbuchKlick(e)) return;
   if(st.bereich === "rutenwand" && kleinteileKlick(e, toast)){ renderListe(); return; }
+  if(st.bereich === "heute" && e.target.closest("[data-kt-stand],[data-kt-check-fertig]") && kleinteileKlick(e, toast)){ render(); return; }
   const zb = e.target.closest("[data-zu-box]");
   if(zb){ e.preventDefault(); st.filter = "alle"; st.suche = ""; geheZu("rutenwand"); setTimeout(() => { const k = document.getElementById("kleinteile"); if(k) k.scrollIntoView(); }, 400); return; }
   if((st.bereich === "gewaesser" || st.bereich === "heute") && scheineKlick(e)) return;
@@ -547,6 +549,7 @@ document.addEventListener("change", e => {
   if(karteAenderung(e)){ toast("Notiz gespeichert"); return; }
   if(e.target.id === "h-ort"){ hst.ort = e.target.value; merkeHeute(); render(); return; }
   if(liveAenderung(e)){ render(); return; }
+  if(kleinteileAenderung(e, toast, renderListe)) return;
   if(e.target.matches("[data-kk-see]")){ kuesteSeeAendern(e.target.value); render(); return; }
   const pk = e.target.closest("[data-pack]");
   if(pk){ abhaken(pk.dataset.pack); return; }
@@ -571,6 +574,7 @@ document.addEventListener("change", e => {
   }
 });
 document.addEventListener("input", e => {
+  if(kleinteileEingabe(e)) return;
   if(karteEingabe(e)){
     const pos = e.target.selectionStart; render();
     const i = document.getElementById("gw-suche"); if(i){ i.focus(); try { i.setSelectionRange(pos, pos); } catch(err){} }

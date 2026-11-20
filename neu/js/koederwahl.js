@@ -7,7 +7,7 @@
    wenn es nicht läuft. Passende Teile aus der Kleinteile-Box.
    ============================================================ */
 import { lese, schreibe } from "./store.js";
-import { box } from "./kleinteile.js";
+import { box, teilVorhanden } from "./kleinteile.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const KEY = "neu_truebung_v1";
@@ -90,7 +90,7 @@ export function koederKarteHTML(ort, lage, fische, kt, tagWort = "heute"){
     const fa = kunst ? farbe(tr.wert, licht, f.id) : null;
     const fa2 = kunst && f.zeitTipp && /dämmerung|nacht/i.test(f.zeitTipp) ? farbe(tr.wert, "nacht", f.id) : null;
     const fu = fuehrung(wt.wert, f.id);
-    const ausBox = b.teile.filter(t => k.kat.includes(t.kat) && (t.n == null || t.n > 0)).slice(0, 4).map(t => t.name);
+    const ausBox = b.teile.filter(t => k.kat.includes(t.kat) && teilVorhanden(t)).slice(0, 4).map(t => t.name);
     return `<li class="kw-fisch"><b>${esc(f.name.split(" (")[0])}</b>
       <dl class="reihen">
         <div class="reihe"><dt>Köder</dt><dd>${esc(k.typ)}</dd></div>

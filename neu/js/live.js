@@ -13,7 +13,7 @@ import { speichereAusflug } from "./tagebuch.js";
 import { orteListe, tagesLage, windRichtung } from "./lage.js";
 import { alleSetups, heuteISO } from "./setups.js";
 import { tasche } from "./tasche.js";
-import { box } from "./kleinteile.js";
+import { box, teilVorhanden, teilVerbraucht, checkMerken, checkHTML } from "./kleinteile.js";
 import { limitStand } from "./scheine.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
@@ -45,7 +45,7 @@ function ereignis(typ, text){
 function zusammenfassung(l){
   const n = typ => l.ereignisse.filter(e => e.typ === typ).length;
   const koeder = [...new Set(l.ereignisse.filter(e => e.typ === "koeder").map(e => e.text).concat(l.koeder ? [l.koeder] : []))];
-  const zeilen = l.ereignisse.map(e => `${e.z} ${({ biss: "Biss", fehlbiss: "Fehlbiss", koeder: "Köder: ", setup: "Setup: ", notiz: "" })[e.typ] ?? ""}${e.typ === "biss" || e.typ === "fehlbiss" ? (e.text ? " – " + e.text : "") : e.text}`);
+  const zeilen = l.ereignisse.map(e => `${e.z} ${({ biss: "Biss", fehlbiss: "Fehlbiss", abriss: "Abriss: ", koeder: "Köder: ", setup: "Setup: ", notiz: "" })[e.typ] ?? ""}${e.typ === "biss" || e.typ === "fehlbiss" ? (e.text ? " – " + e.text : "") : e.text}`);
   return { bisse: n("biss"), fehlbisse: n("fehlbiss"), koeder, text: [`Live-Protokoll: ${n("biss")} ${n("biss") === 1 ? "Biss" : "Bisse"}, ${n("fehlbiss")} ${n("fehlbiss") === 1 ? "Fehlbiss" : "Fehlbisse"}.`, ...zeilen].join("\n") };
 }
 
@@ -63,29 +63,30 @@ export function liveBeenden(wetterRoh){
   const a = { id: l.id, datum: l.datum, von: l.von, bis: jetzt(), spotId: l.spotId, wetter, wassertemp: null, methode: "", koeder: z.koeder.join(", "),
     setup: l.setup || "", bewertung: 0, notizen: z.text, faenge: [], foto: null, bisse: z.bisse, fehlbisse: z.fehlbisse, ereignisse: l.ereignisse, live: true };
   try { localStorage.removeItem(KEY); } catch(e){}
+  checkMerken(z.koeder);
   return speichereAusflug(a).then(() => a);
 }
 
 /* ---------- Ansicht ---------- */
 export function liveHTML(ortId){
   const l = live();
-  if(!l) return `<div class="h-live-start"><button type="button" class="knopf prim" data-live-start="${esc(ortId || "")}">Am Wasser? Live-Modus starten</button>
+  if(!l) return checkHTML() + `<div class="h-live-start"><button type="button" class="knopf prim" data-live-start="${esc(ortId || "")}">Am Wasser? Live-Modus starten</button>
     <span class="hinweis-klein">Fang, Biss und Köderwechsel mit einem Tipp festhalten.</span></div>`;
   const f = faengeDerSitzung(l);
   const n = typ => l.ereignisse.filter(e => e.typ === typ).length;
   const setups = alleSetups().filter(s => s.kategorie !== "backup");
-  const koederListe = [...new Set(box().teile.filter(t => ["gummi", "kunst", "natur", "jig"].includes(t.kat)).map(t => t.name))];
+  const koederListe = [...new Set(box().teile.filter(t => ["gummi", "kunst", "natur", "jig"].includes(t.kat) && teilVorhanden(t)).map(t => t.name))];
   return `<div class="h-karte h-live"><div class="live-kopf"><span class="live-punkt"></span><b>Live seit ${esc(l.von)}</b><span>${esc(l.ortName || "")}</span></div>
     <div class="live-zahlen"><div><b>${f.length}</b><span>Fänge</span></div><div><b>${n("biss")}</b><span>Bisse</span></div><div><b>${n("fehlbiss")}</b><span>Fehlbisse</span></div></div>
     ${(() => { const lim = limitStand(l.spotId, l.datum); return lim.length ? `<p class="live-limit">${lim.map(x => `<span class="${x.n >= x.max ? "voll" : ""}">${esc(x.label)} ${x.n}/${x.max}</span>`).join("")}</p>` : ""; })()}
     <button type="button" class="knopf prim live-fang" data-live-fang>Fang!</button>
-    <div class="live-knoepfe"><button type="button" class="knopf" data-live-ereignis="biss">Biss</button><button type="button" class="knopf" data-live-ereignis="fehlbiss">Fehlbiss</button></div>
+    <div class="live-knoepfe"><button type="button" class="knopf" data-live-ereignis="biss">Biss</button><button type="button" class="knopf" data-live-ereignis="fehlbiss">Fehlbiss</button><button type="button" class="knopf" data-live-abriss title="Köder abgerissen – Box wird angepasst">Abriss</button></div>
     <div class="live-felder">
       <label class="feld"><span>Setup</span><select data-live-setup><option value="">–</option>${setups.map(s => `<option value="${esc(s.key)}"${s.key === l.setup ? " selected" : ""}>${esc(s.titel + (s.zusatz ? " (" + s.zusatz + ")" : ""))}</option>`).join("")}</select></label>
       <label class="feld"><span>Köder gerade</span><input type="text" data-live-koeder value="${esc(l.koeder)}" list="live-koeder" placeholder="z. B. Gummifisch 10 cm" autocomplete="off"></label>
       <datalist id="live-koeder">${koederListe.map(k => `<option value="${esc(k)}">`).join("")}</datalist>
     </div>
-    ${l.ereignisse.length ? `<ul class="live-log">${l.ereignisse.slice(-5).reverse().map(e => `<li><span class="mono">${esc(e.z)}</span>${esc(({ biss: "Biss", fehlbiss: "Fehlbiss", koeder: "Köder: ", setup: "Setup: " })[e.typ] || "")}${e.typ === "koeder" || e.typ === "setup" ? esc(e.text) : ""}</li>`).join("")}</ul>` : ""}
+    ${l.ereignisse.length ? `<ul class="live-log">${l.ereignisse.slice(-5).reverse().map(e => `<li><span class="mono">${esc(e.z)}</span>${esc(({ biss: "Biss", fehlbiss: "Fehlbiss", abriss: "Abriss: ", koeder: "Köder: ", setup: "Setup: " })[e.typ] || "")}${["koeder", "setup", "abriss"].includes(e.typ) ? esc(e.text) : ""}</li>`).join("")}</ul>` : ""}
     <div class="akt-zeile"><button type="button" class="knopf" data-live-ende>Beenden &amp; als Ausflug speichern</button><button type="button" class="knopf leise" data-live-abbruch>Verwerfen</button></div>
   </div>`;
 }
@@ -104,6 +105,13 @@ export function liveKlick(e, { toast, neuZeichnen, wetterFuer }){
   }
   const er = t.closest("[data-live-ereignis]");
   if(er){ ereignis(er.dataset.liveEreignis); toast(er.dataset.liveEreignis === "biss" ? "Biss notiert" : "Fehlbiss notiert"); neuZeichnen(); return true; }
+  if(t.closest("[data-live-abriss]")){
+    const l = live(); if(!l) return true;
+    const v = teilVerbraucht(l.koeder);
+    ereignis("abriss", l.koeder || "Montage");
+    toast(v ? `Abriss notiert – ${v.name} jetzt ${v.stand === "leer" ? "leer" : "knapp"}` : l.koeder ? "Abriss notiert (Köder nicht in deiner Box)" : "Abriss notiert");
+    neuZeichnen(); return true;
+  }
   if(t.closest("[data-live-ende]")){
     const l = live(); if(!l) return true;
     liveBeenden(wetterFuer ? wetterFuer(l) : null).then(a => { toast("Als Ausflug gespeichert"); neuZeichnen(); });
