@@ -9,6 +9,7 @@
    ============================================================ */
 import { lese, schreibe, ladeFaengeDaten, speichereFaengeDaten, dkNotizen, setzeDkNotiz } from "./store.js";
 import { istFluss, linienVon, anfordern, UMKREIS_KM, vorabGeladen } from "./flusslauf.js";
+import { pegelHTML } from "./pegel.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -227,6 +228,7 @@ function steckbriefHTML(e){
     <h2>${esc(e.name)}</h2>
     <p class="det-sub">${esc(e.unter)}</p>
     ${istFluss(e) ? `<p class="hinweis-klein">${linienVon(e) ? `Die Linie zeigt den Verlauf aus OpenStreetMap im Umkreis von etwa ${UMKREIS_KM} km um den Zugangspunkt – nicht die erlaubte Angelstrecke. Die steht im Erlaubnisschein.` : "Verlauf wird geladen, sobald du online bist …"}</p>` : ""}
+    ${istFluss(e) ? pegelHTML(e) : ""}
     ${inhalt}
     <div class="akt-zeile">${heuteKnopf}${alsSpot}${e.ebene === "spots" ? `<button type="button" class="knopf" data-gw-bearb="${esc(r.id)}">Bearbeiten</button>` : ""}
       <a class="knopf leise" href="https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}" target="_blank" rel="noopener">Route ›</a></div>

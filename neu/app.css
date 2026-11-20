@@ -677,3 +677,21 @@ button.frei-rolle:hover{border-color:var(--muted)}
   .fangbuch .fang-kopf{grid-template-columns:repeat(4,minmax(0,200px))}
 }
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} .sk:active{transform:none} }
+
+/* ============================================================
+   Etappe 7: Pegel & Wassertemperatur im Steckbrief
+   ============================================================ */
+.gw-pegel{background:var(--water-soft);border-radius:12px;padding:12px 14px;display:grid;gap:6px}
+.gw-pegel h3{font-size:13px;font-weight:700;color:var(--water);text-transform:uppercase;letter-spacing:.05em}
+#gw-pegel{display:grid;gap:6px}
+.pg-zeile{display:grid;grid-template-columns:auto minmax(80px,1fr);gap:12px;align-items:center}
+.pg-zeile > div{display:grid}
+.pg-wert{font-family:var(--f-mono);font-size:20px;font-weight:700}
+.pg-zeile small,.pg-wt small{font-size:13.5px;color:var(--muted)}
+.pg-lage{font-size:12px;font-weight:700;border-radius:999px;padding:2px 8px;vertical-align:3px;background:var(--surface);color:var(--water)}
+.pg-lage.low,.pg-lage.high{background:var(--float);color:#fff}
+.pg-linie{width:100%;height:34px;overflow:visible}
+.pg-linie polyline{fill:none;stroke:var(--water);stroke-width:2;stroke-linejoin:round}
+.pg-rat{font-size:14.5px;margin:0}
+.pg-wt{border-top:1px solid var(--line);padding-top:8px;margin-top:2px}
+.pg-zeile ~ .pg-wt{margin-top:6px}
