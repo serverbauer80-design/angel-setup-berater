@@ -75,7 +75,7 @@ function koeder(fisch, wt, tr){
   }
 }
 
-export function koederKarteHTML(ort, lage, fische, kt){
+export function koederKarteHTML(ort, lage, fische, kt, tagWort = "heute"){
   if(!lage || !fische.length) return "";
   const iso = lage.iso;
   const tr = truebung(ort, iso, kt);
@@ -100,7 +100,7 @@ export function koederKarteHTML(ort, lage, fische, kt){
       </dl></li>`;
   }).filter(Boolean);
   if(!zeilen.length) return "";
-  return `<div class="h-karte h-koeder"><h3>Köder heute</h3>
+  return `<div class="h-karte h-koeder"><h3>Köder ${tagWort === "heute" ? "heute" : "für " + tagWort}</h3>
     <div class="kw-lage">
       <div class="chips" role="group" aria-label="Wassertrübung">${TRUEB.map(([v, l]) => `<button type="button" class="chip${tr.wert === v ? " on" : ""}" data-truebung="${v}" aria-pressed="${tr.wert === v}">${l}</button>`).join("")}</div>
       <span class="hinweis-klein">Wasser ${tr.quelle === "du" ? "laut dir" : tr.quelle === "Welle" ? "aus der Welle geschätzt" : "geschätzt – tippe, wie es aussieht"} · ${Math.round(wt.wert)} °C ${wt.quelle === "gemessen" ? "gemessen" : "(Richtwert für den Monat)"} · ${licht === "hell" ? "viel Licht" : "bedeckt"}</span>

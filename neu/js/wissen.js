@@ -8,6 +8,7 @@ import { schaubildSVG } from "./schaubild.js";
 import { lese } from "./store.js";
 import { knotenUebersichtHTML, knotenDetailHTML, knotenLinks, knotenIn } from "./knoten.js";
 import { bestimmenUebersichtHTML, bestimmenDetailHTML } from "./bestimmen.js";
+import { jahresplanHTML } from "./jahresplan.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const STATUS = { machbar: ["g", "Passt"], bedingt: ["y", "Geht mit Abstrichen"], wunsch: ["w", "Wunschliste"] };
@@ -34,6 +35,7 @@ export function wissenHTML(id){
   if(id === "knoten") return `<section class="wissen"><a class="zurueck sichtbar" href="#wissen">‹ Alle Angelarten</a><p class="eyebrow">Wissen</p><h2>Knoten</h2>
     <p class="lead-klein">Jeder Knoten, den die Montagen brauchen – Schritt für Schritt gezeichnet.</p>${knotenUebersichtHTML()}</section>`;
   if(id && id.startsWith("knoten-")) return knotenDetailHTML(id.slice(7), montagenMit);
+  if(id === "jahr") return jahresplanHTML();
   if(id === "bestimmen") return `<section class="wissen"><a class="zurueck sichtbar" href="#wissen">‹ Wissen</a><p class="eyebrow">Wissen</p><h2>Fische bestimmen</h2>
     <p class="lead-klein">Arten, die man leicht verwechselt – und bei denen es rechtlich darauf ankommt.</p>${bestimmenUebersichtHTML()}</section>`;
   if(id && id.startsWith("bestimmen-")) return bestimmenDetailHTML(id.slice(10));
@@ -61,6 +63,7 @@ function uebersichtHTML(){
         <div class="w-karten">${arten.map(a => `<a class="w-karte" href="#wissen/${a.id}">
           <b>${esc(a.name)}</b><span>${esc(a.kurz)}</span><small>${esc(a.fische)} · ${a.montagen.length} Montage${a.montagen.length > 1 ? "n" : ""}</small></a>`).join("")}</div></div>`;
     }).join("")}
+    <div class="w-gruppe"><h3>Planen <span>Was geht wann?</span></h3><div class="w-karten"><a class="w-karte" href="#wissen/jahr"><b>Jahresplaner</b><span>Monat für Monat: Top-Zeit, möglich oder Schonzeit – für die Fische, die du mit deinem Gerät beangeln kannst.</span><small>tagesgenau aus den Regeln für SH</small></a></div></div>
     ${bestimmenUebersichtHTML()}
     ${knotenUebersichtHTML()}
   </section>`;

@@ -1058,3 +1058,24 @@ body.druck-fm .fm-druck .fm-titel{display:block}
 /* ---------- Bremse ---------- */
 .bremse p{margin:0 0 6px}
 .bremse-schritte{margin:0 0 6px;padding-left:20px;display:grid;gap:4px;font-size:15px}
+
+/* ---------- Jahresplaner ---------- */
+.jp-tabelle{display:grid;gap:3px;overflow-x:auto}
+.jp-kopf,.jp-zeile{display:grid;grid-template-columns:minmax(96px,1.6fr) repeat(12,minmax(18px,1fr));gap:3px;align-items:center}
+.jp-kopf span{font-size:11px;color:var(--muted);text-align:center;font-family:var(--f-mono)}
+.jp-kopf span:first-child{text-align:left}
+.jp-kopf span.jetzt{color:var(--float);font-weight:700}
+.jp-fisch{display:grid;line-height:1.15;min-width:0}
+.jp-fisch b{font-size:14px;font-weight:600}
+.jp-fisch small{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jp-m{height:22px;border-radius:4px;background:var(--surface2);display:inline-block}
+.jp-m.top{background:var(--ok)}
+.jp-m.geht{background:color-mix(in srgb,var(--ok) 35%,var(--surface2))}
+.jp-m.teils,.jp-m.teils-top{background:repeating-linear-gradient(135deg,var(--bad-soft) 0 4px,color-mix(in srgb,var(--ok) 45%,var(--surface2)) 4px 8px)}
+.jp-m.schon,.jp-m.geschuetzt{background:var(--bad-soft)}
+.jp-m.jetzt{outline:2px solid var(--float);outline-offset:1px}
+.jp-legende{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13px;color:var(--muted)}
+.jp-legende .jp-m{width:18px;height:12px;margin-left:6px;vertical-align:middle}
+.jp-vorschau{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.jp-vorschau li{display:grid;gap:2px}
+.jp-vorschau span{font-size:14.5px;color:var(--muted)}

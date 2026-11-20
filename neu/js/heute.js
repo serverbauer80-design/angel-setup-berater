@@ -18,6 +18,7 @@ import { startPlan, startHTML } from "./startzeit.js";
 import { wohinHTML } from "./wohin.js";
 import { liveHTML } from "./live.js";
 import { koederKarteHTML } from "./koederwahl.js";
+import { saisonVorschauHTML } from "./jahresplan.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const KEY = "neu_heute_v1";
@@ -71,6 +72,7 @@ export function heuteHTML(){
     <div id="h-fische">${fischeHTML(ort)}</div>
     <div id="h-koeder">${koederKarte(ort)}</div>
     <div id="h-schonzeit">${hst.tag === 0 ? schonzeitHTML() : ""}</div>
+    <div id="h-vorschau">${hst.tag === 0 ? saisonVorschauHTML() : ""}</div>
     <div id="h-pflege">${pflegeKarteHTML()}</div>
     <div id="h-tasche">${tascheHTML(ort)}</div>
     <div id="berater-anker">${beraterHTML()}</div>
@@ -113,7 +115,7 @@ function koederKarte(ort){
   const iso = tagISO(hst.tag);
   const b = fischBewertung(ort, lage, +iso.slice(5, 7), iso, null);
   const top = b.passt.filter(x => x.punkte >= 1).slice(0, 3).map(x => ({ id: x.fisch.id, name: x.fisch.name, zeitTipp: x.zeitTipp }));
-  return koederKarteHTML(ort, lage, top, lage.kueste);
+  return koederKarteHTML(ort, lage, top, lage.kueste, ["heute", "morgen", "übermorgen"][hst.tag]);
 }
 
 /* Wann losfahren? – braucht Wetter (und an Tidegewässern die Gezeiten) */
