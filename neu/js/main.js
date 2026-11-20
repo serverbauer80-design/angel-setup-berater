@@ -34,6 +34,7 @@ import { initScheine, scheineKlick, scheineNachSync, beiScheinAenderung } from "
 import { einkaufHTML } from "./einkauf.js";
 import { kleinteileHTML, kleinteileKlick, kleinteileEingabe, kleinteileAenderung } from "./kleinteile.js";
 import { ausgabenAenderung } from "./ausgaben.js";
+import { teilenSeiteHTML, teilenKlick, planTeilen } from "./teilen.js";
 import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen, tragkraftEintragen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
@@ -91,7 +92,8 @@ function gruppeZu(key){ return GRUPPEN.find(g => g.glieder.some(s => s.key === k
 function leseHash(){
   const h = decodeURIComponent(location.hash.replace(/^#/, ""));
   const [b, s] = h.split("/");
-  st.bereich = BEREICHE.some(x => x.id === b) ? b : "rutenwand";
+  st.teilen = b === "teilen" ? (s || "") : null;
+  st.bereich = st.teilen != null ? "heute" : BEREICHE.some(x => x.id === b) ? b : "rutenwand";
   st.protokoll = st.bereich === "heute" && s === "pruefprotokoll";
   st.wissen = st.bereich === "wissen" ? (s || null) : null;
   const g = s ? gruppeZu(s) : null;
@@ -418,6 +420,7 @@ function render(){
   renderSync();
   const main = $("#inhalt");
   document.body.dataset.bereich = st.bereich;
+  if(st.teilen != null){ document.body.classList.remove("hat-detail"); main.innerHTML = teilenSeiteHTML(st.teilen); return; }
   if(st.bereich !== "rutenwand"){
     document.body.classList.remove("hat-detail");
     main.innerHTML = st.bereich === "heute"
@@ -468,6 +471,8 @@ function renderListe(){
 document.addEventListener("click", e => {
   if(liveKlick(e, { toast, neuZeichnen: render, wetterFuer: l => { const c = (lese("neu_wetter_cache_v1", {}) || {})[l.ortId]; return c ? { ...c.data, _stand: c.t } : null; } })) return;
   if(fangbuchKlick(e)) return;
+  if(teilenKlick(e, toast)) return;
+  if(e.target.closest("[data-plan-teilen]")){ planTeilen(null, toast); return; }
   if(st.bereich === "rutenwand" && kleinteileKlick(e, toast)){ renderListe(); return; }
   if(st.bereich === "heute" && e.target.closest("[data-kt-stand],[data-kt-check-fertig]") && kleinteileKlick(e, toast)){ render(); return; }
   const zb = e.target.closest("[data-zu-box]");

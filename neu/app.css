@@ -1169,3 +1169,7 @@ body.druck-fm .fm-druck .fm-titel{display:block}
 .mu-dims details{border-top:1px solid var(--line);padding:6px 0}
 .mu-dims summary{font-weight:600;cursor:pointer}
 .h-muster{margin:8px 0 0;padding:8px 12px;border-radius:12px;background:var(--ok-soft);font-size:15px}
+
+/* ---------- Teilen ---------- */
+.tl .reihen{margin:8px 0}
+.h-live-start [data-plan-teilen]{justify-self:start}

@@ -14,6 +14,7 @@ import { alleFaenge } from "./fangbuch.js";
 import { scheineHTML, scheineSpotHTML } from "./scheine.js";
 import { kachelnAusschnitt } from "./offline.js";
 import { FUEHRER, GRUNDKOSTEN, STAND as FUEHRER_STAND } from "../daten/fuehrer.js";
+import { spotTeilen, planTeilen } from "./teilen.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -341,7 +342,8 @@ function steckbriefHTML(e){
     ${istFluss(e) ? pegelHTML(e) : ""}
     ${inhalt}
     <div class="akt-zeile">${heuteKnopf}${alsSpot}${e.ebene === "spots" ? `<button type="button" class="knopf" data-gw-bearb="${esc(r.id)}">Bearbeiten</button>` : ""}
-      <a class="knopf leise" href="https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}" target="_blank" rel="noopener">Route ›</a></div>
+      <a class="knopf leise" href="https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}" target="_blank" rel="noopener">Route ›</a>
+      ${e.ebene !== "faenge" ? `<button type="button" class="knopf leise" data-gw-teilen="${esc(e.id)}">Teilen</button><button type="button" class="knopf leise" data-gw-plan="${esc(e.id)}">Angeltag hier planen</button>` : ""}</div>
   </article>`;
 }
 
@@ -454,6 +456,10 @@ export function karteKlick(e, toast, geheZuHeute){
   if(h){ geheZuHeute("spot_" + h.dataset.gwHeute); return true; }
   const b = t.closest("[data-gw-bearb]");
   if(b){ const s = ladeFaengeDaten().spots.find(x => x.id === b.dataset.gwBearb); if(s) spotForm(s, s.lat, s.lng, m => { toast(m); neuZeichnenFn(); }); return true; }
+  const gt = t.closest("[data-gw-teilen]");
+  if(gt){ const e2 = eintraege().find(x => x.id === gt.dataset.gwTeilen); if(e2) spotTeilen(e2, toast); return true; }
+  const gp = t.closest("[data-gw-plan]");
+  if(gp){ const e2 = eintraege().find(x => x.id === gp.dataset.gwPlan); if(e2) planTeilen({ ort: { n: e2.name, la: +e2.lat.toFixed(5), lo: +e2.lng.toFixed(5) } }, toast); return true; }
   const as = t.closest("[data-gw-alsspot]");
   if(as){
     const e2 = eintraege().find(x => x.id === as.dataset.gwAlsspot);

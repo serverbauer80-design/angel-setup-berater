@@ -71,7 +71,8 @@ export function liveBeenden(wetterRoh){
 export function liveHTML(ortId){
   const l = live();
   if(!l) return checkHTML() + `<div class="h-live-start"><button type="button" class="knopf prim" data-live-start="${esc(ortId || "")}">Am Wasser? Live-Modus starten</button>
-    <span class="hinweis-klein">Fang, Biss und Köderwechsel mit einem Tipp festhalten.</span></div>`;
+    <span class="hinweis-klein">Fang, Biss und Köderwechsel mit einem Tipp festhalten.</span>
+    <button type="button" class="knopf leise klein" data-plan-teilen>Angeltag mit Freunden planen ›</button></div>`;
   const f = faengeDerSitzung(l);
   const n = typ => l.ereignisse.filter(e => e.typ === typ).length;
   const setups = alleSetups().filter(s => s.kategorie !== "backup");

@@ -12,6 +12,7 @@ import { koederBilanzHTML } from "./koederbilanz.js";
 import { zieleHTML, zieleKlick } from "./ziele.js";
 import { ausgabenHTML, ausgabenKlick } from "./ausgaben.js";
 import { musterHTML } from "./muster.js";
+import { fangTeilen } from "./teilen.js";
 import { ausfluege, ausfluegeGeladen, ladeAusfluege, speichereAusflug, loescheAusflug } from "./tagebuch.js";
 import { rechtFuer, ladeWetter, tagesLage, windRichtung, orteListe } from "./lage.js";
 import { blatt, feld, auswahl } from "./edit.js";
@@ -186,6 +187,7 @@ export function fangBearbeiten(id, vorgabe = {}){
   const andere = c && !fid ? c.fischName : "";
   let foto = c ? c.foto || null : null;
   const fischOpt = [["", "– Fischart wählen –"], ...FISCHE.map(f => [f.id, f.name]), ["_andere", "Andere Art …"]];
+  setTimeout(() => { const tb = document.querySelector("#blatt [data-fang-teilen]"); if(tb && c) tb.addEventListener("click", () => fangTeilen(c, toastFn)); }, 0);
   const dlg = blatt(c ? "Fang bearbeiten" : "Fang eintragen", `
     <div class="feld-raster">
       ${auswahl("fisch", "Fischart", fischOpt, andere ? "_andere" : fid, { breit: true })}
@@ -207,7 +209,7 @@ export function fangBearbeiten(id, vorgabe = {}){
       <div class="breit" id="fb-foto-vorschau">${foto ? `<img class="fb-foto" src="${foto}" alt="Foto vom Fang">` : ""}</div>
     </div>
     <datalist id="fb-koeder-liste">${[...new Set(alleFaenge().map(x => x.koeder).filter(Boolean))].slice(0, 40).map(k => `<option value="${esc(k)}">`).join("")}</datalist>
-    <div class="blatt-akt"><button type="submit" class="knopf prim" value="speichern">Speichern</button></div>
+    <div class="blatt-akt"><button type="submit" class="knopf prim" value="speichern">Speichern</button>${c ? `<button type="button" class="knopf" data-fang-teilen>Teilen</button>` : ""}</div>
     ${c ? `<div class="gefahr"><button type="submit" class="knopf warn" value="loeschen" formnovalidate>Fang löschen</button></div>` : ""}`,
     (fd, knopf) => {
       if(knopf && knopf.value === "loeschen"){
