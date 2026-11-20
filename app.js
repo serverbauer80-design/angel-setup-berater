@@ -4226,7 +4226,8 @@ function ulFromBase64(b64){
 async function ulCloudLadeAlle(uid){
   const snap = await ulFirestoreCol(uid).orderBy("created").get();
   // dataB64 beim Listing weglassen – nur Metadaten zurückgeben
-  return snap.docs.map(d => {
+  /* Erlaubnisscheine der neuen App liegen in derselben Sammlung (typ "schein") */
+  return snap.docs.filter(d => d.data().typ !== "schein").map(d => {
     const { dataB64, ...meta } = d.data();
     return { id: d.id, ...meta, inCloud: true };
   });

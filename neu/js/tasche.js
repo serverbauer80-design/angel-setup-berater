@@ -7,6 +7,7 @@
    ============================================================ */
 import { lese, schreibe, beiAenderung, pushDebounced, tascheSetzen } from "./store.js";
 import { angelartFuer } from "./angelarten.js";
+import { scheinInfo } from "./scheine.js";
 
 export const TASCHE_KEY = "neu_tasche_v1";
 export function tasche(){ return lese(TASCHE_KEY, null) || { setups: [], abgehakt: {}, geaendert: "" }; }
@@ -90,7 +91,7 @@ export function packliste(ort, lage){
   /* 3) Pflicht & Fisch versorgen */
   gruppen.push({ titel: "Pflicht & Fisch versorgen", punkte: [
     { text: "Fischereischein + Personalausweis" },
-    { text: ort && /Dänemark/.test(ort.name) ? "Dänischer Angelschein (Fisketegn)" : "Erlaubnisschein / Tageskarte fürs Gewässer" },
+    { text: ort && /Dänemark/.test(ort.name) ? "Dänischer Angelschein (Fisketegn)" : "Erlaubnisschein / Tageskarte fürs Gewässer", info: scheinInfo(ort) },
     { text: "Kescher" }, { text: "Abhakmatte" }, { text: "Lösezange / Hakenlöser" },
     { text: "Maßband", info: mindestmasse(zielfische) }, { text: "Fischtöter + Messer", info: "nur wenn du entnehmen willst" },
     { text: "Eimer / Kühltasche für den Fang" }

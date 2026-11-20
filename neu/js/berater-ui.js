@@ -59,7 +59,7 @@ export function fischeHTML(key, catches){
       return `<details class="ansatz">
         <summary><span class="amp ${AMPEL[x.stufe]}" title="${x.stufe ? "geht" : "passt"}"></span>
           <span class="ansatz-txt"><b>${esc(x.fisch.name)}</b><span>${esc(x.ansatz.methode)}</span><small>${esc(gwTxt)}</small></span>
-          <span class="ansatz-rechts">${rang}${zahl ? `<span class="pill fang">${zahl} Fang${zahl > 1 ? "e" : ""}</span>` : ""}</span></summary>
+          <span class="ansatz-rechts">${rang}${zahl ? `<span class="pill fang">${zahl > 1 ? zahl + " Fänge" : "1 Fang"}</span>` : ""}</span></summary>
         <div class="ansatz-innen">
           ${grundHTML(x.plus, x.gruende, x.hinweise)}
           ${besser}

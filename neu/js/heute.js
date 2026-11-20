@@ -10,6 +10,7 @@ import { tasche, packliste } from "./tasche.js";
 import { beraterHTML, bst, merkeBerater } from "./berater-ui.js";
 import { erfahrung, erfahrungHTML, schonzeitHTML } from "./erfahrung.js";
 import { ausfluegeGeladen, ladeAusfluege } from "./tagebuch.js";
+import { scheinHinweisHTML } from "./scheine.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const KEY = "neu_heute_v1";
@@ -46,6 +47,7 @@ export function heuteHTML(){
         <div class="chips h-tage" role="group" aria-label="Tag">${TAGE.map((t, i) => `<button type="button" class="chip${hst.tag === i ? " on" : ""}" data-h-tag="${i}" aria-pressed="${hst.tag === i}">${t}</button>`).join("")}</div>
       </div>
     </div>
+    ${scheinHinweisHTML()}
     <div id="h-lage" class="h-lage">${lageHTML(ort)}</div>
     <div id="h-gezeiten"></div>
     <div id="h-erfahrung">${erfahrungHTML(erfahrung(ort, aktuelleLage(), iso), ort.name)}</div>

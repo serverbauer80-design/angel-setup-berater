@@ -721,3 +721,52 @@ button.frei-rolle:hover{border-color:var(--muted)}
 .h-vorschlag-knoepfe{display:flex;flex-wrap:wrap;gap:8px}
 .h-vorschlag-knoepfe .knopf{min-height:44px;color:var(--water);text-align:left}
 .h-vorschlag-knoepfe .knopf small{color:var(--muted);font-weight:400;margin-left:4px}
+
+/* ============================================================
+   Etappe 10: Fänge auf der Karte + Erlaubnisscheine
+   ============================================================ */
+.gw-fang-pin{background:none;border:none}
+.gw-fang-pin span{display:grid;place-items:center;width:28px;height:28px;border-radius:50% 50% 50% 4px;transform:rotate(-45deg);background:var(--warn);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.gw-fang-pin span i{transform:rotate(45deg);font:700 12.5px/1 var(--f-mono, monospace);font-style:normal;color:#1a1200}
+.gw-fang-pin.sel span{border-color:var(--ink);transform:rotate(-45deg) scale(1.15)}
+.gw-fang-arten{display:flex;flex-wrap:wrap;gap:6px}
+.gw-fang-arten span{background:var(--warn-soft);border-radius:999px;padding:4px 10px;font-size:14px}
+.gw-fang-arten small{color:var(--muted)}
+.gw-fang-liste{margin:0;padding-left:18px;font-size:13.5px;color:var(--muted)}
+.sch-bereich{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:8px;margin-top:12px}
+.sch-kopf{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sch-kopf h3{font-size:17px}
+.sch-kopf h3 small{font-size:13px;color:var(--muted);font-weight:400}
+.sch-liste{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.sch-zeile{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--surface2);border:1px solid transparent;border-radius:10px;padding:8px 10px;font:inherit;color:var(--ink);cursor:pointer;min-height:56px}
+.sch-zeile:hover{border-color:var(--line)}
+.sch-mini{width:44px;height:32px;border-radius:5px;object-fit:cover;flex:none;display:grid;place-items:center;background:var(--water-soft);font-size:16px}
+.sch-txt{display:grid;min-width:0;flex:1}
+.sch-txt b{font-size:15px}
+.sch-txt small{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sch-status{font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px;flex:none;max-width:44%;text-align:right;background:var(--ok-soft);color:var(--ok)}
+.sch-status.bald{background:var(--warn-soft);color:var(--warn)}
+.sch-status.ab{background:var(--bad-soft);color:var(--bad)}
+.sch-status.spaeter{background:var(--surface);color:var(--muted)}
+.sch-spot{display:grid;gap:6px;margin:0}
+.sch-spot-zeile{display:flex;justify-content:space-between;gap:10px;align-items:baseline;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--ok-soft);border:none;border-left:4px solid var(--ok);border-radius:10px;padding:8px 12px;cursor:pointer}
+.sch-spot-zeile span{font-size:13px;color:var(--muted)}
+.sch-spot-zeile.bald{background:var(--warn-soft);border-left-color:var(--warn)}
+.sch-spot-zeile.ab{background:var(--bad-soft);border-left-color:var(--bad)}
+.sch-spots{border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:grid;gap:6px;margin:0}
+.sch-spots legend{font-size:13.5px;font-weight:600;padding:0 4px}
+.sch-spot-filter{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
+.sch-spot-wahl{max-height:190px;overflow:auto;display:grid;gap:2px}
+.sch-spot-wahl label{display:flex;gap:8px;align-items:center;padding:6px 4px;font-size:14.5px;cursor:pointer}
+.sch-spot-wahl input{width:20px;height:20px;flex:none}
+.sch-spot-wahl label[hidden]{display:none}
+.sch-vorschau{display:flex;flex-wrap:wrap;gap:10px}
+.sch-vorschau figure{margin:0;display:grid;gap:4px;justify-items:start}
+.sch-foto{max-width:220px;max-height:160px;border-radius:8px;cursor:zoom-in;display:block}
+.sch-gross{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.97);display:grid;place-content:center;justify-items:center;gap:10px;padding:12px;cursor:zoom-out}
+.sch-gross img{max-width:100%;max-height:calc(100% - 40px);object-fit:contain}
+.sch-gross span{color:#fff;font-size:13px;opacity:.8}
+.sch-hinweis ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.sch-hinweis li button{display:flex;justify-content:space-between;gap:10px;width:100%;text-align:left;font:inherit;color:var(--ink);border:none;border-radius:10px;padding:10px 12px;cursor:pointer;background:var(--warn-soft);border-left:4px solid var(--warn)}
+.sch-hinweis li.ab button{background:var(--bad-soft);border-left-color:var(--bad)}
+.sch-hinweis li span{font-size:13.5px;text-align:right}

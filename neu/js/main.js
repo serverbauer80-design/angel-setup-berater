@@ -22,6 +22,7 @@ import { umschalten, abhaken, leeren, nurHakenWeg, inTasche } from "./tasche.js"
 import { gewaesserHTML, karteEinhaengen, initKarte, karteKlick, karteEingabe, karteAenderung } from "./karte.js";
 import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuSetup } from "./fangbuch.js";
 import { beiAusflugAenderung, ausfluegeNachSync } from "./tagebuch.js";
+import { initScheine, scheineKlick, scheineNachSync, beiScheinAenderung } from "./scheine.js";
 import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen, tragkraftEintragen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
@@ -446,6 +447,7 @@ function renderListe(){
 /* ---------- Ereignisse ---------- */
 document.addEventListener("click", e => {
   if(fangbuchKlick(e)) return;
+  if((st.bereich === "gewaesser" || st.bereich === "heute") && scheineKlick(e)) return;
   if(st.bereich === "gewaesser" && karteKlick(e, toast, ortId => { hst.ort = ortId; merkeHeute(); geheZu("heute"); toast("Ort für Heute übernommen"); })) return;
   const f = e.target.closest("[data-filter]");
   if(f){ st.filter = f.dataset.filter; schreibeText(KEYS.filter, st.filter); renderListe(); return; }
@@ -596,7 +598,9 @@ $("#sync-dialog").addEventListener("click", async e => {
 initEdit({ toast, geheZu });
 initKarte(() => render());
 initFangbuch({ toast, render: () => render() });
-beiAenderung(() => { ausfluegeNachSync(); render(); });
+initScheine({ toast });
+beiAenderung(() => { ausfluegeNachSync(); scheineNachSync(); render(); });
+beiScheinAenderung(() => { if(["gewaesser", "heute"].includes(st.bereich)) render(); });
 beiAusflugAenderung(() => { if(["fangbuch", "rutenwand", "heute"].includes(st.bereich)) render(); });
 leseHash();
 render();

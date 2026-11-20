@@ -10,18 +10,22 @@
 import { lese, schreibe, ladeFaengeDaten, speichereFaengeDaten, dkNotizen, setzeDkNotiz } from "./store.js";
 import { istFluss, linienVon, anfordern, UMKREIS_KM, vorabGeladen } from "./flusslauf.js";
 import { pegelHTML } from "./pegel.js";
+import { alleFaenge } from "./fangbuch.js";
+import { scheineHTML, scheineSpotHTML } from "./scheine.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 const KEY = "neu_karte_v1";
 export const kst = Object.assign({ ebenen: { spots: true, lav: true, dk: false, kueste: false, osm: false }, auswahl: null, suche: "", zentrum: null, zoom: null }, lese(KEY, {}) || {});
 kst.auswahl = null;
+if(kst.ebenen.faenge === undefined) kst.ebenen.faenge = true;
 function merke(){ schreibe(KEY, { ebenen: kst.ebenen, zentrum: kst.zentrum, zoom: kst.zoom }); }
 
 const TYP = { see: "See", fluss: "Fluss", kanal: "Kanal", kueste: "Küste / Meer", forellensee: "Forellensee / Put & Take", teich: "Teich" };
 const REGION = { sh: "Schleswig-Holstein", hh: "Hamburg", ni: "Niedersachsen", mv: "Mecklenburg-Vorpommern", dk: "Dänemark" };
 const EBENEN = [
   { id: "spots",  label: "Deine Spots",       farbe: "--float" },
+  { id: "faenge", label: "Meine Fänge",       farbe: "--warn" },
   { id: "lav",    label: "LAV-Gewässer",      farbe: "--water" },
   { id: "dk",     label: "Dänemark P&T",      farbe: "--ok" },
   { id: "kueste", label: "Freie Küste SH",    farbe: "--bad" },
@@ -52,6 +56,18 @@ function eintraege(){
   const out = [];
   if(kst.ebenen.spots) f.spots.filter(s => typeof s.lat === "number").forEach(s => out.push({ id: "spot:" + s.id, ebene: "spots", name: s.name, lat: s.lat, lng: s.lng, roh: s,
     unter: [TYP[s.type] || s.type, REGION[s.region] || ""].filter(Boolean).join(" · "), eigen: !!(s.visited || s.rating || f.catches.some(c => c.spotId === s.id)) }));
+  if(kst.ebenen.faenge){
+    /* je Spot mit Fängen ein Eintrag – Fänge ohne Spot haben keinen Ort */
+    const proSpot = {};
+    alleFaenge().forEach(c => { if(c.spotId) (proSpot[c.spotId] = proSpot[c.spotId] || []).push(c); });
+    Object.entries(proSpot).forEach(([sid, fa]) => {
+      const s = f.spots.find(x => x.id === sid);
+      if(!s || typeof s.lat !== "number") return;
+      fa.sort((a, b) => String(b.datum).localeCompare(String(a.datum)));
+      out.push({ id: "fang:" + sid, ebene: "faenge", name: s.name, lat: s.lat, lng: s.lng, roh: { spot: s, faenge: fa },
+        unter: `${fa.length > 1 ? fa.length + " Fänge" : "1 Fang"} · zuletzt ${datumKurz(fa[0].datum)}` });
+    });
+  }
   if(kst.ebenen.lav && typeof LAV_GEWAESSER !== "undefined") LAV_GEWAESSER.forEach(g => out.push({ id: "lav:" + g.id, ebene: "lav", name: g.name, lat: g.lat, lng: g.lng, roh: g,
     unter: `${g.typ} · LAV${g.kostenlosLav ? " · für Mitglieder kostenlos" : ""}` }));
   if(kst.ebenen.dk && typeof DK_PUTTAKE !== "undefined") DK_PUTTAKE.forEach(d => out.push({ id: "dk:" + d.nr, ebene: "dk", name: d.name, lat: d.lat, lng: d.lng, roh: d,
@@ -60,6 +76,8 @@ function eintraege(){
   if(kst.ebenen.osm) (lese("osm_spots_cache_v1", []) || []).forEach((o, i) => { if(typeof o.lat === "number") out.push({ id: "osm:" + (o.id || i), ebene: "osm", name: o.name || "Angelstelle (OSM)", lat: o.lat, lng: o.lng, roh: o, unter: "OpenStreetMap" }); });
   return out;
 }
+
+const datumKurz = iso => iso ? new Date(iso + "T12:00:00").toLocaleDateString("de-DE", { day: "numeric", month: "short", year: "numeric" }) : "";
 
 /* ---------- Karte ---------- */
 let karte = null, kartenEl = null, schicht = null, kuesteSchicht = null, setzModus = null, setzMarker = null;
@@ -89,9 +107,22 @@ function zeichneMarker(){
   if(kst.ebenen.kueste){
     kuesteSchicht = L.layerGroup(KUESTE_ZONEN.map(z => L.polygon(z.punkte, { color: farbe("--bad"), weight: 1.5, fillOpacity: 0.12, interactive: false }))).addTo(karte);
   }
-  const FARBE = { spots: farbe("--float"), lav: farbe("--water"), dk: farbe("--ok"), kueste: farbe("--bad"), osm: farbe("--muted") };
+  const FARBE = { spots: farbe("--float"), faenge: farbe("--warn"), lav: farbe("--water"), dk: farbe("--ok"), kueste: farbe("--bad"), osm: farbe("--muted") };
+  const pinPlatz = {};
   eintraege().forEach(e => {
     const gewaehlt = kst.auswahl === e.id;
+    if(e.ebene === "faenge"){
+      /* Spots mit gleicher Position: Fähnchen nebeneinander statt übereinander */
+      const pk = e.lat.toFixed(4) + "," + e.lng.toFixed(4); const versatz = (pinPlatz[pk] = (pinPlatz[pk] || 0) + 1) - 1;
+      /* Fänge als Zahl-Fähnchen über dem Spot, damit der Spot-Punkt sichtbar bleibt */
+      const n = e.roh.faenge.length;
+      const m = L.marker([e.lat, e.lng], { icon: L.divIcon({ className: "gw-fang-pin" + (gewaehlt ? " sel" : ""), html: `<span><i>${n > 99 ? "99+" : n}</i></span>`, iconSize: [28, 34], iconAnchor: [14 - versatz * 30, 38] }),
+        title: e.name, keyboard: false, zIndexOffset: 500 });
+      m.bindTooltip(`${e.name}: ${e.unter}`, { direction: "top", offset: [0, -36] });
+      m.on("click", ev => { L.DomEvent.stopPropagation(ev); waehle(e.id, false); });
+      m.addTo(schicht);
+      return;
+    }
     /* Flüsse und Kanäle: Verlauf als Linie, der Punkt bleibt als Zugang klein darauf */
     const linien = istFluss(e) ? linienVon(e) : null;
     if(linien){
@@ -152,7 +183,7 @@ export function gewaesserHTML(){
   if(typeof L === "undefined") return `<section class="gewaesser"><p class="leer">Die Karte konnte nicht geladen werden (keine Verbindung?). Die Liste der Gewässer funktioniert trotzdem, sobald du wieder online bist.</p></section>`;
   const alle = eintraege();
   const q = kst.suche.toLowerCase();
-  const liste = q ? alle.filter(e => (e.name + " " + e.unter + " " + (e.roh.notes || "") + " " + (e.roh.adr || "")).toLowerCase().includes(q)) : alle.filter(e => e.ebene !== "osm");
+  const liste = q ? alle.filter(e => (e.name + " " + e.unter + " " + (e.roh.notes || "") + " " + (e.roh.adr || "")).toLowerCase().includes(q)) : alle.filter(e => e.ebene !== "osm" && e.ebene !== "faenge");
   const sortiert = liste.sort((a, b) => (b.eigen ? 1 : 0) - (a.eigen ? 1 : 0) || a.name.localeCompare(b.name, "de")).slice(0, 60);
   const aktiv = alle.find(e => e.id === kst.auswahl);
   return `<section class="gewaesser">
@@ -167,6 +198,7 @@ export function gewaesserHTML(){
       <div class="gw-links">
         <div id="gw-karten-platz" class="gw-karten-platz"></div>
         ${setzModus ? `<p class="gw-setzen">Tippe auf die Karte, um die Position zu setzen. <button type="button" class="knopf klein leise" data-gw-setzen-ab>Abbrechen</button></p>` : ""}
+        ${scheineHTML()}
       </div>
       <div class="gw-rechts">
         <div id="gw-steckbrief">${aktiv ? steckbriefHTML(aktiv) : `<p class="hinweis-klein">Tippe auf einen Punkt in der Karte oder ein Gewässer in der Liste.</p>`}</div>
@@ -185,10 +217,28 @@ function faengeAm(spotId){
   return f.catches.filter(c => c.spotId === spotId).sort((a, b) => String(b.datum).localeCompare(String(a.datum)));
 }
 
+/* Steckbrief der Ebene „Meine Fänge“: was, wann, womit an diesem Spot */
+function fangUebersicht(fa, spot){
+  const name = id => ((FISCHE.find(f => f.id === id) || {}).name || id || "").split(" (")[0];
+  const arten = {};
+  fa.forEach(c => { const k = c.fischId || c.fischName; const a = arten[k] = arten[k] || { name: c.fischId ? name(c.fischId) : c.fischName, n: 0, max: 0 }; a.n++; if(+c.laenge > a.max) a.max = +c.laenge; });
+  const zaehle = arr => { const z = {}; arr.filter(Boolean).forEach(x => z[x] = (z[x] || 0) + 1); return Object.entries(z).sort((a, b) => b[1] - a[1]); };
+  const tz = zaehle(fa.map(c => c.tz))[0];
+  const TZ = { daemmerung_morgen: "Morgendämmerung", vormittag: "Vormittag", mittag: "Mittag", nachmittag: "Nachmittag", daemmerung_abend: "Abenddämmerung", nacht: "Nacht" };
+  const monate = zaehle(fa.map(c => c.datum && new Date(c.datum + "T12:00:00").toLocaleDateString("de-DE", { month: "long" })));
+  return `<div class="gw-fang-arten">${Object.values(arten).sort((a, b) => b.n - a.n).map(a => `<span><b>${a.n}×</b> ${esc(a.name)}${a.max ? ` <small>bis ${a.max} cm</small>` : ""}</span>`).join("")}</div>
+    <dl class="reihen">
+      ${tz ? `<div class="reihe"><dt>Beste Zeit</dt><dd>${esc(TZ[tz[0]] || tz[0])} (${tz[1]}×)</dd></div>` : ""}
+      ${monate.length ? `<div class="reihe"><dt>Monate</dt><dd>${monate.slice(0, 3).map(([m, n]) => `${esc(m)} ${n}×`).join(" · ")}</dd></div>` : ""}
+    </dl>
+    <ul class="gw-fang-liste">${fa.slice(0, 6).map(c => `<li>${esc(datumKurz(c.datum))}${c.uhrzeit ? " · " + esc(c.uhrzeit) : ""} · ${esc(c.fischId ? name(c.fischId) : c.fischName)}${c.laenge ? " · " + esc(c.laenge) + " cm" : ""}${c.koeder ? " · " + esc(c.koeder) : ""}</li>`).join("")}</ul>
+    <p><button type="button" class="knopf leise klein" data-gw-wahl="spot:${esc(spot.id)}">Spot-Steckbrief öffnen ›</button></p>`;
+}
+
 function steckbriefHTML(e){
   const r = e.roh;
-  const heuteKnopf = e.ebene === "spots" ? `<button type="button" class="knopf prim" data-gw-heute="${esc(r.id)}">Heute hier angeln</button>` : "";
-  const alsSpot = e.ebene !== "spots" && e.ebene !== "kueste" ? `<button type="button" class="knopf" data-gw-alsspot="${esc(e.id)}">Als Spot speichern</button>` : "";
+  const heuteKnopf = e.ebene === "spots" || e.ebene === "faenge" ? `<button type="button" class="knopf prim" data-gw-heute="${esc(e.ebene === "faenge" ? r.spot.id : r.id)}">Heute hier angeln</button>` : "";
+  const alsSpot = !["spots", "kueste", "faenge"].includes(e.ebene) ? `<button type="button" class="knopf" data-gw-alsspot="${esc(e.id)}">Als Spot speichern</button>` : "";
   let inhalt = "";
   if(e.ebene === "spots"){
     const fa = faengeAm(r.id);
@@ -198,8 +248,11 @@ function steckbriefHTML(e){
       ${r.rating ? `<div class="reihe"><dt>Wertung</dt><dd>${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</dd></div>` : ""}
       ${r.notes ? `<div class="reihe"><dt>Notiz</dt><dd>${esc(r.notes)}</dd></div>` : ""}
     </dl>
-    <div class="gw-faenge">${fa.length ? `<b>${fa.length} Fang${fa.length > 1 ? "e" : ""} hier</b> · zuletzt ${esc(fa[0].datum)}${groesster ? ` · größter: ${esc(groesster.fischName)} ${esc(groesster.laenge)} cm` : ""}
+    ${scheineSpotHTML(r.id)}
+    <div class="gw-faenge">${fa.length ? `<b>${fa.length > 1 ? fa.length + " Fänge" : "1 Fang"} hier</b> · zuletzt ${esc(fa[0].datum)}${groesster ? ` · größter: ${esc(groesster.fischName)} ${esc(groesster.laenge)} cm` : ""}
       <ul>${fa.slice(0, 5).map(c => `<li>${esc(c.datum)} · ${esc(c.fischName || c.fischId)}${c.laenge ? " · " + esc(c.laenge) + " cm" : ""}${c.methode ? " · " + esc(c.methode.split(" – ")[0]) : ""}</li>`).join("")}</ul>` : `<span class="hinweis-klein">Noch keine Fänge hier eingetragen.</span>`}</div>`;
+  } else if(e.ebene === "faenge"){
+    inhalt = fangUebersicht(e.roh.faenge, e.roh.spot);
   } else if(e.ebene === "lav"){
     inhalt = `<dl class="reihen">${(r.gruppen || []).map(g => `<div class="reihe"><dt>${esc(g.name)}</dt><dd>${esc(g.preise)}</dd></div>`).join("")}</dl>
       ${r.url ? `<p><a href="${esc(r.url)}" target="_blank" rel="noopener">Gewässerseite beim LAV ›</a></p>` : ""}
