@@ -23,6 +23,7 @@ import { gewaesserHTML, karteEinhaengen, initKarte, karteKlick, karteEingabe, ka
 import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuSetup } from "./fangbuch.js";
 import { beiAusflugAenderung, ausfluegeNachSync } from "./tagebuch.js";
 import { initScheine, scheineKlick, scheineNachSync, beiScheinAenderung } from "./scheine.js";
+import { einkaufHTML } from "./einkauf.js";
 import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen, tragkraftEintragen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
@@ -180,6 +181,7 @@ function listeHTML(){
       <p class="gruppe-hinweis">Liegen bereit, auf keiner Rute montiert. Antippen zum Bearbeiten.</p>
       ${frei.map(r => `<button type="button" class="frei-rolle" data-rolle-bearb="${r.id}"><b>${esc(r.name)}${r.groesse ? ` <small>${r.groesse}${r.freilauf ? " · Freilauf" : ""}</small>` : ""}</b><span>${esc(r.schnur || "keine Schnur eingetragen")}</span></button>`).join("")}</section>`;
   }
+  if(st.filter === "alle" && !st.suche) html += einkaufHTML();
   const arch = AUSR.archiv();
   const nArch = arch.ruten.length + arch.rollen.length;
   if(nArch && st.filter === "alle" && !st.suche){

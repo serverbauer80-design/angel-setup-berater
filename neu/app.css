@@ -770,3 +770,22 @@ button.frei-rolle:hover{border-color:var(--muted)}
 .sch-hinweis li button{display:flex;justify-content:space-between;gap:10px;width:100%;text-align:left;font:inherit;color:var(--ink);border:none;border-radius:10px;padding:10px 12px;cursor:pointer;background:var(--warn-soft);border-left:4px solid var(--warn)}
 .sch-hinweis li.ab button{background:var(--bad-soft);border-left-color:var(--bad)}
 .sch-hinweis li span{font-size:13.5px;text-align:right}
+
+/* ============================================================
+   Etappe 11: Einkaufsplanung (Rutenwand)
+   ============================================================ */
+.einkauf{margin-top:28px;display:grid;gap:8px}
+.ek-liste{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ek-karte{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:8px}
+.ek-karte.top{border-color:var(--water);box-shadow:0 0 0 1px var(--water) inset}
+.ek-kopf{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start}
+.ek-kopf > div{display:grid;gap:2px;min-width:0}
+.ek-kopf b{font-size:16.5px}
+.ek-kopf small{font-size:13px;color:var(--muted)}
+.ek-rang{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--water-soft);color:var(--water);font-weight:700;font-family:var(--f-mono)}
+.ek-karte.top .ek-rang{background:var(--water);color:var(--surface)}
+.ek-preis{font-family:var(--f-mono);font-size:13.5px;font-weight:700;white-space:nowrap;color:var(--ink)}
+.ek-gruende{margin:0;padding-left:18px;display:grid;gap:3px;font-size:14.5px}
+.ek-gruende li.warn{color:var(--warn)}
+.ek-details summary{cursor:pointer;color:var(--water);font-size:14px;font-weight:600;min-height:32px;display:flex;align-items:center}
+.ek-details .reihen{margin-top:6px}

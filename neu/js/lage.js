@@ -213,7 +213,7 @@ const RAEUBER = ["zander", "hecht", "barsch", "rapfen", "meerforelle", "wolfsbar
 
 /* Top-Monate je Fisch (Norddeutschland) – genauer als Jahreszeiten.
    Schonzeiten schließen ohnehin aus; hier geht es um die Beißlaune. */
-const TOPMONATE = {
+export const TOPMONATE = {
   zander: [6, 9, 10, 11, 12, 1], hecht: [5, 9, 10, 11, 12, 1], barsch: [7, 8, 9, 10, 11],
   forelle: [3, 4, 5, 10, 11, 12, 1, 2], rapfen: [5, 6, 7, 8, 9], doebel: [5, 6, 7, 8, 9, 10],
   aal: [5, 6, 7, 8, 9], quappe: [11, 12, 1, 2, 3], karpfen: [5, 6, 7, 8, 9, 10], schleie: [5, 6, 7, 8],
