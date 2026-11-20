@@ -973,3 +973,17 @@ body.druck-fm .fm-druck .fm-titel{display:block}
 .sz-leiste span.vorbei{opacity:.3}
 .sz-skala{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-family:var(--f-mono)}
 .link-knopf{background:none;border:0;padding:0;font:inherit;color:var(--water);text-decoration:underline;cursor:pointer}
+
+/* ---------- Wo heute? ---------- */
+.wo-kopf{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.wo-kopf h3{margin:0}
+.wo-liste{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.wo-zeile{width:100%;display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;text-align:left;background:var(--surface2);border:1px solid transparent;border-radius:12px;padding:9px 10px;color:var(--ink);font:inherit;cursor:pointer}
+.wo-zeile:hover{border-color:var(--water)}
+.wo-rang{width:26px;height:26px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-weight:700;font-size:13px}
+.wo-liste li:first-child .wo-rang{background:var(--float);color:var(--on-float)}
+.wo-txt{display:grid;gap:2px;min-width:0}
+.wo-txt small{font-size:13px;color:var(--muted)}
+.wo-txt .amp{display:inline-block;width:8px;height:8px;margin:0 3px 1px 0;vertical-align:middle}
+.wo-grund{color:var(--ok)!important}
+.wo-pfeil{color:var(--muted);font-size:20px}

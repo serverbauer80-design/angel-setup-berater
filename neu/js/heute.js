@@ -15,6 +15,7 @@ import { ladeKueste, kuesteTag, kuesteHTML, seeSetzen } from "./kueste.js";
 import { unterwegsHTML, unterwegsVorbereiten } from "./offline.js";
 import { pflegeKarteHTML } from "./geraetepflege.js";
 import { startPlan, startHTML } from "./startzeit.js";
+import { wohinHTML } from "./wohin.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const KEY = "neu_heute_v1";
@@ -56,6 +57,7 @@ export function heuteHTML(){
         <div class="chips h-tage" role="group" aria-label="Tag">${TAGE.map((t, i) => `<button type="button" class="chip${hst.tag === i ? " on" : ""}" data-h-tag="${i}" aria-pressed="${hst.tag === i}">${t}</button>`).join("")}</div>
       </div>
     </div>
+    <div id="h-wohin">${wohinHTML()}</div>
     <div id="h-unterwegs">${unterwegsHTML(ort)}</div>
     ${scheinHinweisHTML()}
     <div id="h-lage" class="h-lage">${lageHTML(ort)}</div>

@@ -85,6 +85,33 @@ export async function ladeWetter(ort){
   }
 }
 
+/* Mehrere Orte in einer Anfrage (Open-Meteo nimmt Koordinatenlisten) – füllt denselben Cache */
+export async function ladeWetterViele(orte){
+  const cache = lese(WETTER_KEY, {}) || {};
+  const fehlt = orte.filter(o => !cache[o.id] || Date.now() - cache[o.id].t > 20 * 60 * 1000);
+  for(let i = 0; i < fehlt.length; i += 25){
+    const teil = fehlt.slice(i, i + 25);
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${teil.map(o => o.lat).join(",")}&longitude=${teil.map(o => o.lng).join(",")}` +
+      `&current=temperature_2m,wind_speed_10m,wind_gusts_10m,wind_direction_10m,cloud_cover,surface_pressure,precipitation` +
+      `&hourly=temperature_2m,surface_pressure,wind_speed_10m,wind_gusts_10m,wind_direction_10m,cloud_cover,precipitation_probability` +
+      `&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min,wind_gusts_10m_max,precipitation_probability_max` +
+      `&past_hours=6&forecast_days=3&timezone=Europe%2FBerlin`;
+    try {
+      const res = await fetch(url);
+      if(!res.ok) continue;
+      let data = await res.json();
+      if(!Array.isArray(data)) data = [data];
+      data.forEach((d, k) => { if(teil[k]) cache[teil[k].id] = { t: Date.now(), data: d }; });
+    } catch(e){}
+  }
+  /* Cache nicht endlos wachsen lassen */
+  const keys = Object.keys(cache); if(keys.length > 60) keys.sort((a, b) => cache[a].t - cache[b].t).slice(0, keys.length - 60).forEach(k => delete cache[k]);
+  schreibe(WETTER_KEY, cache);
+  const out = {};
+  orte.forEach(o => { if(cache[o.id]) out[o.id] = { ...cache[o.id].data, _stand: cache[o.id].t, _cache: false }; });
+  return out;
+}
+
 const RICHTUNG = ["N", "NO", "O", "SO", "S", "SW", "W", "NW"];
 export const windRichtung = g => RICHTUNG[Math.round(g / 45) % 8];
 

@@ -21,6 +21,7 @@ import { heuteHTML, heuteNachladen, hst, merkeHeute, fischWaehlen, kuesteSeeAend
 import { istOffline } from "./offline.js";
 import { spuelenQuittieren, einsatzZeileHTML } from "./geraetepflege.js";
 import { startpunktSetzen } from "./startzeit.js";
+import { wohinBerechnen, wohinHTML } from "./wohin.js";
 import { umschalten, abhaken, leeren, nurHakenWeg, inTasche } from "./tasche.js";
 import { gewaesserHTML, karteEinhaengen, initKarte, karteKlick, karteEingabe, karteAenderung } from "./karte.js";
 import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuSetup } from "./fangbuch.js";
@@ -461,6 +462,15 @@ document.addEventListener("click", e => {
   const f = e.target.closest("[data-filter]");
   if(f){ st.filter = f.dataset.filter; schreibeText(KEYS.filter, st.filter); renderListe(); return; }
   if(e.target.closest("[data-unterwegs]")){ unterwegsStarten(toast); return; }
+  if(e.target.closest("[data-wohin]")){
+    const box = () => document.getElementById("h-wohin");
+    const p = wohinBerechnen(msg => { const s = document.getElementById("wo-status"); if(s) s.textContent = msg; });
+    if(box()) box().innerHTML = wohinHTML();
+    p.then(() => { if(box()) box().innerHTML = wohinHTML(); }).catch(() => toast("Vergleich nicht möglich – ist Netz da?"));
+    return;
+  }
+  const wo = e.target.closest("[data-wohin-ort]");
+  if(wo){ hst.ort = wo.dataset.wohinOrt; hst.tag = +wo.dataset.wohinTag; merkeHeute(); render(); window.scrollTo(0, 0); return; }
   if(e.target.closest("[data-start-setzen]")){
     if(!navigator.geolocation){ toast("Standort ist in diesem Browser nicht verfügbar"); return; }
     navigator.geolocation.getCurrentPosition(pos => { startpunktSetzen({ lat: pos.coords.latitude, lng: pos.coords.longitude }); toast("Startpunkt gespeichert"); render(); },
