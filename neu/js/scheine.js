@@ -106,6 +106,20 @@ export function gueltig(s){
   if(t <= 30) return { st: "bald", text: t === 0 ? "läuft heute ab" : `läuft in ${t} Tag${t > 1 ? "en" : ""} ab (${datumDE(s.bis)})`, tage: t };
   return { st: "ok", text: `gültig bis ${datumDE(s.bis)}`, tage: t };
 }
+/* Fangmeldung fällig? (Abgabedatum in ≤ 30 Tagen oder bis zu 90 Tage überfällig, noch nicht abgegeben) */
+export function fmFaellig(s){
+  if(!s.fmBis || s.fmAbgegeben) return null;
+  const t = tageBis(s.fmBis);
+  if(t > 30 || t < -90) return null;
+  return { tage: t, text: t < 0 ? `Fangmeldung war bis ${datumDE(s.fmBis)} fällig` : t === 0 ? "Fangmeldung heute abgeben" : `Fangmeldung bis ${datumDE(s.fmBis)} abgeben` };
+}
+function fmOeffnen(s){
+  import("./fangmeldung.js").then(m => m.fangmeldungOeffnen(s, {
+    toast: toastFn,
+    zurueck: () => scheinBearbeiten(s.id),
+    abgegeben: () => { const x = liste.find(y => y.id === s.id); if(x) speichere({ ...x, fmAbgegeben: heuteISO() }).then(() => toastFn("Fangmeldung als abgegeben markiert")); }
+  }));
+}
 export function scheineFuerSpot(spotId){ return liste.filter(s => (s.spotIds || []).includes(spotId)); }
 /* Für einen Ort aus „Heute“: eigener Spot direkt, sonst Spots im Umkreis von 5 km */
 export function scheineFuerOrt(ort){
@@ -131,7 +145,7 @@ function zeile(s){
   const fuer = (s.spotIds || []).map(id => (spots.find(x => x.id === id) || {}).name).filter(Boolean);
   return `<li><button type="button" class="sch-zeile" data-schein="${esc(s.id)}">
     ${s.foto ? `<img src="${s.foto}" alt="" class="sch-mini">` : `<span class="sch-mini leer" aria-hidden="true">📄</span>`}
-    <span class="sch-txt"><b>${esc(s.name)}</b><small>${esc([ART_NAME[s.art] || "", fuer.length ? "für " + fuer.join(", ") : s.gilt || ""].filter(Boolean).join(" · "))}</small></span>
+    <span class="sch-txt"><b>${esc(s.name)}</b><small>${esc([ART_NAME[s.art] || "", fuer.length ? "für " + fuer.join(", ") : s.gilt || ""].filter(Boolean).join(" · "))}</small>${fmFaellig(s) ? `<small class="sch-fm-faellig">${esc(fmFaellig(s).text)}</small>` : ""}</span>
     <span class="sch-status ${g.st}">${esc(g.text)}</span></button></li>`;
 }
 export function scheineHTML(){
@@ -152,9 +166,11 @@ export function scheineSpotHTML(spotId){
 /* Hinweis in „Heute“: was läuft bald ab oder ist gerade abgelaufen */
 export function scheinHinweisHTML(){
   const l = liste.map(s => ({ s, g: gueltig(s) })).filter(x => x.g.st === "bald" || (x.g.st === "ab" && x.g.tage >= -30));
-  if(!l.length) return "";
-  return `<div class="h-karte sch-hinweis"><h3>Erlaubnisscheine</h3><ul>${l.map(x => `<li class="${x.g.st}"><button type="button" data-schein="${esc(x.s.id)}"><b>${esc(x.s.name)}</b><span>${esc(x.g.text)}</span></button></li>`).join("")}</ul>
-    <p class="hinweis-klein">Verlängern und dann im Schein das neue Ablaufdatum eintragen.</p></div>`;
+  const fm = liste.map(s => ({ s, f: fmFaellig(s) })).filter(x => x.f);
+  if(!l.length && !fm.length) return "";
+  return `<div class="h-karte sch-hinweis"><h3>Erlaubnisscheine</h3><ul>${l.map(x => `<li class="${x.g.st}"><button type="button" data-schein="${esc(x.s.id)}"><b>${esc(x.s.name)}</b><span>${esc(x.g.text)}</span></button></li>`).join("")}
+    ${fm.map(x => `<li class="${x.f.tage < 0 ? "ab" : "bald"}"><button type="button" data-schein-fm="${esc(x.s.id)}"><b>${esc(x.s.name)}</b><span>${esc(x.f.text)} – Liste ist fertig</span></button></li>`).join("")}</ul>
+    ${l.length ? `<p class="hinweis-klein">Verlängern und dann im Schein das neue Ablaufdatum eintragen.</p>` : ""}</div>`;
 }
 
 /* ---------- Bearbeiten ---------- */
@@ -198,7 +214,9 @@ export function scheinBearbeiten(id, vorgabeSpot){
       ${feld("bis", "Gültig bis", v.bis || "", { typ: "date" })}
       ${spotAuswahl(v.spotIds || [])}
       ${feld("gilt", "Gilt außerdem für", v.gilt || "", { breit: true, ph: "z. B. alle Vereinsgewässer, Strecke A–B" })}
-      ${feld("notiz", "Notiz", v.notiz || "", { breit: true, textarea: true, rows: 2, ph: "Regeln, Fanglimit, Fangmeldung bis …" })}
+      ${feld("notiz", "Notiz", v.notiz || "", { breit: true, textarea: true, rows: 2, ph: "Regeln, Fanglimit …" })}
+      ${feld("fmBis", "Fangmeldung abgeben bis", v.fmBis || "", { typ: "date" })}
+      ${alt ? `<div class="breit sch-fm"><span><b>Fangmeldung</b><small id="sch-fm-kurz">…</small></span><button type="button" class="knopf klein" data-sch-fm>Ansehen</button></div>` : ""}
       <label class="feld"><span>Foto Vorderseite</span><input type="file" name="foto" data-nr="0" accept="image/*"></label>
       <label class="feld"><span>Foto Rückseite</span><input type="file" name="foto2" data-nr="1" accept="image/*"></label>
       <div class="breit sch-vorschau" id="sch-vorschau">${vorschau()}</div>
@@ -218,11 +236,13 @@ export function scheinBearbeiten(id, vorgabeSpot){
       const s = { ...(alt || {}), id: alt ? alt.id : genId(), erstellt: alt ? alt.erstellt : new Date().toISOString(),
         name, art: fd.get("art"), nr: String(fd.get("nr") || "").trim(), von, bis,
         spotIds: fd.getAll("spot"), gilt: String(fd.get("gilt") || "").trim(), notiz: String(fd.get("notiz") || "").trim(),
+        fmBis: fd.get("fmBis") || "", fmAbgegeben: alt && alt.fmBis === (fd.get("fmBis") || "") ? alt.fmAbgegeben || null : null,
         foto: fotos[0], foto2: fotos[1] };
       speichere(s).then(wo => toastFn(wo === "cloud" ? "Schein gespeichert" : wo === "lokal" ? "Schein gespeichert (nur auf diesem Gerät)" : "Nicht gespeichert"));
       return null;
     });
   const form = dlg.querySelector("form");
+  if(alt) import("./fangmeldung.js").then(m => { const k = form.querySelector("#sch-fm-kurz"); if(k) k.textContent = m.fangmeldungKurz(alt) + (alt.fmAbgegeben ? ` · abgegeben am ${datumDE(alt.fmAbgegeben)}` : ""); });
   form.addEventListener("change", async e => {
     if(e.target.type === "file" && e.target.files[0]){
       try { fotos[+e.target.dataset.nr] = await verkleinere(e.target.files[0]); form.querySelector("#sch-vorschau").innerHTML = vorschau(); }
@@ -235,6 +255,7 @@ export function scheinBearbeiten(id, vorgabeSpot){
     form.querySelectorAll(".sch-spot-wahl label").forEach(l => { l.hidden = q && !l.textContent.toLowerCase().includes(q) && !l.querySelector("input").checked; });
   });
   form.addEventListener("click", e => {
+    if(e.target.closest("[data-sch-fm]")){ fmOeffnen(alt); return; }
     const w = e.target.closest("[data-sch-foto-weg]");
     if(w){ fotos[+w.dataset.schFotoWeg] = null; form.querySelector("#sch-vorschau").innerHTML = vorschau(); return; }
     const g = e.target.closest("[data-sch-gross]");
@@ -253,6 +274,8 @@ function grossZeigen(src, wo){
 
 /* Klicks aus Gewässer/Heute */
 export function scheineKlick(e){
+  const fm = e.target.closest("[data-schein-fm]");
+  if(fm){ const s = liste.find(x => x.id === fm.dataset.scheinFm); if(s) fmOeffnen(s); return true; }
   const n = e.target.closest("[data-schein-neu]");
   if(n){ scheinBearbeiten(null, n.dataset.scheinNeu || null); return true; }
   const s = e.target.closest("[data-schein]");

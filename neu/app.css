@@ -922,3 +922,29 @@ a.kn-link{color:var(--water);text-decoration:underline dotted;text-underline-off
 .sb-top dt{font-size:12px;color:var(--muted)}
 .sb-top dd{margin:0;font-weight:600}
 .sb-top small{color:var(--muted);font-weight:400}
+
+/* ---------- Fangmeldung ---------- */
+.sch-fm{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--surface2);border-radius:12px;padding:10px 12px}
+.sch-fm span{display:grid;gap:2px}
+.sch-fm small{font-size:13px;color:var(--muted)}
+.sch-fm-faellig{color:var(--warn)!important}
+.fm-bericht{display:grid;gap:10px}
+.fm-bericht h3{margin:0;font-size:20px}
+.fm-bericht h4{margin:6px 0 0;font-size:15px}
+.fm-kopf{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px 12px;margin:0}
+.fm-kopf dt{font-size:12px;color:var(--muted)}
+.fm-kopf dd{margin:0;font-weight:600}
+.fm-tab{width:100%;border-collapse:collapse;font-size:14px}
+.fm-tab th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;border-bottom:1px solid var(--line);padding:4px 6px 4px 0}
+.fm-tab td{border-bottom:1px solid var(--line);padding:6px 6px 6px 0;font-variant-numeric:tabular-nums}
+.fm-akt{flex-wrap:wrap;align-items:center}
+.fm-druck{display:none}
+.fm-bericht .fm-titel{display:none}
+body.druck-fm .fm-druck .fm-titel{display:block}
+@media print{
+  body.druck-fm>*:not(.fm-druck){display:none!important}
+  body.druck-fm{background:#fff!important;color:#000!important}
+  body.druck-fm .fm-druck{display:block;padding:12mm;color:#000;font-family:Arial,sans-serif}
+  body.druck-fm .fm-druck *{color:#000!important;background:none!important}
+  body.druck-fm .fm-tab th,body.druck-fm .fm-tab td{border-bottom:1px solid #999}
+}
