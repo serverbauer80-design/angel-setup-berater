@@ -888,3 +888,37 @@ a.kn-link{color:var(--water);text-decoration:underline dotted;text-underline-off
 .h-offline b{color:var(--warn)}
 .gw-offline{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin:6px 0 0}
 #sync-chip[data-status="offline"]{border-color:var(--warn);color:var(--warn)}
+
+/* ---------- Saisonbilanz ---------- */
+.sb{display:grid;gap:12px}
+.sb-zahlen{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.sb-zahlen>div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:grid;gap:1px}
+.sb-zahlen b{font-family:var(--f-head,inherit);font-size:28px;line-height:1.1}
+.sb-zahlen span{font-size:13px;color:var(--muted)}
+.sb-zahlen i{font-style:normal;font-size:12px;color:var(--muted)}
+.sb-zahlen i.sb-plus{color:var(--ok)}
+.sb-fazit ul{margin:0;padding-left:20px;display:grid;gap:5px}
+.sb-rekorde{list-style:none;margin:0;padding:0;display:grid}
+.sb-rekorde li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.sb-rekorde li:first-child{border-top:0}
+.sb-rekorde span{display:grid;gap:1px}
+.sb-rekorde small{font-size:12.5px;color:var(--muted)}
+.sb-mass{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.sb-mass i{display:block;white-space:nowrap;font-style:normal;font-weight:400;font-size:12px;color:var(--muted)}
+.sb-rekorde li.neu .sb-mass i{color:var(--float)}
+.sb-monate{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:end}
+.sb-m{display:grid;justify-items:center;gap:2px}
+.sb-saeulen{height:90px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px}
+.sb-saeulen span{width:40%;max-width:12px;border-radius:3px 3px 0 0;min-height:0}
+.sb-s-f{background:var(--float)}
+.sb-s-a{background:var(--water);opacity:.45}
+.sb-m b{font-size:12px;min-height:15px}
+.sb-m small{font-size:10.5px;color:var(--muted)}
+.sb-legende{display:flex;gap:6px 10px;align-items:center;font-size:12.5px;color:var(--muted);margin:4px 0 0}
+.sb-legende span{display:inline-block;width:10px;height:10px;border-radius:2px;margin-left:6px}
+.sb-l-f{background:var(--float)}.sb-l-a{background:var(--water);opacity:.45}
+.sb-top{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:0}
+.sb-top div{background:var(--surface2);border-radius:10px;padding:8px 10px}
+.sb-top dt{font-size:12px;color:var(--muted)}
+.sb-top dd{margin:0;font-weight:600}
+.sb-top small{color:var(--muted);font-weight:400}

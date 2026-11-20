@@ -7,6 +7,7 @@
    ============================================================ */
 import { ladeFaengeDaten, speichereFaengeDaten, lese, schreibe } from "./store.js";
 import { alleSetups, heuteISO, datumDE, komma, katByKey } from "./setups.js";
+import { saisonHTML, saisonKlick } from "./saison.js";
 import { ausfluege, ausfluegeGeladen, ladeAusfluege, speichereAusflug, loescheAusflug } from "./tagebuch.js";
 import { rechtFuer, ladeWetter, tagesLage, windRichtung, orteListe } from "./lage.js";
 import { blatt, feld, auswahl } from "./edit.js";
@@ -496,9 +497,10 @@ export function fangbuchHTML(){
     <div class="seg" role="tablist" aria-label="Fangbuch">
       <button type="button" role="tab" aria-selected="${fst.ansicht === "verlauf"}" class="${fst.ansicht === "verlauf" ? "on" : ""}" data-fb-ansicht="verlauf">Verlauf</button>
       <button type="button" role="tab" aria-selected="${fst.ansicht === "statistik"}" class="${fst.ansicht === "statistik" ? "on" : ""}" data-fb-ansicht="statistik">Was funktioniert?</button>
+      <button type="button" role="tab" aria-selected="${fst.ansicht === "saison"}" class="${fst.ansicht === "saison" ? "on" : ""}" data-fb-ansicht="saison">Saison</button>
     </div>
-    ${arten.length > 1 ? `<div class="chips" role="group" aria-label="Fischart"><button type="button" class="chip${!fst.fisch ? " on" : ""}" data-fb-fisch="">Alle</button>${arten.map(([k, l]) => `<button type="button" class="chip${fst.fisch === k ? " on" : ""}" data-fb-fisch="${esc(k)}" aria-pressed="${fst.fisch === k}">${esc(fischName(k))}<i>${l.length}</i></button>`).join("")}</div>` : ""}
-    <div class="fb-inhalt${fst.ansicht === "statistik" ? " stat" : ""}">${fst.ansicht === "statistik" ? statistikHTML(alle) : verlaufHTML(alle)}</div>
+    ${arten.length > 1 && fst.ansicht !== "saison" ? `<div class="chips" role="group" aria-label="Fischart"><button type="button" class="chip${!fst.fisch ? " on" : ""}" data-fb-fisch="">Alle</button>${arten.map(([k, l]) => `<button type="button" class="chip${fst.fisch === k ? " on" : ""}" data-fb-fisch="${esc(k)}" aria-pressed="${fst.fisch === k}">${esc(fischName(k))}<i>${l.length}</i></button>`).join("")}</div>` : ""}
+    <div class="fb-inhalt${fst.ansicht !== "verlauf" ? " stat" : ""}">${fst.ansicht === "statistik" ? statistikHTML(alle) : fst.ansicht === "saison" ? saisonHTML() : verlaufHTML(alle)}</div>
   </section>`;
 }
 
@@ -514,6 +516,7 @@ export function fangbuchKlick(e){
     }
     return true;
   }
+  if(saisonKlick(e)){ renderFn(); return true; }
   const f = e.target.closest("[data-fb-fang]"); if(f){ fangBearbeiten(f.dataset.fbFang); return true; }
   const a = e.target.closest("[data-fb-ausflug]"); if(a){ ausflugBearbeiten(a.dataset.fbAusflug); return true; }
   const v = e.target.closest("[data-fb-ansicht]"); if(v){ fst.ansicht = v.dataset.fbAnsicht; merke(); renderFn(); return true; }
