@@ -22,6 +22,7 @@ import { istOffline } from "./offline.js";
 import { spuelenQuittieren, einsatzZeileHTML } from "./geraetepflege.js";
 import { startpunktSetzen } from "./startzeit.js";
 import { wohinBerechnen, wohinHTML } from "./wohin.js";
+import { liveKlick, liveAenderung, liveFabHTML } from "./live.js";
 import { umschalten, abhaken, leeren, nurHakenWeg, inTasche } from "./tasche.js";
 import { gewaesserHTML, karteEinhaengen, initKarte, karteKlick, karteEingabe, karteAenderung } from "./karte.js";
 import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuSetup } from "./fangbuch.js";
@@ -401,7 +402,13 @@ function platzhalterHTML(id, klein){
 }
 
 /* ---------- Gesamt-Render ---------- */
+function liveFab(){
+  let f = document.getElementById("live-fab-platz");
+  if(!f){ f = document.createElement("div"); f.id = "live-fab-platz"; document.body.appendChild(f); }
+  f.innerHTML = st.bereich === "heute" ? "" : liveFabHTML();
+}
 function render(){
+  liveFab();
   renderNav();
   renderSync();
   const main = $("#inhalt");
@@ -453,6 +460,7 @@ function renderListe(){
 
 /* ---------- Ereignisse ---------- */
 document.addEventListener("click", e => {
+  if(liveKlick(e, { toast, neuZeichnen: render, wetterFuer: l => { const c = (lese("neu_wetter_cache_v1", {}) || {})[l.ortId]; return c ? { ...c.data, _stand: c.t } : null; } })) return;
   if(fangbuchKlick(e)) return;
   if(st.bereich === "rutenwand" && kleinteileKlick(e, toast)){ renderListe(); return; }
   const zb = e.target.closest("[data-zu-box]");
@@ -532,6 +540,7 @@ document.addEventListener("click", e => {
 document.addEventListener("change", e => {
   if(karteAenderung(e)){ toast("Notiz gespeichert"); return; }
   if(e.target.id === "h-ort"){ hst.ort = e.target.value; merkeHeute(); render(); return; }
+  if(liveAenderung(e)){ render(); return; }
   if(e.target.matches("[data-kk-see]")){ kuesteSeeAendern(e.target.value); render(); return; }
   const pk = e.target.closest("[data-pack]");
   if(pk){ abhaken(pk.dataset.pack); return; }

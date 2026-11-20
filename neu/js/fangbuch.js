@@ -175,7 +175,7 @@ export function fangBearbeiten(id, vorgabe = {}){
   const v = c || {
     datum: vorgabe.datum || heuteISO(), uhrzeit: vorgabe.datum && vorgabe.datum !== heuteISO() ? "" : jetztZeit(),
     fischId: vorgabe.fischId || "", spotId: vorgabe.spotId ?? spotVorschlag(), setup: vorgabe.setup ?? setupVorschlag(vorgabe.fischId),
-    methode: vorgabe.methode || "", ausflugId: vorgabe.ausflugId || null
+    methode: vorgabe.methode || "", ausflugId: vorgabe.ausflugId || null, koeder: vorgabe.koeder || ""
   };
   const fid = v.fischId || (c ? fischIdAus(c.fischName) : "");
   const andere = c && !fid ? c.fischName : "";

@@ -987,3 +987,24 @@ body.druck-fm .fm-druck .fm-titel{display:block}
 .wo-txt .amp{display:inline-block;width:8px;height:8px;margin:0 3px 1px 0;vertical-align:middle}
 .wo-grund{color:var(--ok)!important}
 .wo-pfeil{color:var(--muted);font-size:20px}
+
+/* ---------- Live-Modus ---------- */
+.h-live-start{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
+.h-live{border:2px solid var(--float)}
+.live-kopf{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
+.live-kopf span:last-child{color:var(--muted);font-size:14px}
+.live-punkt{width:10px;height:10px;border-radius:50%;background:var(--bad);animation:live-puls 1.6s infinite}
+@keyframes live-puls{50%{opacity:.3}}
+@media (prefers-reduced-motion:reduce){.live-punkt{animation:none}}
+.live-zahlen{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.live-zahlen div{background:var(--surface2);border-radius:10px;padding:6px;text-align:center;display:grid}
+.live-zahlen b{font-size:22px}
+.live-zahlen span{font-size:12px;color:var(--muted)}
+.live-fang{width:100%;min-height:64px;font-size:24px;font-weight:700}
+.live-knoepfe{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.live-knoepfe .knopf{min-height:48px}
+.live-felder{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+.live-log{list-style:none;margin:0;padding:0;display:grid;gap:2px;font-size:13.5px;color:var(--muted)}
+.live-log .mono{margin-right:8px}
+.live-fab{position:fixed;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:50;width:72px;height:72px;border-radius:50%;border:0;background:var(--float);color:var(--on-float);font-weight:700;font-size:17px;box-shadow:0 6px 18px rgba(0,0,0,.3);cursor:pointer}
+@media (min-width:900px){.live-fab{bottom:24px}}
