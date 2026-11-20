@@ -11,6 +11,7 @@ import { saisonHTML, saisonKlick } from "./saison.js";
 import { koederBilanzHTML } from "./koederbilanz.js";
 import { zieleHTML, zieleKlick } from "./ziele.js";
 import { ausgabenHTML, ausgabenKlick } from "./ausgaben.js";
+import { musterHTML } from "./muster.js";
 import { ausfluege, ausfluegeGeladen, ladeAusfluege, speichereAusflug, loescheAusflug } from "./tagebuch.js";
 import { rechtFuer, ladeWetter, tagesLage, windRichtung, orteListe } from "./lage.js";
 import { blatt, feld, auswahl } from "./edit.js";
@@ -439,7 +440,7 @@ function statistikHTML(alle){
   if(!f.length && !aus.length) return `<p class="leer">Sobald du Fänge oder Ausflüge einträgst, siehst du hier, was bei dir funktioniert.</p>`;
   const mitFang = aus.filter(a => (a.faenge || []).some(x => x.art) || alle.some(c => c.ausflugId === a.id));
   const block = (titel, inhalt) => `<section class="fb-stat"><h3>${titel}</h3>${inhalt}</section>`;
-  const teile = [];
+  const teile = fst.fisch ? [] : [musterHTML()];
 
   const proSetup = zaehle(f, c => c.setup);
   if(proSetup.length) teile.push(block("Pro Setup", balken(proSetup.slice(0, 12).map(([k, l]) => {
@@ -472,13 +473,6 @@ function statistikHTML(alle){
 
   const proKoeder = zaehle(f, c => c.koeder);
   if(proKoeder.length) teile.push(block("Köder", balken(proKoeder.slice(0, 8).map(([k, l]) => ({ label: k, n: l.length })))));
-
-  /* Luftdruck: Anteil der Ausflüge mit Fang je Trend */
-  const mitDruck = aus.filter(a => a.wetter && a.wetter.luftdruck);
-  if(mitDruck.length >= 3 && !fst.fisch) teile.push(block("Luftdruck und Erfolg", balken(DRUCK.map(t => {
-    const l = mitDruck.filter(a => a.wetter.luftdruck === t); const ok = l.filter(a => mitFang.includes(a)).length;
-    return { label: t, n: l.length ? Math.round(ok / l.length * 100) : 0, wert: l.length ? Math.round(ok / l.length * 100) + " %" : "–", sub: `${ok} von ${l.length} Ausflügen mit Fang` };
-  }), { hinweis: "Erst ab etwa zehn Ausflügen je Trend wirklich aussagekräftig." })));
 
   return teile.join("") || `<p class="leer">Noch zu wenige Angaben für eine Auswertung.</p>`;
 }
@@ -537,6 +531,7 @@ export function fangbuchKlick(e){
   if(ausgabenKlick(e, toastFn)){ renderFn(); return true; }
   const f = e.target.closest("[data-fb-fang]"); if(f){ fangBearbeiten(f.dataset.fbFang); return true; }
   const a = e.target.closest("[data-fb-ausflug]"); if(a){ ausflugBearbeiten(a.dataset.fbAusflug); return true; }
+  if(e.target.closest("[data-fb-zu-muster]")){ fst.ansicht = "statistik"; fst.fisch = ""; merke(); }
   const v = e.target.closest("[data-fb-ansicht]"); if(v){ fst.ansicht = v.dataset.fbAnsicht; merke(); renderFn(); return true; }
   const c = e.target.closest("[data-fb-fisch]"); if(c){ fst.fisch = c.dataset.fbFisch; merke(); renderFn(); return true; }
   if(e.target.closest("[data-fb-mehr]")){ fst.tage += 40; renderFn(); return true; }

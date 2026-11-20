@@ -9,6 +9,8 @@ import { orteListe, ladeWetter, tagesLage, ladeGezeiten, mondphase, windRichtung
 import { tasche, packliste } from "./tasche.js";
 import { beraterHTML, bst, merkeBerater } from "./berater-ui.js";
 import { erfahrung, erfahrungHTML, schonzeitHTML } from "./erfahrung.js";
+import { musterHeute } from "./muster.js";
+const musterZeile = (lage, iso) => { const t = musterHeute(lage, iso); return t ? `<p class="h-muster">${esc(t)} <a href="#fangbuch" data-fb-zu-muster>Deine Muster ›</a></p>` : ""; };
 import { ausfluegeGeladen, ladeAusfluege } from "./tagebuch.js";
 import { scheinHinweisHTML } from "./scheine.js";
 import { ladeKueste, kuesteTag, kuesteHTML, seeSetzen } from "./kueste.js";
@@ -68,7 +70,7 @@ export function heuteHTML(){
     <div id="h-gezeiten"></div>
     <div id="h-kueste">${kuesteKarte(ort, orte)}</div>
     <div id="h-start">${startKarte(ort)}</div>
-    <div id="h-erfahrung">${erfahrungHTML(erfahrung(ort, aktuelleLage(), iso), ort.name)}</div>
+    <div id="h-erfahrung">${erfahrungHTML(erfahrung(ort, aktuelleLage(), iso), ort.name)}${musterZeile(aktuelleLage(), iso)}</div>
     <div id="h-fische">${fischeHTML(ort)}</div>
     <div id="h-koeder">${koederKarte(ort)}</div>
     <div id="h-schonzeit">${hst.tag === 0 ? schonzeitHTML() : ""}</div>
@@ -227,7 +229,7 @@ export function heuteNachladen(neuZeichnen){
   const ort = aktuellerOrt();
   const fuelle = () => {
     const l = document.getElementById("h-lage"); if(l) l.innerHTML = lageHTML(ort);
-    const e = document.getElementById("h-erfahrung"); if(e) e.innerHTML = erfahrungHTML(erfahrung(ort, aktuelleLage(), tagISO(hst.tag)), ort.name);
+    const e = document.getElementById("h-erfahrung"); if(e) e.innerHTML = erfahrungHTML(erfahrung(ort, aktuelleLage(), tagISO(hst.tag)), ort.name) + musterZeile(aktuelleLage(), tagISO(hst.tag));
     const f = document.getElementById("h-fische"); if(f) f.innerHTML = fischeHTML(ort);
     const t = document.getElementById("h-tasche"); if(t) t.innerHTML = tascheHTML(ort);
     const k = document.getElementById("h-kueste"); if(k) k.innerHTML = kuesteKarte(ort);
