@@ -24,6 +24,7 @@ import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuS
 import { beiAusflugAenderung, ausfluegeNachSync } from "./tagebuch.js";
 import { initScheine, scheineKlick, scheineNachSync, beiScheinAenderung } from "./scheine.js";
 import { einkaufHTML } from "./einkauf.js";
+import { kleinteileHTML, kleinteileKlick } from "./kleinteile.js";
 import { initEdit, ruteBearbeiten, neueRute, rolleBearbeiten, neueRolle, montiere, schnurWechseln, schnurDatum, zurueckholen, tragkraftEintragen } from "./edit.js";
 
 const $ = s => document.querySelector(s);
@@ -181,7 +182,7 @@ function listeHTML(){
       <p class="gruppe-hinweis">Liegen bereit, auf keiner Rute montiert. Antippen zum Bearbeiten.</p>
       ${frei.map(r => `<button type="button" class="frei-rolle" data-rolle-bearb="${r.id}"><b>${esc(r.name)}${r.groesse ? ` <small>${r.groesse}${r.freilauf ? " · Freilauf" : ""}</small>` : ""}</b><span>${esc(r.schnur || "keine Schnur eingetragen")}</span></button>`).join("")}</section>`;
   }
-  if(st.filter === "alle" && !st.suche) html += einkaufHTML();
+  if(st.filter === "alle" && !st.suche) html += kleinteileHTML() + einkaufHTML();
   const arch = AUSR.archiv();
   const nArch = arch.ruten.length + arch.rollen.length;
   if(nArch && st.filter === "alle" && !st.suche){
@@ -449,6 +450,9 @@ function renderListe(){
 /* ---------- Ereignisse ---------- */
 document.addEventListener("click", e => {
   if(fangbuchKlick(e)) return;
+  if(st.bereich === "rutenwand" && kleinteileKlick(e, toast)){ renderListe(); return; }
+  const zb = e.target.closest("[data-zu-box]");
+  if(zb){ e.preventDefault(); st.filter = "alle"; st.suche = ""; geheZu("rutenwand"); setTimeout(() => { const k = document.getElementById("kleinteile"); if(k) k.scrollIntoView(); }, 400); return; }
   if((st.bereich === "gewaesser" || st.bereich === "heute") && scheineKlick(e)) return;
   if(st.bereich === "gewaesser" && karteKlick(e, toast, ortId => { hst.ort = ortId; merkeHeute(); geheZu("heute"); toast("Ort für Heute übernommen"); })) return;
   const f = e.target.closest("[data-filter]");

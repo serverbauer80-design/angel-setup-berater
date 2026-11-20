@@ -8,6 +8,7 @@
 import { lese, schreibe, beiAenderung, pushDebounced, tascheSetzen } from "./store.js";
 import { angelartFuer } from "./angelarten.js";
 import { scheinInfo } from "./scheine.js";
+import { boxInfo } from "./kleinteile.js";
 
 export const TASCHE_KEY = "neu_tasche_v1";
 export function tasche(){ return lese(TASCHE_KEY, null) || { setups: [], abgehakt: {}, geaendert: "" }; }
@@ -77,11 +78,11 @@ export function packliste(ort, lage){
         if(m){
           m.teile.forEach(x => {
             if(/hauptschnur/i.test(x.n)) return;            // ist schon auf der Rolle
-            if(!teile.has(x.n)) teile.set(x.n, { text: x.n, info: x.d });
+            if(!teile.has(x.n)) teile.set(x.n, { text: x.n, info: x.d, box: boxInfo(x.n + " " + x.d) });
           });
         } else (a.montage || []).forEach(x => {
           if(/hauptschnur|schnur$/i.test(x.k)) return;
-          if(!teile.has(x.k)) teile.set(x.k, { text: x.k, info: x.v });
+          if(!teile.has(x.k)) teile.set(x.k, { text: x.k, info: x.v, box: boxInfo(x.k + " " + x.v) });
         });
       });
     });

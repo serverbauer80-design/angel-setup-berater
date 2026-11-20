@@ -92,6 +92,14 @@ export function tascheSetzen(t){
   melde();
 }
 
+/* ---------- Kleinteile-Box ---------- */
+export const KT_KEY = "neu_kleinteile_v1";
+export function kleinteileSetzen(b){
+  schreibe(KT_KEY, b);
+  pushDebounced();
+  melde();
+}
+
 /* Andere Tabs (z. B. die alte App parallel offen) */
 window.addEventListener("storage", e => {
   if(e.key === KEYS.wartung){ pflege.wartung = lese(KEYS.wartung, {}) || {}; melde(); }
@@ -122,6 +130,12 @@ function uebernimm(data){
     if(!lokal || (lokal.geaendert || "") < data.tasche.geaendert){ schreibe(TASCHE_KEY, data.tasche); geaendert = true; }
     else if((lokal.geaendert || "") > data.tasche.geaendert) pushDebounced();
   }
+  /* Kleinteile-Box: neuere gewinnt */
+  if(data.kleinteile && data.kleinteile.geaendert){
+    const lokal = lese(KT_KEY, null);
+    if(!lokal || (lokal.geaendert || "") < data.kleinteile.geaendert){ schreibe(KT_KEY, data.kleinteile); geaendert = true; }
+    else if((lokal.geaendert || "") > data.kleinteile.geaendert) pushDebounced();
+  }
   if(data.wartung && typeof data.wartung === "object"){ pflege.wartung = data.wartung; schreibe(KEYS.wartung, pflege.wartung); geaendert = true; }
   if(data.schnur && typeof data.schnur === "object"){  pflege.schnur  = data.schnur;  schreibe(KEYS.schnur,  pflege.schnur);  geaendert = true; }
   if(data.dkNotizen && typeof data.dkNotizen === "object"){ schreibe(DK_KEY, data.dkNotizen); geaendert = true; }
@@ -142,6 +156,7 @@ export function pushDebounced(){
   timer = setTimeout(() => {
     const aus = AUSR.gespeichert();
     const ta = lese(TASCHE_KEY, null);
+    const kt = lese(KT_KEY, null);
     /* Fänge/Spots und Dänemark-Notizen nur mitschicken, wenn hier geändert –
        sonst bleibt der Stand der alten App unangetastet */
     const extra = {};
@@ -154,6 +169,7 @@ export function pushDebounced(){
     docRef.set({
       ...extra,
       ...(ta ? { tasche: ta } : {}),
+      ...(kt ? { kleinteile: kt } : {}),
       wartung: pflege.wartung,
       schnur: pflege.schnur,
       ...(aus ? { ausruestung: aus } : {}),

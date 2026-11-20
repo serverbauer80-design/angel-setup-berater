@@ -847,3 +847,36 @@ a.kn-link{color:var(--water);text-decoration:underline dotted;text-underline-off
 .kk-ort{background:none;border:0;padding:4px 0;color:var(--water);font:inherit;text-align:left;cursor:pointer;text-decoration:underline dotted;text-underline-offset:2px}
 .kk-aendern{display:inline-flex;gap:6px;align-items:center;margin:2px 0}
 .kk-aendern select{font:inherit;font-size:13px;padding:2px 4px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+
+/* ---------- Kleinteile-Box ---------- */
+.kleinteile{display:grid;gap:8px;padding-top:14px}
+.kt-warn{color:var(--warn)}
+.kt-nachkauf{background:var(--warn-soft);border-radius:14px;padding:12px 14px;display:grid;gap:6px;justify-items:start}
+.kt-nachkauf h3{font-size:17px;margin:0}
+.kt-nachkauf ul{list-style:none;margin:0;padding:0;display:grid;gap:3px;width:100%}
+.kt-nachkauf li{display:flex;justify-content:space-between;gap:8px;font-size:15px}
+.kt-nachkauf small{color:var(--muted);white-space:nowrap}
+.kt-fach{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:0 12px}
+.kt-fach>summary{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:11px 0;cursor:pointer;font-weight:600;list-style:none}
+.kt-fach>summary::-webkit-details-marker{display:none}
+.kt-fach>summary small{color:var(--muted);font-weight:400;font-size:13px}
+.kt-liste{list-style:none;margin:0 0 8px;padding:0;display:grid}
+.kt-teil{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line)}
+.kt-teil.offen{display:block}
+.kt-teil.knapp .kt-name small{color:var(--warn)}
+.kt-name{background:none;border:0;padding:4px 0;font:inherit;color:var(--ink);text-align:left;display:grid;gap:1px;cursor:pointer;min-width:0}
+.kt-name b{font-weight:500;font-size:15px}
+.kt-name small{font-size:12.5px;color:var(--muted)}
+.kt-zahl{display:flex;align-items:center;gap:4px;flex:none}
+.kt-zahl b{min-width:30px;text-align:center;font-size:16px}
+.kt-pm{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface2);color:var(--ink);font-size:20px;line-height:1;cursor:pointer}
+.kt-pm:disabled{opacity:.35;cursor:default}
+.kt-form{display:grid;gap:8px;padding:8px 0;background:var(--surface);border-radius:14px}
+.kleinteile>.kt-form{border:1px solid var(--line);padding:12px}
+.kt-form-reihe{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kt-weg{color:var(--bad)}
+.kt-schnell{display:grid;gap:8px}
+.kt-schnell ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.kt-schnell small{color:var(--muted);font-weight:400}
+.pk-box{color:var(--ok)}
+.pk-box.knapp{color:var(--warn)}

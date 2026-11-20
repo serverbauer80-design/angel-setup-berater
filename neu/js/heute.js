@@ -177,7 +177,8 @@ function tascheHTML(ort){
     <div class="fortschritt" role="progressbar" aria-valuenow="${prozent}" aria-valuemin="0" aria-valuemax="100"><span style="width:${prozent}%"></span></div>
     ${p.gruppen.map(g => `<div class="pack-gruppe"><h4>${esc(g.titel)}</h4>${g.hinweis ? `<p class="hinweis-klein">${esc(g.hinweis)}</p>` : ""}
       <ul>${g.punkte.map(x => `<li><label class="pack${p.haken[x.text] ? " erledigt" : ""}"><input type="checkbox" data-pack="${esc(x.text)}"${p.haken[x.text] ? " checked" : ""}>
-        <span><b>${esc(x.text)}</b>${x.info ? `<small>${esc(x.info)}</small>` : ""}</span></label></li>`).join("")}</ul></div>`).join("")}
+        <span><b>${esc(x.text)}</b>${x.info ? `<small>${esc(x.info)}</small>` : ""}${x.box ? `<small class="pk-box${x.box.knapp ? " knapp" : ""}">${esc(x.box.text)}</small>` : ""}</span></label></li>`).join("")}</ul></div>`).join("")}
+    ${(() => { const n = p.gruppen.flatMap(g => g.punkte).filter(x => x.box && x.box.knapp).length; return n ? `<p class="hinweis-klein">${n} Teil${n > 1 ? "e" : ""} knapp oder nicht in der Box – <a href="#rutenwand" data-zu-box>zur Kleinteile-Box</a>.</p>` : ""; })()}
     <div class="akt-zeile">
       ${t.setups.map(k => AKTUELL[k] ? `<button type="button" class="knopf klein leise" data-tasche="${k}">${esc(String(AKTUELL[k].name).split(" · ")[0])} ✕</button>` : "").join("")}
     </div>
