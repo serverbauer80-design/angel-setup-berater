@@ -8,6 +8,7 @@
    ============================================================ */
 import { lese, schreibe } from "./store.js";
 import { box, teilVorhanden } from "./kleinteile.js";
+import { bewaehrteKoeder } from "./koederbilanz.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const KEY = "neu_truebung_v1";
@@ -94,6 +95,7 @@ export function koederKarteHTML(ort, lage, fische, kt, tagWort = "heute"){
     return `<li class="kw-fisch"><b>${esc(f.name.split(" (")[0])}</b>
       <dl class="reihen">
         <div class="reihe"><dt>Köder</dt><dd>${esc(k.typ)}</dd></div>
+        ${(bw => bw.length ? `<div class="reihe"><dt>Bei dir bewährt</dt><dd>${bw.map(x => `${esc(x.name)} (${x.n} Fänge)`).join(", ")}</dd></div>` : "")(bewaehrteKoeder(f.id))}
         ${fa ? `<div class="reihe"><dt>Farbe</dt><dd>${esc(fa.text)}${fa2 && /nacht/.test(fa2.grund) ? ` · <small>nachts: ${esc(fa2.text.split(" – ")[0])}</small>` : ""}</dd></div>` : ""}
         ${fu ? `<div class="reihe"><dt>Führung</dt><dd>${esc(fu)}</dd></div>` : ""}
         ${ausBox.length ? `<div class="reihe"><dt>Aus deiner Box</dt><dd>${esc(ausBox.join(", "))}</dd></div>` : ""}

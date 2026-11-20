@@ -8,6 +8,7 @@
 import { ladeFaengeDaten, speichereFaengeDaten, lese, schreibe } from "./store.js";
 import { alleSetups, heuteISO, datumDE, komma, katByKey } from "./setups.js";
 import { saisonHTML, saisonKlick } from "./saison.js";
+import { koederBilanzHTML } from "./koederbilanz.js";
 import { ausfluege, ausfluegeGeladen, ladeAusfluege, speichereAusflug, loescheAusflug } from "./tagebuch.js";
 import { rechtFuer, ladeWetter, tagesLage, windRichtung, orteListe } from "./lage.js";
 import { blatt, feld, auswahl } from "./edit.js";
@@ -480,6 +481,10 @@ function statistikHTML(alle){
   return teile.join("") || `<p class="leer">Noch zu wenige Angaben für eine Auswertung.</p>`;
 }
 
+/* Reiter des Fangbuchs */
+const FB_TABS = [["verlauf", "Verlauf"], ["statistik", "Was funktioniert?"], ["koeder", "Köder"], ["saison", "Saison"]];
+const FB_ANSICHT = { verlauf: a => verlaufHTML(a), statistik: a => statistikHTML(a), koeder: () => koederBilanzHTML(), saison: () => saisonHTML() };
+
 export function fangbuchHTML(){
   setupsNeu();
   const alle = alleFaenge();
@@ -506,12 +511,10 @@ export function fangbuchHTML(){
     </div>
     ${!ausfluegeGeladen() ? `<p class="hinweis-klein">Ausflüge werden geladen …</p>` : ""}
     <div class="seg" role="tablist" aria-label="Fangbuch">
-      <button type="button" role="tab" aria-selected="${fst.ansicht === "verlauf"}" class="${fst.ansicht === "verlauf" ? "on" : ""}" data-fb-ansicht="verlauf">Verlauf</button>
-      <button type="button" role="tab" aria-selected="${fst.ansicht === "statistik"}" class="${fst.ansicht === "statistik" ? "on" : ""}" data-fb-ansicht="statistik">Was funktioniert?</button>
-      <button type="button" role="tab" aria-selected="${fst.ansicht === "saison"}" class="${fst.ansicht === "saison" ? "on" : ""}" data-fb-ansicht="saison">Saison</button>
+      ${FB_TABS.map(([k, l]) => `<button type="button" role="tab" aria-selected="${fst.ansicht === k}" class="${fst.ansicht === k ? "on" : ""}" data-fb-ansicht="${k}">${l}</button>`).join("")}
     </div>
-    ${arten.length > 1 && fst.ansicht !== "saison" ? `<div class="chips" role="group" aria-label="Fischart"><button type="button" class="chip${!fst.fisch ? " on" : ""}" data-fb-fisch="">Alle</button>${arten.map(([k, l]) => `<button type="button" class="chip${fst.fisch === k ? " on" : ""}" data-fb-fisch="${esc(k)}" aria-pressed="${fst.fisch === k}">${esc(fischName(k))}<i>${l.length}</i></button>`).join("")}</div>` : ""}
-    <div class="fb-inhalt${fst.ansicht !== "verlauf" ? " stat" : ""}">${fst.ansicht === "statistik" ? statistikHTML(alle) : fst.ansicht === "saison" ? saisonHTML() : verlaufHTML(alle)}</div>
+    ${arten.length > 1 && ["verlauf", "statistik"].includes(fst.ansicht) ? `<div class="chips" role="group" aria-label="Fischart"><button type="button" class="chip${!fst.fisch ? " on" : ""}" data-fb-fisch="">Alle</button>${arten.map(([k, l]) => `<button type="button" class="chip${fst.fisch === k ? " on" : ""}" data-fb-fisch="${esc(k)}" aria-pressed="${fst.fisch === k}">${esc(fischName(k))}<i>${l.length}</i></button>`).join("")}</div>` : ""}
+    <div class="fb-inhalt${fst.ansicht !== "verlauf" ? " stat" : ""}">${(FB_ANSICHT[fst.ansicht] || (() => verlaufHTML(alle)))(alle)}</div>
   </section>`;
 }
 

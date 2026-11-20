@@ -1127,3 +1127,8 @@ body.druck-fm .fm-druck .fm-titel{display:block}
 .kt-foto-gross .kt-foto-leer{display:grid;place-items:center;min-height:120px;color:var(--muted);font-weight:600}
 .kt-foto-leer[hidden],.kt-box img[hidden],.kt-treffer-zeile img[hidden],.kt-foto-gross img[hidden]{display:none}
 .kt-check .kt-liste{margin:6px 0}
+
+/* ---------- Köder-Bilanz ---------- */
+.kb-liste{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.kb-liste li{display:flex;justify-content:space-between;gap:10px;font-size:15px;padding:6px 0;border-top:1px solid var(--line)}
+.kb-liste small{color:var(--muted);white-space:nowrap}
