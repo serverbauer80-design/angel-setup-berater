@@ -5,6 +5,7 @@
    Die Bewertung ist Erfahrungswissen mit Begründung – keine Garantie.
    ============================================================ */
 import { lese, schreibe } from "./store.js";
+import { kuestenPunkte } from "./kueste.js";
 
 /* Orte – dieselben wie in der bisherigen App, dazu deine besuchten Spots */
 export const ORTE = [
@@ -265,7 +266,12 @@ export function fischBewertung(ort, lage, monat, iso, erf){
       if(WARM.includes(f.id) && t < 3){ p -= 1; minus.push(`sehr kalter Tag (um ${Math.round(t)} °C) – Friedfische beißen träge, fein und langsam fischen`); }
       else if(["karpfen", "schleie", "aal", "wels"].includes(f.id) && t >= 18){ p += 1; plus.push("warm – Friedfisch und Aal aktiv"); }
       if(f.id === "quappe" && t < 6){ p += 1; plus.push("Kälte – Quappen werden aktiv"); }
-      if(ort.kueste){
+      if(ort.kueste && lage.kueste){
+        /* Wind zur Küste, Welle, Wassertemperatur, Ostsee-Pegel (kueste.js) */
+        const k = kuestenPunkte(f.id, lage.kueste);
+        p += k.p; plus.push(...k.plus); minus.push(...k.minus);
+        if(lage.boenMax > 55){ p -= 2; minus.push(`Böen bis ${Math.round(lage.boenMax)} km/h – an der Küste zu viel`); }
+      } else if(ort.kueste){
         if(lage.wind >= 12 && lage.wind <= 35 && ["meerforelle", "wolfsbarsch"].includes(f.id)){ p += 1; plus.push("bewegtes Wasser an der Küste"); }
         if(lage.boenMax > 55){ p -= 2; minus.push(`Böen bis ${Math.round(lage.boenMax)} km/h – an der Küste zu viel`); }
       } else if(lage.boenMax > 60){ p -= 1; minus.push(`Böen bis ${Math.round(lage.boenMax)} km/h`); }

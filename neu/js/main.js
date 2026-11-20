@@ -17,7 +17,7 @@ import {
 import { beraterHTML, fischeHTML, fischeAnzahl, bst, merkeBerater } from "./berater-ui.js";
 import { protokollHTML } from "./protokoll.js";
 import { wissenHTML } from "./wissen.js";
-import { heuteHTML, heuteNachladen, hst, merkeHeute, fischWaehlen } from "./heute.js";
+import { heuteHTML, heuteNachladen, hst, merkeHeute, fischWaehlen, kuesteSeeAendern } from "./heute.js";
 import { umschalten, abhaken, leeren, nurHakenWeg, inTasche } from "./tasche.js";
 import { gewaesserHTML, karteEinhaengen, initKarte, karteKlick, karteEingabe, karteAenderung } from "./karte.js";
 import { fangbuchHTML, fangbuchNachladen, fangbuchKlick, initFangbuch, faengeZuSetup } from "./fangbuch.js";
@@ -453,6 +453,8 @@ document.addEventListener("click", e => {
   if(st.bereich === "gewaesser" && karteKlick(e, toast, ortId => { hst.ort = ortId; merkeHeute(); geheZu("heute"); toast("Ort für Heute übernommen"); })) return;
   const f = e.target.closest("[data-filter]");
   if(f){ st.filter = f.dataset.filter; schreibeText(KEYS.filter, st.filter); renderListe(); return; }
+  const ko = e.target.closest("[data-h-ort-wahl]");
+  if(ko){ hst.ort = ko.dataset.hOrtWahl; merkeHeute(); render(); window.scrollTo(0, 0); return; }
   const ht = e.target.closest("[data-h-tag]");
   if(ht){ hst.tag = +ht.dataset.hTag; merkeHeute(); render(); return; }
   const hf = e.target.closest("[data-h-fisch]");
@@ -499,6 +501,7 @@ document.addEventListener("click", e => {
 document.addEventListener("change", e => {
   if(karteAenderung(e)){ toast("Notiz gespeichert"); return; }
   if(e.target.id === "h-ort"){ hst.ort = e.target.value; merkeHeute(); render(); return; }
+  if(e.target.matches("[data-kk-see]")){ kuesteSeeAendern(e.target.value); render(); return; }
   const pk = e.target.closest("[data-pack]");
   if(pk){ abhaken(pk.dataset.pack); return; }
   if(e.target.id === "b-fisch" || e.target.id === "b-gw"){

@@ -58,7 +58,7 @@ function duenne(geo){
   return out;
 }
 
-async function overpass(query){
+export async function overpass(query){
   let fehler;
   for(const url of SERVER){
     const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 60000);   /* Overpass ist manchmal sehr langsam */

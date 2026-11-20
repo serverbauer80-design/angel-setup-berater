@@ -11,6 +11,7 @@ import { beraterHTML, bst, merkeBerater } from "./berater-ui.js";
 import { erfahrung, erfahrungHTML, schonzeitHTML } from "./erfahrung.js";
 import { ausfluegeGeladen, ladeAusfluege } from "./tagebuch.js";
 import { scheinHinweisHTML } from "./scheine.js";
+import { ladeKueste, kuesteTag, kuesteHTML, seeSetzen } from "./kueste.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const KEY = "neu_heute_v1";
@@ -19,14 +20,19 @@ export function merkeHeute(){ schreibe(KEY, hst); }
 
 const wetterCache = {};   // ortId -> Rohdaten (im Speicher, damit Neuzeichnen sofort geht)
 const gezCache = {};
+const kuesteCache = {};   // ortId -> Küstendaten (Welle, Seerichtung, Pegel)
+let kuesteLaeuft = null;
 
 export function aktuellerOrt(){
   const orte = orteListe();
   return orte.find(o => o.id === hst.ort) || orte[0];
 }
 function aktuelleLage(){
-  const w = wetterCache[aktuellerOrt().id];
-  return w ? tagesLage(w, hst.tag) : null;
+  const ort = aktuellerOrt();
+  const w = wetterCache[ort.id];
+  const l = w ? tagesLage(w, hst.tag) : null;
+  if(l && ort.kueste && kuesteCache[ort.id]) l.kueste = kuesteTag(kuesteCache[ort.id], l.iso, hst.tag === 0, l);
+  return l;
 }
 const TAGE = ["Heute", "Morgen", "Übermorgen"];
 
@@ -50,6 +56,7 @@ export function heuteHTML(){
     ${scheinHinweisHTML()}
     <div id="h-lage" class="h-lage">${lageHTML(ort)}</div>
     <div id="h-gezeiten"></div>
+    <div id="h-kueste">${kuesteKarte(ort, orte)}</div>
     <div id="h-erfahrung">${erfahrungHTML(erfahrung(ort, aktuelleLage(), iso), ort.name)}</div>
     <div id="h-fische">${fischeHTML(ort)}</div>
     <div id="h-schonzeit">${hst.tag === 0 ? schonzeitHTML() : ""}</div>
@@ -86,6 +93,18 @@ function lageHTML(ort){
       <p class="h-legende">Uhrzeit · Temperatur · Wind km/h · Regenrisiko</p>` : ""}
     <p class="hinweis-klein">${l.ausCache ? `Ohne Netz – letzter Stand von ${stand} Uhr.` : `Open-Meteo · Stand ${stand} Uhr`}</p>
   </div>`;
+}
+
+function kuesteKarte(ort, orte){
+  if(!ort.kueste) return "";
+  const l = aktuelleLage();
+  return kuesteHTML(ort, l && l.kueste, orte || orteListe(), l, !kuesteCache[ort.id] || !l);
+}
+/* Seerichtung von Hand setzen („automatisch“ = neu ermitteln) */
+export function kuesteSeeAendern(wert){
+  const ort = aktuellerOrt();
+  seeSetzen(ort, wert === "" ? null : +wert);
+  delete kuesteCache[ort.id];
 }
 
 function gezeitenHTML(ort, liste, fehler){
@@ -176,6 +195,7 @@ export function heuteNachladen(neuZeichnen){
     const e = document.getElementById("h-erfahrung"); if(e) e.innerHTML = erfahrungHTML(erfahrung(ort, aktuelleLage(), tagISO(hst.tag)), ort.name);
     const f = document.getElementById("h-fische"); if(f) f.innerHTML = fischeHTML(ort);
     const t = document.getElementById("h-tasche"); if(t) t.innerHTML = tascheHTML(ort);
+    const k = document.getElementById("h-kueste"); if(k) k.innerHTML = kuesteKarte(ort);
   };
   if(!ausfluegeGeladen()) ladeAusfluege();   /* Wetter der Ausflüge für den Vergleich */
   if(!wetterCache[ort.id] && laeuft !== ort.id){
@@ -183,6 +203,15 @@ export function heuteNachladen(neuZeichnen){
     ladeWetter(ort).then(w => { wetterCache[ort.id] = w; laeuft = null; if(aktuellerOrt().id === ort.id) fuelle(); })
       .catch(err => { laeuft = null; const l = document.getElementById("h-lage");
         if(l) l.innerHTML = `<div class="h-karte"><p class="hinweis-klein">Wetter nicht ladbar (${esc(err.message)}). Ohne Netz? Die Fischauswahl unten nutzt dann nur Saison und Gerät.</p></div>`; });
+  }
+  if(ort.kueste && !kuesteCache[ort.id] && kuesteLaeuft !== ort.id){
+    kuesteLaeuft = ort.id;
+    ladeKueste(ort).then(k => {
+      kuesteCache[ort.id] = k; kuesteLaeuft = null;
+      if(aktuellerOrt().id === ort.id) fuelle();
+      if(k.spaeter) k.spaeter.then(see => { if(see){ k.see = see; if(aktuellerOrt().id === ort.id) fuelle(); } });
+    })
+      .catch(() => { kuesteLaeuft = null; const k = document.getElementById("h-kueste"); if(k) k.innerHTML = kuesteHTML(ort, null, [], null, false); });
   }
   if(ort.tides){
     const iso = tagISO(hst.tag), k = ort.id + iso;
