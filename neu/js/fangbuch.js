@@ -186,7 +186,7 @@ export function fangBearbeiten(id, vorgabe = {}){
   const dlg = blatt(c ? "Fang bearbeiten" : "Fang eintragen", `
     <div class="feld-raster">
       ${auswahl("fisch", "Fischart", fischOpt, andere ? "_andere" : fid, { breit: true })}
-      <p class="breit fb-bestimmen"><a href="#wissen/bestimmen" data-blatt-weg>Unsicher, welcher Fisch? Bestimmen ›</a></p>
+      <p class="breit fb-bestimmen"><a href="#wissen/bestimmen" data-blatt-weg>Unsicher, welcher Fisch? Bestimmen ›</a> · <a href="#wissen/versorgen-toeten" data-blatt-weg>Mitnehmen: richtig versorgen ›</a></p>
       <div class="breit" id="fb-andere"${andere ? "" : " hidden"}>${feld("andere", "Welche Art?", andere, { ph: "z. B. Brasse" })}</div>
       ${feld("laenge", "Länge (cm)", v.laenge ?? "", { im: "decimal", ph: "z. B. 52" })}
       ${feld("gewicht", "Gewicht (kg)", v.gewicht != null ? komma(v.gewicht) : "", { im: "decimal", ph: "optional" })}
