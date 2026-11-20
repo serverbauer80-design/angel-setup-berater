@@ -61,7 +61,10 @@ AUSR.beiAenderung(quelle => { if(quelle === "lokal") pushDebounced(); melde(); }
    (meine_faenge_v1 / Firestore-Feld "faenge"). Fotos bleiben lokal. */
 export function ladeFaengeDaten(){
   const d = lese(KEYS.faenge, null);
-  return d && typeof d === "object" ? { spots: d.spots || [], catches: d.catches || [], ...d } : { spots: [], catches: [] };
+  const out = d && typeof d === "object" ? { spots: d.spots || [], catches: d.catches || [], ...d } : { spots: [], catches: [] };
+  /* Vorbelegter Spot „Elbe (Lauenburg)“ lag versehentlich bei Bremen */
+  out.spots.forEach(s => { if(s.name === "Elbe (Lauenburg)" && Math.abs(s.lng - 8.4752) < 0.001){ s.lat = 53.371; s.lng = 10.565; } });
+  return out;
 }
 let faengeGeaendert = false, dkGeaendert = false;
 export function speichereFaengeDaten(d){

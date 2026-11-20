@@ -1394,7 +1394,7 @@ const SPOTS_SEED = [
   { name:'Großer Ratzeburger See', type:'see', region:'sh', lat:53.7011, lng:10.7743, price:15.00, notes:'Hecht, Zander, Barsch, Maräne, Wels | Große Maränenvorkommen | hejfish.com' },
   { name:'Schaalsee (SH-Anteil)', type:'see', region:'sh', lat:53.6196, lng:10.8673, price:15.00, notes:'Riesenbarsch, Hecht, Maräne, Aal | Bis 72m tief, Biosphärenreservat | hejfish.com' },
   { name:'Elbe-Lübeck-Kanal (ELK)', type:'kanal', region:'sh', lat:53.6289, lng:10.688, price:10.00, notes:'Zander, Barsch, Aal, Karpfen, Quappe | Wenig Schiffsverkehr, Zandertipp | hejfish.com' },
-  { name:'Elbe (Lauenburg)', type:'fluss', region:'sh', lat:53.1868, lng:8.4752, price:10.00, notes:'Zander, Rapfen, Wels, Hecht, Aal | Buhnenangeln, harte Strömung | hejfish.com' },
+  { name:'Elbe (Lauenburg)', type:'fluss', region:'sh', lat:53.371, lng:10.565, price:10.00, notes:'Zander, Rapfen, Wels, Hecht, Aal | Buhnenangeln, harte Strömung | hejfish.com' },
   { name:'Wakenitz', type:'fluss', region:'sh', lat:53.8664, lng:10.6847, price:12.00, notes:'Hecht, Wels, Barsch, Karpfen, Schleie | Amazonas des Nordens, urig | luebecker-anglerverein.de' },
   { name:'Großer Segeberger See', type:'see', region:'sh', lat:53.9369, lng:10.3045, price:12.00, notes:'Hecht, Zander, Barsch, Aal, Karpfen | Bootsvermietung am See | hejfish.com' },
   { name:'Hohendeicher See (Oortkaten)', type:'see', region:'hh', lat:53.5502, lng:10.0013, price:12.00, notes:'Hecht, Zander, Barsch, Regenbogenforelle | Tiefer Grundwassersee, Taucherbereich | asv-hamburg.de' },

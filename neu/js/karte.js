@@ -8,6 +8,7 @@
    wieder eingehängt – so bleiben Ausschnitt und Zoom erhalten.
    ============================================================ */
 import { lese, schreibe, ladeFaengeDaten, speichereFaengeDaten, dkNotizen, setzeDkNotiz } from "./store.js";
+import { istFluss, linienVon, anfordern, UMKREIS_KM, vorabGeladen } from "./flusslauf.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -70,7 +71,7 @@ function karteErzeugen(){
   karte = L.map(kartenEl, { zoomControl: true, attributionControl: true }).setView(kst.zentrum || [54.35, 9.6], kst.zoom || 8);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© OpenStreetMap" }).addTo(karte);
   schicht = L.layerGroup().addTo(karte);
-  karte.on("moveend", () => { const c = karte.getCenter(); kst.zentrum = [c.lat, c.lng]; kst.zoom = karte.getZoom(); merke(); });
+  karte.on("moveend", () => { const c = karte.getCenter(); kst.zentrum = [c.lat, c.lng]; kst.zoom = karte.getZoom(); merke(); flussLaden(); });
   karte.on("click", e => {
     if(!setzModus) return;
     const ll = e.latlng;
@@ -90,8 +91,19 @@ function zeichneMarker(){
   const FARBE = { spots: farbe("--float"), lav: farbe("--water"), dk: farbe("--ok"), kueste: farbe("--bad"), osm: farbe("--muted") };
   eintraege().forEach(e => {
     const gewaehlt = kst.auswahl === e.id;
+    /* Flüsse und Kanäle: Verlauf als Linie, der Punkt bleibt als Zugang klein darauf */
+    const linien = istFluss(e) ? linienVon(e) : null;
+    if(linien){
+      const fl = L.polyline(linien, { color: FARBE[e.ebene], weight: gewaehlt ? 7 : 4.5, opacity: gewaehlt ? 1 : 0.8, lineCap: "round", lineJoin: "round", interactive: false });
+      fl.addTo(schicht);
+      /* breiter, unsichtbarer Streifen zum Antippen */
+      const hit = L.polyline(linien, { color: "#000", weight: 18, opacity: 0 });
+      hit.bindTooltip(e.name, { sticky: true });
+      hit.on("click", ev => { L.DomEvent.stopPropagation(ev); waehle(e.id, false); });
+      hit.addTo(schicht);
+    }
     const m = L.circleMarker([e.lat, e.lng], {
-      radius: gewaehlt ? 10 : (e.ebene === "spots" && e.eigen ? 7 : 5.5),
+      radius: gewaehlt ? 10 : linien ? 4.5 : (e.ebene === "spots" && e.eigen ? 7 : 5.5),
       color: gewaehlt ? farbe("--ink") : "#fff", weight: gewaehlt ? 3 : 1.5,
       fillColor: e.ebene === "kueste" && e.roh.art === "grenze" ? farbe("--ok") : FARBE[e.ebene], fillOpacity: 0.95
     });
@@ -99,6 +111,17 @@ function zeichneMarker(){
     m.on("click", ev => { L.DomEvent.stopPropagation(ev); waehle(e.id, false); });
     m.addTo(schicht);
   });
+  flussLaden();
+}
+
+/* Verläufe für Flüsse im sichtbaren Ausschnitt nachladen (ab mittlerem Zoom) */
+function flussLaden(){
+  if(!karte || karte.getZoom() < 8) return;
+  const b = karte.getBounds().pad(0.3);
+  const fehlen = eintraege().filter(e => istFluss(e) && !linienVon(e) && b.contains([e.lat, e.lng]));
+  const sel = eintraege().find(e => e.id === kst.auswahl && istFluss(e) && !linienVon(e));
+  if(sel && !fehlen.includes(sel)) fehlen.unshift(sel);
+  if(fehlen.length) anfordern(fehlen, () => zeichneMarker());
 }
 
 let neuZeichnenFn = () => {};
@@ -106,7 +129,9 @@ export function initKarte(fn){ neuZeichnenFn = fn; }
 function waehle(id, zentrieren){
   kst.auswahl = id;
   const e = eintraege().find(x => x.id === id);
-  if(zentrieren && e && karte) karte.setView([e.lat, e.lng], Math.max(karte.getZoom(), 11));
+  const lin = e && istFluss(e) ? linienVon(e) : null;
+  if(zentrieren && lin && karte) karte.fitBounds(L.latLngBounds(lin.flat()), { padding: [20, 20], maxZoom: 13 });
+  else if(zentrieren && e && karte) karte.setView([e.lat, e.lng], Math.max(karte.getZoom(), 11));
   neuZeichnenFn();
   const s = document.getElementById("gw-steckbrief"); if(s && !matchMedia("(min-width: 900px)").matches) s.scrollIntoView({ block: "start", behavior: "smooth" });
 }
@@ -118,6 +143,7 @@ export function karteEinhaengen(){
   if(!karte) karteErzeugen();
   platz.appendChild(kartenEl);
   setTimeout(() => { karte.invalidateSize(); zeichneMarker(); }, 0);
+  vorabGeladen.then(() => zeichneMarker());
 }
 
 /* ---------- Seite ---------- */
@@ -200,6 +226,7 @@ function steckbriefHTML(e){
     <p class="eyebrow">${esc(eb.label)}</p>
     <h2>${esc(e.name)}</h2>
     <p class="det-sub">${esc(e.unter)}</p>
+    ${istFluss(e) ? `<p class="hinweis-klein">${linienVon(e) ? `Die Linie zeigt den Verlauf aus OpenStreetMap im Umkreis von etwa ${UMKREIS_KM} km um den Zugangspunkt – nicht die erlaubte Angelstrecke. Die steht im Erlaubnisschein.` : "Verlauf wird geladen, sobald du online bist …"}</p>` : ""}
     ${inhalt}
     <div class="akt-zeile">${heuteKnopf}${alsSpot}${e.ebene === "spots" ? `<button type="button" class="knopf" data-gw-bearb="${esc(r.id)}">Bearbeiten</button>` : ""}
       <a class="knopf leise" href="https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}" target="_blank" rel="noopener">Route ›</a></div>
