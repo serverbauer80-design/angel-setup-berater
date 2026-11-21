@@ -1174,3 +1174,21 @@ body.druck-fm .fm-druck .fm-titel{display:block}
 /* ---------- Teilen ---------- */
 .tl .reihen{margin:8px 0}
 .h-live-start [data-plan-teilen]{justify-self:start}
+
+/* Wetter am Spot */
+.gw-wetter-knopf{justify-content:center;width:100%;min-height:46px}
+.h-karte.sw{box-shadow:none;background:var(--surface2);border:0}
+.sw-kopf{display:flex;align-items:center;justify-content:space-between}
+.sw-kopf h3{font-size:19px}
+.sw-tage{display:flex;gap:6px;overflow-x:auto}
+.sw-tage .chip{display:grid;line-height:1.1;padding:4px 12px;min-height:44px;justify-items:center}
+.sw-tage .chip small{font-size:11px;font-weight:500;opacity:.75}
+.h-karte.sw .h-kacheln div{background:var(--surface)}
+.h-karte.sw .h-kacheln div.akzent{background:var(--water-soft)}
+.h-karte.sw .h-stunden div{background:var(--surface)}
+.sw-angel{list-style:none;padding:0;margin:0;display:grid;gap:4px;font-size:14px}
+.sw-angel b{display:inline-block;min-width:84px}
+.sw-fische{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:14px;align-items:center}
+.sw-fische>b{flex-basis:100%}
+.sw-fische span{display:inline-flex;align-items:center;gap:5px}
+.sw-fische small{color:var(--muted)}

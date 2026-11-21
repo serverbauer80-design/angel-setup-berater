@@ -15,6 +15,7 @@ import { scheineHTML, scheineSpotHTML } from "./scheine.js";
 import { kachelnAusschnitt } from "./offline.js";
 import { FUEHRER, GRUNDKOSTEN, STAND as FUEHRER_STAND } from "../daten/fuehrer.js";
 import { spotTeilen, planTeilen } from "./teilen.js";
+import { spotWetterHTML, spotWetterKlick } from "./spotwetter.js";
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -342,6 +343,7 @@ function steckbriefHTML(e){
     <h2>${esc(e.name)}</h2>
     <p class="det-sub">${esc(e.unter)}</p>
     <a class="knopf prim gw-navi" href="${naviLink(e.lat, e.lng)}" target="_blank" rel="noopener">Navigieren</a>
+    ${e.ebene !== "faenge" ? spotWetterHTML(e, () => neuZeichnenFn()) : ""}
     ${istFluss(e) ? `<p class="hinweis-klein">${linienVon(e) ? `Die Linie zeigt den Verlauf aus OpenStreetMap im Umkreis von etwa ${UMKREIS_KM} km um den Zugangspunkt – nicht die erlaubte Angelstrecke. Die steht im Erlaubnisschein.` : "Verlauf wird geladen, sobald du online bist …"}</p>` : ""}
     ${istFluss(e) ? pegelHTML(e) : ""}
     ${inhalt}
@@ -455,6 +457,7 @@ export function karteKlick(e, toast, geheZuHeute){
       .finally(() => { const b = document.querySelector("[data-gw-offline]"); if(b) b.disabled = false; });
     return true;
   }
+  if(spotWetterKlick(e)){ neuZeichnenFn(); return true; }
   const h = t.closest("[data-gw-heute]");
   if(h){ geheZuHeute("spot_" + h.dataset.gwHeute); return true; }
   const b = t.closest("[data-gw-bearb]");
